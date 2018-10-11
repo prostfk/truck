@@ -43,6 +43,20 @@ CREATE TABLE client (
 );
 
 /*step 2*/
+CREATE TABLE waybill (
+  id             SERIAL NOT NULL PRIMARY KEY,
+  status         VARCHAR DEFAULT NULL,
+  driver         int    NOT NULL,
+  auto           int    NOT NULL,
+  date_departure date    DEFAULT NULL,
+  date_arrival   date    DEFAULT NULL,
+  FOREIGN KEY (auto) REFERENCES auto (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  FOREIGN KEY (driver) REFERENCES driver (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+);
 CREATE TABLE orders (
   id            SERIAL      NOT NULL PRIMARY KEY,
   name          varchar(45) NOT NULL,
@@ -60,20 +74,7 @@ CREATE TABLE orders (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
-CREATE TABLE waybill (
-  id             SERIAL NOT NULL PRIMARY KEY,
-  status         VARCHAR DEFAULT NULL,
-  driver         int    NOT NULL,
-  auto           int    NOT NULL,
-  date_departure date    DEFAULT NULL,
-  date_arrival   date    DEFAULT NULL,
-  FOREIGN KEY (auto) REFERENCES auto (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  FOREIGN KEY (driver) REFERENCES driver (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-);
+
 /*step 3*/
 CREATE TABLE consignment (
   id              SERIAL      NOT NULL PRIMARY KEY,
