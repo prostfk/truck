@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7e42f2ab-4fd7-4dae-b173-07907b806862" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_projectlombok_lombok_1_16_22.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_data_spring_data_jpa_2_0_10_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_config_5_0_7_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_core_5_0_7_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/client/entity/Client.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/client/repository/ClientRepository.java" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/core-module/target/" />
+    <ignored path="$PROJECT_DIR$/web-module/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="truck@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="truck@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="truck@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="truck: database" type="6d9b600a:PostgresImplModel$Database" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="truck@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="truck: database" type="6d9b600a:PostgresImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="truck@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="truck: database" type="6d9b600a:PostgresImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="a16502c0:PostgresImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="truck@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="truck: database" type="6d9b600a:PostgresImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="a16502c0:PostgresImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="821949152">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="3" />
+          <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.44" value="1" />
+          <entry key="project.open.time.51" value="1" />
+          <entry key="project.open.time.68" value="1" />
+          <entry key="project.opened" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="DATABASE/fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad" value="1" />
+          <entry key="auto" value="2" />
+          <entry key="cancellation_act" value="2" />
+          <entry key="client" value="4" />
+          <entry key="company" value="3" />
+          <entry key="consignment" value="2" />
+          <entry key="driver" value="2" />
+          <entry key="html" value="1" />
+          <entry key="java" value="27" />
+          <entry key="orders" value="2" />
+          <entry key="product" value="1" />
+          <entry key="properties" value="3" />
+          <entry key="sql" value="5" />
+          <entry key="stock" value="2" />
+          <entry key="waybill" value="1" />
+          <entry key="xml" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Database Element" value="21" />
+          <entry key="HTML" value="1" />
+          <entry key="JAVA" value="27" />
+          <entry key="Properties" value="3" />
+          <entry key="Scratch" value="5" />
+          <entry key="UML" value="1" />
+          <entry key="XML" value="5" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="1543" />
+          <entry key="properties" value="42" />
+          <entry key="sql" value="737" />
+          <entry key="txt" value="6" />
+          <entry key="xml" value="15" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.spring.boot.run.usages" />
+      <usages-collector id="statistics.spring.boot.mvc.usages" />
+      <usages-collector id="statistics.vcs.git.usages" />
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="1543" />
+          <entry key="PLAIN_TEXT" value="6" />
+          <entry key="Properties" value="42" />
+          <entry key="Scratch" value="737" />
+          <entry key="XML" value="15" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.js.language.service.starts" />
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/console.sql">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="140">
+              <caret line="7" column="2" lean-forward="true" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>`</find>
+      <find>company_owner</find>
+      <find>jpa</find>
+      <find>product_id</find>
+    </findStrings>
+    <replaceStrings>
+      <replace />
+      <replace>VARCHAR</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/core-module/pom.xml" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/dao/UserDao.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/entity/User.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/entity/UserRole.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/entity/User.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/entity/Company.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/company/Company.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/company/entity/Company.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/company/repository/CompanyRepository.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/repository/UserRepository.java" />
+        <option value="$PROJECT_DIR$/web-module/src/main/java/com/itechart/trucking/webmodule/controller/MainController.java" />
+        <option value="$PROJECT_DIR$/core-module/src/test/java/com/itechart/trucking/webmodule/WebModuleApplicationTests.java" />
+        <option value="$PROJECT_DIR$/web-module/src/main/resources/application.properties" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/product/entity/Product.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/cancellationAct/entity/CancellationAct.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/cancellationAct/repository/CancellationActRepository.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/product/repository/ProductRepository.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/resources/application.properties" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/client/entity/Client.java" />
+        <option value="$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/client/repository/ClientRepository.java" />
+        <option value="$PROJECT_DIR$/web-module/pom.xml" />
+        <option value="$PROJECT_DIR$/web-module/src/main/java/com/itechart/trucking/webmodule/config/WebSecurityConfig.java" />
+        <option value="$APPLICATION_CONFIG_DIR$/consoles/db/fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/console.sql" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="alwaysUpdateSnapshots" value="true" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="45" />
+    <option name="y" value="27" />
+    <option name="width" value="938" />
+    <option name="height" value="1053" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="trucking" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="trucking" type="462c0819:PsiDirectoryNode" />
+              <item name="user" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="core-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="trucking" type="462c0819:PsiDirectoryNode" />
+              <item name="user" type="462c0819:PsiDirectoryNode" />
+              <item name="entity" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="webmodule" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="webmodule" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="truckingApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="truckingApp" type="462c0819:PsiDirectoryNode" />
+              <item name="web-module" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="webmodule" type="462c0819:PsiDirectoryNode" />
+              <item name="controller" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="postgresql" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539276034595" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/Change SQL Dialect" value="PostgreSQL" />
+    <property name="database.console.LAST_STATE" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.itechart.trucking.entity" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.itechart.trucking.company" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/core-module" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="WebModuleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="web-module" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.itechart.trucking.webmodule.WebModuleApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7e42f2ab-4fd7-4dae-b173-07907b806862" name="Default Changelist" comment="" />
+      <created>1539206984047</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1539206984047</updated>
+      <workItem from="1539206993103" duration="2583000" />
+      <workItem from="1539240846999" duration="5220000" />
+      <workItem from="1539258795746" duration="1456000" />
+      <workItem from="1539269226362" duration="4187000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="13446000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="45" y="27" width="1875" height="1053" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16293056" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Designer" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Web" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Spring" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Gradle View" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32969433" />
+      <window_info anchor="bottom" id="Java Enterprise" order="11" />
+      <window_info anchor="bottom" id="Database Changes" order="12" />
+      <window_info anchor="bottom" id="Version Control" order="13" show_stripe_button="false" />
+      <window_info active="true" anchor="bottom" id="Database Console" order="14" visible="true" weight="0.1633987" />
+      <window_info anchor="bottom" id="Messages" order="15" visible="true" weight="0.22816594" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Maven Projects" order="5" />
+      <window_info anchor="right" id="Database" order="6" visible="true" weight="0.15800984" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Bean Validation" order="9" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/.." />
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/webmodule/controller/MainController.java" />
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/dao/UserDao.java" />
+    <entry file="file://$PROJECT_DIR$/web-module/src/main/resources/templates/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="7" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/entity/UserRole.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="38" selection-start-line="4" selection-start-column="38" selection-end-line="4" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/entity/Company.java" />
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/company/entity/Company.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/company/repository/CompanyRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" column="69" selection-start-line="14" selection-start-column="69" selection-end-line="14" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/repository/UserRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="13" column="50" selection-start-line="13" selection-start-column="50" selection-end-line="13" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/test/java/com/itechart/trucking/webmodule/WebModuleApplicationTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="5" selection-start-column="5" selection-end-line="15" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/company">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/product">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/waybill">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/stock">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/product/entity/Product.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/auto">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/resources/application.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="28" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-module/src/main/resources/application.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="28" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/product/repository/ProductRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/cancellationAct/repository/CancellationActRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/cancellationAct/entity/CancellationAct.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="20" column="37" selection-start-line="20" selection-start-column="37" selection-end-line="20" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/cancellation_act">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/orders">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/driver">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/consignment">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/client/entity/Client.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="20" lean-forward="true" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/client/repository/ClientRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-module/src/main/java/com/itechart/trucking/webmodule/ServletInitializer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="das://fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/database/truck/schema/public/table/client">
+      <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
+        <state>
+          <filtering enabled="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-module/src/main/java/com/itechart/trucking/webmodule/controller/MainController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="39" selection-start-line="11" selection-start-column="39" selection-end-line="11" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-module/src/main/java/com/itechart/trucking/webmodule/config/WebSecurityConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="39" selection-start-line="2" selection-start-column="39" selection-end-line="2" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web-module/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="6" column="16" lean-forward="true" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://DATABASE/fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>DATABASE</ID>
+          <OriginalElement>fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad</OriginalElement>
+          <nodes>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.product</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.client</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.orders</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.driver</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.auto</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.consignment</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.cancellation_act</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.waybill</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.company</node>
+            <node x="" y="">fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad.TABLE:truck.public.stock</node>
+          </nodes>
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="0.5626943005181347" x="472.5" y="566.5" />
+          <SelectedNodes />
+          <Categories>
+            <Category>Key columns</Category>
+            <Category>Columns</Category>
+          </Categories>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core-module/src/main/java/com/itechart/trucking/user/entity/User.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/fddf44d9-bbde-4fc5-bcd8-7cb85b8f3dad/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="7" column="2" lean-forward="true" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
