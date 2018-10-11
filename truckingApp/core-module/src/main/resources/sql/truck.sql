@@ -8,7 +8,9 @@ CREATE TABLE driver (
   name              varchar(45) NOT NULL,
   passport_number   varchar(45) NOT NULL,
   company_of_driver int         NOT NULL,
-  FOREIGN KEY (company_of_driver) REFERENCES company (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (company_of_driver) REFERENCES company (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 CREATE TABLE auto (
   id               SERIAL PRIMARY KEY,
@@ -17,21 +19,27 @@ CREATE TABLE auto (
   name             varchar(45) NOT NULL,
   car_number       varchar(45) NOT NULL,
   company_owner    int         NOT NULL,
-  FOREIGN KEY (company_owner) REFERENCES company (id) ON DELETE CASCADE ON UPDATE NO ACTION
+  FOREIGN KEY (company_owner) REFERENCES company (id)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
 );
 CREATE TABLE stock (
   id         SERIAL      NOT NULL PRIMARY KEY,
   name       varchar(45) NOT NULL,
   company_id int         NOT NULL,
   address    VARCHAR(50) NOT NULL,
-  FOREIGN KEY (company_id) REFERENCES company (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (company_id) REFERENCES company (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 CREATE TABLE client (
   id           SERIAL      NOT NULL PRIMARY KEY,
   name         varchar(45) NOT NULL,
   type         VARCHAR     NOT NULL,
   client_owner int         NOT NULL,
-  FOREIGN KEY (client_owner) REFERENCES company (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (client_owner) REFERENCES company (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 
 /*step 2*/
@@ -44,9 +52,13 @@ CREATE TABLE orders (
   reciever      INT         NOT NULL,
   date_accepted date                 DEFAULT NULL,
   date_executed date                 DEFAULT NULL,
+  waybill_id    BIGINT      NOT NULL,
+  FOREIGN KEY (waybill_id) REFERENCES waybill (id),
   FOREIGN KEY (sender) REFERENCES stock (id),
   FOREIGN KEY (reciever) REFERENCES stock (id),
-  FOREIGN KEY (client_id) REFERENCES client (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (client_id) REFERENCES client (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 CREATE TABLE waybill (
   id             SERIAL NOT NULL PRIMARY KEY,
@@ -55,15 +67,21 @@ CREATE TABLE waybill (
   auto           int    NOT NULL,
   date_departure date    DEFAULT NULL,
   date_arrival   date    DEFAULT NULL,
-  FOREIGN KEY (auto) REFERENCES auto (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  FOREIGN KEY (driver) REFERENCES driver (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (auto) REFERENCES auto (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  FOREIGN KEY (driver) REFERENCES driver (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 /*step 3*/
 CREATE TABLE consignment (
   id              SERIAL      NOT NULL PRIMARY KEY,
   name            varchar(45) NOT NULL,
   consignment_ref INT         NOT NULL,
-  FOREIGN KEY (consignment_ref) REFERENCES orders (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (consignment_ref) REFERENCES orders (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 CREATE TABLE product (
   id                  SERIAL       NOT NULL PRIMARY KEY,
@@ -80,7 +98,9 @@ CREATE TABLE cancellation_act (
   ammount   int    NOT NULL,
   price     int    NOT NULL,
   productId int    NOT NULL,
-  FOREIGN KEY (productId) REFERENCES product (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+  FOREIGN KEY (productId) REFERENCES product (id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
 );
 
 CREATE TABLE route_list (
