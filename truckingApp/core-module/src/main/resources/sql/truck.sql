@@ -117,6 +117,6 @@ CREATE TABLE users (
   id        SERIAL NOT NULL PRIMARY KEY,
   username  VARCHAR(20),
   email     VARCHAR(50),
-  password  VARCHAR(50),
+  password  VARCHAR(100),
   user_role VARCHAR(20)
 );

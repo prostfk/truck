@@ -13,10 +13,7 @@ import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -24,7 +21,7 @@ import javax.persistence.EntityManagerFactory;
 public class MainController {
 
     @Autowired
-    private RouteListRepository Repository;
+    private UserRepository Repository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
@@ -33,6 +30,11 @@ public class MainController {
 
     @GetMapping(value = "/registration")
     public String getRegistration(){
+        return "registration";
+    }
+
+    @GetMapping(value = "/auth")
+    public String getAuthPage(){
         return "login";
     }
 
@@ -41,7 +43,6 @@ public class MainController {
     public Object getTest(){
         return Repository.findById(1L);
     }
-
 
 
 }

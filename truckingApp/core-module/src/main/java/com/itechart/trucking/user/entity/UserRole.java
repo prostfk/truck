@@ -2,6 +2,6 @@ package com.itechart.trucking.user.entity;
 
 public enum UserRole {
 
-    ADMIN, SUPERADMIN, USER, ANONYMOUS
+    ROLE_ADMIN, ROLE_SUPERADMIN, ROLE_USER, ROLE_ANONYMOUS
 
 }
