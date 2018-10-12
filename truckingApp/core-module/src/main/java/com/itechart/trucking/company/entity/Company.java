@@ -22,6 +22,7 @@ public class Company {
     @Min(0)
     @Max(1)
     private int active;
+    private String address;
 
 
 
