@@ -97,7 +97,7 @@ CREATE TABLE product (
 CREATE TABLE cancellation_act (
   id        SERIAL NOT NULL PRIMARY KEY,
   date      date   NOT NULL,
-  ammount   int    NOT NULL,
+  amount   int    NOT NULL,
   price     int    NOT NULL,
   productId int    NOT NULL,
   FOREIGN KEY (productId) REFERENCES product (id)

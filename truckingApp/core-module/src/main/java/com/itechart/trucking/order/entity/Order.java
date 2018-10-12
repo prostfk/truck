@@ -17,11 +17,18 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToOne
+    @JoinColumn(name = "client_id")
     private Client client;
     private String status;
+    @OneToOne
+    @JoinColumn(name = "sender")
     private Stock sender;
+    @OneToOne
+    @JoinColumn(name = "reciever")
     private Stock receiver;
     private Date dateAccepted;
     private Date dateExecuted;
+
 
 }

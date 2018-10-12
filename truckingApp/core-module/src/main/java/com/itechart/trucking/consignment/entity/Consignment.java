@@ -3,10 +3,7 @@ package com.itechart.trucking.consignment.entity;
 import com.itechart.trucking.company.entity.Company;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -16,6 +13,8 @@ public class Consignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @OneToOne
+    @JoinColumn(name = "consignment_ref")
     private Company consignmentRef;
 
 }

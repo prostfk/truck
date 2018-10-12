@@ -17,6 +17,7 @@ public class Auto {
     private String name;
     private String carNumber;
     @OneToOne
+    @JoinColumn(name = "company_owner")
     private Company companyOwner;
 
 

@@ -3,10 +3,7 @@ package com.itechart.trucking.client.entity;
 import com.itechart.trucking.company.entity.Company;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -17,6 +14,8 @@ public class Client {
     private Long id;
     private String name;
     private String type;
+    @OneToOne
+    @JoinColumn(name = "client_owner")
     private Company company;
 
 }
