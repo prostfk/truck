@@ -1,5 +1,6 @@
 package com.itechart.trucking.product.entity;
 
+import com.itechart.trucking.consignment.entity.Consignment;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,8 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductState status;
     private String description;
-
+    @OneToOne
+    @JoinColumn(name = "product_consignment")
+    private Consignment consignment;
 
 }

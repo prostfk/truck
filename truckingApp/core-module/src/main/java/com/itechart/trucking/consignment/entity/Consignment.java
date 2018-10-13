@@ -1,6 +1,7 @@
 package com.itechart.trucking.consignment.entity;
 
 import com.itechart.trucking.company.entity.Company;
+import com.itechart.trucking.order.entity.Order;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ public class Consignment {
     private Long id;
     private String name;
     @OneToOne
-    @JoinColumn(name = "consignment_ref")
-    private Company consignmentRef;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
 }

@@ -63,7 +63,7 @@ CREATE TABLE orders (
   client_id     int         NOT NULL,
   status        VARCHAR(45) NOT NULL DEFAULT 'new',
   sender        INT         NOT NULL,
-  reciever      INT         NOT NULL,
+  receiver      INT         NOT NULL,
   date_accepted date                 DEFAULT NULL,
   date_executed date                 DEFAULT NULL,
   waybill_id    BIGINT      NOT NULL,
@@ -80,8 +80,8 @@ CREATE TABLE orders (
 CREATE TABLE consignment (
   id              SERIAL      NOT NULL PRIMARY KEY,
   name            varchar(45) NOT NULL,
-  consignment_ref INT         NOT NULL,
-  FOREIGN KEY (consignment_ref) REFERENCES orders (id)
+  order_id INT         NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
