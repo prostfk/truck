@@ -35,7 +35,7 @@ CREATE TABLE stock (
 CREATE TABLE client (
   id           SERIAL      NOT NULL PRIMARY KEY,
   name         varchar(45) NOT NULL,
-  type         VARCHAR     NOT NULL,
+  type         VARCHAR(45) NOT NULL,
   client_owner int         NOT NULL,
   FOREIGN KEY (client_owner) REFERENCES company (id)
     ON DELETE NO ACTION
@@ -45,11 +45,11 @@ CREATE TABLE client (
 /*step 2*/
 CREATE TABLE waybill (
   id             SERIAL NOT NULL PRIMARY KEY,
-  status         VARCHAR DEFAULT NULL,
+  status         VARCHAR(45) DEFAULT NULL,
   driver         int    NOT NULL,
   auto           int    NOT NULL,
-  date_departure date    DEFAULT NULL,
-  date_arrival   date    DEFAULT NULL,
+  date_departure date        DEFAULT NULL,
+  date_arrival   date        DEFAULT NULL,
   FOREIGN KEY (auto) REFERENCES auto (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -61,7 +61,7 @@ CREATE TABLE orders (
   id            SERIAL      NOT NULL PRIMARY KEY,
   name          varchar(45) NOT NULL,
   client_id     int         NOT NULL,
-  status        VARCHAR     NOT NULL DEFAULT 'new',
+  status        VARCHAR(45) NOT NULL DEFAULT 'new',
   sender        INT         NOT NULL,
   reciever      INT         NOT NULL,
   date_accepted date                 DEFAULT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE consignment (
 CREATE TABLE product (
   id                  SERIAL       NOT NULL PRIMARY KEY,
   name                varchar(45) DEFAULT NULL,
-  status              VARCHAR     DEFAULT NULL,
+  status              VARCHAR(45) DEFAULT NULL,
   description         varchar(100) NOT NULL,
   product_consignment INT,
   FOREIGN KEY (product_consignment) REFERENCES consignment (id)
@@ -97,7 +97,7 @@ CREATE TABLE product (
 CREATE TABLE cancellation_act (
   id        SERIAL NOT NULL PRIMARY KEY,
   date      date   NOT NULL,
-  amount   int    NOT NULL,
+  amount    int    NOT NULL,
   price     int    NOT NULL,
   productId int    NOT NULL,
   FOREIGN KEY (productId) REFERENCES product (id)

@@ -1,13 +1,13 @@
 package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.user.entity.User;
+import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -36,11 +36,20 @@ public class RestApiController {
                 return throwError("User with such username already exists");
             }
         }
+        user.setUserRole(UserRole.ROLE_USER);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println(user);
         return userRepository.save(user);
     }
 
+    @GetMapping("/checkRole")
+    @ResponseBody
+    public Map<String, String> checkRole(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByEmail(name);
+        Map<String, String> map = new HashMap<>();
+        map.put("role", userByEmail!=null ? userByEmail.getUserRole().name() : UserRole.ROLE_USER.name());
+        return map;
+    }
 
     private Map<String, String> throwError(String message){
         Map<String, String> map = new HashMap<>();

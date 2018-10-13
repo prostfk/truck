@@ -14,7 +14,8 @@ public class Waybill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private WaybillState status;
     @OneToOne
     @JoinColumn(name = "driver")
     private Driver driver;
