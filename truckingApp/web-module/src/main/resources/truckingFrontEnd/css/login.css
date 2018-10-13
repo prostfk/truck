@@ -57,3 +57,11 @@ body {
 .superuserform_companylist{
     margin-top: 50px;
 }
+.form_block{
+    margin-top: 50px;
+    background-color: #f0f0f0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+

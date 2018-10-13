@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+		<script src="js/jquery.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="css/login.css">
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+	<title>Администратор</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Trucking</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Список компаний <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Новая компания</a>
+        </li>
+      </ul>
+      <li class="navbar-text">
+         <a class="nav-link" href="#">Выйти</a>
+      </li>
+    </div>
+  </nav>
+
+  <div class="row">
+   <div class="offset-md-3 col-md-6 form_block">
+          <h3>Заказ</h3>
+          <small id="emailHelp" class="form-text text-muted">Компания- заказчик перевозки</small>
+          <input type="text" class="form-control" id="order_owner" placeholder="Заказчик">
+
+          <small id="emailHelp" class="form-text text-muted">Адрес Отправления</small>
+          <input type="text" class="form-control" id="order_owner" placeholder="Откуда">
+
+          <small id="emailHelp" class="form-text text-muted">Адрес доставки</small>
+          <input type="text" class="form-control" id="order_owner" placeholder="Куда">
+
+           
+           <div class="form-group">
+          <small id="emailHelp" class="form-text text-muted">Сатус заказа</small>
+            <select class="form-control" id="exampleSelect1">
+              <option>Принят</option>
+              <option>Отклонен</option>
+              <option>Выполен</option>
+              <option>Не выполнен</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-info">Сохранить</button> 
+   </div>
+  </div>
+
+  <div class="row">
+       <div class="offset-md-3 col-md-6 form_block">
+          <h3>Путевой лист</h3>
+          <small id="emailHelp" class="form-text text-muted">Промежуточная точка</small>
+          <input type="text" class="form-control" id="order_owner" placeholder="Адрес">
+          <button type="button" class="btn btn btn-info">Добавить</button> 
+
+      <table class="table">
+         <thead class="thead">
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Пункт</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Гомель</td>
+            <td><a href="edit">Удалить</a></td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Минск</td>
+            <td><a href="edit">Удалить</a></td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Витебск</td>
+            <td><a href="edit">Удалить</a></td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>Санкт-петербург</td>
+            <td><a href="edit">Удалить</a></td>
+          </tr>
+        </tbody>
+      </table>
+   </div>
+  </div>
+
+</body>
+</html>
