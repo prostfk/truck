@@ -1,5 +1,6 @@
 package com.itechart.trucking.product.entity;
 
+import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.consignment.entity.Consignment;
 import lombok.Data;
 
@@ -19,5 +20,8 @@ public class Product {
     @OneToOne
     @JoinColumn(name = "product_consignment")
     private Consignment consignment;
+    @OneToOne
+    @JoinColumn(name = "cancellation_act")
+    private CancellationAct cancellationAct;
 
 }

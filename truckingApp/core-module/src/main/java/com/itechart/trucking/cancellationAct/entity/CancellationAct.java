@@ -1,5 +1,6 @@
 package com.itechart.trucking.cancellationAct.entity;
 
+import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.product.entity.Product;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class CancellationAct {
     private Integer amount;
     private Integer price;
     @OneToOne
-    @JoinColumn(name = "productid")
-    private Product product;
+    @JoinColumn(name = "consignment_id")
+    private Consignment consignment;
 
 }

@@ -71,27 +71,19 @@ CREATE TABLE orders (
   FOREIGN KEY (company_id) REFERENCES company (id),
   FOREIGN KEY (waybill_id) REFERENCES waybill (id),
   FOREIGN KEY (sender) REFERENCES stock (id),
-  FOREIGN KEY (reciever) REFERENCES stock (id),
+  FOREIGN KEY (receiver) REFERENCES stock (id),
   FOREIGN KEY (client_id) REFERENCES client (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 /*step 3*/
 CREATE TABLE consignment (
-  id              SERIAL      NOT NULL PRIMARY KEY,
-  name            varchar(45) NOT NULL,
+  id       SERIAL      NOT NULL PRIMARY KEY,
+  name     varchar(45) NOT NULL,
   order_id INT         NOT NULL,
   FOREIGN KEY (order_id) REFERENCES orders (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
-);
-CREATE TABLE product (
-  id                  SERIAL       NOT NULL PRIMARY KEY,
-  name                varchar(45) DEFAULT NULL,
-  status              VARCHAR(45) DEFAULT NULL,
-  description         varchar(100) NOT NULL,
-  product_consignment INT,
-  FOREIGN KEY (product_consignment) REFERENCES consignment (id)
 );
 
 CREATE TABLE cancellation_act (
@@ -99,10 +91,19 @@ CREATE TABLE cancellation_act (
   date      date   NOT NULL,
   amount    int    NOT NULL,
   price     int    NOT NULL,
-  productId int    NOT NULL,
-  FOREIGN KEY (productId) REFERENCES product (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+  consignment_id BIGINT NOT NULL,
+  FOREIGN KEY (consignment_id) REFERENCES consignment(id)
+);
+
+CREATE TABLE product (
+  id                  SERIAL       NOT NULL PRIMARY KEY,
+  name                varchar(45) DEFAULT NULL,
+  status              VARCHAR(45) DEFAULT NULL,
+  description         varchar(100) NOT NULL,
+  product_consignment INT,
+  cancellation_act    BIGINT       NOT NULL,
+  FOREIGN KEY (product_consignment) REFERENCES consignment (id),
+  FOREIGN KEY (cancellation_act) REFERENCES cancellation_act(id)
 );
 
 CREATE TABLE route_list (
