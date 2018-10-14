@@ -27,13 +27,14 @@ body {
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin input[type=email],input[type=password] {
+.form-signin input[type=email],input[type=password],input[type=text] {
   margin-bottom: -1px;
   text-align: center;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-   margin-bottom: 10px;
+    margin-bottom: 10px;
 }
+
 #icon {
   width:80%;
 }
@@ -43,8 +44,12 @@ body {
 
 
 }
-#loginbutton{
+.loginbutton{
   box-shadow: 0 0 15px 2px #2196F3;
+}
+
+.text_left{
+    text-align: left;
 }
 
 
@@ -62,6 +67,10 @@ body {
     background-color: #f0f0f0;
     padding-top: 20px;
     padding-bottom: 20px;
+}
+.registrate_company_form{
+    border-radius: 20px;
+    box-shadow: 0 0 19px #747474;
 }
 
 
