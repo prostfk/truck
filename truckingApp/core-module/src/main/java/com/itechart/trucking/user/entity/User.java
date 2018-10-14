@@ -1,5 +1,6 @@
 package com.itechart.trucking.user.entity;
 
+import com.itechart.trucking.company.entity.Company;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,6 +22,9 @@ public class User {
     private String email;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+    @OneToOne
+    @JoinColumn
+    private Company company;
 
 
 }

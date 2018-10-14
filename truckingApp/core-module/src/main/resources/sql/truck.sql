@@ -1,13 +1,13 @@
 CREATE TABLE company (
-  id     SERIAL       NOT NULL PRIMARY KEY,
-  name   varchar(100) NOT NULL,
-  active smallint     NOT NULL DEFAULT '0'
+  id     SERIAL        NOT NULL PRIMARY KEY,
+  name   VARCHAR(100) NOT NULL,
+  active smallint      NOT NULL DEFAULT '0'
 );
 CREATE TABLE driver (
-  id                SERIAL      NOT NULL PRIMARY KEY,
-  name              varchar(45) NOT NULL,
-  passport_number   varchar(45) NOT NULL,
-  company_of_driver int         NOT NULL,
+  id                SERIAL       NOT NULL PRIMARY KEY,
+  name              VARCHAR(45) NOT NULL,
+  passport_number   VARCHAR(45) NOT NULL,
+  company_of_driver int          NOT NULL,
   FOREIGN KEY (company_of_driver) REFERENCES company (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
@@ -15,28 +15,28 @@ CREATE TABLE driver (
 CREATE TABLE auto (
   id               SERIAL PRIMARY KEY,
   type             VARCHAR(15) NOT NULL,
-  fuel_consumption int         NOT NULL,
-  name             varchar(45) NOT NULL,
-  car_number       varchar(45) NOT NULL,
-  company_owner    int         NOT NULL,
+  fuel_consumption int          NOT NULL,
+  name             VARCHAR(45) NOT NULL,
+  car_number       VARCHAR(45) NOT NULL,
+  company_owner    int          NOT NULL,
   FOREIGN KEY (company_owner) REFERENCES company (id)
     ON DELETE CASCADE
     ON UPDATE NO ACTION
 );
 CREATE TABLE stock (
-  id         SERIAL      NOT NULL PRIMARY KEY,
-  name       varchar(45) NOT NULL,
-  company_id int         NOT NULL,
+  id         SERIAL       NOT NULL PRIMARY KEY,
+  name       VARCHAR(45) NOT NULL,
+  company_id int          NOT NULL,
   address    VARCHAR(50) NOT NULL,
   FOREIGN KEY (company_id) REFERENCES company (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 CREATE TABLE client (
-  id           SERIAL      NOT NULL PRIMARY KEY,
-  name         varchar(45) NOT NULL,
+  id           SERIAL       NOT NULL PRIMARY KEY,
+  name         VARCHAR(45) NOT NULL,
   type         VARCHAR(45) NOT NULL,
-  client_owner int         NOT NULL,
+  client_owner int          NOT NULL,
   FOREIGN KEY (client_owner) REFERENCES company (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
@@ -48,8 +48,8 @@ CREATE TABLE waybill (
   status         VARCHAR(45) DEFAULT NULL,
   driver         int    NOT NULL,
   auto           int    NOT NULL,
-  date_departure date        DEFAULT NULL,
-  date_arrival   date        DEFAULT NULL,
+  date_departure date         DEFAULT NULL,
+  date_arrival   date         DEFAULT NULL,
   FOREIGN KEY (auto) REFERENCES auto (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -58,16 +58,16 @@ CREATE TABLE waybill (
     ON UPDATE NO ACTION
 );
 CREATE TABLE orders (
-  id            SERIAL      NOT NULL PRIMARY KEY,
-  name          varchar(45) NOT NULL,
-  client_id     int         NOT NULL,
+  id            SERIAL       NOT NULL PRIMARY KEY,
+  name          VARCHAR(45) NOT NULL,
+  client_id     int          NOT NULL,
   status        VARCHAR(45) NOT NULL DEFAULT 'new',
-  sender        INT         NOT NULL,
-  receiver      INT         NOT NULL,
-  date_accepted date                 DEFAULT NULL,
-  date_executed date                 DEFAULT NULL,
-  waybill_id    BIGINT      NOT NULL,
-  company_id    BIGINT      NOT NULL,
+  sender        INT          NOT NULL,
+  receiver      INT          NOT NULL,
+  date_accepted date                  DEFAULT NULL,
+  date_executed date                  DEFAULT NULL,
+  waybill_id    BIGINT       NOT NULL,
+  company_id    BIGINT       NOT NULL,
   FOREIGN KEY (company_id) REFERENCES company (id),
   FOREIGN KEY (waybill_id) REFERENCES waybill (id),
   FOREIGN KEY (sender) REFERENCES stock (id),
@@ -78,32 +78,32 @@ CREATE TABLE orders (
 );
 /*step 3*/
 CREATE TABLE consignment (
-  id       SERIAL      NOT NULL PRIMARY KEY,
-  name     varchar(45) NOT NULL,
-  order_id INT         NOT NULL,
+  id       SERIAL       NOT NULL PRIMARY KEY,
+  name     VARCHAR(45) NOT NULL,
+  order_id INT          NOT NULL,
   FOREIGN KEY (order_id) REFERENCES orders (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
 
 CREATE TABLE cancellation_act (
-  id        SERIAL NOT NULL PRIMARY KEY,
-  date      date   NOT NULL,
-  amount    int    NOT NULL,
-  price     int    NOT NULL,
+  id             SERIAL NOT NULL PRIMARY KEY,
+  date           date   NOT NULL,
+  amount         int    NOT NULL,
+  price          int    NOT NULL,
   consignment_id BIGINT NOT NULL,
-  FOREIGN KEY (consignment_id) REFERENCES consignment(id)
+  FOREIGN KEY (consignment_id) REFERENCES consignment (id)
 );
 
 CREATE TABLE product (
-  id                  SERIAL       NOT NULL PRIMARY KEY,
-  name                varchar(45) DEFAULT NULL,
+  id                  SERIAL        NOT NULL PRIMARY KEY,
+  name                VARCHAR(45) DEFAULT NULL,
   status              VARCHAR(45) DEFAULT NULL,
-  description         varchar(100) NOT NULL,
+  description         VARCHAR(100) NOT NULL,
   product_consignment INT,
-  cancellation_act    BIGINT       NOT NULL,
+  cancellation_act    BIGINT        NOT NULL,
   FOREIGN KEY (product_consignment) REFERENCES consignment (id),
-  FOREIGN KEY (cancellation_act) REFERENCES cancellation_act(id)
+  FOREIGN KEY (cancellation_act) REFERENCES cancellation_act (id)
 );
 
 CREATE TABLE route_list (
@@ -119,5 +119,12 @@ CREATE TABLE users (
   username  VARCHAR(20),
   email     VARCHAR(50),
   password  VARCHAR(100),
-  user_role VARCHAR(20)
+  user_role VARCHAR(20),
+  company   BIGINT DEFAULT NULL,
+  FOREIGN KEY (company) REFERENCES company(id)
+);
+CREATE TABLE tokens (
+  id          SERIAL NOT NULL PRIMARY KEY,
+  email       VARCHAR(50),
+  token_value VARCHAR(100)
 );
