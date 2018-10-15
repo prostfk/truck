@@ -8,7 +8,11 @@ import com.itechart.trucking.token.entity.Token;
 import com.itechart.trucking.token.repository.TokenRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.webmodule.model.util.EmailUtil;
+import com.itechart.trucking.webmodule.model.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -39,49 +43,24 @@ public class SysAdminController {
 
     @GetMapping(value = "/createAdmin")
     public String addNewAdmin() {
-        return "addAdminPageBySysAdmin";//input email to send link
+        return "addAdminBySysAdmin";//input email to send link
     }
 
-    @GetMapping(value = "/regAdmin")
-    public String startRegistration(@RequestParam String token, HttpServletRequest request) {
-        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        if (tokenByTokenValue != null) {
-            request.getSession().setAttribute("token", token);
-            return "registrationUserAdminPage";
-        } else {
-            return "redirect:/error";
-        }
-    }
-
-    @PostMapping(value = "/regAdmin")
+    @PostMapping(value = "/createAdmin")
     @ResponseBody
-    public Object processAdminRegistration(@Valid User user, @RequestParam String token, BindingResult bindingResult){
-        if (!bindingResult.hasErrors()){
-            Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-            if (user.getEmail().equals(tokenByTokenValue.getEmail())){
-                return userRepository.save(user);
-            }
+    public Object processAdminAndSendRequestToEmail(@RequestParam String email, @Value("${server.email}") String username, @Value("${server.password}") String password, HttpServletRequest request) {
+        String token = TokenUtil.generateToken(40);
+        try {
+            EmailUtil.sendMail(username, password, email, "Registration",
+                    String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this <a href=\"%s:%s/regAdmin?token=%s\">link</a> to finish </h4>", request.getServerName(), request.getServerPort(), token)
+            );
+            tokenRepository.save(new Token(email,token));
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
         }
-        Map<Object, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("error", "check data");
-        return objectObjectHashMap;
     }
-
-    @GetMapping(value = "/registerCompany")
-    public String registerCompany(){
-        return "registerCompany";
-    }
-
-    @PostMapping(value = "/registerCompany")
-    @ResponseBody
-    public Object processRegister(@Valid Company company, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            return "{message: 'check your data'}";
-        }
-        @Valid Company save = companyRepository.save(company);
-        return save;
-    }
-
 
 
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RegisterCompany</title>
+    <script src="/static/js/jquery.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+
+<span id="message-span"></span>
+<form class="form-signin" id="form">
+    <label for="name">Name</label>
+    <input type="text" id="name" class="form-control" placeholder="Company name">
+    <button class="btn btn-lg btn-primary btn-block" id="sub-button" type="button">Send</button>
+</form>
+
+<script>
+    document.getElementById('sub-button').onclick = function () {
+        let formData = new FormData();
+        formData.append("name", document.getElementById('name').value);
+        fetch('/registerCompany',{method: "POST", body: formData}).then(function (response) {
+            response.json().then(function (data) {
+                if (data.error===undefined){
+                    document.getElementById("form").style.display = "none";
+                    document.getElementById("message-span").innerText = "success";
+                }else{
+                    document.getElementById("message-span").innerText = data.error;
+                }
+
+            })
+        })
+    }
+</script>
+
+</body>
+</html>

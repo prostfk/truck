@@ -8,6 +8,8 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -79,6 +81,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/editUser/{id}")
+    @ResponseBody
     public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) {
         if (result.hasErrors()) {
             return "{error: 'Check your data'}";
@@ -86,5 +89,33 @@ public class AdminController {
         return userRepository.save(user);
     }
 
+
+    @GetMapping(value = "/registerCompany")
+    public String registerCompany(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByEmail(name);
+        if (userByEmail.getCompany()==null){
+            return "registerCompanyPage";
+        }else{
+            return "editCompanyPage";
+        }
+    }
+
+    @PostMapping(value = "/registerCompany")
+    public Object processRegisteringCompany(@Valid Company company, BindingResult bindingResult){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByEmail(name);
+        if (user.getCompany() == null) {
+            if (!bindingResult.hasErrors()){
+                @Valid Company save = companyRepository.save(company);
+                user.setCompany(save);
+                userRepository.save(user);
+            }
+        }else{
+            return HttpStatus.LOCKED;
+        }
+        return "redirect:/companyPage";
+
+    }
 
 }

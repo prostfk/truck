@@ -23,7 +23,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @OneToOne
-    @JoinColumn
+    @JoinColumn(name = "company")
     private Company company;
 
 

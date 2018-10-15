@@ -2,13 +2,11 @@ package com.itechart.trucking.token.entity;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
+@Table(name = "tokens")
 public class Token {
 
     @Id
@@ -17,4 +15,11 @@ public class Token {
     private String email;
     private String tokenValue;
 
+    public Token() {
+    }
+
+    public Token(String email, String tokenValue) {
+        this.email = email;
+        this.tokenValue = tokenValue;
+    }
 }
