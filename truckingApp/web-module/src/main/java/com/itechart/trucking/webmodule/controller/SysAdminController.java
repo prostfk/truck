@@ -48,13 +48,17 @@ public class SysAdminController {
 
     @PostMapping(value = "/createAdmin")
     @ResponseBody
-    public Object processAdminAndSendRequestToEmail(@RequestParam String email, @Value("${server.email}") String username, @Value("${server.password}") String password, HttpServletRequest request) {
+    public Object processAdminAndSendRequestToEmail(@RequestParam String email, @Value("${server.email}") String username, @Value("${server.password}") String password, @Value("${email.html}") String html, HttpServletRequest request) {
         String token = TokenUtil.generateToken(40);
         try {
             EmailUtil.sendMail(username, password, email, "Registration",
-                    String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this <a href=\"%s:%s/regAdmin?token=%s\">link</a> to finish </h4>", request.getServerName(), request.getServerPort(), token)
+                    String.format(html, request.getServerName(), request.getServerPort(), token)
             );
-            tokenRepository.save(new Token(email,token));
+            if (tokenRepository.findTokenByTokenValue(token)==null){
+                tokenRepository.save(new Token(email,token));
+            }else{
+                return HttpStatus.BAD_REQUEST;
+            }
             return HttpStatus.OK;
         } catch (Exception e) {
             e.printStackTrace();
