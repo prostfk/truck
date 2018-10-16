@@ -4,7 +4,7 @@
   "description": "React is a JavaScript library for building user interfaces.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node_modules/.bin/babel jsx/script.jsx -o js/script.js -w"
   },
   "author": "",
   "license": "ISC",
@@ -13,9 +13,11 @@
     "babel-preset-react": "^6.24.1"
   },
   "babel": {
-    "presets":["react"]
+    "presets": [
+      "react"
+    ]
   },
-  "scripts":{
-    "build":"node_modules/.bin/babel jsx/script.jsx -o js/script.js -w"
+  "dependencies": {
+    "react-router": "^4.3.1"
   }
 }

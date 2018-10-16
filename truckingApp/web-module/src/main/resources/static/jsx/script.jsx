@@ -1,22 +1,13 @@
-/*login page*/
-class LoginPage extends React.Component{
-    render(){
-        return <form className="form-signin">
-            <div id="loginicon">
-                <img id="icon" src="/static/img/login.png" alt=""></img>
-            </div>
-            <input type="email" id="inputEmail" className="form-control" placeholder="Логин" required="" autofocus=""></input>
-            <input type="password" id="inputPassword" className="form-control" placeholder="Пароль" required=""></input>
-            <button id="loginbutton" className="loginbutton btn btn-lg btn-primary btn-block" type="submit">Вход</button>
-        </form>
-    }
-}
-/*login page*/
+import {Router,hashHistory} from 'react-router';
+import {Link} from 'react-router';
+import LoginPage from 'pageAdmin.js';
 
-    ReactDOM.render(
-        <LoginPage />,
-        document.getElementById('container_body')
-    );
-
-
-
+ReactDOM.render(
+    <Provider store={store}>
+        <Router history={hashHistory}>
+            <Route path="/" component={LoginPage}/>
+            <Route path="/auth" component={LoginPage}/>
+        </Router>
+    </Provider>,
+    document.getElementById("LoginPage")
+);
