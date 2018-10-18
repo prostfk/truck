@@ -1,9 +1,8 @@
 package com.itechart.trucking.webmodule.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableWebMvc
@@ -20,4 +19,9 @@ public class WebConfig implements WebMvcConfigurer {
                         "classpath:/static/");
     }
 
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/rest/**").allowedOrigins("http://localhost:3000");
+    }
 }

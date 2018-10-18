@@ -8,13 +8,13 @@ class DispatcherCreateOrderPage extends React.Component{
                     <div class="col-md-6">
                         <h3>Основное</h3>
                         <small id="emailHelp" class="form-text text-muted">Компания- заказчик перевозки</small>
-                        <input type="text" class="form-control" id="order_owner" placeholder="Заказчик"></input>
+                        <input type="text" class="form-control" id="order_owner" placeholder="Заказчик"/>
 
                         <small id="emailHelp" class="form-text text-muted">Адрес Отправления</small>
-                        <input type="text" class="form-control" id="order_owner" placeholder="Откуда"></input>
+                        <input type="text" class="form-control" id="order_owner" placeholder="Откуда"/>
 
                         <small id="emailHelp" class="form-text text-muted">Адрес доставки</small>
-                        <input type="text" class="form-control" id="order_owner" placeholder="Куда"></input>
+                        <input type="text" class="form-control" id="order_owner" placeholder="Куда"/>
 
                         <div class="form-group">
                             <small id="emailHelp" class="form-text text-muted">Сатус заказа</small>
@@ -51,10 +51,10 @@ class DispatcherCreateOrderPage extends React.Component{
                             <option>BusCry 22-13</option>
                         </select>
                         <small id="emailHelp" class="form-text text-muted">Дата отправления</small>
-                        <input type="text" class="form-control" id="order_owner" placeholder="14.10.2015"></input>
+                        <input type="text" class="form-control" id="order_owner" placeholder="14.10.2015"/>
 
                         <small id="emailHelp" class="form-text text-muted">Дата прибытия</small>
-                        <input type="text" class="form-control" id="order_owner" placeholder="15.10.2016"></input>
+                        <input type="text" class="form-control" id="order_owner" placeholder="15.10.2016"/>
 
                     </div>
                 </div>
@@ -63,7 +63,7 @@ class DispatcherCreateOrderPage extends React.Component{
                 <h3>Товарная патрия</h3>
                 <div class="row">
                     <di class="col-md-3">
-                        <input type="text" class="form-control" placeholder="Наименование товара"></input>
+                        <input type="text" class="form-control" placeholder="Наименование товара"/>
                     </di>
                     <di class="col-md-3">
                         <select class="custom-select">
@@ -74,7 +74,7 @@ class DispatcherCreateOrderPage extends React.Component{
                         </select>
                     </di>
                     <di class="col-md-3">
-                        <input type="text" class="form-control" placeholder="Описание, количество.."></input>
+                        <input type="text" class="form-control" placeholder="Описание, количество.."/>
                     </di>
                     <di class="col-md-3">
                         <button type="button" class="btn btn-info btn_fullsize">Добавить</button>

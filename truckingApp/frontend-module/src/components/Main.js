@@ -8,6 +8,7 @@ import LoginPage from './pageLogin/pageLogin';
 import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrderPage";
 import AdminPage from "./pageadmin/pageAdmin";
 import SysAdminPage from "./pageSysAdmin/pageSysAdmin";
+import pageUserLogin from "./pageUserLogin/pageUserLogin";
 
 class MainController extends React.Component{
 	constructor(props) {
@@ -20,7 +21,7 @@ class MainController extends React.Component{
 	  return (
           <Router>
               <div>
-                  <Route path="/login" component={LoginPage} />
+                  <Route path="/login" component={pageUserLogin} />
                   <Route path="/systemadmin" component={SysAdminPage} />
                   <Route path="/admin" component={AdminPage} />
                   <Route path="/dispatcher/createorder" component={DispatcherCreateOrderPage} />
