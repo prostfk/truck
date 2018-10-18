@@ -10,11 +10,13 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,17 +59,19 @@ public class RestApiController {
     }
 
     @PostMapping(value = "/login")
-    public Object login(User user, HttpServletRequest request) throws JSONException {
+    public Object login(@ModelAttribute User user, HttpServletRequest request) throws JSONException {
         User base = userRepository.findUserByEmail(user.getEmail());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        System.out.println(user);
+        System.out.println(base);
         if (user.getEmail().equals(base.getEmail()) && user.getPassword().equals(base.getPassword())) {
             String token = TokenUtil.generateToken(50);
             request.getSession().setAttribute("token", token);
-            return new Token(user.getEmail(), token);
+            return new Token(user.getEmail(), token).toString();
         } else {
             JSONObject json = new JSONObject();
             json.put("error", "Incorrect data");
-            return json;
+            return json.toString();
         }
     }
 

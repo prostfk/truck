@@ -14,9 +14,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 5,max = 20)
+    @Size(min = 5, max = 20)
     private String username;
-    @Size(min = 5,max = 100)
+    @Size(min = 5, max = 100)
     private String password;
     @Size(min = 3, max = 50)
     private String email;
@@ -26,5 +26,19 @@ public class User {
     @JoinColumn(name = "company")
     private Company company;
 
+    public User() {
+    }
 
+    public User(@Size(min = 3, max = 50) String email, @Size(min = 5, max = 100) String password) {
+        this.password = password;
+        this.email = email;
+    }
+
+    public User(@Size(min = 5, max = 20) String username, @Size(min = 5, max = 100) String password, @Size(min = 3, max = 50) String email, UserRole userRole, Company company) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.userRole = userRole;
+        this.company = company;
+    }
 }

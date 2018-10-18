@@ -50,10 +50,10 @@ class pageUserLogin extends Component {
         let formData = new FormData();
         formData.append("email", email);
         formData.append("password", password);
-        console.log(this.state.email + " " + this.state.password);
-        axios.post('http://localhost:8080/rest/login', {formData}).then(response => {
+        console.log(formData.get('password'));
+        fetch('http://localhost:8080/rest/login', {method: "POST",body: formData}).then(response => {
             document.getElementById('login-form').style.display = 'none';
-            console.log(response);
+            response.json().then(data => console.log(data))
         }, err => console.log(err))
     }
 
