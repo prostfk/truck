@@ -14,16 +14,15 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Controller
-@Secured("ROLE_ADMIN")
+/*@Secured("ROLE_ADMIN")*/
+@CrossOrigin
+@RestController
+@RequestMapping(value = "/api")
 public class AdminController {
 
     @Autowired
@@ -35,7 +34,7 @@ public class AdminController {
     @Autowired
     private StockRepository stockRepository;
 
-    @GetMapping(value = "/addUser")
+   /* @GetMapping(value = "/addUser")
     public String addUser() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByEmail(name);
@@ -43,7 +42,7 @@ public class AdminController {
             return "redirect:/error";
         }
         return "addUserByAdmin";
-    }
+    }*/
 
     @GetMapping(value = "/users")
     @ResponseBody
@@ -56,8 +55,9 @@ public class AdminController {
     @GetMapping(value = "/stocks")
     @ResponseBody
     public List<Stock> stocks() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByEmail(name);
+/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
+        String name = "admin";
+        User userByEmail = userRepository.findUserByUsername("admin");
         return stockRepository.findStocksByCompany(userByEmail.getCompany());
     }
 
