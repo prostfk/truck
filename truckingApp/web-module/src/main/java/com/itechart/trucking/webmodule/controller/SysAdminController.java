@@ -58,7 +58,27 @@ public class SysAdminController {
     //list of companys for sys admin
     @GetMapping(value = "/companys")
     public List<Company> gelallcompanies(){
-        return companyRepository.findAll();
+        return companyRepository.findAllByOrderById();
+    }
+
+    @RequestMapping(value = "/companys/changestatus",method = RequestMethod.POST)
+    public boolean changeactivestatus(@RequestBody String companyId){
+        Long compId = Long.parseLong(companyId);
+        if(companyId==null) return false;
+        Company company = companyRepository.findCompanyById(compId);
+        int isActive = company.getActive();
+        if(isActive==1){
+            company.setActive(0);
+        } else company.setActive(1);
+        companyRepository.save(company);
+        return true;
+    }
+    @RequestMapping(value = "/companys/{companyId}",method = RequestMethod.GET)
+    public Company getCompanyById(@PathVariable String companyId){
+        System.out.println(companyId);
+        Long compId = Long.parseLong(companyId);
+        if(companyId==null) return null;
+        return companyRepository.findCompanyById(compId);
     }
 
 

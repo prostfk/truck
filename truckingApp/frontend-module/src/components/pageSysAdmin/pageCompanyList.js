@@ -1,21 +1,39 @@
 import React, { Component } from "react";
 import { Link } from 'react-router-dom'
-import ReactDOM from "react";
+/*import ReactDOM from "react";*/
 
 class SysAdminPage extends React.Component{
     constructor(props) {
         super(props);
         this.getCompanyList = this.getCompanyList.bind(this);
+        this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.state = {
             companies:[]
         };
     }
+    /*update row in companies row's after change status of company*/
+    forceUpdateHandler(companyId){
+        var refthis=this;
+        fetch('http://localhost:8080/api/companys/'+companyId, {method: "get"}).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            refthis.state.companies.find((element, index, array)=>{
+                if(element.id==companyId){
+                    var newcomps = refthis.state.companies;
+                    newcomps[index] = result;
+                    refthis.setState({companies:newcomps});
+                }
+            });
+        })
+    };
+    /*auto run when page init*/
     componentDidMount(){
         this.getCompanyList().then(data => {
             this.setState({companies:data});
         });
-
     }
+
+    /*get all company list*/
     getCompanyList() {
         var myres = fetch('http://localhost:8080/api/companys', {method: "get"}).then(function (response) {
             return response.json();
@@ -24,23 +42,39 @@ class SysAdminPage extends React.Component{
         })
         return myres;
     }
+
+    /*render row of table ( calls from html ) */
     rendertable(company){
         if(!company) return;
-        const isActive =  company.active?"Active":"Locked";
+        const buttonLabel = "Вкл/Выкл";
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{company.id}</div>
             <div className={"col-md-5"}>{company.name}</div>
-            <div className={"col-md-3"}>{isActive}</div>
+            <div className={"col-md-3"} id={"companystatus_"+company.id}>{company.active?"Активна":"Приостановлена"}</div>
             <div className={"col-md-3"}>
-                <Link to={`/edit/${company.id}`} activeClassName="active">Редактировать</Link>
-            </div>
+{/*                <Link to={`/companylist/${company.id}`} activeClassName="active">{buttonLabel}</Link>*/}
+                <a onClick={this.changeCompanyStatus.bind(this,company.id)} className={"table_button bg-secondary text-white"}>{buttonLabel}</a>
+           </div>
         </div>
     }
 
+    /*button changestatus handler*/
+    changeCompanyStatus(compId,event){
+        var ref = this;
+        var myres = fetch('http://localhost:8080/api/companys/changestatus', {method: "POST",body: compId}).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            if(result==true) {
+                ref.forceUpdateHandler(compId);
+            }
+            return result;
+        }).catch((err)=>{
+            console.log(err);
+        });
+
+    }
+
     render(){
-        /*this.state.companies.map((company) => {
-            this.rendertable(company);
-        });*/
         return <div class="row">
             <div class="offset-md-1 col-md-6 superuserform_companylist">
                 <div className="row table_header">
