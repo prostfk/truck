@@ -13,8 +13,6 @@ import pageUserLogin from "./pageUserLogin/pageUserLogin";
 class MainController extends React.Component{
 	constructor(props) {
 	  super(props);
-	  this.state = {ponged: 'Not Ponged'}
-/*	  this.ping = this.ping.bind(this);*/
 	}
 
 	render() {

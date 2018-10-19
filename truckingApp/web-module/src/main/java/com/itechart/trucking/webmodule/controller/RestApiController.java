@@ -23,7 +23,7 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/rest")
-public class RestApiController {
+public class  RestApiController {
 
     @Autowired
     private UserRepository userRepository;
