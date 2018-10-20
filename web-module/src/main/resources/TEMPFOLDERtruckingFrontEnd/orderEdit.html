@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+		<script src="js/jquery.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="css/main.css">
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+
+	<title>Диспетчер</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Trucking</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Список компаний <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Новая компания</a>
+        </li>
+      </ul>
+      <li class="navbar-text">
+         <a class="nav-link" href="#">Выйти</a>
+      </li>
+    </div>
+  </nav>
+
+<div class="row">
+    <div class="offset-md-2 col-md-8 form_clear">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Основное</h3>
+                <small id="emailHelp" class="form-text text-muted">Компания- заказчик перевозки</small>
+                <input type="text" class="form-control" id="order_owner" placeholder="Заказчик">
+
+                <small id="emailHelp" class="form-text text-muted">Адрес Отправления</small>
+                <input type="text" class="form-control" id="order_owner" placeholder="Откуда">
+
+                <small id="emailHelp" class="form-text text-muted">Адрес доставки</small>
+                <input type="text" class="form-control" id="order_owner" placeholder="Куда">
+
+                <div class="form-group">
+                    <small id="emailHelp" class="form-text text-muted">Сатус заказа</small>
+                    <select class="form-control" id="exampleSelect1">
+                        <option>Принят</option>
+                        <option>Отклонен</option>
+                        <option>Выполен</option>
+                        <option>Не выполнен</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>ТТН</h3>
+
+                <small id="emailHelp" class="form-text text-muted">Статус</small>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option selected>Оформлен</option>
+                    <option>Проверка завершена</option>
+                    <option>Доставлен</option>
+                </select>
+
+                <small id="emailHelp" class="form-text text-muted">Водитель</small>
+
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option selected>Иванов</option>
+                    <option>Петров</option>
+                    <option>Тучкин</option>
+                </select>
+
+                <small id="emailHelp" class="form-text text-muted">Автомобиль</small>
+                <select class="form-control" id="exampleFormControlSelect1">
+                    <option selected>Volvo 10</option>
+                    <option>BMW 44-10</option>
+                    <option>BusCry 22-13</option>
+                </select>
+                <small id="emailHelp" class="form-text text-muted">Дата отправления</small>
+                <input type="text" class="form-control" id="order_owner" placeholder="14.10.2015">
+
+                <small id="emailHelp" class="form-text text-muted">Дата прибытия</small>
+                <input type="text" class="form-control" id="order_owner" placeholder="15.10.2016">
+
+            </div>
+        </div>
+    </div>
+    <div class="offset-md-2 col-md-8 form_clear">
+        <h3>Товарная патрия</h3>
+        <div class="row">
+            <di class="col-md-3">
+                <input type="text" class="form-control" placeholder="Наименование товара">
+            </di>
+            <di class="col-md-3">
+                <select class="custom-select">
+                    <option selected>Принят</option>
+                    <option value="1">Проверен</option>
+                    <option value="2">Доставлен</option>
+                    <option value="3">Утерян</option>
+                </select>
+            </di>
+            <di class="col-md-3">
+                <input type="text" class="form-control" placeholder="Описание, количество..">
+            </di>
+            <di class="col-md-3">
+                <button type="button" class="btn btn-info btn_fullsize">Добавить</button>
+            </di>
+        </div>
+
+        <div class="row table_row">
+            <div class="col-md-3">Процессор Intel</div>
+            <div class="col-md-3">Принят</div>
+            <div class="col-md-3">100шт</div>
+            <div class="col-md-3"><a href="" class="btn-sm btn-dark">Удалить</a></div>
+        </div>
+    </div>
+
+    <div class="offset-md-2 col-md-8 form_clear">
+    <button class="btn btn-success btn_fullsize">Сохранить</button>
+    </div>
+</div>
+
+<!--
+<div class="row">
+    <div class="offset-md-1 col-md-8 form_block">
+        <h3>Активные заказы</h3>
+
+        <table class="table">
+            <thead class="thead">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Название</th>
+                <th scope="col">Клиент</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Откуда</th>
+                <th scope="col">Куда</th>
+                <th scope="col">Дата принятия</th>
+                <th scope="col">ТТН</th>
+                <th scope="col">Путевой лист</th>
+                <th scope="col">Заказ</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Перевозка процессоров</td>
+                <td>IB SOFT</td>
+                <td>Принят</td>
+                <td>Склад Рокоссовского</td>
+                <td>Склад Кульмана</td>
+                <td>14.02.2015</td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="edit">редактировать</a></td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Перевозка процессоров</td>
+                <td>IB SOFT</td>
+                <td>Принят</td>
+                <td>Склад Рокоссовского</td>
+                <td>Склад Кульмана</td>
+                <td>14.02.2015</td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="edit">редактировать</a></td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td>Перевозка процессоров</td>
+                <td>IB SOFT</td>
+                <td>Принят</td>
+                <td>Склад Рокоссовского</td>
+                <td>Склад Кульмана</td>
+                <td>14.02.2015</td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="edit">редактировать</a></td>
+            </tr>
+            <tr>
+                <th scope="row">4</th>
+                <td>Перевозка процессоров</td>
+                <td>IB SOFT</td>
+                <td>Принят</td>
+                <td>Склад Рокоссовского</td>
+                <td>Склад Кульмана</td>
+                <td>14.02.2015</td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="">Изменить</a></td>
+                <td><a href="edit">редактировать</a></td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+-->
+
+<!--<div class="offset-md-1 col-md-4 form_clear">
+    <h3>Путевой лист</h3>
+    <small id="emailHelp" class="form-text text-muted">Промежуточная точка</small>
+    <input type="text" class="form-control" id="order_owner" placeholder="Адрес">
+    <button type="button" class="btn btn btn-info">Добавить</button>
+
+    <table class="table">
+        <thead class="thead">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Пункт</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Гомель</td>
+            <td><a href="edit">Удалить</a></td>
+        </tr>
+        <tr>
+            <th scope="row">2</th>
+            <td>Минск</td>
+            <td><a href="edit">Удалить</a></td>
+        </tr>
+        <tr>
+            <th scope="row">3</th>
+            <td>Витебск</td>
+            <td><a href="edit">Удалить</a></td>
+        </tr>
+        <tr>
+            <th scope="row">4</th>
+            <td>Санкт-петербург</td>
+            <td><a href="edit">Удалить</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>-->
+</body>
+</html>
