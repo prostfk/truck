@@ -43,6 +43,25 @@ public class AdminController {
         }
         return "addUserByAdmin";
     }*/
+   @GetMapping(value = "/stocks")
+   @ResponseBody
+   public List<Stock> stocks() {
+       /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
+       String name = "admin";
+       User userByEmail = userRepository.findUserByUsername("admin");
+       return stockRepository.findStocksByCompany(userByEmail.getCompany());
+   }
+
+    @RequestMapping(value = "/stocks",method = RequestMethod.POST)
+    public boolean createStock(@ModelAttribute Stock stock){
+        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
+        String name = "admin";
+        User userByEmail = userRepository.findUserByUsername("admin");
+        stock.setCompany(userByEmail.getCompany());
+        stockRepository.save(stock);
+        return true;
+    }
+
 
     @GetMapping(value = "/users")
     @ResponseBody
@@ -52,14 +71,6 @@ public class AdminController {
         return userRepository.findUsersByCompany(userByEmail.getCompany());
     }
 
-    @GetMapping(value = "/stocks")
-    @ResponseBody
-    public List<Stock> stocks() {
-/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
-        String name = "admin";
-        User userByEmail = userRepository.findUserByUsername("admin");
-        return stockRepository.findStocksByCompany(userByEmail.getCompany());
-    }
 
     @GetMapping(value = "/editCompany")
     public String editCompany() {

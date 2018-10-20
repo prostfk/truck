@@ -6,10 +6,11 @@ import { Route, Link } from 'react-router';
 
 import LoginPage from './pageLogin/pageLogin';
 import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrderPage";
-import AdminPage from "./pageadmin/pageAdmin";
+import AdminPage from "./pageAdmin/pageAdmin";
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import EditCompanyPage from "./pageSysAdmin/pageEditCompany";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
+import PageStockList from "./pageAdmin/pageStockList";
 
 class MainController extends React.Component{
 	constructor(props) {
@@ -23,6 +24,7 @@ class MainController extends React.Component{
                   <Route path="/login" component={pageUserLogin} />
                   <Route exact path="/companylist" component={CompanyListPage} /> {/*list of companies for sysadmin*/}
                   <Route exact path="/companylist/:companyId" component={EditCompanyPage} /> {/*edit company for sysadmin*/}
+                  <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
                   <Route path="/admin" component={AdminPage} />
                   <Route path="/dispatcher/createorder" component={DispatcherCreateOrderPage} />
               </div>
