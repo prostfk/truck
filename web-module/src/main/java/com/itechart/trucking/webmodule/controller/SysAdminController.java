@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,8 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
-@Secured("ROLE_SYS_ADMIN")
+
+/*@Secured("ROLE_SYS_ADMIN")	*/
+@CrossOrigin
+@RestController
+@RequestMapping(value = "/api")
 public class SysAdminController {
 
     @Autowired
@@ -40,11 +44,6 @@ public class SysAdminController {
 
     @Autowired
     private CompanyRepository companyRepository;
-
-    @GetMapping(value = "/createAdmin")
-    public String addNewAdmin() {
-        return "addAdminBySysAdmin";//input email to send link
-    }
 
     @PostMapping(value = "/createAdmin")
     @ResponseBody
@@ -62,6 +61,27 @@ public class SysAdminController {
         }
     }
 
-
-
+    @GetMapping(value = "/companys")
+    public List<Company> gelallcompanies(){
+        return companyRepository.findAllByOrderById();
+    }
+    @RequestMapping(value = "/companys/changestatus",method = RequestMethod.POST)
+    public boolean changeactivestatus(@RequestBody String companyId){
+        Long compId = Long.parseLong(companyId);
+        if(companyId==null) return false;
+        Company company = companyRepository.findCompanyById(compId);
+        int isActive = company.getActive();
+        if(isActive==1){
+            company.setActive(0);
+        } else company.setActive(1);
+        companyRepository.save(company);
+        return true;
+    }
+    @RequestMapping(value = "/companys/{companyId}",method = RequestMethod.GET)
+    public Company getCompanyById(@PathVariable String companyId) {
+        System.out.println(companyId);
+        Long compId = Long.parseLong(companyId);
+        if (companyId == null) return null;
+        return companyRepository.findCompanyById(compId);
+    }
 }

@@ -18,7 +18,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
         String header = httpServletRequest.getHeader("Auth-token");
-        httpServletRequest.getHeaderNames().asIterator().forEachRemaining(System.out::println);
+        //httpServletRequest.getHeaderNames().asIterator().forEachRemaining(System.out::println);
 
         if (header == null) {
             throw new RuntimeException("Token is missing");

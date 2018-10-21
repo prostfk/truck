@@ -13,6 +13,7 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String address;
+    private String name;
     @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
