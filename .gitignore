@@ -23,6 +23,7 @@
 */target/**
 */node-modules/**
 */logging/**
+*.properties
 
 ### NetBeans ###
 /nbproject/private/
