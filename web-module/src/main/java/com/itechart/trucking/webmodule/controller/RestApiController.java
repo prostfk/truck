@@ -4,10 +4,13 @@ import com.itechart.trucking.token.entity.Token;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.webmodule.config.JwtGen;
 import com.itechart.trucking.webmodule.model.util.TokenUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.MultiValueMap;
@@ -29,11 +32,38 @@ public class RestApiController {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private JwtGen jwtGen;
 
     @GetMapping(value = "/users")
-    public Object getUsers(){
+    public Object getUsers() {
         return userRepository.findAll();
+    }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @GetMapping(value = "/index")
+    public HashMap<String, Object> index() {
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("message", "Authenticated and authorised successfully !");
+        map.put("result", "success!");
+        return map;
+    }
+
+    @PostMapping(value = "/token")
+    public String getToken(@ModelAttribute final User user) throws JSONException {
+        JSONObject json = new JSONObject();
+        String generate = jwtGen.generate(user);
+        if (generate == null) {
+            json.put("status", 404);
+            json.put("message", "Invalid data");
+        } else {
+            json.put("status", 200);
+            json.put("token", generate);
+        }
+        return json.toString();
+
     }
 
 
@@ -64,22 +94,22 @@ public class RestApiController {
         return map;
     }
 
-    @PostMapping(value = "/login")
-    public Object login(@ModelAttribute User user, HttpServletRequest request) throws JSONException {
-        User base = userRepository.findUserByEmail(user.getEmail());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println(user);
-        System.out.println(base);
-        if (user.getEmail().equals(base.getEmail()) && user.getPassword().equals(base.getPassword())) {
-            String token = TokenUtil.generateToken(50);
-            request.getSession().setAttribute("token", token);
-            return new Token(user.getEmail(), token).toString();
-        } else {
-            JSONObject json = new JSONObject();
-            json.put("error", "Incorrect data");
-            return json.toString();
-        }
-    }
+//    @PostMapping(value = "/login")
+//    public Object login(@ModelAttribute User user, HttpServletRequest request) throws JSONException {
+//        User base = userRepository.findUserByEmail(user.getEmail());
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        System.out.println(user);
+//        System.out.println(base);
+//        if (user.getEmail().equals(base.getEmail()) && user.getPassword().equals(base.getPassword())) {
+//            String token = TokenUtil.generateToken(50);
+//            request.getSession().setAttribute("token", token);
+//            return new Token(user.getEmail(), token).toString();
+//        } else {
+//            JSONObject json = new JSONObject();
+//            json.put("error", "Incorrect data");
+//            return json.toString();
+//        }
+//    }
 
     @GetMapping(value = "/user")
     public User f() {

@@ -22,8 +22,8 @@ import java.util.Map;
 @Controller
 public class AnonController {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -41,27 +41,27 @@ public class AnonController {
         }
     }
 
-    @PostMapping(value = "/regAdmin")
-    @ResponseBody
-    public Object processAdminRegistration(@Valid User user, @RequestParam String token, BindingResult bindingResult) {
-        user.setUserRole(UserRole.ROLE_ADMIN);
-        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        user.setEmail(tokenByTokenValue.getEmail());
-        if (!bindingResult.hasErrors()) {
-            System.out.println("OK");
-            if (user.getEmail().equals(tokenByTokenValue.getEmail())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-                @Valid User save = userRepository.save(user);
-                if (save!=null){
-                    tokenRepository.delete(tokenByTokenValue);
-                }
-            }
-        }
-        System.out.println("ERROR");
-        Map<Object, Object> objectObjectHashMap = new HashMap<>();
-        objectObjectHashMap.put("error", "check data");
-        return objectObjectHashMap;
-    }
+//    @PostMapping(value = "/regAdmin")
+//    @ResponseBody
+//    public Object processAdminRegistration(@Valid User user, @RequestParam String token, BindingResult bindingResult) {
+//        user.setUserRole(UserRole.ROLE_ADMIN);
+//        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
+//        user.setEmail(tokenByTokenValue.getEmail());
+//        if (!bindingResult.hasErrors()) {
+//            System.out.println("OK");
+//            if (user.getEmail().equals(tokenByTokenValue.getEmail())) {
+//                user.setPassword(passwordEncoder.encode(user.getPassword()));
+//                @Valid User save = userRepository.save(user);
+//                if (save!=null){
+//                    tokenRepository.delete(tokenByTokenValue);
+//                }
+//            }
+//        }
+//        System.out.println("ERROR");
+//        Map<Object, Object> objectObjectHashMap = new HashMap<>();
+//        objectObjectHashMap.put("error", "check data");
+//        return objectObjectHashMap;
+//    }
 
 
 }

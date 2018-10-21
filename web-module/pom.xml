@@ -27,7 +27,17 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+
 	<dependencies>
+		<!--CORE MODULE-->
+		<dependency>
+			<groupId>com.itechart</groupId>
+			<artifactId>core-module</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<!--CORE MODULE-->
+
+		<!--SPRING COMPONENTS-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -43,14 +53,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.itechart</groupId>
-			<artifactId>core-module</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		<!--SPRING COMPONENTS-->
+
+		<!--HIBERNATE-->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -61,19 +73,15 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version> 5.2.1.Final</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-		</dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
+		<!--HIBERNATE-->
 
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-        </dependency>
+		<!--JWT-->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.6.0</version>
+		</dependency>
+		<!--JWT-->
 
 
 		<!--EXCEL-->
@@ -89,16 +97,34 @@
 		</dependency>
 		<!--EXCEL-->
 
+		<!--UTILS-->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+		<!--UTILS-->
+
+		<!--EMAIL-->
 		<dependency>
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.5</version>
 		</dependency>
+		<!--EMAIL-->
+
+		<!--JSON-->
         <dependency>
             <groupId>com.vaadin.external.google</groupId>
             <artifactId>android-json</artifactId>
             <version>0.0.20131108.vaadin1</version>
         </dependency>
+		<!--JSON-->
 
     </dependencies>
 
