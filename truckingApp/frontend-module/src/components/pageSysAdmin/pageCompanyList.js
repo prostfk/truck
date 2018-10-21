@@ -7,8 +7,11 @@ class SysAdminPage extends React.Component{
         super(props);
         this.getCompanyList = this.getCompanyList.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
+        this.sendref = this.sendref.bind(this);
+        this.changeMail = this.changeMail.bind(this);
         this.state = {
-            companies:[]
+            companies:[],
+            inputmail:""
         };
     }
     /*update row in companies row's after change status of company*/
@@ -26,6 +29,25 @@ class SysAdminPage extends React.Component{
             });
         })
     };
+    changeMail(event){
+        this.setState({
+            inputmail: event.target.value
+        })
+    }
+    sendref(){
+        let formData = new FormData();
+        let value = this.state.inputmail;
+        formData.append("email", value);
+        fetch('http://localhost:8080/createAdmin', {method: "POST", body: formData}).then(function (response) {
+            response.json().then(function (data) {
+                if (data.error===undefined){
+                    document.getElementById('emaillabel').innerText = 'Check your email';
+                }else{
+                    document.getElementById('emaillabel').innerText = 'check you data';
+                }
+            })
+        })
+    }
     /*auto run when page init*/
     componentDidMount(){
         this.getCompanyList().then(data => {
@@ -105,9 +127,10 @@ class SysAdminPage extends React.Component{
                 <form class="superuserform_newaccountform grey_form">
                     <h5>Регистрация новой компании</h5>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="inputEmail" placeholder="newUser@mail.com" required=""></input>
+                        <label htmlFor="id" id="emaillabel">Email</label>
+                        <input onChange={this.changeMail} type="email" class="form-control"  id="email" placeholder="newUser@mail.com" required=""></input>
                     </div>
-                    <button class="btn btn-success btn_fullsize">Отправить</button>
+                    <a onClick={this.sendref} class="btn btn-success btn_fullsize">Отправить</a>
                 </form>
             </div>
 

@@ -6,7 +6,6 @@ import { Route, Link } from 'react-router';
 
 import LoginPage from './pageLogin/pageLogin';
 import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrderPage";
-import AdminPage from "./pageAdmin/pageAdmin";
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import EditCompanyPage from "./pageSysAdmin/pageEditCompany";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
@@ -25,7 +24,6 @@ class MainController extends React.Component{
                   <Route exact path="/companylist" component={CompanyListPage} /> {/*list of companies for sysadmin*/}
                   <Route exact path="/companylist/:companyId" component={EditCompanyPage} /> {/*edit company for sysadmin*/}
                   <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
-                  <Route path="/admin" component={AdminPage} />
                   <Route path="/dispatcher/createorder" component={DispatcherCreateOrderPage} />
               </div>
           </Router>
