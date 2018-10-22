@@ -18,15 +18,15 @@ public class JwtGen {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String generate(User jwtUser) {
+    public String generate(User user) {
 
-        User base = userRepository.findUserByIdAndUsername(jwtUser.getId(), jwtUser.getUsername());
-        if (base == null || jwtUser.getPassword() == null || !passwordEncoder.matches(jwtUser.getPassword(), base.getPassword())) {
+        User base = userRepository.findUserByUsername(user.getUsername());
+        if (base == null || user.getPassword() == null || !passwordEncoder.matches(user.getPassword(), base.getPassword())) {
             return null;
         }
         Claims claims = Jwts.claims()
-                .setSubject(base.getUserRole().name());
-        claims.put("userId", String.valueOf(base.getId()));
+                .setSubject(base.getId().toString());
+        claims.put("username", String.valueOf(base.getUsername()));
         claims.put("role", base.getUserRole());
 
 
