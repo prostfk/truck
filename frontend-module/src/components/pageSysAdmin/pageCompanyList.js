@@ -1,5 +1,4 @@
-import React, { Component } from "react";
-import { Link } from 'react-router-dom'
+import React from "react";
 /*import ReactDOM from "react";*/
 
 class SysAdminPage extends React.Component{
@@ -17,7 +16,7 @@ class SysAdminPage extends React.Component{
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId){
         const refThis = this;
-        fetch('http://localhost:8080/api/companys/'+companyId, {method: "get"}).then(function (response) {
+        fetch('http://localhost:8080/api/companies/'+companyId, {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {
             refThis.state.companies.find((element, index, array)=>{
@@ -57,12 +56,12 @@ class SysAdminPage extends React.Component{
 
     /*get all company list*/
     getCompanyList() {
-        const myres = fetch('http://localhost:8080/api/companys', {method: "get"}).then(function (response) {
+        const myRes = fetch('http://localhost:8080/api/companies', {method: "get",headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
         });
-        return myres;
+        return myRes;
     }
 
     /*render row of table ( calls from html ) */
@@ -83,13 +82,13 @@ class SysAdminPage extends React.Component{
     /*button changestatus handler*/
     changeCompanyStatus(compId,event){
         const ref = this;
-        const myres = fetch('http://localhost:8080/api/companys/changestatus', {
+        const myres = fetch('http://localhost:8080/api/companies/changeStatus', {
             method: "POST",
             body: compId
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            if (result == true) {
+            if (result === true) {
                 ref.forceUpdateHandler(compId);
             }
             return result;
