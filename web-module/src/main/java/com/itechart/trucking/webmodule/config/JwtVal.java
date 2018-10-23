@@ -5,6 +5,7 @@ import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.webmodule.controller.MainController;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,22 +22,19 @@ public class JwtVal {
 
         User jwtUser = null;
         try {
-            String[] split = token.split("\\.");
-            Base64 base64 = new Base64();
-            byte[] decode = base64.decode(split[1]);
-            String s = new String(decode);
-            System.err.println(s);
-            jwtUser = initUserFromToken(s);
+            Claims body = Jwts.parser().setSigningKey("truck-secret-key").parseClaimsJws(token).getBody();
+            if (body != null) {
+                String username = body.get("username", String.class);
+                UserRole role = UserRole.valueOf(body.get("role", String.class));
+                jwtUser = new User(username, "dto-dto", "dto", role, null, null);
+            }
+        } catch (SignatureException e) {
+            LOGGER.warn("Someone tried to change token in header. Token value: " + token);
         } catch (Exception e) {
-            LOGGER.warn("Exception in token validation(Maybe, no such user): e");
+            LOGGER.warn("Exception in token validation(Maybe, no such user): ", e);
         }
         return jwtUser;
     }
 
-    private User initUserFromToken(String token) throws JSONException {
-        JSONObject j = new JSONObject(token);
-        return new User(j.get("username").toString(), "dto", "dto", UserRole.valueOf(j.get("role").toString()), null, null);
-
-    }
 
 }

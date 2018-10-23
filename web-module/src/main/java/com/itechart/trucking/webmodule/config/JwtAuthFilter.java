@@ -26,7 +26,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
             LOGGER.warn("No token in header");
             return null;
         }
-        String authenticationToken = header.substring(6);
+        String authenticationToken = header;//header.substring(6);
         JwtAuthToken token = new JwtAuthToken(authenticationToken);
         return getAuthenticationManager().authenticate(token);
     }

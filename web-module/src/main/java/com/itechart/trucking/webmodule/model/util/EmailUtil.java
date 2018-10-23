@@ -27,7 +27,7 @@ public class EmailUtil {
         msg.setHeader("X-SES-CONFIGURATION-SET", "ConfigSet");
         Transport transport = session.getTransport();
         try {
-            transport.connect("smtp.mail.ru", username, password);
+            transport.connect("smtp.gmail.com", username, password);
             transport.sendMessage(msg, msg.getAllRecipients());
         } finally {
             transport.close();

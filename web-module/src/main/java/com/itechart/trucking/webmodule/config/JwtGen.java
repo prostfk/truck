@@ -32,7 +32,7 @@ public class JwtGen {
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, "fenerbahce")
+                .signWith(SignatureAlgorithm.HS512, "truck-secret-key")
                 .compact();
     }
 

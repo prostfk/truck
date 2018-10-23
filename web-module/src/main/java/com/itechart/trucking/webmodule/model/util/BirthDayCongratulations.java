@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -27,8 +30,13 @@ public class BirthDayCongratulations {
     public void congratulate(){
         new Thread(() -> {
             while (true) {
-                java.util.Date date = new java.util.Date();
-                List<User> usersByBirthDay = userRepository.findUsersByBirthDay(new Date(date.getTime()));
+                Date date = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                SimpleDateFormat df = new SimpleDateFormat("MM-dd");
+                String dateString = String.format("%%-%s", df.format(date));
+                System.out.println(dateString);
+                List<User> usersByBirthDay = Collections.emptyList();
                 usersByBirthDay.forEach(user -> {
                     try {
                         EmailUtil.sendMail(email, password, user.getEmail(), "Happy birthday",
