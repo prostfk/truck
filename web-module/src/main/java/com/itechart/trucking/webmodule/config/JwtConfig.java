@@ -13,7 +13,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @EnableGlobalMethodSecurity(prePostEnabled=true)
@@ -22,14 +26,14 @@ import java.util.Collections;
 public class JwtConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private JwtAuthProvider autheticationProvider;
+    private JwtAuthProvider authenticationProvider;
 
     @Autowired
     private JwtAuthenticationEntryPoint entryPoint;
 
     @Bean
     public AuthenticationManager authenticationManager() {
-        return new ProviderManager(Collections.singletonList(autheticationProvider));
+        return new ProviderManager(Collections.singletonList(authenticationProvider));
     }
 
     //create a custom filter
@@ -45,7 +49,6 @@ public class JwtConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.csrf().disable()
                 .authorizeRequests().antMatchers("**/**").authenticated()
                 .and()
@@ -54,9 +57,8 @@ public class JwtConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
-
         http.headers().cacheControl();
+        http.cors();
     }
 
     @Bean

@@ -22,6 +22,7 @@ public class JwtVal {
 
         User jwtUser = null;
         try {
+            System.out.println(token);
             Claims body = Jwts.parser().setSigningKey("truck-secret-key").parseClaimsJws(token).getBody();
             if (body != null) {
                 String username = body.get("username", String.class);

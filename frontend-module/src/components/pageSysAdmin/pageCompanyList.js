@@ -11,32 +11,32 @@ class SysAdminPage extends React.Component{
         this.changeMail = this.changeMail.bind(this);
         this.state = {
             companies:[],
-            inputmail:""
+            inputMail:""
         };
     }
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId){
-        var refthis=this;
+        const refThis = this;
         fetch('http://localhost:8080/api/companys/'+companyId, {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {
-            refthis.state.companies.find((element, index, array)=>{
-                if(element.id==companyId){
-                    var newcomps = refthis.state.companies;
-                    newcomps[index] = result;
-                    refthis.setState({companies:newcomps});
+            refThis.state.companies.find((element, index, array)=>{
+                if(element.id===companyId){
+                    const newCompanies = refThis.state.companies;
+                    newCompanies[index] = result;
+                    refThis.setState({companies:newCompanies});
                 }
             });
         })
     };
     changeMail(event){
         this.setState({
-            inputmail: event.target.value
+            inputMail: event.target.value
         })
     }
     sendref(){
         let formData = new FormData();
-        let value = this.state.inputmail;
+        let value = this.state.inputMail;
         formData.append("email", value);
         fetch('http://localhost:8080/createAdmin', {method: "POST", body: formData}).then(function (response) {
             response.json().then(function (data) {
@@ -57,16 +57,16 @@ class SysAdminPage extends React.Component{
 
     /*get all company list*/
     getCompanyList() {
-        var myres = fetch('http://localhost:8080/api/companys', {method: "get"}).then(function (response) {
+        const myres = fetch('http://localhost:8080/api/companys', {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
-        })
+        });
         return myres;
     }
 
     /*render row of table ( calls from html ) */
-    rendertable(company){
+    renderTable(company){
         if(!company) return;
         const buttonLabel = "Вкл/Выкл";
         return <div className={"row table_row"}>
@@ -82,15 +82,18 @@ class SysAdminPage extends React.Component{
 
     /*button changestatus handler*/
     changeCompanyStatus(compId,event){
-        var ref = this;
-        var myres = fetch('http://localhost:8080/api/companys/changestatus', {method: "POST",body: compId}).then(function (response) {
+        const ref = this;
+        const myres = fetch('http://localhost:8080/api/companys/changestatus', {
+            method: "POST",
+            body: compId
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            if(result==true) {
+            if (result == true) {
                 ref.forceUpdateHandler(compId);
             }
             return result;
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
         });
     }
@@ -106,7 +109,7 @@ class SysAdminPage extends React.Component{
                 </div>
                     {
                     this.state.companies.map((element)=>{
-                        return this.rendertable(element);
+                        return this.renderTable(element);
                     })
                     }
                 <div className="row">
@@ -127,7 +130,7 @@ class SysAdminPage extends React.Component{
                     <h5>Регистрация новой компании</h5>
                     <div class="form-group">
                         <label htmlFor="id" id="emaillabel">Email</label>
-                        <input onChange={this.changeMail} type="email" class="form-control"  id="email" placeholder="newUser@mail.com" required=""></input>
+                        <input onChange={this.changeMail} type="email" class="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
                     </div>
                     <a onClick={this.sendref} class="btn btn-success btn_fullsize">Отправить</a>
                 </form>

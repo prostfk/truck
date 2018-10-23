@@ -54,12 +54,13 @@ class pageUserLogin extends Component {
         formData.append("username", email);
         formData.append("password", password);
         console.log(formData.get('password'));
-        fetch('http://localhost:8080/api/auth', {method: "POST", body: formData}).then(response => {
+        fetch('http://localhost:8080/auth', {method: "POST", body: formData}).then(response => {
             // document.getElementById('login-form').style.display = 'none';
             response.json().then(data => {
                 if (data.error === undefined) {
                     document.getElementById('login-form').style.display = 'none';
                     console.log(`SUCCESS: ${data.token}`);
+                    sessionStorage.setItem("Auth-token", data.token);
                     let headers = new Headers();
                     headers.append("Auth-token", data.token);//put token in header for api-access
                 }else{

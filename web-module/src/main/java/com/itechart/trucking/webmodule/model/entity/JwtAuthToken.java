@@ -1,13 +1,26 @@
 package com.itechart.trucking.webmodule.model.entity;
 
+import com.itechart.trucking.user.entity.UserRole;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 public class JwtAuthToken extends UsernamePasswordAuthenticationToken {
 
     private String token;
+    private String username;
+    private String role;
 
     public JwtAuthToken(String token) {
         super(null, null);
+        this.token = token;
+    }
+
+    public JwtAuthToken(String token, Object principal, Object credentials) {
+        super(principal, credentials);
+        role = credentials instanceof UserRole ? ((UserRole) credentials).name() : credentials.toString();
+        username = (String) principal;
         this.token = token;
     }
 
@@ -19,14 +32,22 @@ public class JwtAuthToken extends UsernamePasswordAuthenticationToken {
         this.token = token;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public Object getCredentials() {
-        return super.getCredentials();
+        return role;
     }
 
     @Override
     public Object getPrincipal() {
-        return super.getPrincipal();
+        return username;
     }
 
 }

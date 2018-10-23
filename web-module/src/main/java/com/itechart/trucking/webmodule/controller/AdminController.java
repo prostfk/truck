@@ -50,16 +50,15 @@ public class AdminController {
     @GetMapping(value = "/stocks")
     @ResponseBody
     public List<Stock> stocks() {
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
-        String name = "admin";
-        User userByEmail = userRepository.findUserByUsername("admin");
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(name);
+        User userByEmail = userRepository.findUserByUsername(name);
         return stockRepository.findStocksByCompany(userByEmail.getCompany());
     }
     @RequestMapping(value = "/stocks",method = RequestMethod.POST)
     public boolean createStock(@ModelAttribute Stock stock){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
-        String name = "admin";
-        User userByEmail = userRepository.findUserByUsername("admin");
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
         stock.setCompany(userByEmail.getCompany());
         stockRepository.save(stock);
         return true;

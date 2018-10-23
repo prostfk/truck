@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.MultiValueMap;
@@ -25,47 +26,36 @@ import java.util.Map;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/rest")
+@RequestMapping(value = "/api")
 public class RestApiController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private JwtGen jwtGen;
 
-    @GetMapping(value = "/users")
-    public Object getUsers() {
-        return userRepository.findAll();
-    }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/index")
     public HashMap<String, Object> index() {
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("message", "Authenticated and authorised successfully !");
         map.put("result", "success!");
         return map;
     }
 
-    @PostMapping(value = "/token")
-    public String getToken(@ModelAttribute final User user) throws JSONException {
+
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping(value = "/checkSecure")
+    public String checkSecure() throws JSONException {
+        System.out.println("CHECK SECURE METHOD");
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
         JSONObject json = new JSONObject();
-        String generate = jwtGen.generate(user);
-        if (generate == null) {
-            json.put("status", 404);
-            json.put("message", "Invalid data");
-        } else {
-            json.put("status", 200);
-            json.put("token", generate);
-        }
+        json.put("message", "Success");
+        json.put("username",SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println(json);
         return json.toString();
-
     }
-
 
 //    @PostMapping(value = "/registration")
 //    public Object addNewUserToDatabase(@Valid User user, BindingResult bindingResult){
@@ -85,14 +75,6 @@ public class RestApiController {
 //        return userRepository.save(user);
 //    }
 
-    @GetMapping("/checkRole")
-    public Map<String, String> checkRole() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByEmail(name);
-        Map<String, String> map = new HashMap<>();
-        map.put("role", userByEmail != null ? userByEmail.getUserRole().name() : UserRole.ROLE_USER.name());
-        return map;
-    }
 
 //    @PostMapping(value = "/login")
 //    public Object login(@ModelAttribute User user, HttpServletRequest request) throws JSONException {
@@ -111,10 +93,6 @@ public class RestApiController {
 //        }
 //    }
 
-    @GetMapping(value = "/user")
-    public User f() {
-        return userRepository.findById(1L).get();
-    }
 
     private Map<String, String> throwError(String message) {
         Map<String, String> map = new HashMap<>();

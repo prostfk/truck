@@ -6,9 +6,12 @@ import com.itechart.trucking.webmodule.model.entity.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +37,6 @@ public class JwtAuthProvider extends AbstractUserDetailsAuthenticationProvider {
         if (jwtUser == null) {
             throw new RuntimeException("JWT Token is incorrect");
         }
-
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList(String.valueOf(jwtUser.getUserRole()));
         return new UserDetail(jwtUser.getUsername(), token, jwtUser.getId(), grantedAuthorities);
