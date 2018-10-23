@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 
 class DispatcherCreateOrderPage extends React.Component{
     constructor(props) {
         super(props);
         this.changeInput = this.changeInput.bind(this);
-        this.savebtnClick = this.savebtnClick.bind(this);
+        this.saveBtnClick = this.saveBtnClick.bind(this);
         this.state = {
             client_id:"",
             sender:"",
@@ -22,7 +22,7 @@ class DispatcherCreateOrderPage extends React.Component{
             [event.target.id]: [event.target.value]
         });
     }
-    savebtnClick(event){
+    saveBtnClick(event){
 /*        let formData = new FormData();
         formData.append("id",this.state.client_id);
         formData.append("name",this.state.client_id);
@@ -105,7 +105,7 @@ class DispatcherCreateOrderPage extends React.Component{
                 </div>
             </div>
             <div className="offset-md-2 col-md-8 form_clear">
-                <a onClick={this.savebtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
+                <a onClick={this.saveBtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
             </div>
         </div>
     }

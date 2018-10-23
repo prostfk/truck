@@ -12,8 +12,11 @@ import com.itechart.trucking.routeList.repository.RouteListRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
+import com.itechart.trucking.webmodule.config.JwtGen;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
 import com.itechart.trucking.webmodule.model.util.TokenUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ public class MainController {
     @Autowired
     private UserRepository Repository;
 
+    @Autowired
+    private JwtGen jwtGen;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
         LOGGER.debug("'get' request on index page");
@@ -47,11 +53,20 @@ public class MainController {
         return "registration";
     }
 
-    @GetMapping(value = "/auth")
-    public String getAuthPage(){
-        return "login";
-    }
+    @PostMapping(value = "/auth")
+    @ResponseBody
+    public String getToken(@ModelAttribute final User user) throws JSONException {
+        JSONObject json = new JSONObject();
+        String generate = jwtGen.generate(user);
+        if (generate == null) {
+            json.put("error", "Invalid data");
+        } else {
+            json.put("status", 200);
+            json.put("token", generate);
+        }
+        return json.toString();
 
+    }
     @GetMapping(value = "/repo")
     @ResponseBody
     public Object getTest(){

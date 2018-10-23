@@ -12,6 +12,7 @@ import pageUserLogin from "./pageUserLogin/pageUserLogin";
 import PageStockList from "./pageAdmin/pageStockList";
 import EditConsigment from "./pageDispatcher/pageDispatcherEditConsigment";
 import DispatcherEditOrderPage from "./pageDispatcher/pageDispatcherEditOrderPage";
+import testComponent from "./testComponent/testComponent";
 
 class MainController extends React.Component{
 	constructor(props) {
@@ -22,7 +23,8 @@ class MainController extends React.Component{
 	  return (
           <Router>
               <div>
-                  <Route path="/login" component={pageUserLogin} />
+                  <Route exact path="/auth" component={pageUserLogin} />
+                  <Route exact path="/test" component={testComponent} />
                   <Route exact path="/companylist" component={CompanyListPage} /> {/*list of companies for sysadmin*/}
                   <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
                   <Route exact path="/orders/" component={DispatcherOrderList} />
