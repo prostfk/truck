@@ -39,8 +39,7 @@ public class MainController {
     @Autowired
     private UserRepository Repository;
 
-    @Autowired
-    private JwtGen jwtGen;
+
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
@@ -48,40 +47,9 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping(value = "/registration")
-    public String getRegistration(){
-        return "registration";
-    }
-
-    @PostMapping(value = "/auth")
-    @ResponseBody
-    public String getToken(@ModelAttribute final User user) throws JSONException {
-        JSONObject json = new JSONObject();
-        String generate = jwtGen.generate(user);
-        if (generate == null) {
-            json.put("error", "Invalid data");
-        } else {
-            json.put("status", 200);
-            json.put("token", generate);
-        }
-        return json.toString();
-
-    }
-    @GetMapping(value = "/repo")
-    @ResponseBody
-    public Object getTest(){
-        return Repository.findById(1L);
-    }
-
-    @GetMapping(value = "/json")
-    @ResponseBody
-    public Object getJson(){
-        return Repository.findById(1L);
-    }
-
 //    TEST
 
-    @GetMapping(value = "/xls")
+    @GetMapping(value = "/xls")//check xls method
     @ResponseBody
     public String createXls(@Value("${excel.path}")String path){
         Optional<User> byId = Repository.findById(1L);

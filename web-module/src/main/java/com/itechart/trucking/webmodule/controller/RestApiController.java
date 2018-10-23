@@ -29,27 +29,16 @@ import java.util.Map;
 @RequestMapping(value = "/api")
 public class RestApiController {
 
-    @Autowired
-    private UserRepository userRepository;
-
-
-
-    @GetMapping(value = "/index")
-    public HashMap<String, Object> index() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("message", "Authenticated and authorised successfully !");
-        map.put("result", "success!");
-        return map;
-    }
-
-
 
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/checkSecure")
+    @GetMapping(value = "/checkSecure")//test
     public String checkSecure() throws JSONException {
         System.out.println("CHECK SECURE METHOD");
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+        System.out.println("Principal:" + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        System.out.println("Authorities:" + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+        System.out.println("Credentials:" + SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        System.out.println("Details:" + SecurityContextHolder.getContext().getAuthentication().getDetails());
+        System.out.println("Is Authenticated:" + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
         JSONObject json = new JSONObject();
         json.put("message", "Success");
         json.put("username",SecurityContextHolder.getContext().getAuthentication().getName());
@@ -57,7 +46,7 @@ public class RestApiController {
         return json.toString();
     }
 
-//    @PostMapping(value = "/registration")
+//    @PostMapping(value = "/registration")//redo for rest
 //    public Object addNewUserToDatabase(@Valid User user, BindingResult bindingResult){
 //        if (bindingResult.hasErrors()){
 //            return throwError("Check your data");
@@ -75,29 +64,5 @@ public class RestApiController {
 //        return userRepository.save(user);
 //    }
 
-
-//    @PostMapping(value = "/login")
-//    public Object login(@ModelAttribute User user, HttpServletRequest request) throws JSONException {
-//        User base = userRepository.findUserByEmail(user.getEmail());
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        System.out.println(user);
-//        System.out.println(base);
-//        if (user.getEmail().equals(base.getEmail()) && user.getPassword().equals(base.getPassword())) {
-//            String token = TokenUtil.generateToken(50);
-//            request.getSession().setAttribute("token", token);
-//            return new Token(user.getEmail(), token).toString();
-//        } else {
-//            JSONObject json = new JSONObject();
-//            json.put("error", "Incorrect data");
-//            return json.toString();
-//        }
-//    }
-
-
-    private Map<String, String> throwError(String message) {
-        Map<String, String> map = new HashMap<>();
-        map.put("error", message);
-        return map;
-    }
 
 }

@@ -5,6 +5,7 @@ import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.webmodule.controller.MainController;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
@@ -29,7 +30,10 @@ public class JwtVal {
                 UserRole role = UserRole.valueOf(body.get("role", String.class));
                 jwtUser = new User(username, "dto-dto", "dto", role, null, null);
             }
-        } catch (SignatureException e) {
+        }catch (MalformedJwtException e){
+            LOGGER.info("Empty or invalid token: " + e.getMessage());
+        }
+        catch (SignatureException e) {
             LOGGER.warn("Someone tried to change token in header. Token value: " + token);
         } catch (Exception e) {
             LOGGER.warn("Exception in token validation(Maybe, no such user): ", e);
