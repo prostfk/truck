@@ -77,6 +77,7 @@ public class SysAdminController {
         companyRepository.save(company);
         return true;
     }
+
     @RequestMapping(value = "/companys/{companyId}",method = RequestMethod.GET)
     public Company getCompanyById(@PathVariable String companyId) {
         System.out.println(companyId);

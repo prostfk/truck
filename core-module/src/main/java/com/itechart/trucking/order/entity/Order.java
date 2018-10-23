@@ -38,5 +38,4 @@ public class Order {//enum
     @JoinColumn(name = "company_id")
     private Company company;
 
-
 }
