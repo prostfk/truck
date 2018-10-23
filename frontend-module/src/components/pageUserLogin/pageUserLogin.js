@@ -10,19 +10,19 @@ class pageUserLogin extends Component {
             email: '',
             password: ''
         };
-        this.setEmail = this.setEmail.bind(this);
+        this.setUsername = this.setUsername.bind(this);
         this.setPassword = this.setPassword.bind(this);
         this.processLogin = this.processLogin.bind(this);
 
     }
 
-    setEmail (event) {
+    setUsername(event) {
         this.setState({
             email: event.target.value
         })
     }
 
-    setPassword(event){
+    setPassword(event) {
         this.setState({
             password: event.target.value
         })
@@ -32,11 +32,14 @@ class pageUserLogin extends Component {
         return (
             <form className="form-signin" id="login-form">
                 <div id="loginicon"/>
-                <input type="email" id="inputEmail" value={this.state.email} onChange={this.setEmail} className="form-control"
+                <input type="username" id="inputUsername" value={this.state.email} onChange={this.setUsername}
+                       className="form-control"
                        placeholder="Логин" required=""
                        autoFocus=""/>
-                <input type="password" value={this.state.password} id="inputPassword" onChange={this.setPassword} className="form-control"
+                <input type="password" value={this.state.password} id="inputPassword" onChange={this.setPassword}
+                       className="form-control"
                        placeholder="Пароль" required=""/>
+                <span style={{color: 'red'}} id="error-span"/>
                 <button id="loginbutton" className="loginbutton btn btn-lg btn-primary btn-block"
                         onClick={this.processLogin} type="button">Вход
                 </button>
@@ -48,12 +51,21 @@ class pageUserLogin extends Component {
         let email = this.state.email;
         let password = this.state.password;
         let formData = new FormData();
-        formData.append("email", email);
+        formData.append("username", email);
         formData.append("password", password);
         console.log(formData.get('password'));
-        fetch('http://localhost:8080/rest/login', {method: "POST",body: formData}).then(response => {
-            document.getElementById('login-form').style.display = 'none';
-            response.json().then(data => console.log(data))
+        fetch('http://localhost:8080/api/auth', {method: "POST", body: formData}).then(response => {
+            // document.getElementById('login-form').style.display = 'none';
+            response.json().then(data => {
+                if (data.error === undefined) {
+                    document.getElementById('login-form').style.display = 'none';
+                    console.log(`SUCCESS: ${data.token}`);
+                    let headers = new Headers();
+                    headers.append("Auth-token", data.token);//put token in header for api-access
+                }else{
+                    document.getElementById('error-span').innerText = "Check your data";
+                }
+            })
         }, err => console.log(err))
     }
 

@@ -22,7 +22,7 @@ class MainController extends React.Component{
 	  return (
           <Router>
               <div>
-                  <Route path="/login" component={pageUserLogin} />
+                  <Route path="/auth" component={pageUserLogin} />
                   <Route exact path="/companylist" component={CompanyListPage} /> {/*list of companies for sysadmin*/}
                   <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
                   <Route exact path="/orders/" component={DispatcherOrderList} />

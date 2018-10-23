@@ -5,18 +5,18 @@ class PageStockList extends React.Component {
         super(props);
         this.getStockList = this.getStockList.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
-        this.setcompanyName = this.setcompanyName.bind(this);
-        this.setcompanyAddress = this.setcompanyAddress.bind(this);
+        this.setCompanyName = this.setCompanyName.bind(this);
+        this.setCompanyAddress = this.setCompanyAddress.bind(this);
         this.addNewCompany = this.addNewCompany.bind(this);
         this.state = {
             stocks:[],
-            stockname:"",
-            stockaddress:""
+            stockName:"",
+            stockAddress:""
         };
     }
 
     forceUpdateHandler(){
-        var refthis=this;
+        const refthis = this;
         fetch('http://localhost:8080/api/stocks/', {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -24,24 +24,24 @@ class PageStockList extends React.Component {
         })
     };
 
-    setcompanyName(event) {
+    setCompanyName(event) {
         this.setState({
-            stockname: event.target.value
+            stockName: event.target.value
         })
     }
-    setcompanyAddress(event) {
+    setCompanyAddress(event) {
         this.setState({
-            stockaddress: event.target.value
+            stockAddress: event.target.value
         })
     }
     addNewCompany(event){
-        let stockaddress = this.state.stockaddress;
-        let stockname = this.state.stockname;
+        let stockaddress = this.state.stockAddress;
+        let stockname = this.state.stockName;
         let formData = new FormData();
         formData.append("name", stockname);
         formData.append("address", stockaddress);
         console.log(formData);
-        var ref= this;
+        const ref = this;
 
         fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData}).then(response => {
             response.json().then(data => {
@@ -52,19 +52,19 @@ class PageStockList extends React.Component {
     }
 
     getStockList(){
-        var myres = fetch('http://localhost:8080/api/stocks', {method: "get"}).then(function (response) {
+        const fetchResult = fetch('http://localhost:8080/api/stocks', {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
-        })
-        return myres;
+        });
+        return fetchResult;
     }
     componentDidMount(){
         this.getStockList().then(data => {
             this.setState({stocks:data});
         });
     }
-    rendertable(stock){
+    renderTable(stock){
         console.log("stock name"+ stock.name);
         console.log(stock);
         if(!stock) return;
@@ -88,7 +88,7 @@ class PageStockList extends React.Component {
                    </div>
                    {
                        this.state.stocks.map((element)=>{
-                           return this.rendertable(element);
+                           return this.renderTable(element);
                        })
                    }
 
@@ -107,10 +107,10 @@ class PageStockList extends React.Component {
                <form class="superuserform_newaccountform grey_form">
                    <h5>Добавить склад</h5>
                    <div class="form-group">
-                       <input value={this.state.stockname}  onChange={this.setcompanyName} type="text" class="form-control" id="inputname" placeholder="Склад #201" required=""></input>
+                       <input value={this.state.stockName} onChange={this.setCompanyName} type="text" class="form-control" id="inputname" placeholder="Склад #201" required=""/>
                    </div>
                    <div class="form-group">
-                       <input value={this.state.stockaddress} onChange={this.setcompanyAddress} type="text" class="form-control" id="inputstockadres" placeholder="Адрес" required=""></input>
+                       <input value={this.state.stockAddress} onChange={this.setCompanyAddress} type="text" class="form-control" id="inputstockadres" placeholder="Адрес" required=""/>
                    </div>
                    <a onClick={this.addNewCompany} class="btn btn_fullsize btn-success">Добавить</a>
                </form>
