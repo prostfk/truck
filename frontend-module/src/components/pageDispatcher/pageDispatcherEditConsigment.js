@@ -52,11 +52,11 @@ class EditConsigment extends React.Component{
         if(!product) return;
 
         let status;
-        if(product.status=="-1") status="Не выбран";
-        else if(product.status=="0") status="Принят";
-        else if(product.status=="1") status="Проверен";
-        else if(product.status=="2") status="Доставлен";
-        else if(product.status=="3") status="Утерян";
+        if(product.status==="-1") status="Не выбран";
+        else if(product.status==="0") status="Принят";
+        else if(product.status==="1") status="Проверен";
+        else if(product.status==="2") status="Доставлен";
+        else if(product.status==="3") status="Утерян";
 
         return <div class="row table_row">
             <div class="col-md-3">{product.name}</div>

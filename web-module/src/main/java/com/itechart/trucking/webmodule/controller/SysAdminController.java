@@ -61,12 +61,12 @@ public class SysAdminController {
         }
     }
 
-    @GetMapping(value = "/companys")
-    public List<Company> gelallcompanies(){
+    @GetMapping(value = "/companies")
+    public List<Company> findAllCompanies(){
         return companyRepository.findAllByOrderById();
     }
-    @RequestMapping(value = "/companys/changestatus",method = RequestMethod.POST)
-    public boolean changeactivestatus(@RequestBody String companyId){
+    @RequestMapping(value = "/companies/changeStatus",method = RequestMethod.POST)
+    public boolean changeActiveStatus(@RequestBody String companyId){
         Long compId = Long.parseLong(companyId);
         if(companyId==null) return false;
         Company company = companyRepository.findCompanyById(compId);
@@ -78,7 +78,7 @@ public class SysAdminController {
         return true;
     }
 
-    @RequestMapping(value = "/companys/{companyId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/companies/{companyId}",method = RequestMethod.GET)
     public Company getCompanyById(@PathVariable String companyId) {
         System.out.println(companyId);
         Long compId = Long.parseLong(companyId);

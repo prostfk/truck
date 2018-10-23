@@ -5,6 +5,7 @@ import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,11 +23,9 @@ public class DispatcherController {
 
     @RequestMapping(value = "/orders/",method = RequestMethod.GET)
     public List<Order> getOrders(@ModelAttribute Order order){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
-        String name = "manager";
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
-        List<Order> orders= orderRepository.findAllByCompany(company);
-        return orders;
+        return orderRepository.findAllByCompany(company);
     }
 
     @RequestMapping(value = "/orders/{id}",method = RequestMethod.GET)
@@ -45,7 +44,7 @@ public class DispatcherController {
         }
     }
 
-    @RequestMapping(value = "/ordedrs/createorder",method = RequestMethod.POST)
+    @RequestMapping(value = "/orders/createOrder",method = RequestMethod.POST)
     public boolean createOrder(@ModelAttribute Order order){
         /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
         System.out.println(order);

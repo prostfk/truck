@@ -36,7 +36,7 @@ class DispatcherCreateOrderPage extends React.Component{
 
 
 
-        fetch('http://localhost:8080/api/ordedrs/createorder', {method: "POST",body: formData}).then(response => {
+        fetch('http://localhost:8080/api/orders/createOrder', {method: "POST",body: formData}).then(response => {
             response.json().then(data => console.log(data))
         }, err => console.log(err));*/
     }

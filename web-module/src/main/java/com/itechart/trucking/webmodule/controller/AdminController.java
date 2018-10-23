@@ -38,15 +38,6 @@ public class AdminController {
     @Autowired
     private StockRepository stockRepository;
 
-/*    @GetMapping(value = "/addUser")
-    public String addUser() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByEmail(name);
-        if (userByEmail == null || !userByEmail.getUserRole().equals(UserRole.ROLE_ADMIN)) {
-            return "redirect:/error";
-        }
-        return "addUserByAdmin";
-    }*/
     @GetMapping(value = "/stocks")
     @ResponseBody
     public List<Stock> stocks() {
@@ -55,6 +46,7 @@ public class AdminController {
         User userByEmail = userRepository.findUserByUsername(name);
         return stockRepository.findStocksByCompany(userByEmail.getCompany());
     }
+
     @RequestMapping(value = "/stocks",method = RequestMethod.POST)
     public boolean createStock(@ModelAttribute Stock stock){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -72,11 +64,6 @@ public class AdminController {
         return userRepository.findUsersByCompany(userByEmail.getCompany());
     }
 
-    @GetMapping(value = "/editCompany")
-    public String editCompany() {
-        return "editCompanyPage";
-    }
-
     @PostMapping(value = "/editCompany")
     @ResponseBody
     public Object processEditingCompany(@Valid Company company, BindingResult bindingResult) {
@@ -86,11 +73,6 @@ public class AdminController {
         return companyRepository.save(company);
     }
 
-    @GetMapping(value = "/editUser/{id}")
-    public String editUser(@PathVariable Long id) {
-        return "editUserPage";
-    }
-
     @PostMapping(value = "/editUser/{id}")
     @ResponseBody
     public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) {
@@ -98,17 +80,6 @@ public class AdminController {
             return "{error: 'Check your data'}";
         }
         return userRepository.save(user);
-    }
-
-    @GetMapping(value = "/registerCompany")
-    public String registerCompany(){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByEmail(name);
-        if (userByEmail.getCompany()==null){
-            return "registerCompanyPage";
-        }else{
-            return "editCompanyPage";
-        }
     }
 
     @PostMapping(value = "/registerCompany")
