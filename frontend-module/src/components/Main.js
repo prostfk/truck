@@ -29,8 +29,8 @@ class MainController extends React.Component{
                   <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
                   <Route exact path="/orders/" component={DispatcherOrderList} />
                   <Route exact path="/orders/:orderId" component={DispatcherEditOrderPage} /> {/*edit waybill(ttn) and order*/}
-                  <Route exact path="/orders/createorder" component={DispatcherCreateOrderPage} />
-                  <Route exact path="/orders/createorder/:consigmentId" component={EditConsigment} />
+                  <Route exact path="/orders/createOrder" component={DispatcherCreateOrderPage} />
+                  <Route exact path="/orders/createOrder/:consigmentId" component={EditConsigment} />
               </div>
           </Router>
 	  );
