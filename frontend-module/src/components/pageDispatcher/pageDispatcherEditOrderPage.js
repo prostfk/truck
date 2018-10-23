@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 
-class DispatcherCreateOrderPage extends React.Component{
+class DispatcherEditOrderPage extends React.Component{
     constructor(props) {
         super(props);
         this.changeInput = this.changeInput.bind(this);
         this.savebtnClick = this.savebtnClick.bind(this);
+        const { match: { params } } = this.props;
         this.state = {
+            orderId:params.orderId,
             client_id:"",
             sender:"",
             receiver:"",
@@ -111,4 +113,4 @@ class DispatcherCreateOrderPage extends React.Component{
     }
 }
 
-export default DispatcherCreateOrderPage;
+export default DispatcherEditOrderPage;

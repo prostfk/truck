@@ -6,11 +6,12 @@ import { Route, Link } from 'react-router';
 
 import LoginPage from './pageLogin/pageLogin';
 import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrderPage";
+import DispatcherOrderList from "./pageDispatcher/pageDispatcherOrderList"
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
-import EditCompanyPage from "./pageSysAdmin/pageEditCompany";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
 import PageStockList from "./pageAdmin/pageStockList";
 import EditConsigment from "./pageDispatcher/pageDispatcherEditConsigment";
+import DispatcherEditOrderPage from "./pageDispatcher/pageDispatcherEditOrderPage";
 
 class MainController extends React.Component{
 	constructor(props) {
@@ -24,9 +25,10 @@ class MainController extends React.Component{
                   <Route path="/login" component={pageUserLogin} />
                   <Route exact path="/companylist" component={CompanyListPage} /> {/*list of companies for sysadmin*/}
                   <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
-{/*                  <Route exact path="/stocks/:stockId" component={EditCompanyPage} /> edit company for sysadmin*/}
-                  <Route exact path="/dispatcher/createorder" component={DispatcherCreateOrderPage} />
-                  <Route exact path="/dispatcher/createorder/:consigmentId" component={EditConsigment} />
+                  <Route exact path="/orders/" component={DispatcherOrderList} />
+                  <Route exact path="/orders/:orderId" component={DispatcherEditOrderPage} /> {/*edit waybill(ttn) and order*/}
+                  <Route exact path="/orders/createorder" component={DispatcherCreateOrderPage} />
+                  <Route exact path="/orders/createorder/:consigmentId" component={EditConsigment} />
               </div>
           </Router>
 	  );

@@ -19,13 +19,13 @@ class EditConsigment extends React.Component{
         const prodname= this.state.newproduct_name;
         const prodstatus= this.state.newproduct_status;
         const proddesc= this.state.newproduct_description;
-        var product = {
+        let product = {
             id:this.state.productsammount,
             name:prodname,
             status:prodstatus,
             description:proddesc
         };
-        var newammount=this.state.productsammount++;
+        let newammount=this.state.productsammount++;
 
         this.setState({
             productsammount:newammount
@@ -41,6 +41,7 @@ class EditConsigment extends React.Component{
             newproduct_status:"0",
             newproduct_description:""
         });
+        
     }
     changeInput(event){
         this.setState({
@@ -50,7 +51,7 @@ class EditConsigment extends React.Component{
     rendertable(product){
         if(!product) return;
 
-        var status;
+        let status;
         if(product.status=="-1") status="Не выбран";
         else if(product.status=="0") status="Принят";
         else if(product.status=="1") status="Проверен";
