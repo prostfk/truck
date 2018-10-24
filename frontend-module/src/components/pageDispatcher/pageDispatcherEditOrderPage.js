@@ -31,6 +31,8 @@ class DispatcherEditOrderPage extends React.Component {
     }
 
     changeInput(event) {
+        console.log(event.target.id + " " + event.target.value );
+        console.log(this.state);
         this.setState({
             [event.target.id]: [event.target.value]
         });

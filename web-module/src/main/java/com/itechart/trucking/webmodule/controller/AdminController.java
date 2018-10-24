@@ -41,8 +41,9 @@ public class AdminController {
     @GetMapping(value = "/stocks")
     @ResponseBody
     public List<Stock> stocks() {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);
+/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(name);*/
+        String name = "user2";
         User userByEmail = userRepository.findUserByUsername(name);
         return stockRepository.findStocksByCompany(userByEmail.getCompany());
     }

@@ -11,6 +11,7 @@ import PageStockList from "./pageAdmin/pageStockList";
 import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import DispatcherEditOrderPage from "./pageDispatcher/pageDispatcherEditOrderPage";
 import testComponent from "./testComponent/testComponent";
+import HeaderElement from "./PagesCommon/header";
 
 class MainController extends React.Component{
 	constructor(props) {
@@ -21,6 +22,7 @@ class MainController extends React.Component{
 	  return (
           <Router>
               <div>
+                  <Route path="/*" component={HeaderElement} />
                   <Route exact path="/auth" component={pageUserLogin} />
                   <Route exact path="/test" component={testComponent} />
                   <Route exact path="/companyList" component={CompanyListPage} /> {/*list of companies for sysadmin*/}

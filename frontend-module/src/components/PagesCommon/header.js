@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import testComponent from "../testComponent/testComponent";
-import {BrowserRouter, Link} from "react-router-dom";
+import {Link} from 'react-router-dom'
 
 class HeaderElement extends React.Component{
     render(){
@@ -13,18 +13,16 @@ class HeaderElement extends React.Component{
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item active">
-                        <a className="nav-link" href="#">Список компаний <span className="sr-only">(current)</span></a>
+                        <Link to={`/auth`} className="nav-link">Авторизация</Link>
                     </li>
-                    <li className="nav-item">
-                        {/*<Link className="nav-link" to='/test'>Тест</Link>*/}
-                        <a className="nav-link" href="/test">Test</a>
+                    <li className="nav-item active">
+                        <Link to={`/companyList`} className="nav-link">Список компаний</Link>
                     </li>
-                    <li className="nav-item">
-                        {/*<Link className="nav-link" to='/orders'>Заказы</Link>*/}
-                        <a className="nav-link" href="/orders">Заказы</a>
+                    <li className="nav-item active">
+                        <Link to={`/stocks`} className="nav-link">Склады</Link>
                     </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">Новая компания</a>
+                    <li className="nav-item active">
+                        <Link to={`/orders`} className="nav-link">Заказы</Link>
                     </li>
                 </ul>
                 <li className="navbar-text">
