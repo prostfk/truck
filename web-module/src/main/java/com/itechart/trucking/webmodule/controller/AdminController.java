@@ -50,7 +50,9 @@ public class AdminController {
 
     @RequestMapping(value = "/stocks",method = RequestMethod.POST)
     public boolean createStock(@ModelAttribute Stock stock){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(name);*/
+        String name = "user2";
         User userByEmail = userRepository.findUserByUsername(name);
         stock.setCompany(userByEmail.getCompany());
         stockRepository.save(stock);
