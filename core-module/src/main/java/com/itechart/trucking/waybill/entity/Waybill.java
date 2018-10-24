@@ -14,8 +14,7 @@ public class Waybill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private WaybillState status;
+    private String status;
     @OneToOne
     @JoinColumn(name = "driver")
     private Driver driver;
@@ -25,4 +24,14 @@ public class Waybill {
     private Date dateDeparture;
     private Date dateArrival;
 
+    public Waybill() {
+    }
+
+    public Waybill(String status, Driver driver, Auto auto, Date dateDeparture, Date dateArrival) {
+        this.status = status;
+        this.driver = driver;
+        this.auto = auto;
+        this.dateDeparture = dateDeparture;
+        this.dateArrival = dateArrival;
+    }
 }

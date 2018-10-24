@@ -18,4 +18,12 @@ public class Client {
     @JoinColumn(name = "client_owner")
     private Company company;
 
+    public Client() {
+    }
+
+    public Client(String name, String type, Company company) {
+        this.name = name;
+        this.type = type;
+        this.company = company;
+    }
 }

@@ -12,6 +12,7 @@ class SysAdminPage extends React.Component{
             companies:[],
             inputMail:""
         };
+        document.title = "Список компаний"
     }
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId){

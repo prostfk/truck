@@ -15,7 +15,11 @@ class DispatcherCreateOrderPage extends React.Component{
             auto:"",
             date_departure:"",
             date_arrival:"",
+            company: "",
+            waybill: "",
+            name: ""
         };
+        document.title = "Создать заказ"
     }
     changeInput(event){
         this.setState({
@@ -23,22 +27,21 @@ class DispatcherCreateOrderPage extends React.Component{
         });
     }
     saveBtnClick(event){
-/*        let formData = new FormData();
-        formData.append("id",this.state.client_id);
-        formData.append("name",this.state.client_id);
+        let formData = new FormData();
+        // formData.append("id",this.state.client_id);
+        formData.append("name",this.state.name);
         formData.append("client",this.state.client_id);
-        formData.append("status",this.state.client_id);
-        formData.append("sender",this.state.client_id);
-        formData.append("receiver",this.state.client_id);
-        formData.append("dateAccepted",this.state.client_id);
-        formData.append("dateExecuted",this.state.client_id);
-        formData.append("company",this.state.client_id);
-
-
+        formData.append("status",this.state.status);
+        formData.append("sender",this.state.sender);
+        formData.append("receiver",this.state.receiver);
+        formData.append("dateAccepted",this.state.date_arrival);
+        formData.append("dateExecuted",this.state.date_departure);
+        formData.append("waybill", this.state.waybill);
+        formData.append("company",this.state.company);
 
         fetch('http://localhost:8080/api/orders/createOrder', {method: "POST",body: formData}).then(response => {
             response.json().then(data => console.log(data))
-        }, err => console.log(err));*/
+        }, err => console.log(err));
     }
 
     render(){
@@ -54,7 +57,7 @@ class DispatcherCreateOrderPage extends React.Component{
                         <small className="form-text text-muted">Адрес Отправления</small>
                         <input value={this.state.sender} onChange={this.changeInput} type="text" className="form-control" id="sender" placeholder="Откуда"/>
 
-                        <small className="form-text text-muted">Адрес доставки</small>
+                        <small className="form-text text-muted">Адрес Testдоставки</small>
                         <input value={this.state.receiver} onChange={this.changeInput} type="text" className="form-control" id="receiver" placeholder="Куда"/>
 
                         <div className="form-group">

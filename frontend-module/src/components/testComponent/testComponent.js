@@ -8,21 +8,23 @@ class testComponent extends Component {
             out: ''
         };
         this.checkSecurity = this.checkSecurity.bind(this);
-
+        document.title = "Test page"
     }
 
     render() {
         return <div>
-            <input type="text" id="output" readOnly className="form-control"/>
+            <h1 id={'output'}/>
             <button className="btn btn-primary" onClick={this.checkSecurity}>Load</button>
         </div>;
     }
 
     checkSecurity() {
-        fetch('http://localhost:8080/api/checkSecure',{headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => response.json().then(data => {
-            console.log(data);
-            document.getElementById('output').innerText = data.message;
-        }))
+        return fetch(`http://localhost:8080/api/orders/5`, {method: "get"}).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            console.log(result);
+            return result;
+        });
     }
 
 

@@ -23,6 +23,11 @@ public class Company {
     @Max(1)
     private int active;
 
+    public Company() {
+    }
 
-
+    public Company(@Size(min = 2, max = 100) String name, @Min(0) @Max(1) int active) {
+        this.name = name;
+        this.active = active;
+    }
 }

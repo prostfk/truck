@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import { Link } from 'react-router-dom'
+import React from "react";
+import {Link} from 'react-router-dom'
 
 class DispatcherOrderList extends React.Component{
     constructor(props) {
         super(props);
         this.getOrderList = this.getOrderList.bind(this);
-        this.rendertable = this.rendertable.bind(this);
+        this.renderTable = this.renderTable.bind(this);
         this.state = {
             orders:[]
         };
+        document.title = "Заказы"
     }
     componentDidMount(){
         this.getOrderList().then(data => {
@@ -18,16 +19,16 @@ class DispatcherOrderList extends React.Component{
 
     /*get all company list*/
     getOrderList() {
-        var myres = fetch('http://localhost:8080/api/orders/', {method: "get"}).then(function (response) {
+        return fetch('http://localhost:8080/api/orders/', {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {
+            console.log(result);
             return result;
         });
-        return myres;
     }
 
     /*render row of table ( calls from html ) */
-    rendertable(order){
+    renderTable(order){
         if(!order) return;
         return <div className = "row table_row order_row">
             <div className="col-md-2">{order.client.name}</div>
@@ -55,7 +56,7 @@ class DispatcherOrderList extends React.Component{
                 </div>
                 {
                     this.state.orders.map((element)=>{
-                        return this.rendertable(element);
+                        return this.renderTable(element);
                     })
                 }
             </div>

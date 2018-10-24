@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 
 /*товарная партия*/
-class EditConsigment extends React.Component{
+class EditConsignment extends React.Component{
     constructor(props) {
         super(props);
         this.changeInput = this.changeInput.bind(this);
@@ -14,6 +14,7 @@ class EditConsigment extends React.Component{
             newproduct_name:"",
             newproduct_status:"0",
         };
+        document.title = "Товарная партия"
     }
     addProduct(){
         const prodname= this.state.newproduct_name;
@@ -99,4 +100,4 @@ class EditConsigment extends React.Component{
     }
 }
 
-export default EditConsigment;
+export default EditConsignment;

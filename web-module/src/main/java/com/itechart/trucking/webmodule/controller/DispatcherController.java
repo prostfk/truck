@@ -55,7 +55,7 @@ public class DispatcherController {
     }
 
     @RequestMapping(value = "/orders/createOrder/getAutos",method = RequestMethod.GET)
-    public boolean getAutos(){
+    public List<Auto> getAutos(){
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
 
         /*Заглушка*/
@@ -72,16 +72,14 @@ public class DispatcherController {
             e.printStackTrace();
         }
 
-        List<Auto> autos= waybillRepository.findCustomQueryAutoByDate(datedep,datearr,companyId);
-        System.out.println(autos.toString());
-        return true;
+        return waybillRepository.findCustomQueryAutoByDate(datedep,datearr,companyId);
     }
 
     @RequestMapping(value = "/orders/{id}",method = RequestMethod.GET)
     public Order editOrder(@PathVariable Long id){
         /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
         System.out.println(id);
-        String name = "manager";
+        String name = "user5";
         Company company = userRepository.findUserByUsername(name).getCompany();
 
         Optional<Order> order = orderRepository.findById(id);

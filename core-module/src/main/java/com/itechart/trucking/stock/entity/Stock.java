@@ -18,4 +18,12 @@ public class Stock {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    public Stock() {
+    }
+
+    public Stock(String address, String name, Company company) {
+        this.address = address;
+        this.name = name;
+        this.company = company;
+    }
 }

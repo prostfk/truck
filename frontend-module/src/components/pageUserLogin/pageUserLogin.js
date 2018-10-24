@@ -13,7 +13,7 @@ class pageUserLogin extends Component {
         this.setUsername = this.setUsername.bind(this);
         this.setPassword = this.setPassword.bind(this);
         this.processLogin = this.processLogin.bind(this);
-
+        document.title = "Вход"
     }
 
     setUsername(event) {

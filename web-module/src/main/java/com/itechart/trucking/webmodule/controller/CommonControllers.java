@@ -14,7 +14,7 @@ import java.util.List;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
-public class CommonContollers {
+public class CommonControllers {
 
     @Autowired
     private UserRepository userRepository;
@@ -24,7 +24,8 @@ public class CommonContollers {
     // dispatcher | manager
     @RequestMapping(value = "/orders/",method = RequestMethod.GET)
     public List<Order> getOrders(@ModelAttribute Order order){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+//        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        String name = "user5";
         Company company = userRepository.findUserByUsername(name).getCompany();
         return orderRepository.findAllByCompany(company);
     }

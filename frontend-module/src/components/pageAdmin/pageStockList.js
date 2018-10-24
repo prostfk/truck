@@ -13,6 +13,7 @@ class PageStockList extends React.Component {
             stockName:"",
             stockAddress:""
         };
+        document.title = "Склады"
     }
 
     forceUpdateHandler(){
