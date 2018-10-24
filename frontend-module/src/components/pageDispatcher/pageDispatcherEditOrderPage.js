@@ -20,11 +20,11 @@ class DispatcherEditOrderPage extends React.Component {
                 receiver: {},
                 dateAccepted: '',
                 dateExecuted: '',
-                waybill: {auto:{}},
+                waybill: {auto:{},driver:{}},
                 company: {}
             },
-            freeAuto:[]
-
+            freeAuto:[],
+            freeDrivers:[]
         };
         document.title = "Заказ"
 
@@ -45,7 +45,10 @@ class DispatcherEditOrderPage extends React.Component {
         DispatcherEditOrderPage.findFreeAutos().then(data=>{
             this.setState({freeAuto: data});
             console.log(this.state.freeAuto);
-        })
+        });
+        DispatcherEditOrderPage.findFreeDrivers().then(data=>{
+            this.setState({freeDrivers: data})
+        });
     }
 
     getCurrentOrder() {//load order from server
@@ -131,10 +134,13 @@ class DispatcherEditOrderPage extends React.Component {
 
                         <small className="form-text text-muted">Водитель</small>
                         {/*todo rest req for drivers*/}
-                        <select onChange={this.changeInput} className="form-control" id="driver">
+                        <select onChange={this.changeInput} value={this.state.order.waybill.driver} className="form-control" id="driver">
                             <option selected disabled>Водитель</option>
+                            <option value={this.state.order.waybill.driver.id}>{this.state.order.waybill.driver.name}</option>
                             {
-
+                                this.state.freeDrivers.map(driver=>{
+                                    return <option value={driver.id}>{driver.name}</option>
+                                })
                             }
                         </select>
                         {/*todo rest req for cars*/}
@@ -145,7 +151,7 @@ class DispatcherEditOrderPage extends React.Component {
                             <option selected disabled>Авто</option>
                             {
                                 this.state.freeAuto.map(auto=>{
-                                    return <option>{auto.name}</option>
+                                    return <option value={auto.id}>{auto.name}</option>
                                 })
                             }
                         </select>
