@@ -32,7 +32,7 @@ public class DispatcherController {
     private WaybillRepository waybillRepository;
 
     @RequestMapping(value = "/orders/createOrder/getDrivers",method = RequestMethod.GET)
-    public boolean getDrivers(){
+    public List<Driver> getDrivers(){
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
 
         /*Заглушка*/
@@ -49,9 +49,8 @@ public class DispatcherController {
             e.printStackTrace();
         }
 
-        List<Driver> drivers= waybillRepository.findCustomQueryDriverByDate(datedep,datearr,companyId);
-        System.out.println(drivers.toString());
-        return true;
+        return waybillRepository.findCustomQueryDriverByDate(datedep,datearr,companyId);
+
     }
 
     @RequestMapping(value = "/orders/createOrder/getAutos",method = RequestMethod.GET)

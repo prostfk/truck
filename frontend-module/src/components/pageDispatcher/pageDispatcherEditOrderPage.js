@@ -47,7 +47,8 @@ class DispatcherEditOrderPage extends React.Component {
             console.log(this.state.freeAuto);
         });
         DispatcherEditOrderPage.findFreeDrivers().then(data=>{
-            this.setState({freeDrivers: data})
+            this.setState({freeDrivers: data});
+            console.log(this.state.freeDrivers);
         });
     }
 

@@ -34,8 +34,8 @@ class DispatcherOrderList extends React.Component{
             <div className="col-md-2">{order.client.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
-            <div className="col-md-2">{order.waybill.dateDeparture}</div>
-            <div className="col-md-2">{order.waybill.dateArrival}</div>
+            <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
+            <div className="col-md-2">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
             <div className="col-md-2">
                 <Link to={`/orders/${order.id}`}>Редактировать</Link>
             </div>
