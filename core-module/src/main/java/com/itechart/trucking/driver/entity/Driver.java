@@ -1,6 +1,7 @@
 package com.itechart.trucking.driver.entity;
 
 import com.itechart.trucking.company.entity.Company;
+import com.itechart.trucking.user.entity.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,6 +18,10 @@ public class Driver {
     @OneToOne
     @JoinColumn(name = "company_of_driver")
     private Company companyOfDriver;
+
+    @OneToOne
+    @JoinColumn(name = "userid")
+    private User user;
 
 
 

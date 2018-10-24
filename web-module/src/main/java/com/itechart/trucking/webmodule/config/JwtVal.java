@@ -2,14 +2,10 @@ package com.itechart.trucking.webmodule.config;
 
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
-import com.itechart.trucking.webmodule.controller.MainController;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
-import org.apache.commons.codec.binary.Base64;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

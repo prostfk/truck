@@ -31,13 +31,6 @@ public class DispatcherController {
     @Autowired
     private WaybillRepository waybillRepository;
 
-    @RequestMapping(value = "/orders/",method = RequestMethod.GET)
-    public List<Order> getOrders(@ModelAttribute Order order){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        return orderRepository.findAllByCompany(company);
-    }
-
     @RequestMapping(value = "/orders/createOrder/getdrivers",method = RequestMethod.GET)
     public boolean getDrivers(){
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");

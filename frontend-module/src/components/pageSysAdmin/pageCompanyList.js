@@ -107,9 +107,9 @@ class SysAdminPage extends React.Component{
                     <div className="col-md-3">Действие</div>
                 </div>
                     {
-                    this.state.companies.map((element)=>{
-                        return this.renderTable(element);
-                    })
+                        this.state.companies.map((element)=>{
+                            return this.renderTable(element);
+                        })
                     }
                 <div className="row">
                     <nav aria-label="...">
