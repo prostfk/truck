@@ -1,5 +1,7 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.company.entity.Company;
+import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.token.entity.Token;
 import com.itechart.trucking.token.repository.TokenRepository;
 import com.itechart.trucking.user.entity.User;
@@ -34,6 +36,12 @@ public class AnonController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
     @GetMapping(value = "/regAdmin")//redo for rest
     public String startRegistration(@RequestParam String token) {
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
@@ -59,27 +67,28 @@ public class AnonController {
 
     }
 
-//    @PostMapping(value = "/regAdmin")//redo for rest
-//    @ResponseBody
-//    public Object processAdminRegistration(@Valid User user, @RequestParam String token, BindingResult bindingResult) {
-//        user.setUserRole(UserRole.ROLE_ADMIN);
-//        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-//        user.setEmail(tokenByTokenValue.getEmail());
-//        if (!bindingResult.hasErrors()) {
-//            System.out.println("OK");
-//            if (user.getEmail().equals(tokenByTokenValue.getEmail())) {
-//                user.setPassword(passwordEncoder.encode(user.getPassword()));
-//                @Valid User save = userRepository.save(user);
-//                if (save!=null){
-//                    tokenRepository.delete(tokenByTokenValue);
-//                }
-//            }
-//        }
-//        System.out.println("ERROR");
-//        Map<Object, Object> objectObjectHashMap = new HashMap<>();
+    @PostMapping(value = "/registration")//redo for rest
+    @ResponseBody
+    public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) {
+        user.setUserRole(UserRole.ROLE_ADMIN);
+        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
+        user.setEmail(tokenByTokenValue.getEmail());
+        if (!bindingResult.hasErrors()) {
+            System.out.println("OK");
+            if (user.getEmail().equals(tokenByTokenValue.getEmail())) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                @Valid User save = userRepository.save(user);
+                companyRepository.save(new Company(companyName,1));
+                if (save!=null){
+                    tokenRepository.delete(tokenByTokenValue);
+                }
+            }
+        }
+        System.out.println("ERROR");
+        Map<Object, Object> objectObjectHashMap = new HashMap<>();
 //        objectObjectHashMap.put("error", "check data");
-//        return objectObjectHashMap;
-//    }
+        return objectObjectHashMap;
+    }
 
 
 }

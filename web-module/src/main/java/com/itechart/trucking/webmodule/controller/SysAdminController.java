@@ -51,7 +51,7 @@ public class SysAdminController {
         String token = TokenUtil.generateToken(40);
         try {
             EmailUtil.sendMail(username, password, email, "Registration",
-                    String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this <a href=\"%s:%s/regAdmin?token=%s\">link</a> to finish </h4>", request.getServerName(), request.getServerPort(), token)
+                    String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this link to finish </h4><br/><p>%s:%s/registration?token=%s</p>", request.getServerName(), "3000", token)
             );
             tokenRepository.save(new Token(email,token));
             return HttpStatus.OK;

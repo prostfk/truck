@@ -38,7 +38,7 @@ class SysAdminPage extends React.Component{
         let formData = new FormData();
         let value = this.state.inputMail;
         formData.append("email", value);
-        fetch('http://localhost:8080/createAdmin', {method: "POST", body: formData}).then(function (response) {
+        fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST"}).then(function (response) {
             response.json().then(function (data) {
                 if (data.error===undefined){
                     document.getElementById('emaillabel').innerText = 'Check your email';
