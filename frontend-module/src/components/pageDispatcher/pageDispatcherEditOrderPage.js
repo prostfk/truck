@@ -7,7 +7,8 @@ class DispatcherEditOrderPage extends React.Component {
         this.saveBtnClick = this.saveBtnClick.bind(this);
         this.getCurrentOrder = this.getCurrentOrder.bind(this);
         // this.setValueInSelect = this.setValueInSelect.bind(this);
-        this.findFreeAutos = this.findFreeAutos.bind(this);
+        DispatcherEditOrderPage.findFreeAutos = DispatcherEditOrderPage.findFreeAutos.bind(this);
+        DispatcherEditOrderPage.findFreeDrivers = DispatcherEditOrderPage.findFreeDrivers.bind(this);
         const {match: {params}} = this.props;
         this.state = {
             order: {
@@ -41,7 +42,7 @@ class DispatcherEditOrderPage extends React.Component {
             this.setState({order:data});
             console.log(this.state.order);
         });
-        this.findFreeAutos().then(data=>{
+        DispatcherEditOrderPage.findFreeAutos().then(data=>{
             this.setState({freeAuto: data});
             console.log(this.state.freeAuto);
         })
@@ -58,11 +59,15 @@ class DispatcherEditOrderPage extends React.Component {
         });
     }
 
-    findFreeAutos(){
+    static findFreeAutos(){
         return fetch('http://localhost:8080/api/orders/createOrder/getAutos').then(response=>response.json().then(data=>{
             // console.log(data);
             return data;
         }))
+    }
+
+    static findFreeDrivers(){
+        return fetch('http://localhost:8080/api/orders/createOrder/getDrivers').then(response=>response.json()).then(data=>{return data});
     }
 
 
@@ -128,9 +133,9 @@ class DispatcherEditOrderPage extends React.Component {
                         {/*todo rest req for drivers*/}
                         <select onChange={this.changeInput} className="form-control" id="driver">
                             <option selected disabled>Водитель</option>
-                            <option>Иванов</option>
-                            <option>Петров</option>
-                            <option>Тучкин</option>
+                            {
+
+                            }
                         </select>
                         {/*todo rest req for cars*/}
                         <small className="form-text text-muted">Автомобиль</small>
@@ -139,7 +144,7 @@ class DispatcherEditOrderPage extends React.Component {
                         <select onChange={this.changeInput} value={this.state.order.waybill.auto} className="form-control" id="auto">
                             <option selected disabled>Авто</option>
                             {
-                                this.state.freeAuto.forEach(auto=>{
+                                this.state.freeAuto.map(auto=>{
                                     return <option>{auto.name}</option>
                                 })
                             }

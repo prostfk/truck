@@ -31,7 +31,7 @@ public class DispatcherController {
     @Autowired
     private WaybillRepository waybillRepository;
 
-    @RequestMapping(value = "/orders/createOrder/getdrivers",method = RequestMethod.GET)
+    @RequestMapping(value = "/orders/createOrder/getDrivers",method = RequestMethod.GET)
     public boolean getDrivers(){
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
 

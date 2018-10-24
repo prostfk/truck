@@ -63,6 +63,7 @@ class pageUserLogin extends Component {
                     sessionStorage.setItem("Auth-token", data.token);
                     let headers = new Headers();
                     headers.append("Auth-token", data.token);//put token in header for api-access
+                    this.props.history.push('/')
                 }else{
                     document.getElementById('error-span').innerText = "Check your data";
                 }
