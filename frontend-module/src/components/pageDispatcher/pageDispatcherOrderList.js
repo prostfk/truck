@@ -18,7 +18,7 @@ class DispatcherOrderList extends React.Component{
     }
 
     /*get all company list*/
-    getOrderList(){
+    getOrderList() {
         return fetch('http://localhost:8080/api/orders/', {method: "get"}).then(function (response) {
             return response.json();
         }).then(function (result) {

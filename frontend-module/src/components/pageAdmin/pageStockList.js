@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 class PageStockList extends React.Component {
     constructor(props) {
@@ -42,8 +42,6 @@ class PageStockList extends React.Component {
         formData.append("name", stockname);
         formData.append("address", stockaddress);
         console.log(formData);
-        const ref = this;
-
         fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData}).then(response => {
             response.json().then(data => {
                 console.log(data);

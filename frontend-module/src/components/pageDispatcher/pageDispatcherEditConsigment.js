@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 
 /*товарная партия*/
@@ -26,10 +26,8 @@ class EditConsignment extends React.Component{
             status:prodstatus,
             description:proddesc
         };
-        let newammount=this.state.productsammount++;
-
         this.setState({
-            productsammount:newammount
+            productsammount:++this.state.productsammount
         });
 
         let arrayProducts = this.state.productlist;

@@ -13,8 +13,6 @@ class testComponent extends Component {
 
     render() {
         return <div>
-            <h1 id={'output'}/>
-            <button className="btn btn-primary" onClick={this.checkSecurity}>Load</button>
         </div>;
     }
 
