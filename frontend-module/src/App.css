@@ -30,3 +30,10 @@
     transform: rotate(360deg);
   }
 }
+
+.modal-container {
+  position: relative;
+}
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute;
+}

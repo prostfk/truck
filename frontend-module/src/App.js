@@ -3,8 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 
 /*import './source/js/jquery.js';*/
-import './source/css/bootstrap.min.css';
-import './source/css/bootstrap-grid.min.css';
+import './source/css/bootstrap.css';
+import './source/css/bootstrap-grid.css';
 import './source/css/bootstrap-reboot.min.css';
 import './source/css/main.css';
 

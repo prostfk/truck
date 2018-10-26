@@ -1,4 +1,5 @@
 import React from "react";
+import ModalComponent from './modalComponent'
 /*import ReactDOM from "react";*/
 
 class SysAdminPage extends React.Component{
@@ -8,6 +9,7 @@ class SysAdminPage extends React.Component{
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.sendref = this.sendref.bind(this);
         this.changeMail = this.changeMail.bind(this);
+        this.submitelock = this.submitelock.bind(this);
         this.state = {
             companies:[],
             inputMail:""
@@ -68,20 +70,23 @@ class SysAdminPage extends React.Component{
     /*render row of table ( calls from html ) */
     renderTable(company){
         if(!company) return;
-        const buttonLabel = "Вкл/Выкл";
+        const buttonactivate = <ModalComponent clickfunc={this.submitelock} className={"table_button bg-secondary text-white"} compId={company.id}/>;
+        const buttondeactivate = <a onClick={this.submiteUnlock.bind(this,company.id)} className={"table_button bg-secondary text-white"}>Вкл</a>;
+        const lockedDate = company.lockDate==null?"":" Дата: "+ (new Date(company.lockDate));
+        const titleoflock = company.active?"Активна": (company.lockerId==null?"[admin]":company.lockerId.username) + " : " +(company.lockComment==""?"[without message]":company.lockComment) + lockedDate ;
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{company.id}</div>
             <div className={"col-md-5"}>{company.name}</div>
-            <div className={"col-md-3"} id={"companystatus_"+company.id}>{company.active?"Активна":"Приостановлена"}</div>
+            <div className={"col-md-3"} title={titleoflock} id={"companystatus_"+company.id}>{company.active?"Активна":"Приостановлена"}</div>
             <div className={"col-md-3"}>
 {/*                <Link to={`/companylist/${company.id}`} activeClassName="active">{buttonLabel}</Link>*/}
-                <a onClick={this.changeCompanyStatus.bind(this,company.id)} className={"table_button bg-secondary text-white"}>{buttonLabel}</a>
-           </div>
+            {company.active?buttonactivate:buttondeactivate}
+            </div>
         </div>
     }
 
     /*button changestatus handler*/
-    changeCompanyStatus(compId,event){
+    submiteUnlock(compId,event){
         const ref = this;
         const myres = fetch('http://localhost:8080/api/companies/changeStatus', {
             method: "POST",
@@ -98,9 +103,27 @@ class SysAdminPage extends React.Component{
         });
     }
 
+    submitelock(desc,compId){
+        const ref = this;
+        console.log(desc + compId);
+        const myres = fetch('http://localhost:8080/api/companies/disable/'+compId, {
+            method: "POST",
+            body: desc
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            if (result === true) {
+                ref.forceUpdateHandler(compId);
+            }
+            return result;
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
     render(){
-        return <div class="row">
-            <div class="offset-md-1 col-md-6 superuserform_companylist">
+        return <div className="row">
+            <div className="offset-md-1 col-md-6 superuserform_companylist">
                 <div className="row table_header">
                     <div className="col-md-1">ID</div>
                     <div className="col-md-5">Название компании</div>
@@ -114,28 +137,27 @@ class SysAdminPage extends React.Component{
                     }
                 <div className="row">
                     <nav aria-label="...">
-                        <ul class="pagination pagination-sm">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">1</a>
+                        <ul className="pagination pagination-sm">
+                            <li className="page-item disabled">
+                                <a className="page-link" href="#" tabIndex="-1">1</a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li className="page-item"><a className="page-link" href="#">2</a></li>
+                            <li className="page-item"><a className="page-link" href="#">3</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
 
-            <div class="offset-md-1 col-md-3">
-                <form class="superuserform_newaccountform grey_form">
+            <div className="offset-md-1 col-md-3">
+                <form className="superuserform_newaccountform grey_form">
                     <h5>Регистрация новой компании</h5>
-                    <div class="form-group">
+                    <div className="form-group">
                         <label htmlFor="id" id="emaillabel">Email</label>
-                        <input onChange={this.changeMail} type="email" class="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
+                        <input onChange={this.changeMail} type="email" className="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
                     </div>
-                    <a onClick={this.sendref} class="btn btn-success btn_fullsize">Отправить</a>
+                    <a onClick={this.sendref} className="btn btn-success btn_fullsize">Отправить</a>
                 </form>
             </div>
-
         </div>
     }
 }
