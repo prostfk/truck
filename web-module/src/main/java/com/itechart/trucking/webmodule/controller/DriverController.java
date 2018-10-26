@@ -48,4 +48,22 @@ public class DriverController {
         if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevelDesc(order.get().getWaybill());
         return routeLists;
     }
+
+    @RequestMapping(value ="/orders/getMyOrders/{orderId}/markpoint/{pointId}",method = RequestMethod.GET)
+    public Optional<RouteList> markorder(@PathVariable Long orderId,@PathVariable Long pointId){
+        String name="driverUser";
+
+        Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
+        List<RouteList> routeLists = null;
+        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevelDesc(order.get().getWaybill());
+        else return null;
+        Optional<RouteList> point = routeListRepository.findById(pointId);
+        if(point.isPresent()){
+            if(point.get().getMarked()==null) point.get().setMarked(false);
+            if(point.get().getMarked()) point.get().setMarked(false);
+            else point.get().setMarked(true);
+        }
+        routeListRepository.save(point.get());
+        return point;
+    }
 }

@@ -14,6 +14,7 @@ public class RouteList {
     private Long id;
     private String point;
     private Integer pointLevel;
+    private Boolean marked;
     @OneToOne
     @JoinColumn(name = "waybill_id")
     private Waybill waybill;
