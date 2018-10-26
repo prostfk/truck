@@ -69,10 +69,11 @@ class SysAdminPage extends React.Component{
     renderTable(company){
         if(!company) return;
         const buttonLabel = "Вкл/Выкл";
+        const titleoflock = company.active?"Активна":company.lockerId.username+":"+company.lockComment;
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{company.id}</div>
             <div className={"col-md-5"}>{company.name}</div>
-            <div className={"col-md-3"} id={"companystatus_"+company.id}>{company.active?"Активна":"Приостановлена"}</div>
+            <div className={"col-md-3"} title={titleoflock} id={"companystatus_"+company.id}>{company.active?"Активна":"Приостановлена"}</div>
             <div className={"col-md-3"}>
 {/*                <Link to={`/companylist/${company.id}`} activeClassName="active">{buttonLabel}</Link>*/}
                 <a onClick={this.changeCompanyStatus.bind(this,company.id)} className={"table_button bg-secondary text-white"}>{buttonLabel}</a>
