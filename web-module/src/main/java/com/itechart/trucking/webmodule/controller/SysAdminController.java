@@ -79,6 +79,8 @@ public class SysAdminController {
         companyRepository.save(company);
         return true;
     }
+
+    /*добавить блокирующего юзера!*/
     @RequestMapping(value = "/companies/disable/{companyId}",method = RequestMethod.POST)
     public boolean disabeCompany(@RequestBody String description,@PathVariable String companyId){
         System.out.println(companyId + " : " + description);
