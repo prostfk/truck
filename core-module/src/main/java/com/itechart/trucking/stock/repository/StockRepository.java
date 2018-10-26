@@ -12,4 +12,7 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
 
     List<Stock> findStocksByCompany(Company company);
 
+    Stock findStockById(Long id);
+
+    List<Stock> findStocksByAddressLike(String addressLike);
 }

@@ -14,4 +14,6 @@ public interface CompanyRepository extends CrudRepository<Company, Long> {
    List<Company> findCompaniesByActive(int active);
    List<Company> findCompaniesByNameLikeIgnoreCase(String name);//% %
    List<Company> findAllByOrderById();
+
+    List<Company> findTop10CompaniesByNameLikeIgnoreCase(String nameLike);
 }

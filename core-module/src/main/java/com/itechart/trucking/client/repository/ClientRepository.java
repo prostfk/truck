@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface ClientRepository extends CrudRepository<Client, Long> {
 
-    List<Client> findClientByName(String name);
+    Client findClientByName(String name);
     List<Client> findClientByType(String client);
 
 }

@@ -6,4 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DriverRepository extends CrudRepository<Driver, Long> {
     Driver findDriverByUser(User user);
+
+    Driver findDriverById(Long id);
 }
