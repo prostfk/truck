@@ -12,7 +12,7 @@ public class RouteList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer point;
+    private String point;
     private Integer pointLevel;
     @OneToOne
     @JoinColumn(name = "waybill_id")

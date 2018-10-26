@@ -4,15 +4,15 @@ import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.routeList.entity.RouteList;
+import com.itechart.trucking.routeList.repository.RouteListRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
@@ -25,6 +25,8 @@ public class DriverController {
     private UserRepository userRepository;
     @Autowired
     private DriverRepository driverRepository;
+    @Autowired
+    private RouteListRepository routeListRepository;
 
     @RequestMapping(value = "/orders/getMyOrders",method = RequestMethod.GET)
     public List<Order> getMyOrders(){
@@ -35,5 +37,15 @@ public class DriverController {
         if(driver==null) return null;
         List<Order> orders = orderRepository.findCustomQueryOrderByDriver(driver.getId());
         return orders;
+    }
+
+    @RequestMapping(value ="/orders/getMyOrders/{orderId}",method = RequestMethod.GET)
+    public  List<RouteList> getRouteList(@PathVariable Long orderId){
+        String name="driverUser";
+
+        Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
+        List<RouteList> routeLists = null;
+        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevelDesc(order.get().getWaybill());
+        return routeLists;
     }
 }
