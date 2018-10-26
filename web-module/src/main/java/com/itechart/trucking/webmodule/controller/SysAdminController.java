@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,7 @@ public class SysAdminController {
     public List<Company> findAllCompanies(){
         return companyRepository.findAllByOrderById();
     }
+
     @RequestMapping(value = "/companies/changeStatus",method = RequestMethod.POST)
     public boolean changeActiveStatus(@RequestBody String companyId){
         Long compId = Long.parseLong(companyId);
@@ -74,6 +76,18 @@ public class SysAdminController {
         if(isActive==1){
             company.setActive(0);
         } else company.setActive(1);
+        companyRepository.save(company);
+        return true;
+    }
+    @RequestMapping(value = "/companies/disable/{companyId}",method = RequestMethod.POST)
+    public boolean disabeCompany(@RequestBody String description,@PathVariable String companyId){
+        System.out.println(companyId + " : " + description);
+        Long compId = Long.parseLong(companyId);
+        if(companyId==null) return false;
+        Company company = companyRepository.findCompanyById(compId);
+        company.setLockComment(description);
+        company.setActive(0);
+        company.setLockDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
         companyRepository.save(company);
         return true;
     }

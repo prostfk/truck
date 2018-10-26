@@ -25,7 +25,7 @@ import java.util.Map;
 public class AnonController {
 
 //    @Autowired
-//    private PasswordEncoder passwordEncoder;
+//    private PasswordEncoder passwordEncoder; refresh token
 
     @Autowired
     private JwtGen jwtGen;
