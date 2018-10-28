@@ -23,10 +23,14 @@ class HeaderElement extends React.Component{
                     <li className="nav-item active">
                         <Link to={`/orders`} className="nav-link">Заказы</Link>
                     </li>
+                    <li className="nav-item active">
+                        <Link to={`/myorders`} className="nav-link">Водитель</Link>
+                    </li>
                 </ul>
                 <li className="navbar-text">
                     <a className="nav-link" href="#">Выйти</a>
                 </li>
+
             </div>
         {/*</BrowserRouter>*/}
     </nav>

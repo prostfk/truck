@@ -11,11 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EntityScan("com.itechart")
 @EnableJpaRepositories("com.itechart")
 public class WebModuleApplication {
-
-
     public static void main(String[] args) {
         SpringApplication.run(WebModuleApplication.class, args);
     }
-
-
 }

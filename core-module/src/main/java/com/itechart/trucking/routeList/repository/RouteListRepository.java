@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface RouteListRepository extends CrudRepository<RouteList, Long> {
 
-    List<RouteList> findAllByWaybillOrderByPointLevelDesc(Waybill waybill);
+    List<RouteList> findAllByWaybillOrderByPointLevel(Waybill waybill);
 }
