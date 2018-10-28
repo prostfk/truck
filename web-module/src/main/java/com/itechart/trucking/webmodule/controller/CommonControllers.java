@@ -25,7 +25,7 @@ public class CommonControllers {
     @RequestMapping(value = "/orders/",method = RequestMethod.GET)
     public List<Order> getOrders(@ModelAttribute Order order){
 //        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        String name = "user5";
+        String name = "driverUser";
         Company company = userRepository.findUserByUsername(name).getCompany();
         return orderRepository.findAllByCompany(company);
     }

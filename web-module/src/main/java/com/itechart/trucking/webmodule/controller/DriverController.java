@@ -39,23 +39,30 @@ public class DriverController {
         return orders;
     }
 
-    @RequestMapping(value ="/orders/getMyOrders/{orderId}",method = RequestMethod.GET)
+    @RequestMapping(value ="/orders/getMyOrders/{orderId}/routelist",method = RequestMethod.GET)
     public  List<RouteList> getRouteList(@PathVariable Long orderId){
         String name="driverUser";
-
         Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
         List<RouteList> routeLists = null;
-        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevelDesc(order.get().getWaybill());
+        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
         return routeLists;
     }
+/*    @RequestMapping(value ="/orders/getMyOrders/{orderId}/routelist/{pointId}",method = RequestMethod.GET)
+    public  RouteList getRouteListPoint(@PathVariable Long orderId,@PathVariable Long pointId){
+        String name="driverUser";
+        Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
+        Optional<RouteList> routeList = null;
+        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeList = routeListRepository.findById(pointId);
+        return routeList.get();
+    }*/
 
-    @RequestMapping(value ="/orders/getMyOrders/{orderId}/markpoint/{pointId}",method = RequestMethod.GET)
+    @RequestMapping(value ="/orders/getMyOrders/{orderId}/markpoint/{pointId}",method = RequestMethod.PUT)
     public Optional<RouteList> markorder(@PathVariable Long orderId,@PathVariable Long pointId){
         String name="driverUser";
 
         Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
         List<RouteList> routeLists = null;
-        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevelDesc(order.get().getWaybill());
+        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
         else return null;
         Optional<RouteList> point = routeListRepository.findById(pointId);
         if(point.isPresent()){

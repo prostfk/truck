@@ -11,7 +11,9 @@ import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import testComponent from "./testComponent/testComponent";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
-import DispatcherEditOrder from './pageDispatcher/pageDispatcherEditOrder'
+import DriverOrderList from "./pageDriver/pageDriver";
+import DriverRouteList from "./pageDriver/pageRouteList";
+
 
 class MainController extends React.Component{
 
@@ -29,6 +31,8 @@ class MainController extends React.Component{
                   {/*<Route exact path="/orders/:orderId/edit" component={DispatcherEditOrder} /> /!*edit waybill(ttn) and order*!/*/}
                   <Route exact path="/orders/createOrder" component={DispatcherCreateOrderPage} />
                   <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment} />
+                  <Route exact path="/myorders/" component={DriverOrderList} /> {/*driver*/}
+                  <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList} /> {/*driver*/}
               </div>
           </Router>
 	  );
