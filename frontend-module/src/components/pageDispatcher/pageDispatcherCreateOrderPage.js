@@ -30,7 +30,7 @@ class DispatcherCreateOrderPage extends React.Component {
 
         };
         document.title = "Создать заказ";
-        this.fetchToSenderStocks(1);//это заглушка. Тут вместо 1 должен генериться id компании автоматически
+        this.fetchToSenderStocks(3);//это заглушка. Тут вместо 1 должен генериться id компании автоматически
         this.findAutos();
         this.findDrivers();
     }
@@ -58,10 +58,10 @@ class DispatcherCreateOrderPage extends React.Component {
             console.log(`${v} - ${k}`);
         });
         fetch('http://localhost:8080/api/orders/createOrder', {method: "POST", body: formData}).then(response => {
-            response.json().then(data=>{
-
-            })
-        }, err => console.log(err));
+            return response.json()
+        }).then(data=>{
+            console.log(data);
+        });
     }
 
     fetchToCompany(event) {
@@ -69,7 +69,7 @@ class DispatcherCreateOrderPage extends React.Component {
             companyNameForSearch: [event.target.value]
         });
         if (event.target.value!==''){
-            fetch(`http://localhost:8080/api/companies/findCompaniesByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
+            fetch(`http://localhost:8080/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
                 .then(response => {
                     return response.json()
                 }).then(data => {

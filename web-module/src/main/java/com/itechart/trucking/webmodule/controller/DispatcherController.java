@@ -1,6 +1,8 @@
 package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.client.repository.ClientRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.driver.entity.Driver;
@@ -10,13 +12,16 @@ import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
 import java.text.ParseException;
@@ -30,11 +35,14 @@ import java.util.Optional;
 @RequestMapping(value = "/api")
 public class DispatcherController {
 
-
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
 
     @Autowired
     private WaybillRepository waybillRepository;
@@ -43,14 +51,13 @@ public class DispatcherController {
     private StockRepository stockRepository;
 
     @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private ClientRepository clientRepository;
 
-    @RequestMapping(value = "/orders/createOrder/getDrivers", method = RequestMethod.GET)
-    public List<Driver> getDrivers() {
+    @RequestMapping(value = "/orders/createOrder/getDrivers",method = RequestMethod.GET)
+    public List<Driver> getDrivers(){
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
 
         /*Заглушка*/
@@ -67,12 +74,12 @@ public class DispatcherController {
             e.printStackTrace();
         }
 
-        return waybillRepository.findCustomQueryDriverByDate(datedep, datearr, companyId);
+        return waybillRepository.findCustomQueryDriverByDate(datedep,datearr,companyId);
 
     }
 
-    @RequestMapping(value = "/orders/createOrder/getAutos", method = RequestMethod.GET)
-    public List<Auto> getAutos() {
+    @RequestMapping(value = "/orders/createOrder/getAutos",method = RequestMethod.GET)
+    public List<Auto> getAutos(){
         SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
 
         /*Заглушка*/
@@ -89,27 +96,29 @@ public class DispatcherController {
             e.printStackTrace();
         }
 
-        return waybillRepository.findCustomQueryAutoByDate(datedep, datearr, companyId);
+        return waybillRepository.findCustomQueryAutoByDate(datedep,datearr,companyId);
     }
 
-    @RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
-    public Order editOrder(@PathVariable Long id) {
+    @RequestMapping(value = "/orders/{id}",method = RequestMethod.GET)
+    public Order editOrder(@PathVariable Long id){
         /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
         System.out.println(id);
-        String name = "user5";
+        Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        System.out.println(credentials);
+        String name = "user6";
         Company company = userRepository.findUserByUsername(name).getCompany();
 
         Optional<Order> order = orderRepository.findById(id);
-        if (order.isPresent() && order.get().getCompany().getId() == company.getId())
-            return order.get();
-        else {
+        if(order.isPresent() && order.get().getCompany().getId()==company.getId())
+        return order.get();
+        else{
             System.out.println("access dined");
             return null;
         }
     }
 
-    @RequestMapping(value = "/orders/createOrder", method = RequestMethod.POST)
-    public Order createOrder(OrderDto orderDto) {
+    @PostMapping(value = "/orders/createOrder")
+    public Order createOrder(OrderDto orderDto){
         /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
         Order order = null;
         try {
@@ -124,34 +133,39 @@ public class DispatcherController {
         return order;
     }
 
+    @GetMapping(value = "/clients/findClientsByNameLike")
+    public List<Client> findClientsByNameLike(@RequestParam String name){
+        return clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
+    }
+
     @GetMapping(value = "/companies/findCompaniesByNameLike")
-    public List<Company> findCompaniesByNameLikeRest(@RequestParam String name) {
+    public List<Company> findCompaniesByNameLikeRest(@RequestParam String name){
         name = String.format("%%%s%%", name);
         return companyRepository.findTop10CompaniesByNameLikeIgnoreCase(name);
     }
 
-
     @GetMapping(value = "/companies/{companyId}/stocks")
-    public List<Stock> findStocksByCompany(@PathVariable Long companyId) {
+    public List<Stock> findStocksByCompany(@PathVariable Long companyId){
         Company companyById = companyRepository.findCompanyById(companyId);
         return stockRepository.findStocksByCompany(companyById);
     }
 
     @GetMapping(value = "/companies/stocks/findStocksByAddressLike")
-    public List<Stock> findStocksByNameLike(@RequestParam String address) {
+    public List<Stock> findStocksByNameLike(@RequestParam String address){
         address = String.format("%%%s%%", address);
         return stockRepository.findStocksByAddressLike(address);
     }
 
     @PostMapping(value = "/companies/orders/edit")
-    public Object editOrder(@Valid Order order) {
-        if (order != null) {
-            if (order.getWaybill() != null && order.getCompany() != null && order.getClient() != null) {
-                System.out.println(order);
-            }
-        }
-        return order;
+    public Object editOrder(OrderDto orderDto, Long orderId, Long waybillId, HttpServletRequest request) throws ParseException {
+        request.getParameterNames().asIterator().forEachRemaining(System.out::println);
+        Order orderFromDto = orderService.getOrderFromDto(orderDto);
+        orderFromDto.setId(orderId);
+        System.out.println(orderFromDto);
+        Waybill waybill = orderFromDto.getWaybill();
+        waybill.setId(waybillId);
+        waybillRepository.save(waybill);
+        return orderRepository.save(orderFromDto);
     }
-
 
 }

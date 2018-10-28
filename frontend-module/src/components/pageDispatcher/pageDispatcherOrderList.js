@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from 'react-router-dom'
+import CommonUtil from "../commonUtil/commontUtil";
 
 class DispatcherOrderList extends React.Component{
     constructor(props) {
@@ -34,10 +35,10 @@ class DispatcherOrderList extends React.Component{
             <div className="col-md-2">{order.client.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
-            <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
-            <div className="col-md-2">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
+            <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateDeparture)}</div>
+            <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateArrival)}</div>
             <div className="col-md-2">
-                <Link to={`/orders/${order.id}`}>Редактировать</Link>
+                <Link to={`/orders/${order.id}/edit`}>Редактировать</Link>
             </div>
         </div>
     }

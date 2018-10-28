@@ -19,8 +19,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findUsersByUserRole(UserRole userRole);
     User findUserByUsernameOrEmail(String username, String email);
     List<User> findUsersByCompany(Company company);
-    List<User> findUsersByBirthDay(Date date);
-//    @Query(value = "SELECT * FROM users WHERE birth_day=?1", nativeQuery = true)
+
+    @Query(value = "SELECT * FROM users WHERE CAST(birth_day AS text) LIKE :birthDay", nativeQuery = true)
+    List<User> customFindUsersByBirthDay(@Param("birthDay") String birthDay);
     User findUserByIdAndUsername(Long id, String username);
 
 }

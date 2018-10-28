@@ -48,12 +48,12 @@ public class OrderService {
     public Order getOrderFromDto(OrderDto dto) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Auto autoById = autoRepository.findAutoById(dto.getAutoId());
-        Company company = userRepository.findUserByUsername("driverUser").getCompany();//заглушка
+        Company company = userRepository.findUserByUsername("user6").getCompany();//заглушка
         Driver driverById = driverRepository.findDriverById(dto.getDriverId());
 
         Order order = new Order();
         order.setCompany(company);
-        order.setClient(clientRepository.findClientByName("Брусничка"));
+        order.setClient(clientRepository.findClientById(dto.getClientId()));
         order.setName(dto.getName());
         order.setStatus(dto.getStatus());
         order.setSender(stockRepository.findStockById(dto.getDepartureStock()));

@@ -12,7 +12,7 @@ class HeaderElement extends React.Component{
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
                     <li className="nav-item active">
-                        <Link to={`/auth`} className="nav-link">Авторизация</Link>
+                        {sessionStorage.getItem('username')===null ? <Link to={`/auth`} className="nav-link">Авторизация</Link> : <Link to={'/orders'} className={'nav-link'}>{sessionStorage.getItem('username')}</Link>}
                     </li>
                     <li className="nav-item active">
                         <Link to={`/companyList`} className="nav-link">Список компаний</Link>

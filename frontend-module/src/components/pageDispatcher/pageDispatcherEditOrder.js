@@ -12,6 +12,7 @@ class DispatcherEditOrder extends Component {
         this.sendInfoToServer = this.sendInfoToServer.bind(this);
         this.setValuesFromJson = this.setValuesFromJson.bind(this);
         this.changeDate = this.changeDate.bind(this);
+        // this.fetchToCompany = this.fetchToCompany.bind(this);
         this.state = {
             companyNameForSearch: "",
             name: "",
@@ -65,13 +66,26 @@ class DispatcherEditOrder extends Component {
             }
         });
         let formData = new FormData();
-        formData.append('order', this.state.order);
-        console.log(this.state.order);
-        fetch('/api/companies/orders/edit', {method: 'POST', headers: {'Auth-token': sessionStorage.getItem('Auth-token')}, body: formData}).then(response=>{
-            return response.json().then(data=>{
-                console.log(data);
-                return data;
-            })
+        formData.append("clientId", this.state.client_id);
+        formData.append("name", this.state.name);
+        formData.append("status", this.state.status);
+        formData.append("departureStock", this.state.departure_stock);
+        formData.append("deliveryStock", this.state.delivery_stock);
+        formData.append("dateArrival", this.state.date_departure);
+        formData.append("dateDeparture", this.state.date_arrival);
+        formData.append("waybillStatus", this.state.waybill_status);
+        formData.append("autoId", this.state.auto);
+        formData.append("driverId", this.state.driver);
+        formData.append("orderId", this.state.order.id);
+        formData.append("waybillId", this.state.order.waybill.id);
+        console.log(this.state);
+        formData.forEach((v,k) =>{
+            console.log(`${v} - ${k}`);
+        });
+        fetch('http://localhost:8080/api/companies/orders/edit', {method: 'POST', headers: {'Auth-token': sessionStorage.getItem('Auth-token')}, body: formData}).then(response=>{
+            return response.json()
+        }).then(data=>{
+            console.log(data)
         })
     }
 
@@ -84,27 +98,34 @@ class DispatcherEditOrder extends Component {
             companyNameForSearch: this.state.order.client.name,
             auto: this.state.order.waybill.auto.id,
             driver: this.state.order.waybill.driver.id,
-            departure_stock: this.state.order.sender.address,
-            delivery_stock: this.state.order.receiver.address,
-            company: this.state.order.company.id
+            departure_stock: this.state.order.sender.id,
+            delivery_stock: this.state.order.receiver.id,
+            company: this.state.order.company.id,
+            client_id: this.state.order.client.id,
+            waybill_status: this.state.order.waybill.status
         });
         document.getElementById('auto').innerHTML = `<option value="${this.state.order.waybill.auto.id}">${this.state.order.waybill.auto.name}</option>`
         document.getElementById('driver').innerHTML = `<option value="${this.state.order.waybill.driver.id}">${this.state.order.waybill.driver.name}</option>`
-        document.getElementById('departure_stock').innerHTML = `<option value="${this.state.order.sender.address}">${this.state.order.sender.address}</option>`
-        document.getElementById('delivery_stock').innerHTML = `<option value="${this.state.order.receiver.address}">${this.state.order.receiver.address}</option>`
+        document.getElementById('departure_stock').innerHTML = `<option value="${this.state.order.sender.id}">${this.state.order.sender.address}</option>`
+        document.getElementById('delivery_stock').innerHTML = `<option value="${this.state.order.receiver.id}">${this.state.order.receiver.address}</option>`
         document.getElementById('client_id').innerHTML = `<option value="${this.state.order.company.id}">${this.state.order.company.name}</option>`
 
     }
 
     initOrder() {
         let link = document.location.href.split("/");
-        let id = link[link.length - 1];
+        let id = link[link.length - 2];
         fetch(`http://localhost:8080/api/orders/${id}`, {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
             return response.json()
         }).then(data => {
             console.log(data);
             this.setState({
                 order: data,
+                client: data.client,
+                receiver: data.receiver.id,
+                sender: data.sender.id,
+                waybill: data.waybill,
+                companyNameForSearch: data.client.name
             });
             this.setValuesFromJson()
         });
@@ -116,6 +137,15 @@ class DispatcherEditOrder extends Component {
         });
     }
 
+    changeCompany = (event) =>{
+        this.setState({
+            [event.target.id]: [event.target.value]
+        });
+        console.log("CHANGE COMPANY");
+        this.fetchToUserStocks();
+        this.fetchToStocks(this.state.client_id);
+    };
+
     changeDate(event){
         if (CommonUtil.isDateCorrect(event.target.value)){
             this.setState({
@@ -123,6 +153,69 @@ class DispatcherEditOrder extends Component {
             })
         }
     }
+
+    fetchToCompany = (event) => {
+        this.setState({
+            companyNameForSearch: [event.target.value]
+        });
+        if (event.target.value!==''){
+            fetch(`http://localhost:8080/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
+                .then(response => {
+                    return response.json()
+                }).then(data => {
+                this.addCompaniesInSelect(data);
+            });
+            document.getElementById('client_id').style.display = '';
+        }else{
+            document.getElementById('client_id').style.display = 'none';
+        }
+        this.fetchToUserStocks();
+        this.fetchToStocks(this.state.client_id);
+
+    };
+
+    fetchToUserStocks = () =>{
+        // let companyId = sessionStorage.getItem('companyId');
+        let companyId = 3;//заглушка
+        fetch(`http://localhost:8080/api/companies/${companyId}/stocks`).then(response=>response.json()).then(data=>{
+            let html = '';
+            if (data.status === 404) return;
+            console.log(data);
+            data.map(stock=>{
+                html += `<option value="${stock.id}">${stock.address}</option>`
+            });
+            document.getElementById('departure_stock').innerHTML = html;
+            this.setState({
+                departure_stock: this.state.order.sender.id
+            })
+        })
+    };
+
+    fetchToStocks = (id) =>{
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response=>response.json()).then(data=>{
+            let html = '';
+            if (data.status === 404) return;
+            console.log(data);
+            data.map(stock=>{
+                html += `<option value="${stock.id}">${stock.address}</option>`
+            });
+            document.getElementById('delivery_stock').innerHTML = html;
+            this.setState({
+                departure_stock: this.state.order.sender.id
+            })
+        })
+    };
+
+    addCompaniesInSelect(companies) {
+        let html = '';
+        if (companies.length === 0) return;
+        companies.map(client => {
+            html += `<option value=${client.id}>${client.name}</option>`
+        });
+        document.getElementById('client_id').innerHTML = html;
+        this.state.client_id = this.state.order.client.id;
+    }
+
 
     render() {
         return (
@@ -141,7 +234,7 @@ class DispatcherEditOrder extends Component {
 
 
                             <select className={'form-control'} value={this.state.client_id}
-                                    onClick={this.setCustomerCompany} onChange={this.changeInput}
+                                    onClick={this.setCustomerCompany} onChange={this.changeCompany}
                                     name="client_id" id="client_id">
                             </select>
 

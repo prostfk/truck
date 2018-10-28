@@ -36,7 +36,7 @@ public class BirthDayCongratulations {
                 SimpleDateFormat df = new SimpleDateFormat("MM-dd");
                 String dateString = String.format("%%-%s", df.format(date));
                 System.out.println(dateString);
-                List<User> usersByBirthDay = Collections.emptyList();
+                List<User> usersByBirthDay = userRepository.customFindUsersByBirthDay(dateString);
                 usersByBirthDay.forEach(user -> {
                     try {
                         EmailUtil.sendMail(email, password, user.getEmail(), "Happy birthday",
