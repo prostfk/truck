@@ -177,7 +177,7 @@ class DispatcherEditOrder extends Component {
     fetchToUserStocks = () =>{
         // let companyId = sessionStorage.getItem('companyId');
         let companyId = 3;//заглушка
-        fetch(`http://localhost:8080/api/companies/${companyId}/stocks`).then(response=>response.json()).then(data=>{
+        fetch(`http://localhost:8080/api/companies/${companyId}/stocks`,{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response=>response.json()).then(data=>{
             let html = '';
             if (data.status === 404) return;
             console.log(data);
@@ -192,7 +192,7 @@ class DispatcherEditOrder extends Component {
     };
 
     fetchToStocks = (id) =>{
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response=>response.json()).then(data=>{
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`,{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response=>response.json()).then(data=>{
             let html = '';
             if (data.status === 404) return;
             console.log(data);

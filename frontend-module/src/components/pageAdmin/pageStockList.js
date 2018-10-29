@@ -18,7 +18,7 @@ class PageStockList extends React.Component {
 
     forceUpdateHandler(){
         const refthis = this;
-        fetch('http://localhost:8080/api/stocks/', {method: "get"}).then(function (response) {
+        fetch('http://localhost:8080/api/stocks/', {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             refthis.setState({stocks:result})
@@ -42,7 +42,7 @@ class PageStockList extends React.Component {
         formData.append("name", stockname);
         formData.append("address", stockaddress);
         console.log(formData);
-        fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData}).then(response => {
+        fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
             response.json().then(data => {
                 console.log(data);
                 this.forceUpdateHandler();
@@ -51,7 +51,7 @@ class PageStockList extends React.Component {
     }
 
     getStockList(){
-        const fetchResult = fetch('http://localhost:8080/api/stocks', {method: "get"}).then(function (response) {
+        const fetchResult = fetch('http://localhost:8080/api/stocks', {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

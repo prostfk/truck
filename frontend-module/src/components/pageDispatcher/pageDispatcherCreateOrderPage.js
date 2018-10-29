@@ -59,7 +59,7 @@ class DispatcherCreateOrderPage extends React.Component {
         formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
-        fetch('http://localhost:8080/api/orders/createOrder', {method: "POST", body: formData}).then(response => {
+        fetch('http://localhost:8080/api/orders/createOrder', {method: "POST", body: formData,headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
             return response.json()
         }).then(data => {
             if (data.error === undefined) {
@@ -92,7 +92,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     fetchToStocks(id) {
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`,{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -104,7 +104,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     fetchToSenderStocks(id) {
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -134,7 +134,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     findAutos() {
-        fetch('http://localhost:8080/api/orders/createOrder/getAutos').then(response => response.json().then(data => {
+        fetch('http://localhost:8080/api/orders/createOrder/getAutos',{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
@@ -147,7 +147,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     findDrivers() {
-        fetch('http://localhost:8080/api/orders/createOrder/getDrivers').then(response => response.json()).then(data => {
+        fetch('http://localhost:8080/api/orders/createOrder/getDrivers',{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`

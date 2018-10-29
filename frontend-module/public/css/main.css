@@ -86,4 +86,7 @@ body {
     background-color: #f3f3f3;
     padding: 15px;
 }
+.error-span{
+    color: red;
+}
 

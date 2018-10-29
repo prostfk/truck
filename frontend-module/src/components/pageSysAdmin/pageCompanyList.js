@@ -19,7 +19,7 @@ class SysAdminPage extends React.Component{
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId){
         const refThis = this;
-        fetch('http://localhost:8080/api/companies/'+companyId, {method: "get"}).then(function (response) {
+        fetch('http://localhost:8080/api/companies/'+companyId, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             refThis.state.companies.find((element, index, array)=>{
@@ -40,7 +40,7 @@ class SysAdminPage extends React.Component{
         let formData = new FormData();
         let value = this.state.inputMail;
         formData.append("email", value);
-        fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST"}).then(function (response) {
+        fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             response.json().then(function (data) {
                 if (data.error===undefined){
                     document.getElementById('emaillabel').innerText = 'Check your email';
@@ -90,7 +90,8 @@ class SysAdminPage extends React.Component{
         const ref = this;
         const myres = fetch('http://localhost:8080/api/companies/changeStatus', {
             method: "POST",
-            body: compId
+            body: compId,
+            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -108,7 +109,8 @@ class SysAdminPage extends React.Component{
         console.log(desc + compId);
         const myres = fetch('http://localhost:8080/api/companies/disable/'+compId, {
             method: "POST",
-            body: desc
+            body: desc,
+            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

@@ -69,25 +69,30 @@ public class AnonController {
 
     @PostMapping(value = "/registration")//redo for rest
     @ResponseBody
-    public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) {
+    public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
         user.setUserRole(UserRole.ROLE_ADMIN);
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
+        if (tokenByTokenValue==null){
+            jsonObject.put("error", "Invalid link!");
+            return jsonObject;
+        }
         user.setEmail(tokenByTokenValue.getEmail());
-        if (!bindingResult.hasErrors()) {
-            System.out.println("OK");
+        if (!bindingResult.hasErrors() && userRepository.findUserByUsername(user.getUsername())==null && companyRepository.findCompanyByName(companyName)==null) {
             if (user.getEmail().equals(tokenByTokenValue.getEmail())) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
+                Company save1 = companyRepository.save(new Company(companyName, 1));
+                user.setCompany(save1);
                 @Valid User save = userRepository.save(user);
-                companyRepository.save(new Company(companyName,1));
                 if (save!=null){
                     tokenRepository.delete(tokenByTokenValue);
+                    jsonObject.put("status", "success");
+                    return jsonObject;
                 }
             }
         }
-        System.out.println("ERROR");
-        Map<Object, Object> objectObjectHashMap = new HashMap<>();
-//        objectObjectHashMap.put("error", "check data");
-        return objectObjectHashMap;
+        jsonObject.put("error", "Invalid data!");
+        return jsonObject;
     }
 
 
