@@ -5,6 +5,7 @@ import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.entity.OrderDto;
@@ -166,6 +167,14 @@ public class DispatcherController {
         waybill.setId(waybillId);
         waybillRepository.save(waybill);
         return orderRepository.save(orderFromDto);
+    }
+
+    @PostMapping(value = "/orders/createConsignment")
+    public Object createConsignment(Long orderId, @RequestParam(value = "consignments")String []consignments){
+        for (int i = 0; i < consignments.length; i++) {
+            System.out.println("i = " + consignments[i]);
+        }
+        return "Hello world";
     }
 
 }

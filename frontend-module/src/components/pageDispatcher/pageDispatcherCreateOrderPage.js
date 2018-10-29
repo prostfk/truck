@@ -27,7 +27,9 @@ class DispatcherCreateOrderPage extends React.Component {
             date_departure: "14/07/2018",
             date_arrival: "01/01/2019",
             company: "",
-
+            consignment: [],
+            newConsignmentName: "",
+            newOrderId: ''
         };
         document.title = "Создать заказ";
         this.fetchToSenderStocks(3);//это заглушка. Тут вместо 1 должен генериться id компании автоматически
@@ -41,7 +43,7 @@ class DispatcherCreateOrderPage extends React.Component {
         });
     }
 
-    saveBtnClick(event) {
+    saveBtnClick() {
         let formData = new FormData();
         // let time = this.state.date_departure.join('');
         formData.append("clientId", this.state.client_id);
@@ -54,13 +56,20 @@ class DispatcherCreateOrderPage extends React.Component {
         formData.append("waybillStatus", this.state.waybill_status);
         formData.append("autoId", this.state.auto);
         formData.append("driverId", this.state.driver);
-        formData.forEach((v,k) =>{
+        formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
         fetch('http://localhost:8080/api/orders/createOrder', {method: "POST", body: formData}).then(response => {
             return response.json()
-        }).then(data=>{
-            console.log(data);
+        }).then(data => {
+            if (data.error === undefined) {
+                this.setState({
+                    newOrderId: data.id
+                });
+                console.log("Order id: " + this.state.newOrderId);
+                document.getElementById('order-from').style.display = 'none';
+                document.getElementById('consignment-form').style.display = '';
+            }
         });
     }
 
@@ -68,7 +77,7 @@ class DispatcherCreateOrderPage extends React.Component {
         this.setState({
             companyNameForSearch: [event.target.value]
         });
-        if (event.target.value!==''){
+        if (event.target.value !== '') {
             fetch(`http://localhost:8080/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
                 .then(response => {
                     return response.json()
@@ -76,17 +85,17 @@ class DispatcherCreateOrderPage extends React.Component {
                 this.addCompaniesInSelect(data);
             });
             document.getElementById('client_id').style.display = '';
-        }else{
+        } else {
             document.getElementById('client_id').style.display = 'none';
         }
 
     }
 
-    fetchToStocks(id){
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response=>response.json()).then(data=>{
+    fetchToStocks(id) {
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
-            data.map(stock=>{
+            data.map(stock => {
                 html += `<option value="${stock.id}">${stock.address}</option>`
             });
             document.getElementById('delivery_stock').innerHTML = html;
@@ -94,11 +103,11 @@ class DispatcherCreateOrderPage extends React.Component {
         })
     }
 
-    fetchToSenderStocks(id){
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response=>response.json()).then(data=>{
+    fetchToSenderStocks(id) {
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
-            data.map(stock=>{
+            data.map(stock => {
                 html += `<option value="${stock.id}">${stock.address}</option>`;
             });
             document.getElementById('departure_stock').innerHTML = html;
@@ -117,17 +126,17 @@ class DispatcherCreateOrderPage extends React.Component {
 
     }
 
-    setCustomerCompany(event){
+    setCustomerCompany(event) {
         this.setState({
             client_id: event.target.value
         });
         this.fetchToStocks(event.target.value)
     }
 
-    findAutos(){
-        fetch('http://localhost:8080/api/orders/createOrder/getAutos').then(response=>response.json().then(data=>{
+    findAutos() {
+        fetch('http://localhost:8080/api/orders/createOrder/getAutos').then(response => response.json().then(data => {
             let autoHtml = '';
-            data.map(auto=>{
+            data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
                 console.log(auto.id)
             });
@@ -137,8 +146,8 @@ class DispatcherCreateOrderPage extends React.Component {
         }))
     }
 
-    findDrivers(){
-        fetch('http://localhost:8080/api/orders/createOrder/getDrivers').then(response=>response.json()).then(data=>{
+    findDrivers() {
+        fetch('http://localhost:8080/api/orders/createOrder/getDrivers').then(response => response.json()).then(data => {
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
@@ -149,7 +158,7 @@ class DispatcherCreateOrderPage extends React.Component {
         });
     }
 
-    setDefault(){
+    setDefault() {
         this.setState({departure_stock: document.getElementById('departure_stock').value});
         this.setState({delivery_stock: document.getElementById('delivery_stock').value});
         this.setState({status: document.getElementById('status').value});
@@ -158,91 +167,168 @@ class DispatcherCreateOrderPage extends React.Component {
         this.setState({auto: document.getElementById('auto').value});
     }
 
+    //Consignment
+
+    editConsignment = (event) => {
+        event.preventDefault();
+        this.setState({
+            consignment: [...this.state.consignment, this.state.newConsignmentName],
+            newConsignmentName: ''
+        });
+
+    };
+
+    sendConsignment = () => {
+        let formData = new FormData();
+        formData.append("id", this.state.newOrderId);
+        let array = [];
+        for (let i = 0; i < this.state.consignment.length; i++){
+            array.push(this.state.consignment[i].join(''))
+        }
+        console.log(array);
+        formData.append("consignments",JSON.stringify(array));
+        fetch('http://localhost:8080/api/orders/createConsignment',{body: formData, method: "POST", headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response=>{
+            return response.json()
+        }).then(data => {
+            console.log(data);
+            if (data.error === undefined){
+                window.location.href = '/';
+            }
+        })
+    };
+
     render() {
 
         let customerCompanyStyle = {
             display: 'none'
         };
-        return <div className="row">
-            <div className="offset-md-1 col-md-6 superuserform_companylist">
-                <div className="row">
-                    <div className="col-md-6">
-                        <h3>Основное</h3>
-                        <small className="form-text text-muted">Наименование товара</small>
-                        <input value={this.state.name} onChange={this.changeInput} type="text"
-                               className="form-control" id="name" placeholder="Наименование товара"/>
+        return (
+            <div>
+                <div className="row" id={'order-form'}>
+                    <div className="offset-md-1 col-md-6 superuserform_companylist">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <h3>Основное</h3>
+                                <small className="form-text text-muted">Наименование товара</small>
+                                <input value={this.state.name} onChange={this.changeInput} type="text"
+                                       className="form-control" id="name" placeholder="Наименование товара"/>
 
-                        <small className="form-text text-muted">Компания- заказчик перевозки</small>
-                        <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany} type="text"
-                               className="form-control" id="companyNameForSearch" placeholder="Заказчик"/>
-
-
-                        <select className={'form-control'} value={this.state.client_id} onClick={this.setCustomerCompany} onChange={this.changeInput} style={customerCompanyStyle}  name="client_id" id="client_id">
-                        </select>
-
-                        <small className="form-text text-muted">Адрес Отправления</small>
-                        <select value={this.state.departure_stock} onChange={this.changeInput}
-                               className="form-control" id="departure_stock" placeholder="Откуда"/>
+                                <small className="form-text text-muted">Компания- заказчик перевозки</small>
+                                <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany}
+                                       type="text"
+                                       className="form-control" id="companyNameForSearch" placeholder="Заказчик"/>
 
 
-                        <small className="form-text text-muted">Адрес Доставки</small>
-                        <select value={this.state.delivery_stock} onChange={this.changeInput} className="form-control" id="delivery_stock" placeholder="Куда">
-                        </select>
+                                <select className={'form-control'} value={this.state.client_id}
+                                        onClick={this.setCustomerCompany} onChange={this.changeInput}
+                                        style={customerCompanyStyle} name="client_id" id="client_id">
+                                </select>
 
-                        <div className="form-group">
-                            <small className="form-text text-muted">Сатус заказа</small>
-                            <select onChange={this.changeInput} value={this.state.status} className="form-control"
-                                    id="status">
-                                <option selected disabled>Статус</option>
-                                <option>Принят</option>
-                                <option>Отклонен</option>
-                                <option>Выполен</option>
-                                <option>Не выполнен</option>
-                            </select>
+                                <small className="form-text text-muted">Адрес Отправления</small>
+                                <select value={this.state.departure_stock} onChange={this.changeInput}
+                                        className="form-control" id="departure_stock" placeholder="Откуда"/>
+
+
+                                <small className="form-text text-muted">Адрес Доставки</small>
+                                <select value={this.state.delivery_stock} onChange={this.changeInput}
+                                        className="form-control"
+                                        id="delivery_stock" placeholder="Куда">
+                                </select>
+
+                                <div className="form-group">
+                                    <small className="form-text text-muted">Сатус заказа</small>
+                                    <select onChange={this.changeInput} value={this.state.status}
+                                            className="form-control"
+                                            id="status">
+                                        <option selected disabled>Статус</option>
+                                        <option>Принят</option>
+                                        <option>Отклонен</option>
+                                        <option>Выполен</option>
+                                        <option>Не выполнен</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <h3>ТТН</h3>
+
+                                <small className="form-text text-muted">Статус</small>
+                                <select onChange={this.changeInput} value={this.state.waybill_status}
+                                        className="form-control"
+                                        id="waybill_status">
+                                    <option selected disabled>Статус</option>
+                                    <option>Оформлен</option>
+                                    <option>Проверка завершена</option>
+                                    <option>Доставлен</option>
+                                </select>
+
+
+                                <small className="form-text text-muted">Дата отправления</small>
+                                <input value={this.state.date_departure} onChange={this.changeInput} type="text"
+                                       className="form-control" id="date_departure" placeholder="14.10.2015"/>
+
+                                <small className="form-text text-muted">Дата прибытия</small>
+                                <input value={this.state.date_arrival} onChange={this.changeInput} type="text"
+                                       className="form-control" id="date_arrival" placeholder="15.10.2016"/>
+
+                                <small className="form-text text-muted">Водитель</small>
+                                <select onChange={this.changeInput} value={this.state.driver} className="form-control"
+                                        id="driver">
+                                    <option selected disabled>Водитель</option>
+
+                                </select>
+
+                                <small className="form-text text-muted">Автомобиль</small>
+                                <select onChange={this.changeInput} value={this.state.auto} className="form-control"
+                                        id="auto">
+                                    <option selected disabled>Авто</option>
+
+                                </select>
+
+                            </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
-                        <h3>ТТН</h3>
+                    <div className="offset-md-2 col-md-8 form_clear">
+                        <a onClick={this.saveBtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
+                    </div>
 
-                        <small className="form-text text-muted">Статус</small>
-                        <select onChange={this.changeInput} value={this.state.waybill_status} className="form-control"
-                                id="waybill_status">
-                            <option selected disabled>Статус</option>
-                            <option>Оформлен</option>
-                            <option>Проверка завершена</option>
-                            <option>Доставлен</option>
-                        </select>
+                </div>
+                <div style={customerCompanyStyle} id={'consignment-form'}>
+                    <div className="d-flex justify-content-center align-items-center">
+                        <form className="form-inline align-content-center" onSubmit={(e) => {
+                            e.preventDefault()
+                        }}>
+                            <div className="form-group">
+                                <label htmlFor="consignment">Название товара</label>
+                                <input type="text" id="newConsignmentName" value={this.state.newConsignmentName}
+                                       onChange={this.changeInput} className="form-control mx-sm-3"/>
+                                <button type={'button'} className="btn btn-success"
+                                        onClick={this.editConsignment}>Добавить
+                                </button>
+                                <button type={'button'} className="btn btn-primary"
+                                        onClick={this.sendConsignment}>Отправить
+                                </button>
 
 
-                        <small className="form-text text-muted">Дата отправления</small>
-                        <input value={this.state.date_departure} onChange={this.changeInput} type="text"
-                               className="form-control"  id="date_departure" placeholder="14.10.2015"/>
-
-                        <small className="form-text text-muted">Дата прибытия</small>
-                        <input value={this.state.date_arrival} onChange={this.changeInput} type="text"
-                               className="form-control" id="date_arrival" placeholder="15.10.2016"/>
-
-                        <small className="form-text text-muted">Водитель</small>
-                        <select onChange={this.changeInput} value={this.state.driver} className="form-control"
-                                id="driver">
-                            <option selected disabled>Водитель</option>
-
-                        </select>
-
-                        <small className="form-text text-muted">Автомобиль</small>
-                        <select onChange={this.changeInput} value={this.state.auto} className="form-control" id="auto">
-                            <option selected disabled>Авто</option>
-
-                        </select>
-
+                            </div>
+                        </form>
+                    </div>
+                    <div className="">
+                        <ul id='lis' className="list-group">
+                            <ListOfConsignments items={this.state.consignment}/>
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <div className="offset-md-2 col-md-8 form_clear">
-                <a onClick={this.saveBtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
-            </div>
-        </div>
+            </div>);
     }
 }
+
+const ListOfConsignments = props => (
+    <ul>
+        {
+            props.items.map((item, index) => <li className={'list-group-item list-group-item-secondary text-center'}
+                                                 key={index}>{item}</li>)
+        }
+    </ul>
+);
 
 export default DispatcherCreateOrderPage;
