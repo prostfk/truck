@@ -19,7 +19,7 @@ class DriverOrderList extends React.Component{
 
     /*get all company list*/
     getOrderList() {
-        return fetch('http://localhost:8080/api/orders/getMyOrders', {method: "get"}).then(function (response) {
+        return fetch('http://localhost:8080/api/orders/getMyOrders', {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
