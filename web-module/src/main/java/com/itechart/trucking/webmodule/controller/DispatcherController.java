@@ -159,7 +159,6 @@ public class DispatcherController {
 
     @PostMapping(value = "/companies/orders/edit")
     public Object editOrder(OrderDto orderDto, Long orderId, Long waybillId, HttpServletRequest request) throws ParseException {
-        request.getParameterNames().asIterator().forEachRemaining(System.out::println);
         Order orderFromDto = orderService.getOrderFromDto(orderDto);
         orderFromDto.setId(orderId);
         System.out.println(orderFromDto);
