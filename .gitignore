@@ -24,6 +24,8 @@
 */node-modules/**
 */logging/**
 *.properties
+*.log
+*.gz
 
 ### NetBeans ###
 /nbproject/private/

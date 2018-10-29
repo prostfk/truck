@@ -57,7 +57,7 @@ class DispatcherEditOrderPage extends React.Component {
     getCurrentOrder() {//load order from server
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
-        return fetch(`http://localhost:8080/api/orders/${id}`, {method: "get"}).then(function (response) {
+        return fetch(`http://localhost:8080/api/orders/${id}`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             // console.log(result);
@@ -66,14 +66,14 @@ class DispatcherEditOrderPage extends React.Component {
     }
 
     static findFreeAutos(){
-        return fetch('http://localhost:8080/api/orders/createOrder/getAutos').then(response=>response.json().then(data=>{
+        return fetch('http://localhost:8080/api/orders/createOrder/getAutos',{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response=>response.json().then(data=>{
             // console.log(data);
             return data;
         }))
     }
 
     static findFreeDrivers(){
-        return fetch('http://localhost:8080/api/orders/createOrder/getDrivers').then(response=>response.json()).then(data=>{return data});
+        return fetch('http://localhost:8080/api/orders/createOrder/getDrivers',{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response=>response.json()).then(data=>{return data});
     }
 
 
@@ -89,7 +89,7 @@ class DispatcherEditOrderPage extends React.Component {
                 formData.append("dateExecuted",this.state.order.dateExecuted);
                 formData.append("company",this.state.order.company);
                 console.log(formData.forEach(s => console.log(s)));
-                fetch('http://localhost:8080/api/orders/createOrder', {method: "POST",body: formData}).then(response => {
+                fetch('http://localhost:8080/api/orders/createOrder', {method: "POST",body: formData,headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
                     response.json().then(data => console.log(data))
                 }, err => console.log(err));
     }

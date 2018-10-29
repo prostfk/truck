@@ -18,4 +18,11 @@ public class Consignment {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    public Consignment() {
+    }
+
+    public Consignment(String name, Order order) {
+        this.name = name;
+        this.order = order;
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
+@Deprecated
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired

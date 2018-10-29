@@ -29,11 +29,11 @@ class DispatcherEditOrder extends Component {
             date_arrival: "01/01/2019",
             company: "",
             order: {},
-            client:{},
+            client: {},
             companyObj: {},
             receiver: {},
             sender: {},
-            waybill:{}
+            waybill: {}
         };
         this.initOrder();
     }
@@ -41,24 +41,24 @@ class DispatcherEditOrder extends Component {
     sendInfoToServer() {
         console.log(this.state.order);
         this.setState({
-            companyObj:{
+            companyObj: {
                 name: this.state.company
             },
-            receiver:{
+            receiver: {
                 address: this.state.delivery_stock
             },
-            sender:{
+            sender: {
                 address: this.state.departure_stock,
                 company: this.state.company
             },
-            waybill:{
+            waybill: {
                 status: this.state.waybill_status,
                 auto: this.state.auto,
                 driver: this.state.driver,
                 dateArrival: this.state.date_arrival,
                 dateDeparture: this.state.date_departure
             },
-            order:{
+            order: {
                 dateAccepted: this.state.date_departure,
                 dateExecuted: this.state.date_arrival,
                 id: this.state.order.id,
@@ -79,13 +79,21 @@ class DispatcherEditOrder extends Component {
         formData.append("orderId", this.state.order.id);
         formData.append("waybillId", this.state.order.waybill.id);
         console.log(this.state);
-        formData.forEach((v,k) =>{
+        formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
-        fetch('http://localhost:8080/api/companies/orders/edit', {method: 'POST', headers: {'Auth-token': sessionStorage.getItem('Auth-token')}, body: formData}).then(response=>{
+        fetch('http://localhost:8080/api/companies/orders/edit', {
+            method: 'POST',
+            headers: {'Auth-token': sessionStorage.getItem('Auth-token')},
+            body: formData
+        }).then(response => {
             return response.json()
-        }).then(data=>{
-            console.log(data)
+        }).then(data => {
+            if (data.error === undefined){
+                this.showConsignmentHideOrder();
+                document.getElementById('success-order-span').innerText = 'Изменено';
+
+            }
         })
     }
 
@@ -95,8 +103,8 @@ class DispatcherEditOrder extends Component {
             date_arrival: CommonUtil.getCorrectDateFromLong(this.state.order.dateExecuted),
             status: this.state.order.status,
             name: this.state.order.name,
-            companyNameForSearch: this.state.order.client.name,
-            auto: this.state.order.waybill.auto.id,
+            companyNameForSearch: this.state.client.name,
+            auto: this.state.waybill.auto.id,
             driver: this.state.order.waybill.driver.id,
             departure_stock: this.state.order.sender.id,
             delivery_stock: this.state.order.receiver.id,
@@ -127,6 +135,7 @@ class DispatcherEditOrder extends Component {
                 waybill: data.waybill,
                 companyNameForSearch: data.client.name
             });
+            console.log(this.state);
             this.setValuesFromJson()
         });
     }
@@ -137,7 +146,7 @@ class DispatcherEditOrder extends Component {
         });
     }
 
-    changeCompany = (event) =>{
+    changeCompany = (event) => {
         this.setState({
             [event.target.id]: [event.target.value]
         });
@@ -146,8 +155,8 @@ class DispatcherEditOrder extends Component {
         this.fetchToStocks(this.state.client_id);
     };
 
-    changeDate(event){
-        if (CommonUtil.isDateCorrect(event.target.value)){
+    changeDate(event) {
+        if (CommonUtil.isDateCorrect(event.target.value)) {
             this.setState({
                 [event.target.id]: [event.target.value]
             })
@@ -158,7 +167,7 @@ class DispatcherEditOrder extends Component {
         this.setState({
             companyNameForSearch: [event.target.value]
         });
-        if (event.target.value!==''){
+        if (event.target.value !== '') {
             fetch(`http://localhost:8080/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
                 .then(response => {
                     return response.json()
@@ -166,7 +175,7 @@ class DispatcherEditOrder extends Component {
                 this.addCompaniesInSelect(data);
             });
             document.getElementById('client_id').style.display = '';
-        }else{
+        } else {
             document.getElementById('client_id').style.display = 'none';
         }
         this.fetchToUserStocks();
@@ -174,14 +183,13 @@ class DispatcherEditOrder extends Component {
 
     };
 
-    fetchToUserStocks = () =>{
-        // let companyId = sessionStorage.getItem('companyId');
-        let companyId = 3;//заглушка
-        fetch(`http://localhost:8080/api/companies/${companyId}/stocks`).then(response=>response.json()).then(data=>{
+    fetchToUserStocks = () => {
+        // fetch(`http://localhost:8080/api/companies/${companyId}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/companies/findStocksByUsername`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             console.log(data);
-            data.map(stock=>{
+            data.map(stock => {
                 html += `<option value="${stock.id}">${stock.address}</option>`
             });
             document.getElementById('departure_stock').innerHTML = html;
@@ -191,12 +199,12 @@ class DispatcherEditOrder extends Component {
         })
     };
 
-    fetchToStocks = (id) =>{
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`).then(response=>response.json()).then(data=>{
+    fetchToStocks = (id) => {
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             console.log(data);
-            data.map(stock=>{
+            data.map(stock => {
                 html += `<option value="${stock.id}">${stock.address}</option>`
             });
             document.getElementById('delivery_stock').innerHTML = html;
@@ -216,94 +224,142 @@ class DispatcherEditOrder extends Component {
         this.state.client_id = this.state.order.client.id;
     }
 
+    showOrderHideConsignment = () => {
+        document.getElementById('order-form').style.display = '';
+        document.getElementById('consignment-form').style.display = 'none';
+    };
+
+    showConsignmentHideOrder = () => {
+        document.getElementById('order-form').style.display = 'none';
+        document.getElementById('consignment-form').style.display = '';
+    };
 
     render() {
+        let none = {
+            display: 'none'
+        };
+        let green = {
+            color: 'green'
+        };
         return (
-            <div className="row">
-                <div className="offset-md-1 col-md-6 superuserform_companylist">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <h3>Основное</h3>
-                            <small className="form-text text-muted">Наименование товара</small>
-                            <input value={this.state.name} onChange={this.changeInput} type="text"
-                                   className="form-control" id="name" placeholder="Наименование товара"/>
+            <div>
+                <span className="text-center" style={green} id={'success-order-span'}/>
+                <div className="row" id={'order-form'}>
+                    <div className="offset-md-1 col-md-6 superuserform_companylist">
+                        <div className="row">
+                            <div className="col-md-6">
+                                <h3>Основное</h3>
+                                <small className="form-text text-muted">Наименование товара</small>
+                                <input value={this.state.name} onChange={this.changeInput} type="text"
+                                       className="form-control" id="name" placeholder="Наименование товара"/>
 
-                            <small className="form-text text-muted">Компания- заказчик перевозки</small>
-                            <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany} type="text"
-                                   className="form-control" id="companyNameForSearch" placeholder="Заказчик"/>
-
-
-                            <select className={'form-control'} value={this.state.client_id}
-                                    onClick={this.setCustomerCompany} onChange={this.changeCompany}
-                                    name="client_id" id="client_id">
-                            </select>
-
-                            <small className="form-text text-muted">Адрес Отправления</small>
-                            <select value={this.state.departure_stock} onChange={this.changeInput}
-                                    className="form-control" id="departure_stock" placeholder="Откуда"/>
+                                <small className="form-text text-muted">Компания- заказчик перевозки</small>
+                                <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany} type="text"
+                                       className="form-control" id="companyNameForSearch" placeholder="Заказчик"/>
 
 
-                            <small className="form-text text-muted">Адрес Доставки</small>
-                            <select value={this.state.delivery_stock} onChange={this.changeInput}
-                                    className="form-control" id="delivery_stock" placeholder="Куда">
-                            </select>
-
-                            <div className="form-group">
-                                <small className="form-text text-muted">Сатус заказа</small>
-                                <select onChange={this.changeInput} value={this.state.status} className="form-control"
-                                        id="status">
-                                    <option selected disabled>Статус</option>
-                                    <option>Принят</option>
-                                    <option>Отклонен</option>
-                                    <option>Выполен</option>
-                                    <option>Не выполнен</option>
+                                <select className={'form-control'} value={this.state.client_id}
+                                        onClick={this.setCustomerCompany} onChange={this.changeCompany}
+                                        name="client_id" id="client_id">
                                 </select>
+
+                                <small className="form-text text-muted">Адрес Отправления</small>
+                                <select value={this.state.departure_stock} onChange={this.changeInput}
+                                        className="form-control" id="departure_stock" placeholder="Откуда"/>
+
+
+                                <small className="form-text text-muted">Адрес Доставки</small>
+                                <select value={this.state.delivery_stock} onChange={this.changeInput}
+                                        className="form-control" id="delivery_stock" placeholder="Куда">
+                                </select>
+
+                                <div className="form-group">
+                                    <small className="form-text text-muted">Сатус заказа</small>
+                                    <select onChange={this.changeInput} value={this.state.status} className="form-control"
+                                            id="status">
+                                        <option selected disabled>Статус</option>
+                                        <option>Принят</option>
+                                        <option>Отклонен</option>
+                                        <option>Выполен</option>
+                                        <option>Не выполнен</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <h3>ТТН</h3>
+
+                                <small className="form-text text-muted">Статус</small>
+                                <select onChange={this.changeInput} value={this.state.waybill_status}
+                                        className="form-control"
+                                        id="waybill_status">
+                                    <option selected disabled>Статус</option>
+                                    <option>Оформлен</option>
+                                    <option>Проверка завершена</option>
+                                    <option>Доставлен</option>
+                                </select>
+
+
+                                <small className="form-text text-muted">Дата отправления</small>
+                                <input value={this.state.date_departure} onChange={this.changeInput} type="text"
+                                       className="form-control" id="date_departure" placeholder="14.10.2015"/>
+                                <span className={'error-span'} id={'error-span-date_departure'}/>
+
+                                <small className="form-text text-muted">Дата прибытия</small>
+                                <input value={this.state.date_arrival} onChange={this.changeInput} type="text"
+                                       className="form-control" id="date_arrival" placeholder="15.10.2016"/>
+                                <span className={'error-span'} id={'error-span-date_arrival'}/>
+
+
+                                <small className="form-text text-muted">Водитель</small>
+                                <select onChange={this.changeInput} value={this.state.driver} className="form-control"
+                                        id="driver">
+                                    <option selected disabled>Водитель</option>
+
+                                </select>
+
+                                <small className="form-text text-muted">Автомобиль</small>
+                                <select onChange={this.changeInput} value={this.state.auto} className="form-control"
+                                        id="auto">
+                                    <option selected disabled>Авто</option>
+                                </select>
+
                             </div>
                         </div>
-                        <div className="col-md-6">
-                            <h3>ТТН</h3>
-
-                            <small className="form-text text-muted">Статус</small>
-                            <select onChange={this.changeInput} value={this.state.waybill_status}
-                                    className="form-control"
-                                    id="waybill_status">
-                                <option selected disabled>Статус</option>
-                                <option>Оформлен</option>
-                                <option>Проверка завершена</option>
-                                <option>Доставлен</option>
-                            </select>
-
-
-                            <small className="form-text text-muted">Дата отправления</small>
-                            <input value={this.state.date_departure} onChange={this.changeInput} type="text"
-                                   className="form-control" id="date_departure" placeholder="14.10.2015"/>
-                            <span className={'error-span'} id={'error-span-date_departure'}/>
-
-                            <small className="form-text text-muted">Дата прибытия</small>
-                            <input value={this.state.date_arrival} onChange={this.changeInput} type="text"
-                                   className="form-control" id="date_arrival" placeholder="15.10.2016"/>
-                            <span className={'error-span'} id={'error-span-date_arrival'}/>
-
-
-                            <small className="form-text text-muted">Водитель</small>
-                            <select onChange={this.changeInput} value={this.state.driver} className="form-control"
-                                    id="driver">
-                                <option selected disabled>Водитель</option>
-
-                            </select>
-
-                            <small className="form-text text-muted">Автомобиль</small>
-                            <select onChange={this.changeInput} value={this.state.auto} className="form-control"
-                                    id="auto">
-                                <option selected disabled>Авто</option>
-
-                            </select>
-
-                        </div>
+                    </div>
+                    <div className="offset-md-2 col-md-8 form_clear">
+                        <a onClick={this.sendInfoToServer} id={'order-submit-button'} className="btn btn-success btn_fullsize">Сохранить</a>
                     </div>
                 </div>
-                <div className="offset-md-2 col-md-8 form_clear">
-                    <a onClick={this.sendInfoToServer} className="btn btn-success btn_fullsize">Сохранить</a>
+                <div style={none} id={'consignment-form'}>
+                    <div className="d-flex justify-content-center align-items-center">
+                        <form className="form-inline align-content-center" onSubmit={(e) => {e.preventDefault()}}>
+                            <button className={'btn btn-secondary'} onClick={this.showOrderHideConsignment}>Вернуться к заказу</button>
+                            <div className="form-group">
+                                <label htmlFor="consignment">Название товара</label>
+                                <input type="text" id="newConsignmentName" value={this.state.newConsignmentName}
+                                       onChange={this.changeInput} className="form-control mx-sm-3"/>
+                                <button type={'button'} className="btn btn-success"
+                                        onClick={this.addConsignment}>Добавить
+                                </button>
+                                <button type={'button'} className="btn btn-primary"
+                                        onClick={this.sendConsignment}>Отправить
+                                </button>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div className="">
+                        <ul id='lis' className="list-group">
+                            {
+                                this.state.consignment.map((item, index) =>
+                                    <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{item}   -
+                                        <span aria-hidden="true">&times;</span>
+                                    </li>
+
+                                )
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         );

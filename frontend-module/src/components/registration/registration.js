@@ -27,20 +27,29 @@ class registration extends Component {
         formData.append('password', this.state.password);
         formData.append('companyName', this.state.companyName);
         formData.append('token', this.state.token);
-        console.log(this.state);
-        console.log(formData.forEach(i => console.log(i)));
         fetch(`http://localhost:8080/registration`, {
             method: "POST",
             body: formData
-        }).then(response => response.json().then(data => {
+        }).then(response=>{
+            return response.json()
+        }).then(data=>{
             console.log(data);
-        }))
+            if (data.error === undefined){
+                document.getElementById('doc-form').style.display = 'none';
+                window.location.href = '/auth'
+            }else{
+                document.getElementById('error-span').style.color = "red";
+                document.getElementById('error-span').innerText = "Invalid data";
+            }
+
+        })
     }
 
     render() {
         return <div className="row">
             <div className="offset-md-3 col-md-6">
-                <form className="superuserform_newaccountform registrate_company_form">
+                <form className="superuserform_newaccountform registrate_company_form" id={'reg-from'}>
+                    <span id="error-span" className={'error-span'}/>
                     <h2>Регистрация компании</h2>
                     <div className="form-group">
                         <label htmlFor="inputCompanyName">Название компании</label>
