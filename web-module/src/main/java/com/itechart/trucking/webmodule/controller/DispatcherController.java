@@ -6,6 +6,7 @@ import com.itechart.trucking.client.repository.ClientRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
+import com.itechart.trucking.consignment.repository.ConsignmentRepository;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.entity.OrderDto;
@@ -17,6 +18,9 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
+import com.itechart.trucking.webmodule.config.UserDetailsServiceImpl;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +32,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +61,9 @@ public class DispatcherController {
 
     @Autowired
     private ClientRepository clientRepository;
+
+    @Autowired
+    private ConsignmentRepository consignmentRepository;
 
     @RequestMapping(value = "/orders/createOrder/getDrivers",method = RequestMethod.GET)
     public List<Driver> getDrivers(){
@@ -168,12 +176,46 @@ public class DispatcherController {
         return orderRepository.save(orderFromDto);
     }
 
-    @PostMapping(value = "/orders/createConsignment")
-    public Object createConsignment(Long orderId, @RequestParam(value = "consignments")String []consignments){
-        for (int i = 0; i < consignments.length; i++) {
-            System.out.println("i = " + consignments[i]);
+    @GetMapping(value = "/companies/findStocksByUsername")
+    public Object findCompanyByUsername() throws JSONException {
+        try {
+            System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+            Company company = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getCompany();
+            return stockRepository.findStocksByCompany(company);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            JSONObject json = new JSONObject();
+            json.put("error", "No stocks");
+            return json.toString();
         }
-        return "Hello world";
+    }
+
+    @GetMapping(value = "/testUser")
+    public Object getUserDetails() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("name", SecurityContextHolder.getContext().getAuthentication().getName());
+        json.put("details", SecurityContextHolder.getContext().getAuthentication().getDetails());
+        json.put("principal", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        json.put("credentials", SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        return json.toString();
+    }
+
+    @PostMapping(value = "/orders/createConsignment")
+    public Object createConsignment(Long orderId, @RequestParam(value = "consignments")String consignments) throws JSONException {
+        JSONObject json = new JSONObject();
+        String[] split = consignments.split("`");
+        Order orderById = orderRepository.findOrderById(orderId);
+        if (orderById==null){
+            json.put("error", "no such order");
+        }else{
+            List<Consignment> consignmentList = new LinkedList<>();
+            for (String s : split) {
+                consignmentList.add(consignmentRepository.save(new Consignment(s, orderById)));
+            }
+            json.put("status", "saved");
+            json.put("consignments", consignmentList);
+        }
+        return json.toString();
     }
 
 }

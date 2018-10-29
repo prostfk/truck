@@ -32,7 +32,7 @@ class DispatcherCreateOrderPage extends React.Component {
             newOrderId: ''
         };
         document.title = "Создать заказ";
-        this.fetchToSenderStocks(3);//это заглушка. Тут вместо 1 должен генериться id компании автоматически
+        this.fetchToSenderStocks();
         this.findAutos();
         this.findDrivers();
     }
@@ -59,7 +59,11 @@ class DispatcherCreateOrderPage extends React.Component {
         formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
-        fetch('http://localhost:8080/api/orders/createOrder', {method: "POST", body: formData,headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
+        fetch('http://localhost:8080/api/orders/createOrder', {
+            method: "POST",
+            body: formData,
+            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+        }).then(response => {
             return response.json()
         }).then(data => {
             if (data.error === undefined) {
@@ -67,7 +71,7 @@ class DispatcherCreateOrderPage extends React.Component {
                     newOrderId: data.id
                 });
                 console.log("Order id: " + this.state.newOrderId);
-                document.getElementById('order-from').style.display = 'none';
+                document.getElementById('order-form').style.display = 'none';
                 document.getElementById('consignment-form').style.display = '';
             }
         });
@@ -92,7 +96,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     fetchToStocks(id) {
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`,{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -103,8 +107,9 @@ class DispatcherCreateOrderPage extends React.Component {
         })
     }
 
-    fetchToSenderStocks(id) {
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+    fetchToSenderStocks() {
+        // fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/companies/findStocksByUsername`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -134,7 +139,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     findAutos() {
-        fetch('http://localhost:8080/api/orders/createOrder/getAutos',{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        fetch('http://localhost:8080/api/orders/createOrder/getAutos', {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
@@ -147,7 +152,7 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     findDrivers() {
-        fetch('http://localhost:8080/api/orders/createOrder/getDrivers',{headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch('http://localhost:8080/api/orders/createOrder/getDrivers', {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
@@ -169,29 +174,43 @@ class DispatcherCreateOrderPage extends React.Component {
 
     //Consignment
 
-    editConsignment = (event) => {
+    addConsignment = (event) => {
         event.preventDefault();
         this.setState({
             consignment: [...this.state.consignment, this.state.newConsignmentName],
             newConsignmentName: ''
         });
+    };
 
+    //trbl
+    removeConsignment = (name) => {
+        let tmp = this.state.consignment;
+        let index = tmp.indexOf(name);
+        tmp.splice(index, 1);
+        this.setState({
+            consignment: tmp
+        })
     };
 
     sendConsignment = () => {
         let formData = new FormData();
         formData.append("id", this.state.newOrderId);
         let array = [];
-        for (let i = 0; i < this.state.consignment.length; i++){
+        for (let i = 0; i < this.state.consignment.length; i++) {
             array.push(this.state.consignment[i].join(''))
         }
         console.log(array);
-        formData.append("consignments",JSON.stringify(array));
-        fetch('http://localhost:8080/api/orders/createConsignment',{body: formData, method: "POST", headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response=>{
+        console.log(JSON.stringify(array));
+        formData.append("consignments", array.join('`'));
+        fetch('http://localhost:8080/api/orders/createConsignment', {
+            body: formData,
+            method: "POST",
+            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+        }).then(response => {
             return response.json()
         }).then(data => {
             console.log(data);
-            if (data.error === undefined){
+            if (data.error === undefined) {
                 window.location.href = '/';
             }
         })
@@ -294,15 +313,13 @@ class DispatcherCreateOrderPage extends React.Component {
                 </div>
                 <div style={customerCompanyStyle} id={'consignment-form'}>
                     <div className="d-flex justify-content-center align-items-center">
-                        <form className="form-inline align-content-center" onSubmit={(e) => {
-                            e.preventDefault()
-                        }}>
+                        <form className="form-inline align-content-center" onSubmit={(e) => {e.preventDefault()}}>
                             <div className="form-group">
                                 <label htmlFor="consignment">Название товара</label>
                                 <input type="text" id="newConsignmentName" value={this.state.newConsignmentName}
                                        onChange={this.changeInput} className="form-control mx-sm-3"/>
                                 <button type={'button'} className="btn btn-success"
-                                        onClick={this.editConsignment}>Добавить
+                                        onClick={this.addConsignment}>Добавить
                                 </button>
                                 <button type={'button'} className="btn btn-primary"
                                         onClick={this.sendConsignment}>Отправить
@@ -314,7 +331,14 @@ class DispatcherCreateOrderPage extends React.Component {
                     </div>
                     <div className="">
                         <ul id='lis' className="list-group">
-                            <ListOfConsignments items={this.state.consignment}/>
+                            {
+                                this.state.consignment.map((item, index) =>
+                                        <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{item}   -
+                                            <span aria-hidden="true">&times;</span>
+                                        </li>
+
+                                )
+                            }
                         </ul>
                     </div>
                 </div>
@@ -322,13 +346,5 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 }
 
-const ListOfConsignments = props => (
-    <ul>
-        {
-            props.items.map((item, index) => <li className={'list-group-item list-group-item-secondary text-center'}
-                                                 key={index}>{item}</li>)
-        }
-    </ul>
-);
 
 export default DispatcherCreateOrderPage;

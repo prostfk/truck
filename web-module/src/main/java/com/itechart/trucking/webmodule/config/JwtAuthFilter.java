@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     protected JwtAuthFilter() {
-        super("fg/api/**");
+        super("/api/**");
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthFilter.class);
