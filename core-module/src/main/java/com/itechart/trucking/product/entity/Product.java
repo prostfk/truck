@@ -24,4 +24,5 @@ public class Product {
     @JoinColumn(name = "cancellation_act")
     private CancellationAct cancellationAct;
 
+    private int price;
 }
