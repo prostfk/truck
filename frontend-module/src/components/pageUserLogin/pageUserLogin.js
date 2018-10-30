@@ -47,10 +47,10 @@ class pageUserLogin extends Component {
     }
 
     processLogin() {
-        let email = this.state.email;
+        let username = this.state.email;
         let password = this.state.password;
         let formData = new FormData();
-        formData.append("username", email);
+        formData.append("username", username);
         formData.append("password", password);
         console.log(formData.get('password'));
         fetch('http://localhost:8080/auth', {method: "POST", body: formData}).then(response => {
@@ -60,9 +60,8 @@ class pageUserLogin extends Component {
                     document.getElementById('login-form').style.display = 'none';
                     console.log(`SUCCESS: ${data.token}`);
                     sessionStorage.setItem("Auth-token", data.token);
-                    let headers = new Headers();
-                    headers.append("Auth-token", data.token);//put token in header for api-access
-                    this.props.history.push('/')
+                    sessionStorage.setItem("username", username);
+                    this.props.history.push('/');
                 }else{
                     document.getElementById('error-span').innerText = "Check your data";
                 }

@@ -1,7 +1,7 @@
-import React   from "react";
+import React from "react";
 
-import { BrowserRouter as Router } from 'react-router-dom'
-import { Route} from 'react-router';
+import {BrowserRouter as Router} from 'react-router-dom'
+import {Route} from 'react-router';
 import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrderPage";
 import DispatcherOrderList from "./pageDispatcher/pageDispatcherOrderList"
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
@@ -20,36 +20,38 @@ import ManagerConsignment from "./pageManager/pageManagerConsignment";
 import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
 import MainHeader from "./PagesCommon/mainHeader";
+import IndexComponent from './indexComponent/indexComponent'
 
+class MainController extends React.Component {
 
-class MainController extends React.Component{
-
-	render() {
-	  return (
-          <Router>
-              <div>
-                  <Route path="/*" component={HeaderElement} />
-                  <Route path="/registration" component={registration} />
-                  <Route exact path="/auth" component={pageUserLogin} />
-                  <Route exact path="/test" component={testComponent} />
-                  <Route exact path="/companyList" component={CompanyListPage} /> {/*list of companies for sysadmin*/}
-                  <Route exact path="/stocks" component={PageStockList} /> {/* stock list for admin */}
-                  <Route exact path="/orders/" component={DispatcherOrderList} />
-                  <Route exact path="/orders/:orderId/edit" component={DispatcherEditOrder} /> {/*edit waybill(ttn) and order*/}
-                  <Route exact path="/orders/createOrder" component={DispatcherCreateOrderPage} />
-                  <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment} />
-                  <Route exact path="/myorders/" component={DriverOrderList} /> {/*driver*/}
-                  <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList} /> {/*driver*/}
-              	  <Route path="/manager/orders" component={MainHeader} />
-                  <Route exact path="/manager/orders" component={pageManagerOrders} />
-                  <Route path="/manager/edit/*" component={ManagerHeader} />
-                  <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment} />
-                  <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion} />
-                  <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList} />
-		</div>
-          </Router>
-	  );
-	}
+    render() {
+        return (
+            <Router>
+                <div>
+                    <Route path="/*" component={HeaderElement}/>
+                    <Route path="/" component={IndexComponent}/>
+                    <Route path="/registration" component={registration}/>
+                    <Route exact path="/auth" component={pageUserLogin}/>
+                    <Route exact path="/test" component={testComponent}/>
+                    <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
+                    <Route exact path="/stocks" component={PageStockList}/> {/* stock list for admin */}
+                    <Route exact path="/orders/" component={DispatcherOrderList}/>
+                    <Route exact path="/orders/:orderId/edit"
+                           component={DispatcherEditOrder}/> {/*edit waybill(ttn) and order*/}
+                    <Route exact path="/orders/createOrder" component={DispatcherCreateOrderPage}/>
+                    <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment}/>
+                    <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
+                    <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList}/> {/*driver*/}
+                    <Route path="/manager/orders" component={MainHeader}/>
+                    <Route exact path="/manager/orders" component={pageManagerOrders}/>
+                    <Route path="/manager/edit/*" component={ManagerHeader}/>
+                    <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
+                    <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
+                    <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
+                </div>
+            </Router>
+        );
+    }
 }
 
 export default MainController;
