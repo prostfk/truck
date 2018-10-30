@@ -42,16 +42,6 @@ public class AnonController {
     @Autowired
     private CompanyRepository companyRepository;
 
-    @GetMapping(value = "/regAdmin")//redo for rest
-    public String startRegistration(@RequestParam String token) {
-        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        if (tokenByTokenValue != null) {
-            return "registrationUserAdminPage";
-        } else {
-            return "redirect:/error";
-        }
-    }
-
     @PostMapping(value = "/auth")//auth rest
     @ResponseBody
     public String getToken(@ModelAttribute final User user) throws JSONException {

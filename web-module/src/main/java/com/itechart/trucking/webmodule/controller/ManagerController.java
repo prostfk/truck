@@ -11,6 +11,7 @@ import com.itechart.trucking.product.repository.ProductRepository;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")

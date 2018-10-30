@@ -9,11 +9,13 @@ import com.itechart.trucking.routeList.repository.RouteListRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasAuthority('ROLE_DRIVER')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
