@@ -59,8 +59,8 @@ class pageManagerOrders extends Component {
                             <div className="col-md-2"><b>Название склада (получатель)</b></div>
                             <div className="col-md-2"><b>Дата отправления</b></div>
                             <div className="col-md-1"><b>Дата получения</b></div>
-                            <div className="col-md-2"><b></b></div>
-                            <div className="col-md-1"><b></b></div>
+                            <div className="col-md-2"><b/></div>
+                            <div className="col-md-1"><b/></div>
                         </div>
                         {
                             this.state.orders.map((element)=>{

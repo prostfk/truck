@@ -131,6 +131,7 @@ class DispatcherEditOrder extends Component {
             document.getElementById('client_id').innerHTML = `<option value="${this.state.order.company.id}">${this.state.order.company.name}</option>`;
             console.log(this.state);
             // this.setValuesFromJson()
+            console.log(this.state.consignment);
         });
 
     }

@@ -23,6 +23,8 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     @Query("select o From Order o where o.waybill IN (select w.id FROM Waybill w where w.driver.id = :driverId) and o.status='Accepted' ")
     List<Order> findCustomQueryOrderByDriver(@Param("driverId") Long driverId);
 
+    List<Order> findAllByStatus(String active);
+
 /*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")
     List<Auto> findCustomQueryAutoByDate(@Param("companyId") Long companyId);*/
 }
