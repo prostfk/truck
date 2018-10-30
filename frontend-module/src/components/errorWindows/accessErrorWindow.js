@@ -1,21 +1,16 @@
 import React, {Component} from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-export default class LogoutComponent extends Component {
+export default class AccessErrorWindow extends Component {
 
 
     constructor(props) {
         super(props);
         this.state = {
-            modal: false
-        }
+            message: props.message,
+            modal: true
+        };
     }
-
-    submitLogout = () => {
-        sessionStorage.removeItem('Auth-token');
-        sessionStorage.removeItem('username');
-        this.toggle();
-    };
 
     toggle = () => {
         this.setState({
@@ -26,18 +21,19 @@ export default class LogoutComponent extends Component {
     render() {
         return (
             <div>
-                <a className={this.props.className} onClick={this.toggle}>Выйти</a>
                 <Modal isOpen={this.state.modal}>
                     <form>
                         <ModalHeader>Выйти?</ModalHeader>
                         <ModalBody>
-                            <Button color="info" onClick={this.submitLogout}>Выйти</Button>
-                            <Button color="danger" onClick={this.toggle}>Отмена</Button>
+                            <h1>Ошибка</h1>
+                            <p>{this.state.message}</p>
                         </ModalBody>
+                        <ModalFooter>
+                            <Button color="danger" onClick={this.toggle}>Закрыть</Button>
+                        </ModalFooter>
                     </form>
                 </Modal>
             </div>
         );
     }
-
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
+import ErrorUiHandler from "../errorWindows/errorHandler";
 
 class DispatcherOrderList extends React.Component{
     constructor(props) {
@@ -25,6 +26,8 @@ class DispatcherOrderList extends React.Component{
         }).then(function (result) {
             console.log(result);
             return result;
+        }).catch(err=>{
+            throw new Error('Ошибка доступа')
         });
     }
 
