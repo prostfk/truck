@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -197,6 +199,7 @@ public class DispatcherController {
         json.put("details", SecurityContextHolder.getContext().getAuthentication().getDetails());
         json.put("principal", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         json.put("credentials", SecurityContextHolder.getContext().getAuthentication().getCredentials());
+        json.put("authorities", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return json.toString();
     }
 

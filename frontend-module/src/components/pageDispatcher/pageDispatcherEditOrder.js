@@ -33,7 +33,8 @@ class DispatcherEditOrder extends Component {
             companyObj: {},
             receiver: {},
             sender: {},
-            waybill: {}
+            waybill: {},
+            consignment: []
         };
         this.initOrder();
     }
@@ -98,25 +99,6 @@ class DispatcherEditOrder extends Component {
     }
 
     setValuesFromJson() {
-        this.setState({
-            date_departure: CommonUtil.getCorrectDateFromLong(this.state.order.dateAccepted),
-            date_arrival: CommonUtil.getCorrectDateFromLong(this.state.order.dateExecuted),
-            status: this.state.order.status,
-            name: this.state.order.name,
-            companyNameForSearch: this.state.client.name,
-            auto: this.state.waybill.auto.id,
-            driver: this.state.order.waybill.driver.id,
-            departure_stock: this.state.order.sender.id,
-            delivery_stock: this.state.order.receiver.id,
-            company: this.state.order.company.id,
-            client_id: this.state.order.client.id,
-            waybill_status: this.state.order.waybill.status
-        });
-        document.getElementById('auto').innerHTML = `<option value="${this.state.order.waybill.auto.id}">${this.state.order.waybill.auto.name}</option>`
-        document.getElementById('driver').innerHTML = `<option value="${this.state.order.waybill.driver.id}">${this.state.order.waybill.driver.name}</option>`
-        document.getElementById('departure_stock').innerHTML = `<option value="${this.state.order.sender.id}">${this.state.order.sender.address}</option>`
-        document.getElementById('delivery_stock').innerHTML = `<option value="${this.state.order.receiver.id}">${this.state.order.receiver.address}</option>`
-        document.getElementById('client_id').innerHTML = `<option value="${this.state.order.company.id}">${this.state.order.company.name}</option>`
 
     }
 
@@ -129,15 +111,28 @@ class DispatcherEditOrder extends Component {
             console.log(data);
             this.setState({
                 order: data,
-                client: data.client,
-                receiver: data.receiver.id,
-                sender: data.sender.id,
-                waybill: data.waybill,
-                companyNameForSearch: data.client.name
+                date_departure: CommonUtil.getCorrectDateFromLong(data.dateAccepted),
+                date_arrival: CommonUtil.getCorrectDateFromLong(data.dateExecuted),
+                status: data.status,
+                name: data.name,
+                companyNameForSearch: data.client.name,
+                auto: data.waybill.auto.id,
+                driver: data.waybill.driver.id,
+                departure_stock: data.sender.id,
+                delivery_stock: data.receiver.id,
+                company: data.company.id,
+                client_id: data.client.id,
+                waybill_status: data.waybill.status,
             });
+            document.getElementById('auto').innerHTML = `<option value="${this.state.order.waybill.auto.id}">${this.state.order.waybill.auto.name}</option>`;
+            document.getElementById('driver').innerHTML = `<option value="${this.state.order.waybill.driver.id}">${this.state.order.waybill.driver.name}</option>`;
+            document.getElementById('departure_stock').innerHTML = `<option value="${this.state.order.sender.id}">${this.state.order.sender.address}</option>`;
+            document.getElementById('delivery_stock').innerHTML = `<option value="${this.state.order.receiver.id}">${this.state.order.receiver.address}</option>`;
+            document.getElementById('client_id').innerHTML = `<option value="${this.state.order.company.id}">${this.state.order.company.name}</option>`;
             console.log(this.state);
-            this.setValuesFromJson()
+            // this.setValuesFromJson()
         });
+
     }
 
     changeInput(event) {

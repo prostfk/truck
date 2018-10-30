@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.List;
 
 public class JwtAuthToken extends UsernamePasswordAuthenticationToken {
 
@@ -17,8 +18,8 @@ public class JwtAuthToken extends UsernamePasswordAuthenticationToken {
         this.token = token;
     }
 
-    public JwtAuthToken(String token, Object principal, Object credentials) {
-        super(principal, credentials);
+    public JwtAuthToken(String token, Object principal, Object credentials, List<GrantedAuthority> grantedAuthorities) {
+        super(principal, credentials, grantedAuthorities);
         role = credentials instanceof UserRole ? ((UserRole) credentials).name() : credentials.toString();
         username = (String) principal;
         this.token = token;
