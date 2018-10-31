@@ -23,7 +23,7 @@ export default class ErrorUiHandler extends Component {
         if (this.state.errInfo){
             return (
                 <div>
-                    <AccessErrorWindow message={"Ошибка __текст ошибки__"}/>
+                    <AccessErrorWindow message={this.state.err.toString()}/>
                 </div>
             );
         }else {
