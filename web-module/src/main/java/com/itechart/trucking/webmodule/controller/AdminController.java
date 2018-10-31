@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -38,6 +39,27 @@ public class AdminController {
 
     @Autowired
     private StockRepository stockRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping(value = "/admin/saveUser")
+    public Object saveNewUser(User user){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        user.setCompany(userByUsername.getCompany());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User save = userRepository.save(user);
+        System.out.println(save);
+        return save;
+    }
+
+    @GetMapping(value = "/getCompanyUsers")
+    public List<User> findUsersByCompany(User user){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        return userRepository.findUsersByCompany(userByUsername.getCompany());
+    }
 
     @GetMapping(value = "/stocks")
     @ResponseBody

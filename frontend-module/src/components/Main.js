@@ -21,6 +21,7 @@ import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
 import MainHeader from "./PagesCommon/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
+import UsersList from "./pageSysAdmin/pageUsersList";
 
 class MainController extends React.Component {
 
@@ -31,6 +32,7 @@ class MainController extends React.Component {
                     <Route path="/*" component={HeaderElement}/>
                     <Route path="/" component={IndexComponent}/>
                     <Route path="/registration" component={registration}/>
+                    <Route path="/usersList" component={UsersList}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={testComponent}/>
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
