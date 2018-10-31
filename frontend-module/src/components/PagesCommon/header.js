@@ -26,6 +26,9 @@ class HeaderElement extends React.Component{
                     <li className="nav-item active">
                         <Link to={`/myorders`} className="nav-link">Водитель</Link>
                     </li>
+                    <li className="nav-item active">
+                        <Link to={`/owner/orders`} className="nav-link">Владелец</Link>
+                    </li>
                 </ul>
                 <li className="navbar-text">
                     <a className="nav-link" href="#">Выйти</a>

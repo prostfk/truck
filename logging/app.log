@@ -8899,3 +8899,527 @@ org.postgresql.util.PSQLException: ERROR: column company0_.locker_id does not ex
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+2018-10-31 16:39:40 [http-nio-8080-exec-9] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 0, SQLState: 42703
+2018-10-31 16:39:40 [http-nio-8080-exec-9] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - ERROR: column company0_.locker_id does not exist
+  Position: 716
+2018-10-31 16:39:40 [http-nio-8080-exec-9] INFO  o.h.e.i.DefaultLoadEventListener - HHH000327: Error performing load command : org.hibernate.exception.SQLGrammarException: could not extract ResultSet
+org.hibernate.exception.SQLGrammarException: could not extract ResultSet
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:106)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:42)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:111)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:97)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:79)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.getResultSet(AbstractLoadPlanBasedLoader.java:434)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeQueryStatement(AbstractLoadPlanBasedLoader.java:186)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:121)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:86)
+	at org.hibernate.loader.entity.plan.AbstractLoadPlanBasedEntityLoader.load(AbstractLoadPlanBasedEntityLoader.java:167)
+	at org.hibernate.persister.entity.AbstractEntityPersister.load(AbstractEntityPersister.java:4004)
+	at org.hibernate.event.internal.DefaultLoadEventListener.loadFromDatasource(DefaultLoadEventListener.java:508)
+	at org.hibernate.event.internal.DefaultLoadEventListener.doLoad(DefaultLoadEventListener.java:478)
+	at org.hibernate.event.internal.DefaultLoadEventListener.load(DefaultLoadEventListener.java:219)
+	at org.hibernate.event.internal.DefaultLoadEventListener.proxyOrLoad(DefaultLoadEventListener.java:278)
+	at org.hibernate.event.internal.DefaultLoadEventListener.doOnLoad(DefaultLoadEventListener.java:121)
+	at org.hibernate.event.internal.DefaultLoadEventListener.onLoad(DefaultLoadEventListener.java:89)
+	at org.hibernate.internal.SessionImpl.fireLoad(SessionImpl.java:1213)
+	at org.hibernate.internal.SessionImpl.internalLoad(SessionImpl.java:1096)
+	at org.hibernate.type.EntityType.resolveIdentifier(EntityType.java:639)
+	at org.hibernate.type.EntityType.resolve(EntityType.java:431)
+	at org.hibernate.engine.internal.TwoPhaseLoad.doInitializeEntity(TwoPhaseLoad.java:151)
+	at org.hibernate.engine.internal.TwoPhaseLoad.initializeEntity(TwoPhaseLoad.java:125)
+	at org.hibernate.loader.Loader.initializeEntitiesAndCollections(Loader.java:1140)
+	at org.hibernate.loader.Loader.processResultSet(Loader.java:999)
+	at org.hibernate.loader.Loader.doQuery(Loader.java:937)
+	at org.hibernate.loader.Loader.doQueryAndInitializeNonLazyCollections(Loader.java:343)
+	at org.hibernate.loader.Loader.doList(Loader.java:2609)
+	at org.hibernate.loader.Loader.doList(Loader.java:2592)
+	at org.hibernate.loader.Loader.listIgnoreQueryCache(Loader.java:2424)
+	at org.hibernate.loader.Loader.list(Loader.java:2419)
+	at org.hibernate.loader.hql.QueryLoader.list(QueryLoader.java:502)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.list(QueryTranslatorImpl.java:371)
+	at org.hibernate.engine.query.spi.HQLQueryPlan.performList(HQLQueryPlan.java:216)
+	at org.hibernate.internal.SessionImpl.list(SessionImpl.java:1450)
+	at org.hibernate.query.internal.AbstractProducedQuery.doList(AbstractProducedQuery.java:1402)
+	at org.hibernate.query.internal.AbstractProducedQuery.list(AbstractProducedQuery.java:1374)
+	at org.hibernate.query.internal.AbstractProducedQuery.getSingleResult(AbstractProducedQuery.java:1420)
+	at org.hibernate.query.criteria.internal.compile.CriteriaQueryTypeQueryAdapter.getSingleResult(CriteriaQueryTypeQueryAdapter.java:59)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:214)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:91)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:136)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:125)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:602)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:590)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212)
+	at com.sun.proxy.$Proxy99.findUserByUsername(Unknown Source)
+	at com.itechart.trucking.webmodule.config.JwtGen.generate(JwtGen.java:23)
+	at com.itechart.trucking.webmodule.controller.AnonController.getToken(AnonController.java:59)
+	at jdk.internal.reflect.GeneratedMethodAccessor91.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:877)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:200)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:200)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:96)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:66)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:800)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:806)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.postgresql.util.PSQLException: ERROR: column company0_.locker_id does not exist
+  Position: 716
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2440)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2183)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:308)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:441)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:365)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:143)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:106)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:70)
+	... 137 common frames omitted
+2018-10-31 16:39:40 [http-nio-8080-exec-9] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessResourceUsageException: could not extract ResultSet; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: could not extract ResultSet] with root cause
+org.postgresql.util.PSQLException: ERROR: column company0_.locker_id does not exist
+  Position: 716
+	at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:2440)
+	at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:2183)
+	at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:308)
+	at org.postgresql.jdbc.PgStatement.executeInternal(PgStatement.java:441)
+	at org.postgresql.jdbc.PgStatement.execute(PgStatement.java:365)
+	at org.postgresql.jdbc.PgPreparedStatement.executeWithFlags(PgPreparedStatement.java:143)
+	at org.postgresql.jdbc.PgPreparedStatement.executeQuery(PgPreparedStatement.java:106)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeQuery(ProxyPreparedStatement.java:52)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeQuery(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.extract(ResultSetReturnImpl.java:70)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.getResultSet(AbstractLoadPlanBasedLoader.java:434)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeQueryStatement(AbstractLoadPlanBasedLoader.java:186)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:121)
+	at org.hibernate.loader.plan.exec.internal.AbstractLoadPlanBasedLoader.executeLoad(AbstractLoadPlanBasedLoader.java:86)
+	at org.hibernate.loader.entity.plan.AbstractLoadPlanBasedEntityLoader.load(AbstractLoadPlanBasedEntityLoader.java:167)
+	at org.hibernate.persister.entity.AbstractEntityPersister.load(AbstractEntityPersister.java:4004)
+	at org.hibernate.event.internal.DefaultLoadEventListener.loadFromDatasource(DefaultLoadEventListener.java:508)
+	at org.hibernate.event.internal.DefaultLoadEventListener.doLoad(DefaultLoadEventListener.java:478)
+	at org.hibernate.event.internal.DefaultLoadEventListener.load(DefaultLoadEventListener.java:219)
+	at org.hibernate.event.internal.DefaultLoadEventListener.proxyOrLoad(DefaultLoadEventListener.java:278)
+	at org.hibernate.event.internal.DefaultLoadEventListener.doOnLoad(DefaultLoadEventListener.java:121)
+	at org.hibernate.event.internal.DefaultLoadEventListener.onLoad(DefaultLoadEventListener.java:89)
+	at org.hibernate.internal.SessionImpl.fireLoad(SessionImpl.java:1213)
+	at org.hibernate.internal.SessionImpl.internalLoad(SessionImpl.java:1096)
+	at org.hibernate.type.EntityType.resolveIdentifier(EntityType.java:639)
+	at org.hibernate.type.EntityType.resolve(EntityType.java:431)
+	at org.hibernate.engine.internal.TwoPhaseLoad.doInitializeEntity(TwoPhaseLoad.java:151)
+	at org.hibernate.engine.internal.TwoPhaseLoad.initializeEntity(TwoPhaseLoad.java:125)
+	at org.hibernate.loader.Loader.initializeEntitiesAndCollections(Loader.java:1140)
+	at org.hibernate.loader.Loader.processResultSet(Loader.java:999)
+	at org.hibernate.loader.Loader.doQuery(Loader.java:937)
+	at org.hibernate.loader.Loader.doQueryAndInitializeNonLazyCollections(Loader.java:343)
+	at org.hibernate.loader.Loader.doList(Loader.java:2609)
+	at org.hibernate.loader.Loader.doList(Loader.java:2592)
+	at org.hibernate.loader.Loader.listIgnoreQueryCache(Loader.java:2424)
+	at org.hibernate.loader.Loader.list(Loader.java:2419)
+	at org.hibernate.loader.hql.QueryLoader.list(QueryLoader.java:502)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.list(QueryTranslatorImpl.java:371)
+	at org.hibernate.engine.query.spi.HQLQueryPlan.performList(HQLQueryPlan.java:216)
+	at org.hibernate.internal.SessionImpl.list(SessionImpl.java:1450)
+	at org.hibernate.query.internal.AbstractProducedQuery.doList(AbstractProducedQuery.java:1402)
+	at org.hibernate.query.internal.AbstractProducedQuery.list(AbstractProducedQuery.java:1374)
+	at org.hibernate.query.internal.AbstractProducedQuery.getSingleResult(AbstractProducedQuery.java:1420)
+	at org.hibernate.query.criteria.internal.compile.CriteriaQueryTypeQueryAdapter.getSingleResult(CriteriaQueryTypeQueryAdapter.java:59)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$SingleEntityExecution.doExecute(JpaQueryExecution.java:214)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:91)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:136)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:125)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:602)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:590)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:92)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:185)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212)
+	at com.sun.proxy.$Proxy99.findUserByUsername(Unknown Source)
+	at com.itechart.trucking.webmodule.config.JwtGen.generate(JwtGen.java:23)
+	at com.itechart.trucking.webmodule.controller.AnonController.getToken(AnonController.java:59)
+	at jdk.internal.reflect.GeneratedMethodAccessor91.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:209)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:102)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:891)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:991)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:925)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:877)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:851)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:200)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:320)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.invoke(FilterSecurityInterceptor.java:127)
+	at org.springframework.security.web.access.intercept.FilterSecurityInterceptor.doFilter(FilterSecurityInterceptor.java:91)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:119)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:137)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:111)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:170)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:200)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:96)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:66)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:215)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:178)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:357)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:270)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:200)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:198)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:140)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:800)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:806)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@10c38f1 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@1706c647 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6537f4b5 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@51c9352 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@77123f67 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@5687fb3c (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@c4f2f05 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@6d28bbdd (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@b275818 (This connection has been closed.)
+2018-10-31 17:55:45 [http-nio-8080-exec-6] WARN  com.zaxxer.hikari.pool.PoolBase - HikariPool-1 - Failed to validate connection org.postgresql.jdbc.PgConnection@62900c5b (This connection has been closed.)
+2018-10-31 17:56:00 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 17:56:00 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8e143edc: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2e8df08; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 17:56:00 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 17:56:00 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f332e358: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7fce028c; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:01:03 [http-nio-8080-exec-2] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:01:03 [http-nio-8080-exec-2] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@9cc4e6c7: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@10380713; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:01:03 [http-nio-8080-exec-2] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:01:03 [http-nio-8080-exec-2] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f2242d2f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7ed8ccfb; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:01:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:01:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ed2cd5e8: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@61d0343c; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:01:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:01:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f8568a99: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@74aa6b4d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@db9580a9: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5769617d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d284c5ad: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5e782479; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:44 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:44 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@e0a78317: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@6c5b62c3; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:44 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:44 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b1a6594a: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@3d5ab89e; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:55 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:55 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b1199454: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@3de57580; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:55 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:55 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@fcc43d09: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7038dcdd; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:59 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:59 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@a7d9dbd7: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2b253a03; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:03:59 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:03:59 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@fccb3e60: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7037dfb4; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:01 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:01 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ead5cc66: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@66292db2; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:01 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:01 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@a843d2fc: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@24bf3328; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:03 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:03 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f3d649a7: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7f2aa873; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:03 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:03 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@84800613: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@87ce7c7; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:04 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:04 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8d175517: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@1ebb4c3; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:04 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:04 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@964c98c0: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@1ab07914; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:05 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:05 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@982b4a09: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@14d7abdd; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:05 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:05 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@dddc5a46: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5120bb92; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:06 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:06 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d2d06244: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5e2c8390; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:06 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:06 [http-nio-8080-exec-9] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@adea498f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2116a85b; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:06 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:06 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@df522dff: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@53aecc2b; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:06 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:06 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@83ae91f7: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@f527023; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:14 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:14 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b57daee4: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@39814f30; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:14 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:14 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@a0df1230: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2c23f3e4; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:16 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:17 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@fe81fdca: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@727d1c1e; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:17 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:17 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@fce28c76: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@701e6da2; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:17 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:17 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@995c4eb0: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@15a0af64; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:17 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:17 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@e2e1a3bb: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@6e1d426f; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:19 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:19 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c7c41c2a: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@4b38fdfe; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:19 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:19 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@a4c81221: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2834f3f5; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:26 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:26 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ae93b1a0: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@226f5074; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:26 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:26 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d5fb0a30: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5907ebe4; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ff4e361c: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@73b2d7c8; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:34 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8890b8fc: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@46c5928; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:36 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:36 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c9e1a127: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@451d40f3; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:36 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:36 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8bb0ffbf: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@74c1e6b; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8c9d2743: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@61c697; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@e918f091: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@65e41145; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:37 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:37 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@9e2dd1f9: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@12d1302d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:37 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:37 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c557d2e2: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@49ab3336; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@cad4f221: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@462813f5; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@9ba2fe6f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@175e1fbb; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@fb3114f9: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@77cdf52d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f79c55ff: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7b60b42b; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:38 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:38 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@accefc66: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@20321db2; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:38 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:38 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@fcad29b3: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7051c867; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:38 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:38 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f00a0e2e: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7cf6effa; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:38 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:38 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f7f284ce: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7b0e651a; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:39 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:39 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d4e489e6: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@58186832; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:39 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:39 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@dbe7feb6: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@571b1f62; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:39 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:39 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f28c1cdd: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@7e70fd09; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:39 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:39 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@aba5d280: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@27593354; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:44 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:44 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@da328f49: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@56ce6e9d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:44 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:44 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@904facd5: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@1cb34d01; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:47 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:47 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c957ce6f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@45ab2fbb; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:47 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:47 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c15ad454: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@4da63580; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:49 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:49 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8df0f075: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@10c11a1; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:49 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:49 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@a77d56bb: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2b81b76f; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:50 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:50 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@bb084932: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@37f4a8e6; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:04:50 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:04:50 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b4703fb6: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@388cde62; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:05:24 [http-nio-8080-exec-6] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:05:24 [http-nio-8080-exec-6] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@edc20ea9: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@613eef7d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:05:24 [http-nio-8080-exec-6] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:05:24 [http-nio-8080-exec-6] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@9d33c3c1: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@11cf2215; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:15 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:15 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@da64d0b7: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@56983163; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:15 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:15 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ceb862d8: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@4244830c; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:16 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:16 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d09f5ad9: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5c63bb0d; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:16 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:16 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@85b13584: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@94dd450; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:17 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:17 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b746c27f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@3bba23ab; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:17 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:17 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@aad85bd8: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2624ba0c; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:21 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:21 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ca4f6794: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@46b38640; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:21 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:21 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d32c3dd7: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5fd0dc03; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:21 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:21 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@88d8539f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@424b24b; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:21 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:21 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@9f2977dd: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@13d59609; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:22 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:22 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@96ee93bc: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@1a127268; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:22 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:22 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@95f33f1c: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@190fdec8; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:23 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:23 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@96316388: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@1acd825c; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:23 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:23 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c0e39d3d: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@4c1f7ce9; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:23 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:23 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8fb965e6: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@3458432; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:23 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:23 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@80dbec72: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@c270da6; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:29 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:29 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c0744a21: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@4c88abf5; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:29 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:29 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@f59fd76d: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@796336b9; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:30 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:30 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@bbf6113d: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@370af0e9; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:30 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:30 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@9ab20cf0: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@164eed24; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:35 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:35 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c9b9bed5: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@45455f01; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:35 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:35 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@bd2e116a: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@31d2f0be; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@a72e88b2: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@2bd26966; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:36 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@aba7ac3e: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@275b4dea; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:36 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:36 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@e66d217d: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@6a91c0a9; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:36 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:36 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b54e399f: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@39b2d84b; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@d42433d2: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@58d8d206; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:37 [http-nio-8080-exec-7] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@890e0d36: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@5f2ece2; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@bc1e2927: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@30e2c8f3; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:38 [http-nio-8080-exec-10] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@c8dfefec: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@44230e38; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:56 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:56 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b70bcfed: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@3bf72e39; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:56 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:56 [http-nio-8080-exec-8] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ea362992: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@66cac846; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:59 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:59 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@b7f7dff6: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@3b0b3e22; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:07:59 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:07:59 [http-nio-8080-exec-3] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@ab334a44: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@27cfab90; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:08:03 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:08:03 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@8a1fdd40: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@6e33c94; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
+2018-10-31 18:08:03 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Request is to process authentication
+2018-10-31 18:08:03 [http-nio-8080-exec-5] DEBUG c.i.t.webmodule.config.JwtAuthFilter - Authentication success. Updating SecurityContextHolder to contain: org.springframework.security.authentication.UsernamePasswordAuthenticationToken@dd803570: Principal: com.itechart.trucking.webmodule.model.entity.UserDetail@517cd4a4; Credentials: [PROTECTED]; Authenticated: true; Details: null; Granted Authorities: ROLE_DISPATCHER
