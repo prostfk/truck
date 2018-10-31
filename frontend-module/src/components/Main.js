@@ -15,11 +15,11 @@ import DriverOrderList from "./pageDriver/pageDriver";
 import DriverRouteList from "./pageDriver/pageRouteList";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
 import pageManagerOrders from "./pageManager/pageManagerOrders";
-import ManagerHeader from "./PagesCommon/managerHeader";
+import ManagerHeader from "./pageManager/managerHeader";
 import ManagerConsignment from "./pageManager/pageManagerConsignment";
 import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
-import MainHeader from "./PagesCommon/mainHeader";
+import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 
 class MainController extends React.Component {

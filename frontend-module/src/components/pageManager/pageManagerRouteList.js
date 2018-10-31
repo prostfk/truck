@@ -20,7 +20,7 @@ class ManagerRouteList extends Component {
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            this.setState({routePoints:data, waybill:data[0].waybill});
+            this.setState({routePoints:data});
         });
     }
 
@@ -33,7 +33,7 @@ class ManagerRouteList extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/routelist/${id}`, {method: "get"}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/routelist/${id}`, {method: "get",headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);

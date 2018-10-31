@@ -24,7 +24,7 @@ class ManagerConsignment extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get"}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get",headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -64,7 +64,7 @@ class ManagerConsignment extends Component {
         else if(event.target.value==="Доставлен") status="DELIVERED";
         else if(event.target.value==="Утерян") status="LOST";
 
-        fetch(`http://localhost:8080/api/manager/upsateproductstatus/${productId}`, {method: "POST", body: status})
+        fetch(`http://localhost:8080/api/manager/upsateproductstatus/${productId}`, {method: "POST", body: status,headers: {'Auth-token': sessionStorage.getItem('Auth-token')}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {
