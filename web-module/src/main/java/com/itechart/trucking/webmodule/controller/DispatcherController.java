@@ -67,70 +67,54 @@ public class DispatcherController {
     @Autowired
     private ConsignmentRepository consignmentRepository;
 
-    @RequestMapping(value = "/orders/createOrder/getDrivers",method = RequestMethod.GET)
-    public List<Driver> getDrivers(){
-        SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
-
-        /*Заглушка*/
-        String strdatefrom = "28-10-2018";
-        String strdateto = "29-10-2018";
-        Long companyId = 1L;
-
-        java.util.Date datedep = null;
-        java.util.Date datearr = null;
+    @RequestMapping(value = "/orders/createOrder/getDriversByDates", method = RequestMethod.GET)
+    public List<Driver> getDrivers(@RequestParam String dateFrom, @RequestParam String dateTo) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(name);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        java.util.Date dateDeparture = null;
+        java.util.Date dateArrival = null;
         try {
-            datedep = dateformat.parse(strdatefrom);
-            datearr = dateformat.parse(strdateto);
+            dateDeparture = dateFormat.parse(dateFrom);
+            dateArrival = dateFormat.parse(dateTo);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        return waybillRepository.findCustomQueryDriverByDate(datedep,datearr,companyId);
-
+        return waybillRepository.findCustomQueryDriverByDate(dateDeparture, dateArrival, user.getCompany().getId());
     }
 
-    @RequestMapping(value = "/orders/createOrder/getAutos",method = RequestMethod.GET)
-    public List<Auto> getAutos(){
-        SimpleDateFormat dateformat = new SimpleDateFormat("dd-M-yyyy");
-
-        /*Заглушка*/
-        String strdatefrom = "28-10-2018";
-        String strdateto = "29-10-2018";
-        Long companyId = 1L;
-
-        java.util.Date datedep = null;
-        java.util.Date datearr = null;
+    @RequestMapping(value = "/orders/createOrder/getAutosByDates", method = RequestMethod.GET)
+    public List<Auto> getAutos(@RequestParam String dateFrom, @RequestParam String dateTo) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(name);
+        java.util.Date dateDeparture = null;
+        java.util.Date dateArrival = null;
         try {
-            datedep = dateformat.parse(strdatefrom);
-            datearr = dateformat.parse(strdateto);
+            dateDeparture = dateFormat.parse(dateFrom);
+            dateArrival = dateFormat.parse(dateTo);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        return waybillRepository.findCustomQueryAutoByDate(datedep,datearr,companyId);
+        return waybillRepository.findCustomQueryAutoByDate(dateDeparture, dateArrival, user.getCompany().getId());
     }
 
-    @RequestMapping(value = "/orders/{id}",method = RequestMethod.GET)
-    public Order editOrder(@PathVariable Long id){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
-        System.out.println(id);
-        Object credentials = SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        System.out.println(credentials);
-        String name = "user6";
+    @RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
+    public Order editOrder(@PathVariable Long id) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
-
         Optional<Order> order = orderRepository.findById(id);
-        if(order.isPresent() && order.get().getCompany().getId()==company.getId())
-        return order.get();
-        else{
+        if (order.isPresent() && order.get().getCompany().getId() == company.getId())
+            return order.get();
+        else {
             System.out.println("access dined");
             return null;
         }
     }
 
     @PostMapping(value = "/orders/createOrder")
-    public Order createOrder(OrderDto orderDto){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
+    public Order createOrder(OrderDto orderDto, String consignments) throws ParseException {
+        String[] split = consignments.split("`");
         Order order = null;
         try {
             order = orderService.getOrderFromDto(orderDto);
@@ -140,29 +124,32 @@ public class DispatcherController {
         System.out.println(orderDto + " - order dto ");
         System.out.println(order);
         waybillRepository.save(order.getWaybill());
-        orderRepository.save(order);
-        return order;
+        Order save = orderRepository.save(order);
+        for (String s : split) {
+            consignmentRepository.save(new Consignment(s, save));
+        }
+        return save;
     }
 
     @GetMapping(value = "/clients/findClientsByNameLike")
-    public List<Client> findClientsByNameLike(@RequestParam String name){
+    public List<Client> findClientsByNameLike(@RequestParam String name) {
         return clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
     }
 
     @GetMapping(value = "/companies/findCompaniesByNameLike")
-    public List<Company> findCompaniesByNameLikeRest(@RequestParam String name){
+    public List<Company> findCompaniesByNameLikeRest(@RequestParam String name) {
         name = String.format("%%%s%%", name);
         return companyRepository.findTop10CompaniesByNameLikeIgnoreCase(name);
     }
 
     @GetMapping(value = "/companies/{companyId}/stocks")
-    public List<Stock> findStocksByCompany(@PathVariable Long companyId){
+    public List<Stock> findStocksByCompany(@PathVariable Long companyId) {
         Company companyById = companyRepository.findCompanyById(companyId);
         return stockRepository.findStocksByCompany(companyById);
     }
 
     @GetMapping(value = "/companies/stocks/findStocksByAddressLike")
-    public List<Stock> findStocksByNameLike(@RequestParam String address){
+    public List<Stock> findStocksByNameLike(@RequestParam String address) {
         address = String.format("%%%s%%", address);
         return stockRepository.findStocksByAddressLike(address);
     }
@@ -184,7 +171,7 @@ public class DispatcherController {
             System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
             Company company = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getCompany();
             return stockRepository.findStocksByCompany(company);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
             JSONObject json = new JSONObject();
             json.put("error", "No stocks");
@@ -204,20 +191,9 @@ public class DispatcherController {
     }
 
     @PostMapping(value = "/orders/createConsignment")
-    public Object createConsignment(Long orderId, @RequestParam(value = "consignments")String consignments) throws JSONException {
+    public Object createConsignment(Long orderId, @RequestParam(value = "consignments") String consignments) throws JSONException {
         JSONObject json = new JSONObject();
-        String[] split = consignments.split("`");
-        Order orderById = orderRepository.findOrderById(orderId);
-        if (orderById==null){
-            json.put("error", "no such order");
-        }else{
-            List<Consignment> consignmentList = new LinkedList<>();
-            for (String s : split) {
-                consignmentList.add(consignmentRepository.save(new Consignment(s, orderById)));
-            }
-            json.put("status", "saved");
-            json.put("consignments", consignmentList);
-        }
+
         return json.toString();
     }
 

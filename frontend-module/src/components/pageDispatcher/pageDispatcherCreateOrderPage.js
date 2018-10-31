@@ -1,4 +1,5 @@
 import React from "react";
+import CommonUtil from "../commonUtil/commontUtil";
 
 class DispatcherCreateOrderPage extends React.Component {
     constructor(props) {
@@ -24,8 +25,8 @@ class DispatcherCreateOrderPage extends React.Component {
             waybill_status: "",
             driver: "",
             auto: "",
-            date_departure: "14/07/2018",
-            date_arrival: "01/01/2019",
+            date_departure: CommonUtil.getCorrectDateFromLong(new Date().getTime()),
+            date_arrival: CommonUtil.getCorrectDateFromLong(new Date(new Date().getTime() + 86400000)),
             company: "",
             consignment: [],
             newConsignmentName: "",
@@ -45,7 +46,6 @@ class DispatcherCreateOrderPage extends React.Component {
 
     saveBtnClick() {
         let formData = new FormData();
-        // let time = this.state.date_departure.join('');
         formData.append("clientId", this.state.client_id);
         formData.append("name", this.state.name);
         formData.append("status", this.state.status);
@@ -56,6 +56,11 @@ class DispatcherCreateOrderPage extends React.Component {
         formData.append("waybillStatus", this.state.waybill_status);
         formData.append("autoId", this.state.auto);
         formData.append("driverId", this.state.driver);
+        let array = [];
+        for (let i = 0; i < this.state.consignment.length; i++) {
+            array.push(this.state.consignment[i].join(''))
+        }
+        formData.append("consignments", array.join('`'));
         formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
@@ -67,12 +72,9 @@ class DispatcherCreateOrderPage extends React.Component {
             return response.json()
         }).then(data => {
             if (data.error === undefined) {
-                this.setState({
-                    newOrderId: data.id
-                });
-                console.log("Order id: " + this.state.newOrderId);
                 document.getElementById('order-form').style.display = 'none';
-                document.getElementById('consignment-form').style.display = '';
+                document.getElementById('consignment-form').style.display = 'none';
+                this.props.history.push('/orders/' + data.id);
             }
         });
     }
@@ -116,6 +118,7 @@ class DispatcherCreateOrderPage extends React.Component {
                 html += `<option value="${stock.id}">${stock.address}</option>`;
             });
             document.getElementById('departure_stock').innerHTML = html;
+            document.getElementById('delivery_stock').innerHTML = html;
             this.setDefault();
         })
     }
@@ -135,15 +138,16 @@ class DispatcherCreateOrderPage extends React.Component {
         this.setState({
             client_id: event.target.value
         });
-        this.fetchToStocks(event.target.value)
+        // this.fetchToStocks(event.target.value)
     }
 
     findAutos() {
-        fetch('http://localhost:8080/api/orders/createOrder/getAutos', {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        let dd = this.state.date_departure;
+        let da = this.state.date_arrival;
+        fetch(`http://localhost:8080/api/orders/createOrder/getAutosByDates?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
-                console.log(auto.id)
             });
             document.getElementById('auto').innerHTML = autoHtml;
             this.setDefault();
@@ -152,15 +156,19 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     findDrivers() {
-        fetch('http://localhost:8080/api/orders/createOrder/getDrivers', {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        let dd = this.state.date_departure;
+        let da = this.state.date_arrival;
+        fetch(`http://localhost:8080/api/orders/createOrder/getDriversByDates?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+            console.log(data);
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
             });
             document.getElementById('driver').innerHTML = driverHtml;
             this.setDefault();
-
-        });
+        }).catch(err=>{
+            throw new Error('Нет доступа к свободным водителям');
+        })
     }
 
     setDefault() {
@@ -192,34 +200,19 @@ class DispatcherCreateOrderPage extends React.Component {
         })
     };
 
-    sendConsignment = () => {
-        let formData = new FormData();
-        formData.append("id", this.state.newOrderId);
-        let array = [];
-        for (let i = 0; i < this.state.consignment.length; i++) {
-            array.push(this.state.consignment[i].join(''))
-        }
-        console.log(array);
-        console.log(JSON.stringify(array));
-        formData.append("consignments", array.join('`'));
-        fetch('http://localhost:8080/api/orders/createConsignment', {
-            body: formData,
-            method: "POST",
-            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
-        }).then(response => {
-            return response.json()
-        }).then(data => {
-            console.log(data);
-            if (data.error === undefined) {
-                window.location.href = '/';
-            }
-        })
+    showConsignment = () => {
+        document.getElementById('order-form').style.display = 'none';
+        document.getElementById('consignment-form').style.display = '';
+        document.getElementById('sendOrderRequestButton').style.display = '';
     };
 
     render() {
 
         let customerCompanyStyle = {
             display: 'none'
+        };
+        let marginTop = {
+            marginTop: '2%'
         };
         return (
             <div>
@@ -307,25 +300,20 @@ class DispatcherCreateOrderPage extends React.Component {
                         </div>
                     </div>
                     <div className="offset-md-2 col-md-8 form_clear">
-                        <a onClick={this.saveBtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
+                        <a onClick={this.showConsignment} className="btn btn-success btn_fullsize">Продолжить</a>
                     </div>
 
                 </div>
-                <div style={customerCompanyStyle} id={'consignment-form'}>
-                    <div className="d-flex justify-content-center align-items-center">
+                <div className={'pb-3'} style={customerCompanyStyle} id={'consignment-form'}>
+                    <div className="d-flex justify-content-center align-items-center" style={marginTop}>
                         <form className="form-inline align-content-center" onSubmit={(e) => {e.preventDefault()}}>
                             <div className="form-group">
                                 <label htmlFor="consignment">Название товара</label>
                                 <input type="text" id="newConsignmentName" value={this.state.newConsignmentName}
                                        onChange={this.changeInput} className="form-control mx-sm-3"/>
-                                <button type={'button'} className="btn btn-success"
+                                <button type={'button'} className="btn btn-info"
                                         onClick={this.addConsignment}>Добавить
                                 </button>
-                                <button type={'button'} className="btn btn-primary"
-                                        onClick={this.sendConsignment}>Отправить
-                                </button>
-
-
                             </div>
                         </form>
                     </div>
@@ -341,6 +329,9 @@ class DispatcherCreateOrderPage extends React.Component {
                             }
                         </ul>
                     </div>
+                </div>
+                <div className="offset-md-2 col-md-8 form_clear" id={'sendOrderRequestButton'} style={customerCompanyStyle}>
+                    <a onClick={this.saveBtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
                 </div>
             </div>);
     }
