@@ -1,4 +1,5 @@
 import React from "react";
+import ModalAcceptDelete from "./modalAcceptDelete";
 
 class PageStockList extends React.Component {
     constructor(props) {
@@ -8,6 +9,7 @@ class PageStockList extends React.Component {
         this.setCompanyName = this.setCompanyName.bind(this);
         this.setCompanyAddress = this.setCompanyAddress.bind(this);
         this.addNewCompany = this.addNewCompany.bind(this);
+        this.submiteDelete = this.submiteDelete.bind(this);
         this.state = {
             stocks:[],
             stockName:"",
@@ -69,12 +71,33 @@ class PageStockList extends React.Component {
         if(!stock) return;
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{stock.id}</div>
-            <div className={"col-md-5"}>{stock.name}</div>
+            <div className={"col-md-4"}>{stock.name}</div>
             <div className={"col-md-3"}>{stock.address}</div>
-            <div className={"col-md-3"}>
+            <div className={"col-md-1"}>
                 <a className={"table_button bg-secondary text-white"}>edit</a>
             </div>
+            <div className={"col-md-3"}>
+                <ModalAcceptDelete clickfunc={this.submiteDelete} className={"table_button bg-secondary text-white"} stockId={stock.id}/>
+            </div>
         </div>
+    }
+
+    submiteDelete(stockId){
+        const ref = this;
+        fetch('http://localhost:8080/api/stocks', {
+            method: "DELETE",
+            body: stockId,
+            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            console.log(result)
+            if (result) {
+                ref.setState({stocks:result})
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
     }
     render(){
        return <div class="row">
@@ -82,8 +105,9 @@ class PageStockList extends React.Component {
                    <div className="row table_header">
                        <div className="col-md-1">ID</div>
                        <div className="col-md-5">Название склада</div>
-                       <div className="col-md-3">Адрес</div>
-                       <div className="col-md-3">Действие</div>
+                       <div className="col-md-4">Адрес</div>
+                       <div className="col-md-1"></div>
+                       <div className="col-md-1"></div>
                    </div>
                    {
                        this.state.stocks.map((element)=>{
