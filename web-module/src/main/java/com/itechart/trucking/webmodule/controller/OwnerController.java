@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
 @Controller
+@RequestMapping(value = "/api")
 public class OwnerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerController.class);
@@ -34,7 +35,7 @@ public class OwnerController {
 
 //    TEST
 
-    @GetMapping(value = "/xls")//check xls method
+    @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
     public String createXls(@Value("${excel.path}")String path){
         Optional<User> byId = Repository.findById(1L);
