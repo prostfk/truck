@@ -291,6 +291,7 @@ CREATE TABLE public.product (
     name character varying(45) DEFAULT NULL::character varying,
     status character varying(45) DEFAULT NULL::character varying,
     description character varying(100) NOT NULL,
+    price integer NOT NULL,
     product_consignment integer,
     cancellation_act bigint NOT NULL
 );
@@ -670,7 +671,7 @@ INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_a
 INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (5, 'Заказ #416', 1, 'Accepted', 3, 6, '2018-10-24', NULL, 3, 1);
 INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (6, 'Заказ #417', 1, 'Accepted', 6, 3, '2018-10-24', NULL, 4, 1);
 INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (4, 'Заказ #415', 1, 'Completed', 5, 4, '2018-10-24', NULL, 2, 1);
-
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (2, 'Заказ #411', 1, 'ACTIVE', 5, 4, '2018-10-24', NULL, 2, 1);
 
 --
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres

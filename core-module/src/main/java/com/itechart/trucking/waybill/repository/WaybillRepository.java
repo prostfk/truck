@@ -2,6 +2,7 @@ package com.itechart.trucking.waybill.repository;
 
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.waybill.entity.Waybill;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

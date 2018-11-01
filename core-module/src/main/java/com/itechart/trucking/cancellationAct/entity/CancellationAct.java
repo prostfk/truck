@@ -5,6 +5,7 @@ import com.itechart.trucking.product.entity.Product;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -13,7 +14,7 @@ public class CancellationAct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String date;
+    private Date date;
     private Integer amount;
     private Integer price;
     @OneToOne

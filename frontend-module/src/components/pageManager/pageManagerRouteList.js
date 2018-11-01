@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+﻿import React, {Component} from "react";
 
 class ManagerRouteList extends Component {
 
@@ -12,7 +12,10 @@ class ManagerRouteList extends Component {
             orderId: "",
             point:"",
             sequence:"",
-            waybill:{}
+
+            showingInfoWindow: false,
+            activeMarker: {},
+            selectedPlace: {},
         }
 
         document.title = "Путевой лист";
@@ -20,7 +23,7 @@ class ManagerRouteList extends Component {
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            this.setState({routePoints:data, waybill:data[0].waybill});
+            this.setState({routePoints:data});
         });
     }
 
@@ -33,7 +36,7 @@ class ManagerRouteList extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/routelist/${id}`, {method: "get"}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/routelist/${id}`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -64,7 +67,7 @@ class ManagerRouteList extends Component {
     deletePoint(pointId) {
         console.log(pointId);
         const ref = this;
-        fetch(`http://localhost:8080/api/manager/deletepoint/${pointId}`, {method: "DELETE"})
+        fetch(`http://localhost:8080/api/manager/deletepoint/${pointId}`, {method: "DELETE", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {
@@ -78,27 +81,60 @@ class ManagerRouteList extends Component {
     }
 
     addPoint() {
+        let split = document.location.href.split('/');
+        let id = split[split.length - 1];
         let ref = this;
        let routePoint = {};
        routePoint.id = null;
        routePoint.point = this.state.point;
        routePoint.pointLevel = this.state.sequence;
-       routePoint.waybill = this.state.waybill;
+       routePoint.waybill = null;
        console.log(routePoint);
 
-       fetch('http://localhost:8080/api/manager/createPoint', {method:"POST", headers: {'Content-Type':'application/json'},
+       fetch(`http://localhost:8080/api/manager/${id}/createPoint`, {method:"POST", headers: {'Content-Type':'application/json', 'Auth-token': sessionStorage.getItem("Auth-token")},
            body: JSON.stringify(routePoint)})
            .then(function(response) {
                return response.json();
            }).then(function(result) {
                if(result === true) {
+                   console.log(result);
                    ref.forceUpdateHandler();
                }
            });
     }
+
+    onMarkerClick = (props, marker, e) =>
+        this.setState({
+            selectedPlace: props,
+            activeMarker: marker,
+            showingInfoWindow: true
+        });
+
+    onMapClicked = (props) => {
+        if (this.state.showingInfoWindow) {
+            this.setState({
+                showingInfoWindow: false,
+                activeMarker: null
+            })
+        }
+    };
+
     render() {
         return (
-            <div className="row" id="managerroutelist">
+            /*<Map google={this.props.google}
+                 onClick={this.onMapClicked}>
+                <Marker onClick={this.onMarkerClick}
+                        name={'Current location'} />
+
+                <InfoWindow
+                    marker={this.state.activeMarker}
+                    visible={this.state.showingInfoWindow}>
+                    <div>
+                        <h1>{this.state.selectedPlace.name}</h1>
+                    </div>
+                </InfoWindow>
+            </Map>*/
+           <div className="row" id="managerroutelist">
                 <div className="offset-md-2 col-md-8 form_clear">
                     <div className="row">
                         <div className="col-md-5">

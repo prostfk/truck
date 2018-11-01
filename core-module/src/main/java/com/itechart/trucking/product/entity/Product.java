@@ -17,6 +17,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductState status;
     private String description;
+    private Integer price;
     @OneToOne
     @JoinColumn(name = "product_consignment")
     private Consignment consignment;
