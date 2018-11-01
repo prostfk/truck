@@ -366,7 +366,8 @@ CREATE TABLE public.stock (
     id integer NOT NULL,
     name character varying(45) NOT NULL,
     company_id integer NOT NULL,
-    address character varying(50) NOT NULL
+    address character varying(50) NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -667,13 +668,14 @@ INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid)
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (3, 'Заказ #414', 1, 'Accepted', 3, 5, '2018-10-24', NULL, 1, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (5, 'Заказ #416', 1, 'Accepted', 3, 6, '2018-10-24', NULL, 3, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (6, 'Заказ #417', 1, 'Accepted', 6, 3, '2018-10-24', NULL, 4, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (4, 'Заказ #415', 1, 'Completed', 5, 4, '2018-10-24', NULL, 2, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (7, 'Товар 100', 3, 'Принят', 1, 1, '2018-01-30', '2018-03-01', 5, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (8, 'Название', 1, 'Принят', 8, 8, '2018-12-16', '2018-12-14', 6, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (9, 'ывыа', 1, 'Принят', 8, 8, '2018-11-11', '2018-11-11', 7, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (3, 'Заказ #414', 1, 'ACCEPTED', 3, 3, '1970-01-01', '2018-10-24', 1, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (9, 'ывыа', 1, 'ACCEPTED', 8, 8, '2018-11-11', '2018-11-11', 7, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (8, 'Название', 1, 'ACCEPTED', 8, 8, '2018-12-16', '2018-12-14', 6, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (10, 'Тестовый заказ', 1, 'ACCEPTED', 1, 1, '2018-11-03', '2018-11-01', 8, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (5, 'Заказ #416', 1, 'ACCEPTED', 3, 6, '2018-10-24', NULL, 3, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (4, 'Заказ #415', 1, 'ACCEPTED', 5, 4, '2018-10-24', NULL, 2, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (7, 'Товар 100', 3, 'ACCEPTED', 1, 1, '2018-01-30', '2018-03-01', 5, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (6, 'Заказ #417', 1, 'ACCEPTED', 6, 3, '2018-10-24', NULL, 4, 1);
 
 
 --
@@ -689,7 +691,7 @@ INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_a
 INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (6, 'Пушкино', 2, 2, false);
 INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (7, 'Павлово', 3, 2, false);
 INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (5, 'Грозный', 1, 2, false);
-INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (1, 'Минскс', 4, 1, false);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (1, 'Минскс', 4, 1, true);
 INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (4, 'Гродно', 1, 1, true);
 INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (2, 'Брагин', 2, 1, true);
 INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (3, 'Иваневичи', 3, 1, true);
@@ -699,18 +701,18 @@ INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUE
 -- Data for Name: stock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.stock (id, name, company_id, address) VALUES (1, 'Склад 1', 1, 'Брусничная 12');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (3, 'Склад 3', 1, 'Иванова 44');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (8, 'Склад CV4', 3, 'Портовая 17');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (6, 'Склад 16', 1, 'Шаманова 17');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (7, 'Склад 12', 2, 'Демидова 10');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (4, 'Склад 17', 1, 'Држный берег 7');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (5, 'Склд 10', 1, 'Кольная 3');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (10, 'Склад 12', 1, 'Адрес');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (11, 'Складское помещение', 1, 'Белого В.А.');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (12, 'Склад 12', 1, 'Адрес');
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (1, 'Склад 1', 1, 'Брусничная 12', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (3, 'Склад 3', 1, 'Иванова 44', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (8, 'Склад CV4', 3, 'Портовая 17', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (7, 'Склад 12', 2, 'Демидова 10', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (4, 'Склад 17', 1, 'Држный берег 7', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (10, 'Склад 12', 1, 'Адрес', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (12, 'Склад 12', 1, 'Адрес', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (5, 'Склд 10', 1, 'Кольная 3', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (6, 'Склад 16', 1, 'Шаманова 17', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (11, 'Складское помещение', 1, 'Белого В.А.', true);
 
 
 --
@@ -740,13 +742,14 @@ INSERT INTO public.users (id, username, email, password, user_role, company, bir
 -- Data for Name: waybill; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (1, 'DONE', 1, 19, '2018-10-26', '2018-10-28');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (2, 'DONE', 1, 19, '2018-10-29', '2018-10-30');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (3, 'DONE', 2, 20, '2018-10-26', '2018-10-27');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (4, 'DONE', 3, 20, '2018-10-30', '2018-10-31');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (5, 'Оформлен', 7, 22, '2018-01-30', '2018-03-01');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (6, 'Оформлен', 9, 26, '2018-12-16', '2018-12-14');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (7, 'Оформлен', 8, 20, '2018-11-11', '2018-11-11');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (1, 'ACCEPTED', 1, 19, '1970-01-01', '2018-10-24');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (2, 'ACCEPTED', 1, 19, '2018-10-29', '2018-10-30');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (3, 'ACCEPTED', 2, 20, '2018-10-26', '2018-10-27');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (8, 'ACCEPTED', 7, 21, '2018-11-03', '2018-11-01');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (4, 'ACCEPTED', 3, 20, '2018-10-30', '2018-10-31');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (5, 'ACCEPTED', 7, 22, '2018-01-30', '2018-03-01');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (6, 'ACCEPTED', 9, 26, '2018-12-16', '2018-12-14');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (7, 'ACCEPTED', 8, 20, '2018-11-11', '2018-11-11');
 
 
 --
@@ -795,7 +798,7 @@ SELECT pg_catalog.setval('public.driver_id_seq', 9, true);
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orders_id_seq', 9, true);
+SELECT pg_catalog.setval('public.orders_id_seq', 10, true);
 
 
 --
@@ -837,7 +840,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 37, true);
 -- Name: waybill_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.waybill_id_seq', 7, true);
+SELECT pg_catalog.setval('public.waybill_id_seq', 8, true);
 
 
 --
