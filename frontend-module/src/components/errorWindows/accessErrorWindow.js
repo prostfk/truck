@@ -16,6 +16,7 @@ export default class AccessErrorWindow extends Component {
         this.setState({
             modal: !this.state.modal
         });
+        window.location.href = '/'
     };
 
     render() {

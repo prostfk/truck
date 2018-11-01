@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DISPATHCER')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -55,7 +55,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "/getCompanyUsers")
-    public List<User> findUsersByCompany(User user){
+    public List<User> findUsersByCompany(){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
         return userRepository.findUsersByCompany(userByUsername.getCompany());
@@ -64,18 +64,14 @@ public class AdminController {
     @GetMapping(value = "/stocks")
     @ResponseBody
     public List<Stock> stocks() {
-/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);*/
-        String name = "user2";
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
         return stockRepository.findStocksByCompany(userByEmail.getCompany());
     }
 
     @RequestMapping(value = "/stocks",method = RequestMethod.POST)
     public boolean createStock(@ModelAttribute Stock stock){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);*/
-        String name = "user2";
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
         stock.setCompany(userByEmail.getCompany());
         stockRepository.save(stock);
@@ -86,7 +82,7 @@ public class AdminController {
     @ResponseBody
     public List<User> findUsers() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByEmail(name);
+        User userByEmail = userRepository.findUserByUsername(name);
         return userRepository.findUsersByCompany(userByEmail.getCompany());
     }
 
@@ -102,6 +98,7 @@ public class AdminController {
     @PostMapping(value = "/editUser/{id}")
     @ResponseBody
     public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) {
+        user.setId(id);
         if (result.hasErrors()) {
             return "{error: 'Check your data'}";
         }

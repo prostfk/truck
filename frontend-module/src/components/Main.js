@@ -22,6 +22,7 @@ import ManagerRouteList from "./pageManager/pageManagerRouteList";
 import MainHeader from "./PagesCommon/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageSysAdmin/pageUsersList";
+import CompanyOwnerStatistics from "./pageOwner/statistics";
 
 class MainController extends React.Component {
 
@@ -44,12 +45,14 @@ class MainController extends React.Component {
                     <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment}/>
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
                     <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList}/> {/*driver*/}
-                    <Route path="/manager/orders" component={MainHeader}/>
+                    {/*<Route path="/manager/orders" component={MainHeader}/>*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
                     <Route path="/manager/edit/*" component={ManagerHeader}/>
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
+                    <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
+
                 </div>
             </Router>
         );

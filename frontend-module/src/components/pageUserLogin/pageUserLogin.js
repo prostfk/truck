@@ -61,6 +61,7 @@ class pageUserLogin extends Component {
                     console.log(`SUCCESS: ${data.token}`);
                     sessionStorage.setItem("Auth-token", data.token);
                     sessionStorage.setItem("username", username);
+                    sessionStorage.setItem("role", data.role);
                     this.props.history.push('/');
                 }else{
                     document.getElementById('error-span').innerText = "Check your data";

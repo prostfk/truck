@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import LogoutComponent from "../pageLogout/logoutComponent";
 
-class ManagerHeader extends Component {
+export default class AnonHeader extends Component {
+
     render() {
         return (
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -13,21 +14,14 @@ class ManagerHeader extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className={'nav-link'}>{sessionStorage.getItem('username')}</a>
-                        </li>
-                        <li className="nav-item active">
-                            <Link to={`/manager/orders`} className="nav-link">Заказы</Link>
+                            <Link to={`/auth`} className="nav-link">Войти в систему</Link>
                         </li>
                     </ul>
-                    <li className="navbar-text">
-                        <LogoutComponent/>
-                    </li>
+
 
                 </div>
             </nav>
         );
-
     }
-}
 
-export default ManagerHeader;
+}

@@ -14,7 +14,9 @@ export default class LogoutComponent extends Component {
     submitLogout = () => {
         sessionStorage.removeItem('Auth-token');
         sessionStorage.removeItem('username');
+        sessionStorage.removeItem('role');
         this.toggle();
+        window.location.href = "/";
     };
 
     toggle = () => {
@@ -24,15 +26,21 @@ export default class LogoutComponent extends Component {
     };
 
     render() {
+        let red = {
+            color: '#E5E8E8'
+        };
+        let margin = {
+            marginLeft: '2%'
+        };
         return (
             <div>
-                <a className={this.props.className} onClick={this.toggle}>Выйти</a>
+                <a className={this.props.className} style={red} onClick={this.toggle}><b>Выйти</b></a>
                 <Modal isOpen={this.state.modal}>
                     <form>
                         <ModalHeader>Выйти?</ModalHeader>
                         <ModalBody>
                             <Button color="info" onClick={this.submitLogout}>Выйти</Button>
-                            <Button color="danger" onClick={this.toggle}>Отмена</Button>
+                            <Button style={margin} color="danger" onClick={this.toggle}>Отмена</Button>
                         </ModalBody>
                     </form>
                 </Modal>

@@ -10,9 +10,7 @@ class DispatcherEditOrder extends Component {
         this.changeInput = this.changeInput.bind(this);
         this.initOrder = this.initOrder.bind(this);
         this.sendInfoToServer = this.sendInfoToServer.bind(this);
-        this.setValuesFromJson = this.setValuesFromJson.bind(this);
         this.changeDate = this.changeDate.bind(this);
-        // this.fetchToCompany = this.fetchToCompany.bind(this);
         this.state = {
             companyNameForSearch: "",
             name: "",
@@ -25,47 +23,23 @@ class DispatcherEditOrder extends Component {
             waybill_status: "",
             driver: "",
             auto: "",
-            date_departure: "14/07/2018",
-            date_arrival: "01/01/2019",
+            date_departure: CommonUtil.getCorrectDateFromLong(new Date(new Date().getTime() + 86400000)),
+            date_arrival: CommonUtil.getCorrectDateFromLong(new Date(new Date().getTime() + 86400000)),
             company: "",
+            orderId: '',
             order: {},
             client: {},
             companyObj: {},
             receiver: {},
             sender: {},
             waybill: {},
-            consignment: []
+            consignment: [],
+            newConsignmentName: ""
         };
         this.initOrder();
     }
 
     sendInfoToServer() {
-        console.log(this.state.order);
-        this.setState({
-            companyObj: {
-                name: this.state.company
-            },
-            receiver: {
-                address: this.state.delivery_stock
-            },
-            sender: {
-                address: this.state.departure_stock,
-                company: this.state.company
-            },
-            waybill: {
-                status: this.state.waybill_status,
-                auto: this.state.auto,
-                driver: this.state.driver,
-                dateArrival: this.state.date_arrival,
-                dateDeparture: this.state.date_departure
-            },
-            order: {
-                dateAccepted: this.state.date_departure,
-                dateExecuted: this.state.date_arrival,
-                id: this.state.order.id,
-                name: this.state.name
-            }
-        });
         let formData = new FormData();
         formData.append("clientId", this.state.client_id);
         formData.append("name", this.state.name);
@@ -80,6 +54,12 @@ class DispatcherEditOrder extends Component {
         formData.append("orderId", this.state.order.id);
         formData.append("waybillId", this.state.order.waybill.id);
         console.log(this.state);
+        let array = [];
+        for (let i = 0; i < this.state.consignment.length; i++) {
+            console.log( typeof this.state.consignment[i]);
+            array.push( (typeof this.state.consignment[i]) === "string" ? this.state.consignment[i] : this.state.consignment[i].join(''));
+        }
+        formData.append("consignments", array.join('`'));
         formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
@@ -90,16 +70,10 @@ class DispatcherEditOrder extends Component {
         }).then(response => {
             return response.json()
         }).then(data => {
-            if (data.error === undefined){
-                this.showConsignmentHideOrder();
-                document.getElementById('success-order-span').innerText = 'Изменено';
-
+            if (data.error === undefined) {
+                this.props.history.push('/orders');
             }
         })
-    }
-
-    setValuesFromJson() {
-
     }
 
     initOrder() {
@@ -123,6 +97,7 @@ class DispatcherEditOrder extends Component {
                 company: data.company.id,
                 client_id: data.client.id,
                 waybill_status: data.waybill.status,
+                orderId: data.id
             });
             document.getElementById('auto').innerHTML = `<option value="${this.state.order.waybill.auto.id}">${this.state.order.waybill.auto.name}</option>`;
             document.getElementById('driver').innerHTML = `<option value="${this.state.order.waybill.driver.id}">${this.state.order.waybill.driver.name}</option>`;
@@ -146,9 +121,6 @@ class DispatcherEditOrder extends Component {
         this.setState({
             [event.target.id]: [event.target.value]
         });
-        console.log("CHANGE COMPANY");
-        this.fetchToUserStocks();
-        this.fetchToStocks(this.state.client_id);
     };
 
     changeDate(event) {
@@ -175,12 +147,9 @@ class DispatcherEditOrder extends Component {
             document.getElementById('client_id').style.display = 'none';
         }
         this.fetchToUserStocks();
-        this.fetchToStocks(this.state.client_id);
-
     };
 
     fetchToUserStocks = () => {
-        // fetch(`http://localhost:8080/api/companies/${companyId}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
         fetch(`http://localhost:8080/api/companies/findStocksByUsername`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
@@ -189,20 +158,6 @@ class DispatcherEditOrder extends Component {
                 html += `<option value="${stock.id}">${stock.address}</option>`
             });
             document.getElementById('departure_stock').innerHTML = html;
-            this.setState({
-                departure_stock: this.state.order.sender.id
-            })
-        })
-    };
-
-    fetchToStocks = (id) => {
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
-            let html = '';
-            if (data.status === 404) return;
-            console.log(data);
-            data.map(stock => {
-                html += `<option value="${stock.id}">${stock.address}</option>`
-            });
             document.getElementById('delivery_stock').innerHTML = html;
             this.setState({
                 departure_stock: this.state.order.sender.id
@@ -228,6 +183,32 @@ class DispatcherEditOrder extends Component {
     showConsignmentHideOrder = () => {
         document.getElementById('order-form').style.display = 'none';
         document.getElementById('consignment-form').style.display = '';
+        if (this.state.consignment.length === 0){
+            fetch(`http://localhost:8080/api/orders/${this.state.orderId}/consignments`,{headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
+                return response.json();
+            }).then(data => {
+                console.log(this.state);
+                console.log(data);
+                if (data.error === undefined) {
+                    let array = [];
+                    for (let i = 0; i < data.length; i++) {
+                        array.push(data[i].name);
+                    }
+                    this.setState({
+                        consignment: array
+                    });
+                    console.log(this.state);
+                }
+            })
+        }
+    };
+
+    addConsignment = (event) => {
+        event.preventDefault();
+        this.setState({
+            consignment: [...this.state.consignment, this.state.newConsignmentName],
+            newConsignmentName: ''
+        });
     };
 
     render() {
@@ -250,7 +231,8 @@ class DispatcherEditOrder extends Component {
                                        className="form-control" id="name" placeholder="Наименование товара"/>
 
                                 <small className="form-text text-muted">Компания- заказчик перевозки</small>
-                                <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany} type="text"
+                                <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany}
+                                       type="text"
                                        className="form-control" id="companyNameForSearch" placeholder="Заказчик"/>
 
 
@@ -271,7 +253,8 @@ class DispatcherEditOrder extends Component {
 
                                 <div className="form-group">
                                     <small className="form-text text-muted">Сатус заказа</small>
-                                    <select onChange={this.changeInput} value={this.state.status} className="form-control"
+                                    <select onChange={this.changeInput} value={this.state.status}
+                                            className="form-control"
                                             id="status">
                                         <option selected disabled>Статус</option>
                                         <option>Принят</option>
@@ -323,13 +306,18 @@ class DispatcherEditOrder extends Component {
                         </div>
                     </div>
                     <div className="offset-md-2 col-md-8 form_clear">
-                        <a onClick={this.sendInfoToServer} id={'order-submit-button'} className="btn btn-success btn_fullsize">Сохранить</a>
+                        <a onClick={this.showConsignmentHideOrder} id={'order-submit-button'}
+                           className="btn btn-success btn_fullsize">Продолжить</a>
                     </div>
                 </div>
                 <div style={none} id={'consignment-form'}>
                     <div className="d-flex justify-content-center align-items-center">
-                        <form className="form-inline align-content-center" onSubmit={(e) => {e.preventDefault()}}>
-                            <button className={'btn btn-secondary'} onClick={this.showOrderHideConsignment}>Вернуться к заказу</button>
+                        <form className="form-inline align-content-center" onSubmit={(e) => {
+                            e.preventDefault()
+                        }}>
+                            <button className={'btn btn-secondary'} onClick={this.showOrderHideConsignment}>Вернуться к
+                                заказу
+                            </button>
                             <div className="form-group">
                                 <label htmlFor="consignment">Название товара</label>
                                 <input type="text" id="newConsignmentName" value={this.state.newConsignmentName}
@@ -338,17 +326,17 @@ class DispatcherEditOrder extends Component {
                                         onClick={this.addConsignment}>Добавить
                                 </button>
                                 <button type={'button'} className="btn btn-primary"
-                                        onClick={this.sendConsignment}>Отправить
+                                        onClick={this.sendInfoToServer}>Отправить
                                 </button>
 
                             </div>
                         </form>
                     </div>
-                    <div className="">
+                    <div className="pb-3">
                         <ul id='lis' className="list-group">
                             {
-                                this.state.consignment.map((item, index) =>
-                                    <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{item}   -
+                                this.state.consignment.map((index) =>
+                                    <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{index}   -
                                         <span aria-hidden="true">&times;</span>
                                     </li>
 

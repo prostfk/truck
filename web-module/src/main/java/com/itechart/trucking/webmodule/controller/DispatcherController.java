@@ -155,14 +155,30 @@ public class DispatcherController {
     }
 
     @PostMapping(value = "/companies/orders/edit")
-    public Object editOrder(OrderDto orderDto, Long orderId, Long waybillId, HttpServletRequest request) throws ParseException {
+    public Object editOrder(OrderDto orderDto, Long orderId, Long waybillId, String consignments, HttpServletRequest request) throws ParseException, JSONException {
+        JSONObject json = new JSONObject();
         Order orderFromDto = orderService.getOrderFromDto(orderDto);
         orderFromDto.setId(orderId);
-        System.out.println(orderFromDto);
-        Waybill waybill = orderFromDto.getWaybill();
-        waybill.setId(waybillId);
-        waybillRepository.save(waybill);
-        return orderRepository.save(orderFromDto);
+        orderFromDto.getWaybill().setId(waybillId);
+        String[] split = consignments.split("`");
+        consignmentRepository.customDeleteConsignmentsByOrderId(orderId);
+        Waybill savedWaybill = waybillRepository.save(orderFromDto.getWaybill());
+        Order savedOrder = orderRepository.save(orderFromDto);
+        for (String s : split) {
+            consignmentRepository.save(new Consignment(s, orderFromDto));
+        }
+        if (savedOrder != null && savedWaybill != null) {
+            json.put("status", "all data has been saved");
+            json.put("order", savedOrder);
+        } else {
+            json.put("error", "something went wrong");
+        }
+        return orderFromDto;
+    }
+
+    @GetMapping(value = "/orders/{id}/consignments")
+    public Object getConsignments(@PathVariable Long id) {
+        return consignmentRepository.customFindConsignmentsByOrderId(id);
     }
 
     @GetMapping(value = "/companies/findStocksByUsername")

@@ -8,6 +8,7 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.config.JwtGen;
+import com.itechart.trucking.webmodule.config.JwtVal;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class AnonController {
     private JwtGen jwtGen;
 
     @Autowired
+    private JwtVal jwtVal;
+
+    @Autowired
     private TokenRepository tokenRepository;
 
     @Autowired
@@ -47,11 +51,13 @@ public class AnonController {
     public String getToken(@ModelAttribute final User user) throws JSONException {
         JSONObject json = new JSONObject();
         String generate = jwtGen.generate(user);
+        User validate = jwtVal.validate(generate);
         if (generate == null) {
             json.put("error", "Invalid data");
         } else {
             json.put("status", 200);
             json.put("token", generate);
+            json.put("role", validate.getUserRole().name());
         }
         return json.toString();
 
