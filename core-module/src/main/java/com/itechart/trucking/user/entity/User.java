@@ -23,25 +23,26 @@ public class User {
     private String email;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    @OneToOne
-    @JoinColumn(name = "company")
-    private Company company;
     private Date birthDay;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company", nullable = false)
+    private Company company;
+
+
 
     public User() {
     }
-
     public User(@Size(min = 3, max = 50) String email, @Size(min = 5, max = 100) String password) {
         this.password = password;
         this.email = email;
     }
-
     public User(@Size(min = 5, max = 20) String username, @Size(min = 5, max = 100) String password, @Size(min = 3, max = 50) String email, UserRole userRole, Company company, Date date) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.userRole = userRole;
-        this.company = company;
+        /*this.company = company;*/
         this.birthDay = date;
     }
 }
