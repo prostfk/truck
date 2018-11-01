@@ -5,7 +5,7 @@ import com.itechart.trucking.product.entity.Product;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Data

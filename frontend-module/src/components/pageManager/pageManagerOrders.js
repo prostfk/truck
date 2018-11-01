@@ -57,10 +57,10 @@ class pageManagerOrders extends Component {
             <div className="col-md-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
             <div className="col-md-4" style={{display: isDone ? 'block' : 'none'}}>Проверка завершена</div>
             <div className="col-md-2" style={{display: isDone ? 'none' : 'block'}}>
-                <Link to={`/manager/edit/consignment/${order.id}`} className="manager_ref">Товарная партия</Link>
+                <Link to={`/manager/edit/consignment/${order.id}`} className="table_button bg-secondary text-white">Товарная партия</Link>
             </div>
             <div className="col-md-1" style={{display: isDone ? 'none' : 'block'}}>
-                <Link to={`/manager/edit/routelist/${order.id}`} className="manager_ref">Путевой лист</Link>
+                <Link to={`/manager/edit/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой лист</Link>
             </div>
             <div className="col-md-1" style={{display: isDone ? 'none' : 'block'}}><a onClick={this.finishCheck.bind(this, order.id)} className="table_button bg-secondary text-white">Проверен</a></div>
         </div>

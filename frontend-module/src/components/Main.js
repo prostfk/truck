@@ -13,6 +13,7 @@ import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import DriverRouteList from "./pageDriver/pageRouteList";
+import DriverConsignment from "./pageDriver/pageConsignment";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
 import pageManagerOrders from "./pageManager/pageManagerOrders";
 import ManagerHeader from "./PagesCommon/managerHeader";
@@ -40,6 +41,7 @@ class MainController extends React.Component{
                   <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment} />
                   <Route exact path="/myorders/" component={DriverOrderList} /> {/*driver*/}
                   <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList} /> {/*driver*/}
+                  <Route exact path="/myorders/consignment/:consignmentId" component={DriverConsignment} /> {/*driver*/}
               	  <Route path="/manager/orders" component={MainHeader} />{/*manager*/}
                   <Route exact path="/manager/orders" component={pageManagerOrders} />{/*manager*/}
                   <Route path="/manager/edit/*" component={ManagerHeader} />{/*manager*/}

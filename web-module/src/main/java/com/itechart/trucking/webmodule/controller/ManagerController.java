@@ -19,7 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -138,16 +138,17 @@ public class ManagerController {
 
     @GetMapping(value = "/manager/finishChecking/{orderId}")
     public Order finishChecking(@PathVariable Long orderId) {
+
         Order order = orderRepository.findOrderById(orderId);
         Waybill waybill = order.getWaybill();
         waybill.setStatus("DONE");
+        waybill.setCheckDate(new Date((new java.util.Date()).getTime()));
 
         Consignment consignment = consignmentRepository.findConsignmentByOrder(order);
         CancellationAct cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
         //cancellation.setDate(new Date());
-        System.out.println(new Date());
 
-        cancellationAct.setDate(new Date());
+        cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
         cancellationActRepository.save(cancellationAct);
         waybillRepository.save(waybill);
         order.setWaybill(waybill);

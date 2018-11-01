@@ -743,6 +743,10 @@ INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arriv
 INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (4, 'DONE', 3, 20, '2018-10-30', '2018-10-31');
 
 
+--update 0.0.1
+
+
+
 --
 -- Name: auto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --

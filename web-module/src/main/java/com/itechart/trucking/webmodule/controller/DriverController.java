@@ -1,9 +1,16 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.cancellationAct.entity.CancellationAct;
+import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
+import com.itechart.trucking.consignment.entity.Consignment;
+import com.itechart.trucking.consignment.repository.ConsignmentRepository;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.product.entity.Product;
+import com.itechart.trucking.product.entity.ProductState;
+import com.itechart.trucking.product.repository.ProductRepository;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
 import com.itechart.trucking.user.entity.User;
@@ -11,6 +18,7 @@ import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +35,12 @@ public class DriverController {
     private DriverRepository driverRepository;
     @Autowired
     private RouteListRepository routeListRepository;
+    @Autowired
+    private ConsignmentRepository consignmentRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private CancellationActRepository cancellationActRepository;
 
     @RequestMapping(value = "/orders/getMyOrders",method = RequestMethod.GET)
     public List<Order> getMyOrders(){
@@ -72,5 +86,36 @@ public class DriverController {
         }
         routeListRepository.save(point.get());
         return point;
+    }
+
+    @RequestMapping(value ="/orders/getMyOrders/{orderId}/consignment",method = RequestMethod.GET)
+    public List<Product> getDriverConsignment(@PathVariable Long orderId) {
+        List<Product> products = new ArrayList<>();
+        Optional<Order> order = orderRepository.findById(orderId);
+
+        if(order.isPresent()) {
+            Consignment consignment = consignmentRepository.findConsignmentByOrder(order.get());
+            products = productRepository.findAllByConsignment(consignment);
+        }
+        return products;
+    }
+
+    @RequestMapping(value ="/orders/getMyOrders/{orderId}/cancelProduct/{productId}",method = RequestMethod.GET)
+    public Optional<Product> cancelProduct(@PathVariable Long orderId, @PathVariable Long productId) {
+        Optional<Order> order = orderRepository.findById(orderId);
+        Consignment consignment = consignmentRepository.findConsignmentByOrder(order.get());
+        CancellationAct cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
+
+        Optional<Product> product = productRepository.findById(productId);
+
+        product.get().setStatus(ProductState.valueOf("LOST"));
+        cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
+        Integer amount = cancellationAct.getAmount() + 1;
+        cancellationAct.setAmount(amount);
+
+        productRepository.save(product.get());
+        cancellationActRepository.save(cancellationAct);
+
+        return product;
     }
 }

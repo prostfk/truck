@@ -1,7 +1,7 @@
-﻿import React, {Component} from "react";
+import React, {Component} from "react";
 import {Link} from "react-router-dom";
 
-class ManagerConsignment extends Component {
+class DriverConsignment extends Component {
 
     constructor(props) {
         super(props);
@@ -17,8 +17,8 @@ class ManagerConsignment extends Component {
 
     componentDidMount() {
         this.getProductList().then(data => {
-             this.setState({products:data});
-         });
+            this.setState({products:data});
+        });
     }
 
     forceUpdateHandler(product) {
@@ -35,9 +35,8 @@ class ManagerConsignment extends Component {
     /*get active orders*/
     getProductList() {
         let split = document.location.href.split('/');
-        let id = split[split.length - 1];
-        console.log(id);
-        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        let orderId = split[split.length - 1];
+        return fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/consignment`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -65,33 +64,18 @@ class ManagerConsignment extends Component {
 
         return <div className="row table_row manager_orders">
             <div className="col-md-3">{product.name}</div>
-            <div className="col-md-2" style={{display: isLost ? 'block' : 'none' }}>Утерян</div>
-            <div className="col-md-2" style={{display: isLost ? 'none' : 'block' }}>
-                <select className="form-control" defaultValue={status} onChange = {this.changeProductStatus.bind(this, product.id)}>
-                    <option>Принят</option>
-                    <option>Доставлен</option>
-                    <option>Проверен</option>
-                </select>
-            </div>
+            <div className="col-md-2" >{status}</div>
             <div className="col-md-3">{product.description}</div>
             <div className="col-md-2">{product.price}</div>
-            <div className="col-md-2"><a className="table_button bg-secondary text-white" onClick={this.setLostState.bind(this, product.id, isLost)}>{isLost?"Восстановить":"Списать"}</a></div>
-
+            <div className="col-md-2"><a className="table_button bg-secondary text-white" style={{display:isLost?"none":"block"}} onClick={this.setLostState.bind(this, product.id)}>Списать</a></div>
         </div>
     }
 
-    setLostState(productId, status) {
-        let isLost = !status;
-        console.log(isLost);
+    setLostState(productId) {
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        console.log(orderId);
         const ref = this;
-
-        let formData = new FormData();
-        formData.append("orderId", orderId);
-        formData.append("isLost", isLost);
-        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct`, {method: "POST", body:formData, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/cancelProduct/${productId}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -101,26 +85,7 @@ class ManagerConsignment extends Component {
             console.log(err);
         });
     }
-    changeProductStatus(productId, event) {
-        let status;
-        let ref = this;
-        if(event.target.value==="Принят") status="ACCEPTED";
-        else if(event.target.value==="Проверен") status="CHECK_DONE";
-        else if(event.target.value==="Доставлен") status="DELIVERED";
-        else if(event.target.value==="Утерян") status="LOST";
 
-        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}/?status=${status}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
-            .then(function(response) {
-                return response.json();
-            }).then(function(result) {
-                if(result !== undefined) {
-                   ref.forceUpdateHandler(result);
-                }
-                console.log(result);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
     render() {
         return (
             <div className="row">
@@ -155,4 +120,4 @@ class ManagerConsignment extends Component {
     }
 }
 
-export default ManagerConsignment;
+export default DriverConsignment;

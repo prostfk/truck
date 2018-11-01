@@ -2,6 +2,7 @@ package com.itechart.trucking.waybill.entity;
 
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.user.entity.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,8 +22,10 @@ public class Waybill {
     @OneToOne
     @JoinColumn(name = "auto")
     private Auto auto;
+    private Date checkDate;
     private Date dateDeparture;
     private Date dateArrival;
+    //private User userMarkerId;
 
     public Waybill() {
     }
