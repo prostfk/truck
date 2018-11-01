@@ -14,6 +14,8 @@ import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import DriverRouteList from "./pageDriver/pageRouteList";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
+import OwnerOrderList from "./pageOwner/pageOwnerOrderList.js";
+import OwnerRouteList from "./pageOwner/pageOwnerRouteList.js";
 import pageManagerOrders from "./pageManager/pageManagerOrders";
 import ManagerHeader from "./pageManager/managerHeader";
 import ManagerConsignment from "./pageManager/pageManagerConsignment";
@@ -48,7 +50,9 @@ class MainController extends React.Component {
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
-                </div>
+                <Route exact path="/owner/orders" component={OwnerOrderList} /> {/*owner*/}
+                  <Route exact path="/owner/routList/:orderrouteListId" component={OwnerRouteList} /> {/*owner*/}
+              </div>
             </Router>
         );
     }
