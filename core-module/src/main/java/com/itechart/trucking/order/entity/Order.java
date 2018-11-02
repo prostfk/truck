@@ -28,11 +28,11 @@ public class Order {//enum
     @JoinColumn(name = "waybill_id")
     private Waybill waybill;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sender")
     private Stock sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "receiver")
     private Stock receiver;
 

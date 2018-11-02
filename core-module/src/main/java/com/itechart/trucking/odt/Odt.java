@@ -21,7 +21,10 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.waybill.dto.WaybillDto;
 import com.itechart.trucking.waybill.entity.Waybill;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /*Object Type Definition*/
@@ -125,6 +128,11 @@ public class Odt {
             newDtoList.add(newTypedElemnt);
         }
         return newDtoList;
+    }
+
+    public static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        if(dateToConvert==null) return null;
+        return new java.sql.Date(dateToConvert.getTime()).toLocalDate();
     }
 
 }
