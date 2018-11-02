@@ -23,6 +23,7 @@ import MainHeader from "./PagesCommon/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageSysAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
+import EditUser from "./pageSysAdmin/pageEditUser";
 
 class MainController extends React.Component {
 
@@ -34,6 +35,7 @@ class MainController extends React.Component {
                     <Route path="/" component={IndexComponent}/>
                     <Route path="/registration" component={registration}/>
                     <Route path="/usersList" component={UsersList}/>
+                    <Route path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={testComponent}/>
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}

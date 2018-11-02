@@ -23,5 +23,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE CAST(birth_day AS text) LIKE :birthDay", nativeQuery = true)
     List<User> customFindUsersByBirthDay(@Param("birthDay") String birthDay);
     User findUserByIdAndUsername(Long id, String username);
+    @Query(value = "SELECT * FROM users WHERE id=:userId AND company=:companyId", nativeQuery = true)
+    User customFindUserByIdAndCompanyId(@Param("userId")Long userId, @Param("companyId")Long companyId);
 
 }

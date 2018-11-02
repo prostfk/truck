@@ -43,6 +43,7 @@ export default class UsersList extends Component {
             <div className={'col-md-5'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{user.email}</div>
+            <div className={'col-md-3'}><a onClick={this.props.history.push(`/users/${user.id}/edit`)}>Изменить</a></div>
         </div>
     };
 
