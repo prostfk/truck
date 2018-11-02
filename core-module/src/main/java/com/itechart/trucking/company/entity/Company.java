@@ -26,6 +26,7 @@ public class Company {
     @OneToOne
     @JoinColumn(name = "locker_id")
     private User lockerId;
+
     private Date lockDate;
     public Company() {
     }

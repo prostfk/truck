@@ -66,8 +66,25 @@ public class AdminController {
     public List<Stock> stocks() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        return stockRepository.findStocksByCompany(userByEmail.getCompany());
+        return stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true);
     }
+
+    @RequestMapping(value = "/stocks",method = RequestMethod.DELETE)
+    public List<Stock> stockDelete(@RequestBody String bstock) {
+        Long stockId = Long.parseLong(bstock);
+        if(stockId==null) return null;
+/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(name);*/
+        String name = "user2";
+        User userByEmail = userRepository.findUserByUsername(name); if(userByEmail==null) return null;
+        Stock stock = stockRepository.findStockById(stockId); if(stock==null) return null;
+        if(stock.getCompany().equals(userByEmail.getCompany())){
+            stock.setActive(false);
+            stockRepository.save(stock);
+        }
+        return stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true);
+    }
+
 
     @RequestMapping(value = "/stocks",method = RequestMethod.POST)
     public boolean createStock(@ModelAttribute Stock stock){

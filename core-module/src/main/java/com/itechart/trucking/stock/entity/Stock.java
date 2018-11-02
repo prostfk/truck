@@ -17,6 +17,7 @@ public class Stock {
     @OneToOne
     @JoinColumn(name = "company_id")
     private Company company;
+    private Boolean active;
 
     public Stock() {
     }

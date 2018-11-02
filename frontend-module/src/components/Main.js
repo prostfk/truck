@@ -14,12 +14,14 @@ import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import DriverRouteList from "./pageDriver/pageRouteList";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
+import OwnerOrderList from "./pageOwner/pageOwnerOrderList.js";
+import OwnerRouteList from "./pageOwner/pageOwnerRouteList.js";
 import pageManagerOrders from "./pageManager/pageManagerOrders";
-import ManagerHeader from "./PagesCommon/managerHeader";
+import ManagerHeader from "./pageManager/managerHeader";
 import ManagerConsignment from "./pageManager/pageManagerConsignment";
 import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
-import MainHeader from "./PagesCommon/mainHeader";
+import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageSysAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
@@ -47,15 +49,18 @@ class MainController extends React.Component {
                     <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment}/>
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
                     <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList}/> {/*driver*/}
-                    {/*<Route path="/manager/orders" component={MainHeader}/>*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
                     <Route path="/manager/edit/*" component={ManagerHeader}/>
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
+                    <Route exact path="/owner/orders" component={OwnerOrderList} /> {/*owner*/}
+                    <Route exact path="/owner/routList/:orderrouteListId" component={OwnerRouteList} /> {/*owner*/}
                     <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
 
                 </div>
+
+
             </Router>
         );
     }
