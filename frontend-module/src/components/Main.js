@@ -50,7 +50,7 @@ class MainController extends React.Component {
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
                     <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList}/> {/*driver*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
-                    <Route path="/manager/edit/*" component={ManagerHeader}/>
+                    {/*<Route path="/manager/edit/*" component={ManagerHeader}/>*/}
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
