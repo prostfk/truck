@@ -36,6 +36,7 @@ public class OrderDto {
         this.id = order.getId();
         this.name = order.getName();
         this.status = order.getStatus();
+/*        this.client = new ClientDto(order.getClient());*/
         this.sender = new StockDto(order.getSender());
         this.receiver = new StockDto(order.getReceiver());
         this.waybill = new WaybillDto(order.getWaybill());
