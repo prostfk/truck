@@ -8,8 +8,8 @@ import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
-import com.itechart.trucking.order.entity.OrderDto;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.repository.UserRepository;
@@ -45,7 +45,8 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
-    public Order getOrderFromDto(OrderDto dto) throws ParseException {
+    /*This method use OLD DTO!*/
+/*    public Order getOrderFromDto(OrderDto dto) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Auto autoById = autoRepository.findAutoById(dto.getAutoId());
         Company company = userRepository.findUserByUsername("user6").getCompany();//заглушка
@@ -63,6 +64,6 @@ public class OrderService {
         order.setWaybill(new Waybill(dto.getWaybillStatus(), driverById,autoById,order.getDateAccepted(),order.getDateExecuted()));
 //        order.setCompany(company);
         return order;
-    }
+    }*/
 
 }

@@ -8,8 +8,8 @@ import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.consignment.repository.ConsignmentRepository;
 import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
-import com.itechart.trucking.order.entity.OrderDto;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.stock.entity.Stock;
@@ -128,9 +128,10 @@ public class DispatcherController {
         }
     }
 
-    @PostMapping(value = "/orders/createOrder")
+    /*Method use old dto !*/
+/*    @PostMapping(value = "/orders/createOrder")
     public Order createOrder(OrderDto orderDto){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*/
+        *//*        String name = SecurityContextHolder.getContext().getAuthentication().getName();*//*
         Order order = null;
         try {
             order = orderService.getOrderFromDto(orderDto);
@@ -142,7 +143,7 @@ public class DispatcherController {
         waybillRepository.save(order.getWaybill());
         orderRepository.save(order);
         return order;
-    }
+    }*/
 
     @GetMapping(value = "/clients/findClientsByNameLike")
     public List<Client> findClientsByNameLike(@RequestParam String name){
@@ -167,7 +168,8 @@ public class DispatcherController {
         return stockRepository.findStocksByAddressLike(address);
     }
 
-    @PostMapping(value = "/companies/orders/edit")
+    /*Method use old dto !*/
+/*    @PostMapping(value = "/companies/orders/edit")
     public Object editOrder(OrderDto orderDto, Long orderId, Long waybillId, HttpServletRequest request) throws ParseException {
         Order orderFromDto = orderService.getOrderFromDto(orderDto);
         orderFromDto.setId(orderId);
@@ -176,7 +178,7 @@ public class DispatcherController {
         waybill.setId(waybillId);
         waybillRepository.save(waybill);
         return orderRepository.save(orderFromDto);
-    }
+    }*/
 
     @GetMapping(value = "/companies/findStocksByUsername")
     public Object findCompanyByUsername() throws JSONException {
