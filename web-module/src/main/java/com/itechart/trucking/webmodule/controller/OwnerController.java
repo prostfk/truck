@@ -1,6 +1,9 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.order.entity.Order;
+import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
@@ -30,7 +34,8 @@ public class OwnerController {
     @Autowired
     private CompanyRepository companyRepository;
 
-
+    @Autowired
+    private OrderRepository orderRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
@@ -61,4 +66,11 @@ public class OwnerController {
         return userRepository.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
     }
 
+    @GetMapping(value = "/company/orders")
+    @ResponseBody
+    public List<Order> fetchOrdersOfCompany() {
+        // Some kind of test
+        Company company = companyRepository.findCompanyById(1L);
+        return orderRepository.findAllByCompany(company);
+    }
 }
