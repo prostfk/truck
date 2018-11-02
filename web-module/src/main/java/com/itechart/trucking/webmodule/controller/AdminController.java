@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DISPATHCER')")
+@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
