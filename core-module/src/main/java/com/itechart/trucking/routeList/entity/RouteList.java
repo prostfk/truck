@@ -20,5 +20,20 @@ public class RouteList {
     @JoinColumn(name = "waybill_id")
     private Waybill waybill;
 
+    public RouteList() {
+    }
+
+    public RouteList(String point, Integer pointLevel, Boolean marked) {
+        this.point = point;
+        this.pointLevel = pointLevel;
+        this.marked = marked;
+    }
+
+    public RouteList(String point, Integer pointLevel, Boolean marked, Waybill waybill) {
+        this.point = point;
+        this.pointLevel = pointLevel;
+        this.marked = marked;
+        this.waybill = waybill;
+    }
 }
 

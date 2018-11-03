@@ -42,7 +42,7 @@ public class AnonController {
     @Autowired
     private CompanyRepository companyRepository;
 
-    @PostMapping(value = "/auth")//auth rest
+    @PostMapping(value = "/auth")
     @ResponseBody
     public String getToken(@ModelAttribute final User user) throws JSONException {
         JSONObject json = new JSONObject();
@@ -57,7 +57,7 @@ public class AnonController {
 
     }
 
-    @PostMapping(value = "/registration")//redo for rest
+    @PostMapping(value = "/registration")
     @ResponseBody
     public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
         JSONObject jsonObject = new JSONObject();

@@ -24,4 +24,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> customFindUsersByBirthDay(@Param("birthDay") String birthDay);
     User findUserByIdAndUsername(Long id, String username);
 
+    User findUserById(Long id);
+
 }

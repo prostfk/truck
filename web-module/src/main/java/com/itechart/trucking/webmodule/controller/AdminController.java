@@ -7,6 +7,8 @@ import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -42,20 +44,14 @@ public class AdminController {
     @GetMapping(value = "/stocks")
     @ResponseBody
     public List<Stock> stocks() {
-/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);*/
-        String name = "user2";
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
         return stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true);
     }
 
     @RequestMapping(value = "/stocks",method = RequestMethod.DELETE)
-    public List<Stock> stockDelete(@RequestBody String bstock) {
-        Long stockId = Long.parseLong(bstock);
-        if(stockId==null) return null;
-/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);*/
-        String name = "user2";
+    public List<Stock> stockDelete(@RequestBody Long stockId) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name); if(userByEmail==null) return null;
         Stock stock = stockRepository.findStockById(stockId); if(stock==null) return null;
         if(stock.getCompany().equals(userByEmail.getCompany())){
@@ -68,9 +64,7 @@ public class AdminController {
 
     @RequestMapping(value = "/stocks",method = RequestMethod.POST)
     public boolean createStock(@ModelAttribute Stock stock){
-        /*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);*/
-        String name = "user2";
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
         stock.setCompany(userByEmail.getCompany());
         stockRepository.save(stock);
@@ -81,32 +75,32 @@ public class AdminController {
     @ResponseBody
     public List<User> findUsers() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByEmail(name);
+        User userByEmail = userRepository.findUserByUsername(name);
         return userRepository.findUsersByCompany(userByEmail.getCompany());
     }
 
     @PostMapping(value = "/editCompany")
     @ResponseBody
-    public Object processEditingCompany(@Valid Company company, BindingResult bindingResult) {
+    public Object processEditingCompany(@Valid Company company, BindingResult bindingResult) throws JSONException {
         if (bindingResult.hasErrors()) {
-            return "{error: 'Check your data'}";
+            return getInvalidDataJsonMessage();
         }
         return companyRepository.save(company);
     }
 
     @PostMapping(value = "/editUser/{id}")
     @ResponseBody
-    public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) {
+    public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) throws JSONException {
         if (result.hasErrors()) {
-            return "{error: 'Check your data'}";
+            return getInvalidDataJsonMessage();
         }
         return userRepository.save(user);
     }
 
     @PostMapping(value = "/registerCompany")
-    public Object processRegisteringCompany(@Valid Company company, BindingResult bindingResult){
+    public Object processRegisteringCompany(@Valid Company company, BindingResult bindingResult) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findUserByEmail(name);
+        User user = userRepository.findUserByUsername(name);
         if (user.getCompany() == null) {
             if (!bindingResult.hasErrors()){
                 @Valid Company save = companyRepository.save(company);
@@ -114,12 +108,19 @@ public class AdminController {
                 userRepository.save(user);
             }
         }else{
-            return HttpStatus.LOCKED;
+            return getInvalidDataJsonMessage();
         }
         return "redirect:/companyPage";
 
     }
 
+
+
+    private JSONObject getInvalidDataJsonMessage() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("error", "invalid data");
+        return json;
+    }
 
 
 

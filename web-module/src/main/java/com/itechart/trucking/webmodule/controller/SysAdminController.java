@@ -68,7 +68,7 @@ public class SysAdminController {
         return companyRepository.findAllByOrderById();
     }
 
-    @RequestMapping(value = "/companies/changeStatus",method = RequestMethod.POST)
+    @PostMapping(value = "/companies/changeStatus")
     public boolean changeActiveStatus(@RequestBody String companyId){
         Long compId = Long.parseLong(companyId);
         if(companyId==null) return false;
@@ -81,13 +81,9 @@ public class SysAdminController {
         return true;
     }
 
-    /*добавить блокирующего юзера!*/
-    @RequestMapping(value = "/companies/disable/{companyId}",method = RequestMethod.POST)
-    public boolean disabeCompany(@RequestBody String description,@PathVariable String companyId){
-        System.out.println(companyId + " : " + description);
-        Long compId = Long.parseLong(companyId);
-        if(companyId==null) return false;
-        Company company = companyRepository.findCompanyById(compId);
+    @PostMapping(value = "/companies/disable/{companyId}")
+    public boolean disableCompany(@RequestBody String description, @PathVariable Long companyId){
+        Company company = companyRepository.findCompanyById(companyId);
         company.setLockComment(description);
         company.setActive(0);
         company.setLockDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
@@ -95,11 +91,8 @@ public class SysAdminController {
         return true;
     }
 
-    @RequestMapping(value = "/companies/{companyId}",method = RequestMethod.GET)
-    public Company getCompanyById(@PathVariable String companyId) {
-        System.out.println(companyId);
-        Long compId = Long.parseLong(companyId);
-        if (companyId == null) return null;
-        return companyRepository.findCompanyById(compId);
+    @GetMapping(value = "/companies/{companyId}")
+    public Company getCompanyById(@PathVariable Long companyId) {
+        return companyRepository.findCompanyById(companyId);
     }
 }
