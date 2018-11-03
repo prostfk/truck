@@ -17,7 +17,7 @@ export default class UsersList extends Component {
     }
 
     fetchToUsers = () => {
-        fetch('http://localhost:8080/api/getCompanyUsers', {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
+        fetch('http://localhost:8080/api/users', {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {

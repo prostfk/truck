@@ -53,13 +53,18 @@ public class AdminController {
     }
 
     @DeleteMapping(value = "/stocks")
-    public List<StockDto> stockDelete(@RequestBody Long stockId) {
+    public List<StockDto> stockDelete(@RequestBody String stockIds) {
+        Long stockId = Long.parseLong(stockIds);
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        if (userByEmail == null) return null;
+
+        if (userByEmail == null) {
+            return null;
+        }
         Stock stock = stockRepository.findStockById(stockId);
         if (stock == null) return null;
-        if (stock.getCompany().equals(userByEmail.getCompany())) {
+
+        if (stock.getCompany().getId()==userByEmail.getCompany().getId()) {
             stock.setActive(false);
             stockRepository.save(stock);
         }
@@ -69,11 +74,18 @@ public class AdminController {
 
 
     @PostMapping(value = "/stocks")
-    public boolean createStock(@ModelAttribute Stock stock) {
+    public List<StockDto> createStock(@ModelAttribute Stock stock) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        stock.setCompany(userByEmail.getCompany());
-        return stockRepository.save(stock) != null;
+
+        Stock stock1 = new Stock();
+        stock1.setActive(true);
+        stock1.setName(stock.getName());
+        stock1.setAddress(stock.getAddress());
+        stock1.setCompany(userByEmail.getCompany());
+        stockRepository.save(stock1);
+
+        return Odt.StockListToDtoList(userByEmail.getCompany().getCompanyStocks());
 
     }
 
@@ -81,7 +93,7 @@ public class AdminController {
     public List<UserDto> findUsers() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        List<User> usersByCompany = userRepository.findUsersByCompany(userByEmail.getCompany());
+        List<User> usersByCompany = userByEmail.getCompany().getCompanyUsers();
         List<UserDto> userDtos = Odt.UserListToDtoList(usersByCompany);
         return userDtos;
     }
