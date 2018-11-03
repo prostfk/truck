@@ -16,8 +16,12 @@ public class CancellationAct {
     private String date;
     private Integer amount;
     private Integer price;
-    @OneToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consignment_id")
     private Consignment consignment;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "cancellationAct")
+    private Product product;
 
 }

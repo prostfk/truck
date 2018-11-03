@@ -35,7 +35,7 @@ class DispatcherOrderList extends React.Component{
     renderTable(order){
         if(!order) return;
         return <div className = "row table_row order_row">
-            <div className="col-md-2">{order.client.name}</div>
+            <div className="col-md-2">{order.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateDeparture)}</div>
@@ -51,7 +51,7 @@ class DispatcherOrderList extends React.Component{
         return  <div class="row">
             <div class="offset-md-1 col-md-7 superuserform_companylist">
                 <div className = "row table_header">
-                    <div className="col-md-2">Клиент</div>
+                    <div className="col-md-2">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>
                     <div className="col-md-2">Дата отправления</div>

@@ -1,11 +1,9 @@
-package com.itechart.trucking.order.entity;
+package com.itechart.trucking.formData;
 
 import lombok.Data;
 
-import java.sql.Date;
-
 @Data
-public class OrderDto {
+public class OrderFormData {
 
     private Long clientId;
     private String name;
@@ -18,7 +16,7 @@ public class OrderDto {
     private Long autoId;
     private Long driverId;
 
-    public OrderDto(Long clientId, String name, String status, Long departureStock, Long deliveryStock, String dateArrival, String dateDeparture, String waybillStatus, Long autoId, Long driverId) {
+    public OrderFormData(Long clientId, String name, String status, Long departureStock, Long deliveryStock, String dateArrival, String dateDeparture, String waybillStatus, Long autoId, Long driverId) {
         this.clientId = clientId;
         this.name = name;
         this.status = status;

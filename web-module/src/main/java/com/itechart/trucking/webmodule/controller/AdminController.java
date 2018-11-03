@@ -1,19 +1,24 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -40,107 +45,88 @@ public class AdminController {
     @Autowired
     private StockRepository stockRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @PostMapping(value = "/admin/saveUser")
-    public Object saveNewUser(User user){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
-        user.setCompany(userByUsername.getCompany());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User save = userRepository.save(user);
-        System.out.println(save);
-        return save;
-    }
-
-    @GetMapping(value = "/getCompanyUsers")
-    public List<User> findUsersByCompany(){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
-        return userRepository.findUsersByCompany(userByUsername.getCompany());
-    }
-
     @GetMapping(value = "/stocks")
-    @ResponseBody
-    public List<Stock> stocks() {
+    public List<StockDto> stocks() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        return stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true);
+        return Odt.StockListToDtoList(stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true));
     }
 
-    @RequestMapping(value = "/stocks",method = RequestMethod.DELETE)
-    public List<Stock> stockDelete(@RequestBody String bstock) {
-        Long stockId = Long.parseLong(bstock);
-        if(stockId==null) return null;
-/*        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(name);*/
-        String name = "user2";
-        User userByEmail = userRepository.findUserByUsername(name); if(userByEmail==null) return null;
-        Stock stock = stockRepository.findStockById(stockId); if(stock==null) return null;
-        if(stock.getCompany().equals(userByEmail.getCompany())){
+    @DeleteMapping(value = "/stocks")
+    public List<StockDto> stockDelete(@RequestBody Long stockId) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        if (userByEmail == null) return null;
+        Stock stock = stockRepository.findStockById(stockId);
+        if (stock == null) return null;
+        if (stock.getCompany().equals(userByEmail.getCompany())) {
             stock.setActive(false);
             stockRepository.save(stock);
         }
-        return stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true);
+        List<Stock> stockByCompanyAndActive = stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true);
+        return Odt.StockListToDtoList(stockByCompanyAndActive);
     }
 
 
-    @RequestMapping(value = "/stocks",method = RequestMethod.POST)
-    public boolean createStock(@ModelAttribute Stock stock){
+    @PostMapping(value = "/stocks")
+    public boolean createStock(@ModelAttribute Stock stock) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
         stock.setCompany(userByEmail.getCompany());
-        stockRepository.save(stock);
-        return true;
+        return stockRepository.save(stock) != null;
+
     }
 
     @GetMapping(value = "/users")
-    @ResponseBody
-    public List<User> findUsers() {
+    public List<UserDto> findUsers() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        return userRepository.findUsersByCompany(userByEmail.getCompany());
+        List<User> usersByCompany = userRepository.findUsersByCompany(userByEmail.getCompany());
+        List<UserDto> userDtos = Odt.UserListToDtoList(usersByCompany);
+        return userDtos;
     }
 
     @PostMapping(value = "/editCompany")
-    @ResponseBody
-    public Object processEditingCompany(@Valid Company company, BindingResult bindingResult) {
+    public Object processEditingCompany(@Valid Company company, BindingResult bindingResult) throws JSONException {
         if (bindingResult.hasErrors()) {
-            return "{error: 'Check your data'}";
+            return getInvalidDataJsonMessage();
         }
-        return companyRepository.save(company);
+        @Valid Company save = companyRepository.save(company);
+        return new CompanyDto(save);
     }
 
     @PostMapping(value = "/editUser/{id}")
     @ResponseBody
-    public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) {
-        user.setId(id);
+    public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) throws JSONException {
         if (result.hasErrors()) {
-            return "{error: 'Check your data'}";
+            return getInvalidDataJsonMessage();
         }
-        return userRepository.save(user);
+        @Valid User save = userRepository.save(user);
+        return save != null ? new UserDto(user) : null;
+
     }
 
     @PostMapping(value = "/registerCompany")
-    public Object processRegisteringCompany(@Valid Company company, BindingResult bindingResult){
+    public Object processRegisteringCompany(@Valid Company company, BindingResult bindingResult) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findUserByEmail(name);
+        User user = userRepository.findUserByUsername(name);
         if (user.getCompany() == null) {
-            if (!bindingResult.hasErrors()){
+            if (!bindingResult.hasErrors()) {
                 @Valid Company save = companyRepository.save(company);
                 user.setCompany(save);
-                userRepository.save(user);
+                User save1 = userRepository.save(user);
+                return new UserDto(save1);
             }
-        }else{
-            return HttpStatus.LOCKED;
         }
-        return "redirect:/companyPage";
-
+        return getInvalidDataJsonMessage();
     }
 
 
-
+    private JSONObject getInvalidDataJsonMessage() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("error", "invalid data");
+        return json;
+    }
 
 
 }

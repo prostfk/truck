@@ -26,4 +26,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Query(value = "SELECT * FROM users WHERE id=:userId AND company=:companyId", nativeQuery = true)
     User customFindUserByIdAndCompanyId(@Param("userId")Long userId, @Param("companyId")Long companyId);
 
+    User findUserById(Long id);
+
 }

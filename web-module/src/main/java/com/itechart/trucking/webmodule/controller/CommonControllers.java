@@ -1,10 +1,11 @@
 package com.itechart.trucking.webmodule.controller;
 
-import com.itechart.trucking.company.entity.Company;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
-import com.itechart.trucking.waybill.repository.WaybillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,10 +26,10 @@ public class CommonControllers {
 
     // dispatcher | manager
     @RequestMapping(value = "/orders/",method = RequestMethod.GET)
-    public List<Order> getOrders(@ModelAttribute Order order){
+    public List<OrderDto> getOrders(@ModelAttribute Order order){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-//        String name = "driverUser";
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        return orderRepository.findAllByCompany(company);
+        User user = userRepository.findUserByUsername(name);
+        List<Order> orders = user.getCompany().getCompanyOrders();
+        return Odt.OrderToDtoList(orders);
     }
 }

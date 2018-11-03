@@ -321,9 +321,9 @@ class DispatcherCreateOrderPage extends React.Component {
                         <ul id='lis' className="list-group">
                             {
                                 this.state.consignment.map((item, index) =>
-                                        <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{item}   -
-                                            <span aria-hidden="true">&times;</span>
-                                        </li>
+                                    <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{item}   -
+                                        <span aria-hidden="true">&times;</span>
+                                    </li>
 
                                 )
                             }
