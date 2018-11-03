@@ -107,19 +107,6 @@ public class DispatcherController {
         return Odt.AutoListToDtoList(customQueryAutoByDate);
     }
 
-    @RequestMapping(value = "/orders/{id}", method = RequestMethod.GET)
-    public Order editOrder(@PathVariable Long id) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        Optional<Order> order = orderRepository.findById(id);
-        if (order.isPresent() && order.get().getCompany().getId() == company.getId())
-            return order.get();
-        else {
-            System.out.println("access dined");
-            return null;
-        }
-    }
-
     @PostMapping(value = "/orders/createOrder")//todo REDO!!!!!!!!!!!!!!!!!!!!!!!!!!
     public Order createOrder(OrderFormData orderFormData, String consignment) throws ParseException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -136,12 +123,6 @@ public class DispatcherController {
 //        productRepository.saveProduct()
 
         return order;
-    }
-
-    @GetMapping(value = "/companies/{companyId}/stocks")
-    public List<Stock> findStocksByCompany(@PathVariable Long companyId) {
-        Company companyById = companyRepository.findCompanyById(companyId);
-        return stockRepository.findStocksByCompany(companyById);
     }
 
     @PostMapping(value = "/companies/orders/edit")//todo REDO!!!!!!!!!!!!!!!!!!!!!!!
