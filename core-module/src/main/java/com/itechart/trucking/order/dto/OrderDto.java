@@ -6,6 +6,7 @@ import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.consignment.dto.ConsignmentDto;
 import com.itechart.trucking.consignment.entity.Consignment;
+import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
@@ -14,6 +15,7 @@ import com.itechart.trucking.waybill.entity.Waybill;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Data
 public class OrderDto {
@@ -34,8 +36,12 @@ public class OrderDto {
         this.id = order.getId();
         this.name = order.getName();
         this.status = order.getStatus();
-/*        this.dateAccepted = order.getDateAccepted();
-        this.dateExecuted = order.getDateExecuted();*/
+/*        this.client = new ClientDto(order.getClient());*/
+        this.sender = new StockDto(order.getSender());
+        this.receiver = new StockDto(order.getReceiver());
+        this.waybill = new WaybillDto(order.getWaybill());
+        this.dateAccepted = Odt.convertToLocalDateViaInstant(order.getDateAccepted());
+        this.dateExecuted = Odt.convertToLocalDateViaInstant(order.getDateExecuted());
     }
 
     public void setWaybill(Waybill waybill) {
