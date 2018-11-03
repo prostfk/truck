@@ -34,10 +34,10 @@ public class StockDto {
     }
 
     public void setStockSenderOrders(List<Order> stockSenderOrders) {
-        this.stockSenderOrders = Odt.OrdertoDtoList(stockSenderOrders);
+        this.stockSenderOrders = Odt.OrderToDtoList(stockSenderOrders);
     }
 
     public void setStockReceiverOrders(List<Order> stockReceiverOrders) {
-        this.stockReceiverOrders = Odt.OrdertoDtoList(stockReceiverOrders);
+        this.stockReceiverOrders = Odt.OrderToDtoList(stockReceiverOrders);
     }
 }

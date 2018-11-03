@@ -4,9 +4,11 @@ import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
+import lombok.Data;
 
 import java.time.LocalDate;
 
+@Data
 public class UserDto {
     private Long id;
     private String username;

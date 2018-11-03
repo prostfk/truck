@@ -1,8 +1,11 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
@@ -10,6 +13,8 @@ import com.itechart.trucking.consignment.repository.ConsignmentRepository;
 import com.itechart.trucking.driver.dto.DriverDto;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.formData.OrderFormData;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
@@ -66,8 +71,8 @@ public class DispatcherController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping(value = "/getDrivers")
-    public List<Driver> getDrivers(@RequestParam String dateFrom, @RequestParam String dateTo) {
+    @GetMapping(value = "/company/findFreeDrivers")
+    public List<Driver> findFreeDrivers(@RequestParam String dateFrom, @RequestParam String dateTo) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
@@ -84,8 +89,8 @@ public class DispatcherController {
 
     }
 
-    @GetMapping(value = "/getAutosByDates")
-    public List<Auto> getAutos(@RequestParam String dateFrom, @RequestParam String dateTo) {
+    @GetMapping(value = "/company/findFreeAutos")
+    public List<AutoDto> findFreeAutos(@RequestParam String dateFrom, @RequestParam String dateTo) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
@@ -97,40 +102,47 @@ public class DispatcherController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return waybillRepository.findCustomQueryAutoByDate(dateDeparture, dateArrival, user.getCompany().getId());
+        List<Auto> customQueryAutoByDate = waybillRepository.findCustomQueryAutoByDate(dateDeparture, dateArrival, user.getCompany().getId());
+        return Odt.AutoListToDtoList(customQueryAutoByDate);
     }
 
     @GetMapping(value = "/orders/{id}")
-    public Order getOrderById(@PathVariable Long id) {
-        return orderRepository.findOrderById(id);
+    public OrderDto findOrderById(@PathVariable Long id) {
+        Order orderById = orderRepository.findOrderById(id);
+        return new OrderDto(orderById);
     }
 
     @GetMapping(value = "/clients/findClientsByNameLike")//todo correct search
-    public List<Client> findClientsByNameLike(@RequestParam String name) {
-        return clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
+    public List<ClientDto> findClientsByNameLike(@RequestParam String name) {
+        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
+        return Odt.ClientListToDtoList(clientsByNameLikeIgnoreCase);
     }
 
     @GetMapping(value = "/companies/findCompaniesByNameLike")//todo correct search
-    public List<Company> findCompaniesByNameLikeRest(@RequestParam String name) {
-        return companyRepository.findTop10CompaniesByNameLikeIgnoreCase(String.format("%%%s%%", name));
+    public List<CompanyDto> findCompaniesByNameLikeRest(@RequestParam String name) {
+        List<Company> top10CompaniesByNameLikeIgnoreCase = companyRepository.findTop10CompaniesByNameLikeIgnoreCase(String.format("%%%s%%", name));
+        return Odt.CompanyListToDtoList(top10CompaniesByNameLikeIgnoreCase);
     }
 
     @GetMapping(value = "/companies/{companyId}/stocks")
-    public List<Stock> findStocksByCompany() {
+    public List<StockDto> findStocksByCompany() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        return userByUsername.getCompany().getCompanyStocks();
+        List<Stock> companyStocks = userByUsername.getCompany().getCompanyStocks();
+        return Odt.StockListToDtoList(companyStocks);
     }
 
     @GetMapping(value = "/companies/stocks/findStocksByAddressLike")//todo correct search
-    public List<Stock> findStocksByNameLike(@RequestParam String address) {
-        return stockRepository.findStocksByAddressLike(String.format("%%%s%%", address));
+    public List<StockDto> findStocksByNameLike(@RequestParam String address) {
+        List<Stock> stocksByAddressLike = stockRepository.findStocksByAddressLike(String.format("%%%s%%", address));
+        return Odt.StockListToDtoList(stocksByAddressLike);
     }
 
     @GetMapping(value = "/companies/findStocksByUsername")
     public Object findCompanyByUsername() throws JSONException {
         try {
-            return userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getCompany().getCompanyStocks();
+            List<Stock> companyStocks = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getCompany().getCompanyStocks();
+            return Odt.StockListToDtoList(companyStocks);
         } catch (NullPointerException e) {
             e.printStackTrace();
             JSONObject json = new JSONObject();

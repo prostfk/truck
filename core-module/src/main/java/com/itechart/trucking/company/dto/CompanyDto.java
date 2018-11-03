@@ -49,27 +49,27 @@ public class CompanyDto {
     }
 
     public void setCompanyOrders(List<Order> companyOrders) {
-        this.companyOrders = Odt.OrdertoDtoList(companyOrders);
+        this.companyOrders = Odt.OrderToDtoList(companyOrders);
     }
 
 
     public void setCompanyUsers(List<User> companyUsers) {
-        this.companyUsers = Odt.UserListtoDtoList(companyUsers);
+        this.companyUsers = Odt.UserListToDtoList(companyUsers);
     }
 
     public void setCompanyClients(List<Client> companyClients) {
-        this.companyClients = Odt.ClientListtoDtoList(companyClients);
+        this.companyClients = Odt.ClientListToDtoList(companyClients);
     }
 
     public void setCompanyStocks(List<Stock> companyStocks) {
-        this.companyStocks = Odt.StockListtoDtoList(companyStocks);
+        this.companyStocks = Odt.StockListToDtoList(companyStocks);
     }
 
     public void setCompanyDrivers(List<Driver> companyDrivers) {
-        this.companyDrivers = Odt.DriverListtoDtoList(companyDrivers);
+        this.companyDrivers = Odt.DriverListToDtoList(companyDrivers);
     }
 
     public void setCompanyAutos(List<Auto> companyAutos) {
-        this.companyAutos = Odt.AutoListtoDtoList(companyAutos);
+        this.companyAutos = Odt.AutoListToDtoList(companyAutos);
     }
 }

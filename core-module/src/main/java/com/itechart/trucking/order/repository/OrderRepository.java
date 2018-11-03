@@ -31,6 +31,8 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
 
     List<Order> findAllByStatus(String active);
+    List<Order> findAllByStatusAndCompanyId(String active, Long companyId);
+
 
 /*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")
     List<Auto> findCustomQueryAutoByDate(@Param("companyId") Long companyId);*/

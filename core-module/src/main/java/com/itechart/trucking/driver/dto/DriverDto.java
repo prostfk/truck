@@ -38,6 +38,6 @@ public class DriverDto {
     }
 
     public void setWaybills(List<Waybill> waybills) {
-        this.waybills = Odt.WayBiltoDtoList(waybills);
+        this.waybills = Odt.WayBilToDtoList(waybills);
     }
 }

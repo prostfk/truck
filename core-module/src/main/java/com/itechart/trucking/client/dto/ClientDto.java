@@ -29,6 +29,6 @@ public class ClientDto {
     }
 
     public void setClientOrders(List<Order> clientOrders) {
-        this.clientOrders = Odt.OrdertoDtoList(clientOrders);
+        this.clientOrders = Odt.OrderToDtoList(clientOrders);
     }
 }

@@ -32,10 +32,10 @@ public class ConsignmentDto {
     }
 
     public void setProductList(List<Product> productList) {
-        this.productList = Odt.ProducttoDtoList(productList);
+        this.productList = Odt.ProductToDtoList(productList);
     }
 
     public void setCancellationActList(List<CancellationAct> cancellationActList) {
-        this.cancellationActList = Odt.CancellationActtoDtoList(cancellationActList);
+        this.cancellationActList = Odt.CancellationActToDtoList(cancellationActList);
     }
 }

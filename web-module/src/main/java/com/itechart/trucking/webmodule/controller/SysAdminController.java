@@ -1,7 +1,9 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.token.entity.Token;
@@ -26,10 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @PreAuthorize("hasAuthority('ROLE_SYS_ADMIN')")
@@ -64,21 +63,20 @@ public class SysAdminController {
     }
 
     @GetMapping(value = "/companies")
-    public List<Company> findAllCompanies(){
-        return companyRepository.findAllByOrderById();
+    public List<CompanyDto> findAllCompanies(){
+        List<Company> companies = companyRepository.findAllByOrderById();
+        return Odt.CompanyListToDtoList(companies);
     }
 
     @PostMapping(value = "/companies/changeStatus")
     public boolean changeActiveStatus(@RequestBody String companyId){
         Long compId = Long.parseLong(companyId);
-        if(companyId==null) return false;
         Company company = companyRepository.findCompanyById(compId);
         int isActive = company.getActive();
         if(isActive==1){
             company.setActive(0);
         } else company.setActive(1);
-        companyRepository.save(company);
-        return true;
+        return companyRepository.save(company) != null;
     }
 
     @PostMapping(value = "/companies/disable/{companyId}")
@@ -87,12 +85,16 @@ public class SysAdminController {
         company.setLockComment(description);
         company.setActive(0);
         company.setLockDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-        companyRepository.save(company);
-        return true;
+        return companyRepository.save(company) != null;
     }
 
     @GetMapping(value = "/companies/{companyId}")
-    public Company getCompanyById(@PathVariable Long companyId) {
-        return companyRepository.findCompanyById(companyId);
+    public CompanyDto getCompanyById(@PathVariable Long companyId) {
+        Company companyById = companyRepository.findCompanyById(companyId);
+        try {
+            return Odt.CompanyListToDtoList(Collections.singletonList(companyById)).get(0);
+        }catch (IndexOutOfBoundsException e){
+            return null;
+        }
     }
 }

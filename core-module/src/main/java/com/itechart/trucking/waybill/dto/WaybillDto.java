@@ -40,6 +40,6 @@ public class WaybillDto {
     }
 
     public void setRouteListList(List<RouteList> routeListList) {
-        this.routeListList = Odt.RouteListtoDtoList(routeListList);
+        this.routeListList = Odt.RouteListToDtoList(routeListList);
     }
 }

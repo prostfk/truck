@@ -6,6 +6,8 @@ import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.company.dto.CompanyDto;
+import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.driver.dto.DriverDto;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.dto.OrderDto;
@@ -25,12 +27,13 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /*Object Type Definition*/
 public class Odt {
 
-    public static List<WaybillDto> WayBiltoDtoList(List<Waybill> waybills){
+    public static List<WaybillDto> WayBilToDtoList(List<Waybill> waybills){
         if(waybills==null) return null;
         List<WaybillDto> waybillDtos = new ArrayList<>();
         for (Waybill waybill:waybills) {
@@ -40,7 +43,7 @@ public class Odt {
         return waybillDtos;
     }
 
-    public static List<OrderDto> OrdertoDtoList(List<Order> orders){
+    public static List<OrderDto> OrderToDtoList(List<Order> orders){
         if(orders==null) return null;
         List<OrderDto> orderDtos = new ArrayList<>();
         for (Order order:orders) {
@@ -50,7 +53,7 @@ public class Odt {
         return orderDtos;
     }
 
-    public static List<ProductDto> ProducttoDtoList(List<Product> products){
+    public static List<ProductDto> ProductToDtoList(List<Product> products){
         if(products==null) return null;
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product product:products) {
@@ -60,7 +63,7 @@ public class Odt {
         return productDtos;
     }
 
-    public static List<CancellationActDto> CancellationActtoDtoList(List<CancellationAct> cancellationActs){
+    public static List<CancellationActDto> CancellationActToDtoList(List<CancellationAct> cancellationActs){
         if(cancellationActs==null) return null;
         List<CancellationActDto> cancellationActDtos = new ArrayList<>();
         for (CancellationAct cancellationAct:cancellationActs) {
@@ -70,7 +73,7 @@ public class Odt {
         return cancellationActDtos;
     }
 
-    public static List<RouteListDto> RouteListtoDtoList(List<RouteList> routeLists){
+    public static List<RouteListDto> RouteListToDtoList(List<RouteList> routeLists){
         if(routeLists==null) return null;
         List<RouteListDto> routeListDtos = new ArrayList<>();
         for (RouteList routeList:routeLists) {
@@ -80,7 +83,7 @@ public class Odt {
         return routeListDtos;
     }
 
-    public static List<UserDto> UserListtoDtoList(List<User> userList){
+    public static List<UserDto> UserListToDtoList(List<User> userList){
         if(userList==null) return null;
         List<UserDto> userDtoList = new ArrayList<>();
         for (User user:userList) {
@@ -90,7 +93,7 @@ public class Odt {
         return userDtoList;
     }
 
-    public static List<ClientDto> ClientListtoDtoList(List<Client> noneDtoList){
+    public static List<ClientDto> ClientListToDtoList(List<Client> noneDtoList){
         if(noneDtoList==null) return null;
         List<ClientDto> newDtoList = new ArrayList<>();
         for (Client element:noneDtoList) {
@@ -100,7 +103,7 @@ public class Odt {
         return newDtoList;
     }
 
-    public static List<StockDto> StockListtoDtoList(List<Stock> noneDtoList){
+    public static List<StockDto> StockListToDtoList(List<Stock> noneDtoList){
         if(noneDtoList==null) return null;
         List<StockDto> newDtoList = new ArrayList<>();
         for (Stock element:noneDtoList) {
@@ -110,7 +113,7 @@ public class Odt {
         return newDtoList;
     }
 
-    public static List<DriverDto> DriverListtoDtoList(List<Driver> noneDtoList){
+    public static List<DriverDto> DriverListToDtoList(List<Driver> noneDtoList){
         if(noneDtoList==null) return null;
         List<DriverDto> newDtoList = new ArrayList<>();
         for (Driver element:noneDtoList) {
@@ -120,7 +123,7 @@ public class Odt {
         return newDtoList;
     }
 
-    public static List<AutoDto> AutoListtoDtoList(List<Auto> noneDtoList){
+    public static List<AutoDto> AutoListToDtoList(List<Auto> noneDtoList){
         if(noneDtoList==null) return null;
         List<AutoDto> newDtoList = new ArrayList<>();
         for (Auto element:noneDtoList) {
@@ -133,6 +136,24 @@ public class Odt {
     public static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
         if(dateToConvert==null) return null;
         return new java.sql.Date(dateToConvert.getTime()).toLocalDate();
+    }
+
+    public static List<CompanyDto> CompanyListToDtoList(List<Company> companies){
+        LinkedList<CompanyDto> companyDtos = new LinkedList<>();
+        companies.forEach(company -> {
+            companyDtos.add(new CompanyDto(company));
+        });
+        return companyDtos;
+    }
+
+    public static Object getSingleObjectFromList(List list){
+        Object object;
+        try{
+            object = list.get(0);
+        }catch (ArrayIndexOutOfBoundsException e){
+            object = null;
+        }
+        return object;
     }
 
 }

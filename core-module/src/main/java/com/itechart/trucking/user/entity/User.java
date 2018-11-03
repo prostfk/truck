@@ -2,6 +2,7 @@ package com.itechart.trucking.user.entity;
 
 import com.itechart.trucking.company.entity.Company;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -10,6 +11,7 @@ import java.sql.Date;
 @Entity
 @Data
 @Table(name = "users")
+
 public class User {
 
     @Id
@@ -44,5 +46,17 @@ public class User {
         this.userRole = userRole;
         /*this.company = company;*/
         this.birthDay = date;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", userRole=" + userRole +
+                ", birthDay=" + birthDay +
+                '}';
     }
 }

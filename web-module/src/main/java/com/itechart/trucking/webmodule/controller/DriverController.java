@@ -9,8 +9,6 @@ import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
-import com.itechart.trucking.user.dto.UserDto;
-import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,18 +40,16 @@ public class DriverController {
         Driver driver = driverRepository.findDriverByUser(userRepository.findUserByUsername(name));
         List<Order> orders = orderRepository.findCustomQueryOrderByDriver(driver.getId());
 
-        List<OrderDto> orderDtos = Odt.OrdertoDtoList(orders);
+        List<OrderDto> orderDtos = Odt.OrderToDtoList(orders);
         return orderDtos;
     }
 
     @RequestMapping(value ="/orders/getMyOrders/{orderId}/routelist",method = RequestMethod.GET)
     public  List<RouteListDto> getRouteList(@PathVariable Long orderId){
         String name= SecurityContextHolder.getContext().getAuthentication().getName();
-
         Optional<Order> order = orderRepository.findById(orderId);
-        if(order==null || order.get().getWaybill().getDriver().getUser().getUsername().equals(name)==false) return null;
-
-       return Odt.RouteListtoDtoList(order.get().getWaybill().getRouteListList());
+        if(!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) return null;
+       return Odt.RouteListToDtoList(order.get().getWaybill().getRouteListList());
     }
 
 
@@ -62,10 +58,10 @@ public class DriverController {
         String name= SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<Order> order = orderRepository.findById(orderId);
-        if(order==null || order.get().getWaybill().getDriver().getUser().getUsername().equals(name)==false) return null;
+        if(!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) return null;
 
         Optional<RouteList> point = routeListRepository.findById(pointId);
-        if(point.isPresent()==false || point.get().getWaybill().getId()!= order.get().getWaybill().getId()) return null;
+        if(!point.isPresent() || point.get().getWaybill().getId() != order.get().getWaybill().getId()) return null;
         else {
             if(point.get().getMarked()==null) point.get().setMarked(false);
             if(point.get().getMarked()) point.get().setMarked(false);
