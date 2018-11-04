@@ -222,7 +222,7 @@ class DispatcherEditOrder extends Component {
             <div>
                 <span className="text-center" style={green} id={'success-order-span'}/>
                 <div className="row" id={'order-form'}>
-                    <div className="offset-md-1 col-md-6 superuserform_companylist">
+                    <div className="offset-md-2 col-md-8 superuserform_companylist">
                         <div className="row">
                             <div className="col-md-6">
                                 <h3>Основное</h3>
