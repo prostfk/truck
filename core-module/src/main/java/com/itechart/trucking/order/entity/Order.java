@@ -47,4 +47,15 @@ public class Order {//enum
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "order")
     private Consignment consignment;
 
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status='" + status + '\'' +
+                ", dateAccepted=" + dateAccepted +
+                ", dateExecuted=" + dateExecuted +
+                '}';
+    }
 }

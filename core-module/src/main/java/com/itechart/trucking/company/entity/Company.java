@@ -59,4 +59,15 @@ public class Company {
         this.name = name;
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", active=" + active +
+                ", lockComment='" + lockComment + '\'' +
+                ", lockDate=" + lockDate +
+                '}';
+    }
 }

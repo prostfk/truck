@@ -35,4 +35,14 @@ public class Stock {
         this.name = name;
         this.company = company;
     }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "id=" + id +
+                ", address='" + address + '\'' +
+                ", name='" + name + '\'' +
+                ", active=" + active +
+                '}';
+    }
 }
