@@ -30,7 +30,9 @@ class pageUserLogin extends Component {
     render() {
         return (
             <form className="form-signin" id="login-form">
-                <div id="loginicon"/>
+                <div id="loginicon">
+                    <img id="icon" src="/static/img/login.png" alt=""></img>
+                </div>
                 <input type="username" id="inputUsername" value={this.state.email} onChange={this.setUsername}
                        className="form-control"
                        placeholder="Логин" required=""

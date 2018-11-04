@@ -38,9 +38,9 @@ export default class LogoutComponent extends Component {
                 <Modal isOpen={this.state.modal}>
                     <form>
                         <ModalHeader>Выйти?</ModalHeader>
-                        <ModalBody>
-                            <Button color="info" onClick={this.submitLogout}>Выйти</Button>
-                            <Button style={margin} color="danger" onClick={this.toggle}>Отмена</Button>
+                        <ModalBody className={"logoutForm"}>
+                                    <Button color="info" onClick={this.submitLogout}>Выйти</Button>
+                                    <Button style={margin} color="danger" onClick={this.toggle}>Отмена</Button>
                         </ModalBody>
                     </form>
                 </Modal>
