@@ -10,7 +10,8 @@ export default class EditUser extends Component {
             email: '',
             password: '',
             birthDay: '',
-            userRole: ''
+            userRole: '',
+            id: ''
         };
         this.initForm();
     }
@@ -24,16 +25,16 @@ export default class EditUser extends Component {
     initForm = () => {
         let link = window.location.href.split("/");
         let id = link[link.length - 2];
-        fetch(`http://localhost:8080/api/company/user/${id}`, {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
+        fetch(`http://localhost:8080/api/user/${id}`, {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
             return response.json()
         }).then(data => {
             console.log(data);
-            console.log(CommonUtil.getCorrectDateFromLong(data.birthDay));
             this.setState({
                 username: data.username,
                 email: data.email,
                 birthDay: CommonUtil.getCorrectDateFromLong(data.birthDay),
-                userRole: data.userRole
+                userRole: data.userRole,
+                id: data.id
             });
         }).catch(err=>{
             throw new Error('Ошибка доступа')
@@ -42,6 +43,7 @@ export default class EditUser extends Component {
 
     submitChanges = () => {
         let formData = new FormData();
+        formData.append("id", this.state.id);
         formData.append("username", this.state.username);
         formData.append("email", this.state.email);
         formData.append("password", this.state.password);
@@ -49,7 +51,20 @@ export default class EditUser extends Component {
         formData.append("userRole", this.state.userRole);
         formData.forEach((v,k)=>{
             console.log(k + " - " + v);
+        });
+        fetch('http://localhost:8080/api/updateUser', {
+            method: "POST",
+            body: formData,
+            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+        }).then(response=>response.json()).then(data=>{
+            console.log(data);
+            if (data.error === undefined){
+                this.props.history.push('/usersList')
+            }else{
+                document.getElementById('error-form-span').innerText = data.error;
+            }
         })
+
     };
 
 
@@ -58,6 +73,9 @@ export default class EditUser extends Component {
             <div>
                 <div className="form-group row">
                     <h3>Изменение пользователя</h3>
+                </div>
+                <div className="form-group row">
+                    <span className="error-span" id={'error-form-span'}/>
                 </div>
                 <div className="form-group row">
                     <label htmlFor="username" className="col-2 col-form-label">Никнейм</label>

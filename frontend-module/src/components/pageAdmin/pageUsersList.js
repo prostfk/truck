@@ -43,7 +43,7 @@ export default class UsersList extends Component {
             <div className={'col-md-5'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{user.email}</div>
-            <div className={'col-md-3'}><a >Изменить</a></div>
+            <div className={'col-md-3'}><a href={`/user/${user.id}/edit`}>Изменить</a></div>
         </div>
     };
 
@@ -68,7 +68,8 @@ export default class UsersList extends Component {
         formData.append('email',this.state.newUserEmail);
         formData.append('userRole',this.state.newUserRole);
         formData.append('password',this.state.newUserPassword);
-        fetch('http://localhost:8080/api/admin/saveUser', {
+        formData.append('birthDay', this.state.newUserDate);
+        fetch('http://localhost:8080/api/saveUser', {
             method: 'POST',
             body: formData,
             headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
@@ -84,8 +85,18 @@ export default class UsersList extends Component {
                 document.getElementById('from-content').style.display = 'none';
                 setTimeout(function () {
                     // document.getElementById('add-user-form').style.display = 'none';
+                    document.getElementById('message-span').innerText = '';
+                    document.getElementById('from-content').style.display = '';
+                    document.getElementById('newUserEmail').value = '';
+                    document.getElementById('newUserPassword').value = '';
+                    document.getElementById('newUserUsername').value = '';
+                    document.getElementById('newUserRole').value = '';
+                    document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
+
 
                 },2000);
+            }else{
+                document.getElementById('error-form-span').innerText = data.error;
             }
         })
     };
@@ -123,6 +134,7 @@ export default class UsersList extends Component {
                         <span id="message-span"/>
                         <div id={'from-content'}>
                             <h5>Регистрация нового пользователя</h5>
+                            <span className={'error-span'} id={'error-form-span'}/>
                             <div className="form-group">
                                 <label htmlFor="newUserEmail" id="emailLabel">Email</label>
                                 <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"

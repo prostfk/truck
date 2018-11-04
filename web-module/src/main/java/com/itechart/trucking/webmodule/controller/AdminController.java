@@ -14,11 +14,13 @@ import com.itechart.trucking.user.repository.UserRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -44,6 +48,9 @@ public class AdminController {
 
     @Autowired
     private StockRepository stockRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "/stocks")
     public List<StockDto> stocks() {
@@ -71,7 +78,6 @@ public class AdminController {
         List<Stock> stockByCompanyAndActive = stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true);
         return Odt.StockListToDtoList(stockByCompanyAndActive);
     }
-
 
     @PostMapping(value = "/stocks")
     public List<StockDto> createStock(@ModelAttribute Stock stock) {
@@ -131,6 +137,61 @@ public class AdminController {
             }
         }
         return getInvalidDataJsonMessage();
+    }
+
+    @PostMapping(value = "/updateUser")
+    public Object updateUser(@Valid UserDto userDto, String password) throws JSONException {
+        JSONObject json = new JSONObject();
+        User userById = userRepository.findUserById(userDto.getId());
+        if (userById==null){
+            json.put("error", "no id attribute on formData object");
+        }else{
+            User userByUsername = userRepository.findUserByUsername(userDto.getUsername());
+            if (userByUsername == null || !userByUsername.getId().equals(userDto.getId())){
+
+                json.put("error", "user with such username already exists");
+            }else{
+                if (password.length() > 5 && password.length() < 20){
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    userRepository.updateUser(userDto.getId(), userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), userDto.getBirthDay());
+                    json.put("username", userDto.getUsername());
+                    json.put("email", userDto.getEmail());
+                    json.put("birthDay", userDto.getBirthDay());
+                    json.put("role", userDto.getUserRole());
+                }else{
+                    json.put("error", "password must be between 5 and 20 chars");
+                }
+            }
+        }
+        return json.toString();
+    }
+
+    @PostMapping(value = "/saveUser")
+    public Object saveUser(@Valid UserDto userDto, String password, String birthDay) throws JSONException {
+        JSONObject json = new JSONObject();
+        User userByUsername = userRepository.findUserByUsername(userDto.getUsername());
+        if (userByUsername==null){
+            if (password.length() > 5 && password.length() < 20){
+                User admin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay());
+                json.put("username", userDto.getUsername());
+                json.put("email", userDto.getEmail());
+                json.put("birthDay", userDto.getBirthDay());
+                json.put("role", userDto.getUserRole());
+            }else{
+                json.put("error", "password must be between 5 and 20 chars");
+            }
+        }else {
+            json.put("error", "user with such username already exists");
+        }
+        return json.toString();
+
+    }
+
+    @GetMapping(value = "/user/{id}")
+    public UserDto findUserById(@PathVariable Long id){
+        User userById = userRepository.findUserById(id);
+        return new UserDto(userById);
     }
 
 
