@@ -29,5 +29,12 @@ public class Driver {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "driver")
     private List<Waybill> waybills;
 
-
+    @Override
+    public String toString() {
+        return "Driver{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", passportNumber='" + passportNumber + '\'' +
+                '}';
+    }
 }
