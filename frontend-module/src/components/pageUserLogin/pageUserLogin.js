@@ -61,9 +61,12 @@ class pageUserLogin extends Component {
                 if (data.error === undefined) {
                     document.getElementById('login-form').style.display = 'none';
                     console.log(`SUCCESS: ${data.token}`);
-                    sessionStorage.setItem("Auth-token", data.token);
-                    sessionStorage.setItem("username", username);
-                    sessionStorage.setItem("role", data.role);
+                    sessionStorage.setItem("Auth-token", data.token);//deprecated
+                    sessionStorage.setItem("username", username);//deprecated
+                    sessionStorage.setItem("role", data.role);//deprecated
+                    localStorage.setItem("Auth-token", data.token);
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("role", data.role);
                     this.props.history.push('/');
                 }else{
                     document.getElementById('error-span').innerText = "Check your data";
