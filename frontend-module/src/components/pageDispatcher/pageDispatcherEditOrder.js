@@ -130,11 +130,10 @@ class DispatcherEditOrder extends Component {
         if (CommonUtil.isDateCorrect(event.target.value)) {
             this.setState({
                 [event.target.id]: [event.target.value]
-            })
+            });
+            this.findAutos();
+            this.findDrivers();
         }
-        // if (event.target.value.length !== 10) return;
-        this.findAutos();
-        this.findDrivers();
     }
 
     fetchToCompany = (event) => {
@@ -329,12 +328,12 @@ class DispatcherEditOrder extends Component {
 
 
                                 <small className="form-text text-muted">Дата отправления</small>
-                                <input value={this.state.date_departure} onBlur={this.changeDate} onChange={this.changeInput} type="text"
+                                <input value={this.state.date_departure} onChange={this.changeDate} type="text"
                                        className="form-control" id="date_departure" placeholder="14.10.2015"/>
                                 <span className={'error-span'} id={'error-span-date_departure'}/>
 
                                 <small className="form-text text-muted">Дата прибытия</small>
-                                <input value={this.state.date_arrival} onBlur={this.changeDate} onChange={this.changeInput} type="text"
+                                <input value={this.state.date_arrival} onChange={this.changeDate} type="text"
                                        className="form-control" id="date_arrival" placeholder="15.10.2016"/>
                                 <span className={'error-span'} id={'error-span-date_arrival'}/>
 
