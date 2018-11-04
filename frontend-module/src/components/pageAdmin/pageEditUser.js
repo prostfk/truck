@@ -70,7 +70,7 @@ export default class EditUser extends Component {
 
     render() {
         return (
-            <div>
+            <div className={"col-md-8 offset-md-2 superuserform_companylist"}>
                 <div className="form-group row">
                     <h3>Изменение пользователя</h3>
                 </div>
