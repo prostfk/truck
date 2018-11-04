@@ -360,50 +360,54 @@ class DispatcherEditOrder extends Component {
                     </div>
                 </div>
                 <div style={none} id={'consignment-form'}>
-                    <div className="d-flex justify-content-center align-items-center">
+                    <div className="offset-md-2 col-md-8 form_clear">
                         <form className="align-content-center" onSubmit={(e) => {e.preventDefault()}}>
-                            <button className="btn btn-secondary" onClick={this.showOrderHideConsignment}>Вернуться к заказу</button>
-                            <div className="form-group">
-                                <label htmlFor="newProductName">Название товара</label>
-                                <input type="text" id="newProductName" value={this.state.newProductName}
-                                       onChange={this.changeInput} className="form-control mx-sm-3"/>
-                                <div className="form-group">
-                                    <label htmlFor="newProductStatus">Статус</label>
-                                    <select className="form-control" onChange={this.changeInput} value={this.state.newProductStatus} id="newProductStatus">
+                            <button className="btn btn-light" onClick={this.showOrderHideConsignment}>Вернуться к заказу</button>
+                            <h3>Товарная патрия</h3>
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <input type="text" id="newProductName" value={this.state.newProductName}
+                                           onChange={this.changeInput} className="form-control" placeholder={"Название"}/>
+                                </div>
+                                <div className="col-md-2">
+                                    <select className="custom-select" onChange={this.changeInput} value={this.state.newProductStatus} id="newProductStatus">
                                         <option value={'ACCEPTED'}>Принят</option>
                                         <option value={'CHECK_DONE'}>Проверка завершена</option>
                                         <option value={'DELIVERED'}>Доставлен</option>
                                         <option value={'LOST'}>Утерян</option>
                                     </select>
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="newProductDescription">Описание</label>
+                                <div className="col-md-3">
                                     <input type="text" id="newProductDescription" value={this.state.newProductDescription}
-                                           onChange={this.changeInput} className="form-control mx-sm-3"/>
+                                           onChange={this.changeInput} className="form-control" placeholder={"Описание"}/>
 
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="newProductPrice">Цена</label>
+                                <div className="col-md-2">
                                     <input type="number" id="newProductPrice" value={this.state.newProductPrice}
-                                           onChange={this.changeInput} className="form-control mx-sm-3"/>
+                                           onChange={this.changeInput} className="form-control" placeholder={"цена"}/>
 
                                 </div>
+                                <div className="col-md-2">
+                                    <button type={'button'} className="btn btn-info btn_fullsize"
+                                            onClick={this.addProduct}>Добавить
+                                    </button>
+                                </div>
 
-                                <button type={'button'} className="btn btn-info"
-                                        onClick={this.addProduct}>Добавить
-                                </button>
                             </div>
-                        </form>
-                    </div>
-                    <div className="pb-3">
-                        <ul id='lis' className="list-group">
                             {
                                 this.state.consignment.map((item, index) =>
-                                    <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{`${item.name} - ${item.status} - ${item.description} - ${item.price}` }
-                                    </li>
+                                    {
+                                        return <div className={"row table_row"}>
+                                            <div className="col-md-3">{item.name}</div>
+                                            <div className="col-md-2">{item.status}</div>
+                                            <div className="col-md-3">{item.description}</div>
+                                            <div className="col-md-2">{item.price}</div>
+                                            <div className="col-md-2"><a href="" class="btn-sm btn-dark">Удалить</a></div>
+                                        </div>
+                                    }
                                 )
                             }
-                        </ul>
+                        </form>
                     </div>
                     <div className="offset-md-2 col-md-8 form_clear" id={'sendOrderRequestButton'} style={none}>
                         <a onClick={this.sendInfoToServer} className="btn btn-success btn_fullsize">Сохранить</a>
