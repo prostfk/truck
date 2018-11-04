@@ -276,9 +276,9 @@ class DispatcherEditOrder extends Component {
                         <div className="row">
                             <div className="col-md-6">
                                 <h3>Основное</h3>
-                                <small className="form-text text-muted">Наименование товара</small>
+                                <small className="form-text text-muted">Наименование Заказа</small>
                                 <input value={this.state.name} onChange={this.changeInput} type="text"
-                                       className="form-control" id="name" placeholder="Наименование товара"/>
+                                       className="form-control" id="name" placeholder="Наименование заказа"/>
 
                                 <small className="form-text text-muted">Компания- заказчик перевозки</small>
                                 <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany}

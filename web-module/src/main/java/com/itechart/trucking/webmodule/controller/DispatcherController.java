@@ -110,15 +110,25 @@ public class DispatcherController {
         return Odt.AutoListToDtoList(customQueryAutoByDate);
     }
 
+    @GetMapping(value = "/getCompany")
+    public CompanyDto getCompany(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(name);
+        Company company = user.getCompany();
+        CompanyDto companyDto = new CompanyDto(company);
+        if(company.getActive()==0) companyDto.setLockerId(company.getLockerId());
+        return companyDto;
+    }
+
     @PostMapping(value = "/orders/createOrder")
     public Object createOrder(OrderFormData orderFormData, String consignment) throws JSONException, ParseException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(name);
+        if(user.getCompany().getActive()==0) return HttpStatus.NOT_ACCEPTABLE;
         Order orderToSave = orderService.getOrderFromDto(orderFormData, name);
         Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
         Order savedOrder = orderRepository.save(orderToSave);
         Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
-        System.out.println(orderFormData);
-        System.out.println(consignment);
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
@@ -202,9 +212,10 @@ public class DispatcherController {
 
     @GetMapping(value = "/companies/findStocksByUsername")
     public Object findCompanyByUsername() throws JSONException {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
         try {
-            List<Stock> companyStocks = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getCompany().getCompanyStocks();
-            return Odt.StockListToDtoList(companyStocks);
+            return Odt.StockListToDtoList(stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true));
         } catch (NullPointerException e) {
             e.printStackTrace();
             JSONObject json = new JSONObject();

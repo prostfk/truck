@@ -27,8 +27,8 @@ public class WaybillDto {
     public WaybillDto(Waybill waybill) {
         this.id = waybill.getId();
         this.status = waybill.getStatus();
-/*        this.dateDeparture = waybill.getDateDeparture();
-        this.dateArrival = waybill.getDateArrival();*/
+        this.dateDeparture = Odt.convertToLocalDateViaInstant(waybill.getDateDeparture());
+        this.dateArrival = Odt.convertToLocalDateViaInstant(waybill.getDateArrival());
     }
 
     public void setDriver(Driver driver) {
