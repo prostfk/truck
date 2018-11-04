@@ -4,6 +4,9 @@ import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.stock.dto.StockDto;
+import com.itechart.trucking.stock.entity.Stock;
+import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
+@PreAuthorize("hasAuthority('ROLE_DISPATCHER') or hasAuthority('ROLE_ADMIN')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -24,6 +27,10 @@ public class CommonControllers {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private StockRepository stockRepository;
+
+
     // dispatcher | manager
     @RequestMapping(value = "/orders/",method = RequestMethod.GET)
     public List<OrderDto> getOrders(@ModelAttribute Order order){
@@ -32,4 +39,48 @@ public class CommonControllers {
         List<Order> orders = user.getCompany().getCompanyOrders();
         return Odt.OrderToDtoList(orders);
     }
+
+    @GetMapping(value = "/stocks")
+    public List<StockDto> stocks() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        return Odt.StockListToDtoList(stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true));
+    }
+
+    @DeleteMapping(value = "/stocks")
+    public List<StockDto> stockDelete(@RequestBody String stockIds) {
+        Long stockId = Long.parseLong(stockIds);
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        if (userByEmail == null) {
+            return null;
+        }
+        Stock stock = stockRepository.findStockById(stockId);
+        if (stock == null) return null;
+
+        if (stock.getCompany().getId()==userByEmail.getCompany().getId()) {
+            stock.setActive(false);
+            stockRepository.save(stock);
+        }
+        List<Stock> stockByCompanyAndActive = stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true);
+        return Odt.StockListToDtoList(stockByCompanyAndActive);
+    }
+
+    @PostMapping(value = "/stocks")
+    public List<StockDto> createStock(@ModelAttribute Stock stock) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        Stock stock1 = new Stock();
+        stock1.setActive(true);
+        stock1.setName(stock.getName());
+        stock1.setAddress(stock.getAddress());
+        stock1.setCompany(userByEmail.getCompany());
+        stockRepository.save(stock1);
+
+        return Odt.StockListToDtoList(userByEmail.getCompany().getCompanyStocks());
+
+    }
+
 }

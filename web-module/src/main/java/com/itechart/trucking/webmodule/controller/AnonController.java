@@ -71,7 +71,7 @@ public class AnonController {
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
         if (tokenByTokenValue==null){
             jsonObject.put("error", "Invalid link!");
-            return jsonObject;
+            return jsonObject.toString();
         }
         user.setEmail(tokenByTokenValue.getEmail());
         if (!bindingResult.hasErrors() && userRepository.findUserByUsername(user.getUsername())==null && companyRepository.findCompanyByName(companyName)==null) {
@@ -88,7 +88,7 @@ public class AnonController {
             }
         }
         jsonObject.put("error", "Invalid data!");
-        return jsonObject;
+        return jsonObject.toString();
     }
 
 
