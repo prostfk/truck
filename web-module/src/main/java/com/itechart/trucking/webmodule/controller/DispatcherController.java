@@ -157,7 +157,12 @@ public class DispatcherController {
     @GetMapping(value = "/orders/{id}")
     public OrderDto findOrderById(@PathVariable Long id) {
         Order orderById = orderRepository.findOrderById(id);
-        return new OrderDto(orderById);
+        OrderDto orderDto = new OrderDto(orderById);
+        orderDto.setClient(orderById.getClient());
+        orderDto.setCompany(orderById.getCompany());
+        orderDto.getWaybill().setAuto(orderById.getWaybill().getAuto());
+        orderDto.getWaybill().setDriver(orderById.getWaybill().getDriver());
+        return orderDto;
     }
 
     @GetMapping(value = "/clients/findClientsByNameLike")//todo correct search
