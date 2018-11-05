@@ -31,7 +31,7 @@ public class UserDto {
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.userRole = user.getUserRole();
-/*        this.birthDay = user.getBirthDay();*/
+        this.birthDay = user.getBirthDay();
     }
 
     public void setCompany(Company company) {
