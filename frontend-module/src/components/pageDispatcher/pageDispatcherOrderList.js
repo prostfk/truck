@@ -64,13 +64,13 @@ class DispatcherOrderList extends React.Component{
 
 
     render(){
-        let element = <div></div>;
-        if(this.state.company.active==1){
+        let element;// = <div></div>;
+        if(this.state.company.active===1){
             element=<span>
                 <h5>Добавление заказа</h5>
                 <Link to={`/orders/createorder`} className="btn btn-success btn_fullsize">Создать</Link>
             </span>;
-        }else  if(this.state.company.active==0){
+        }else  if(this.state.company.active===0){
             element=<div className={"error-span"}>
                 Комания Заблокирована!
                 <div>Администратор: {this.state.company.lockerId.username}</div>

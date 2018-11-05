@@ -148,17 +148,23 @@ public class AdminController {
     }
 
     @PostMapping(value = "/sendEmail")
-    public HttpStatus sendEmail(String email, String message, String type, @Value("${server.email}") String serverEmail, @Value("${server.password}") String serverPassword) {
+    public Object sendEmail(String email, String message, String type, @Value("${server.email}") String serverEmail, @Value("${server.password}") String serverPassword) throws JSONException {
+        JSONObject json = new JSONObject();
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
         User byEmailAndCompany = userRepository.findUserByEmailAndCompany(email, userByUsername.getCompany());
-        try {
-            EmailUtil.sendMail(serverEmail,serverPassword,email,type,message);
-            return HttpStatus.OK;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return HttpStatus.NOT_FOUND;
+        if (byEmailAndCompany!=null){
+            try {
+                EmailUtil.sendMail(serverEmail,serverPassword,email,type,message);
+                json.put("status", "success");
+            } catch (Exception e) {
+                e.printStackTrace();
+                json.put("error", "Something went wrong with email. Check mail, maybe it is incorrect");
+            }
+        }else{
+            json.put("error", "Something went wrong with email. Check mail, maybe it is incorrect");
         }
+        return json.toString();
 
     }
 

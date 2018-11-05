@@ -7,9 +7,9 @@ class SysAdminPage extends React.Component{
         super(props);
         this.getCompanyList = this.getCompanyList.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
-        this.sendref = this.sendref.bind(this);
+        this.sendRef = this.sendRef.bind(this);
         this.changeMail = this.changeMail.bind(this);
-        this.submitelock = this.submitelock.bind(this);
+        this.submitLock = this.submitLock.bind(this);
         this.state = {
             companies:[],
             inputMail:""
@@ -36,7 +36,7 @@ class SysAdminPage extends React.Component{
             inputMail: event.target.value
         })
     }
-    sendref(){
+    sendRef(){
         let formData = new FormData();
         let value = this.state.inputMail;
         formData.append("email", value);
@@ -70,8 +70,8 @@ class SysAdminPage extends React.Component{
     /*render row of table ( calls from html ) */
     renderTable(company){
         if(!company) return;
-        const buttonactivate = <ModalComponent clickfunc={this.submitelock} className={"table_button bg-secondary text-white"} compId={company.id}/>;
-        const buttondeactivate = <a onClick={this.submiteUnlock.bind(this,company.id)} className={"table_button bg-secondary text-white"}>Вкл</a>;
+        const buttonactivate = <ModalComponent clickfunc={this.submitLock} className={"table_button bg-secondary text-white"} compId={company.id}/>;
+        const buttondeactivate = <a onClick={this.submitUnlock.bind(this,company.id)} className={"table_button bg-secondary text-white"}>Вкл</a>;
         const lockedDate = company.lockDate==null?"":" Дата: "+ (new Date(company.lockDate));
         const titleoflock = company.active?"Активна": (company.lockerId==null?"[admin]":company.lockerId.username) + " : " +(company.lockComment==""?"[without message]":company.lockComment) + lockedDate ;
         return <div className={"row table_row"}>
@@ -86,7 +86,7 @@ class SysAdminPage extends React.Component{
     }
 
     /*button changestatus handler*/
-    submiteUnlock(compId,event){
+    submitUnlock(compId, event){
         const ref = this;
         const myres = fetch('http://localhost:8080/api/companies/changeStatus', {
             method: "POST",
@@ -104,7 +104,7 @@ class SysAdminPage extends React.Component{
         });
     }
 
-    submitelock(desc,compId){
+    submitLock(desc, compId){
         const ref = this;
         console.log(desc + compId);
         const myres = fetch('http://localhost:8080/api/companies/disable/'+compId, {
@@ -157,7 +157,7 @@ class SysAdminPage extends React.Component{
                         <label htmlFor="id" id="emaillabel">Email</label>
                         <input onChange={this.changeMail} type="email" className="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
                     </div>
-                    <a onClick={this.sendref} className="btn btn-success btn_fullsize">Отправить</a>
+                    <a onClick={this.sendRef} className="btn btn-success btn_fullsize">Отправить</a>
                 </form>
             </div>
         </div>

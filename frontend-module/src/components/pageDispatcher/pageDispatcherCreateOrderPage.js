@@ -309,7 +309,7 @@ class DispatcherCreateOrderPage extends React.Component {
                     </div>
 
                 </div>
-                <div className={'pb-3'} style={customerCompanyStyle} id={'consignment-form'}>
+                <div className={'pb-3 container'} style={customerCompanyStyle} id={'consignment-form'}>
                     <div className="d-flex justify-content-center align-items-center" style={marginTop}>
                         <form className="align-content-center" onSubmit={(e) => {e.preventDefault()}}>
                             <div className="form-group">

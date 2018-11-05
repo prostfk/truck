@@ -54,7 +54,7 @@ public class SysAdminController {
             EmailUtil.sendMail(username, password, email, "Registration",
                     String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this link to finish </h4><br/><p>%s:%s/registration?token=%s</p>", request.getServerName(), "3000", token)
             );
-            tokenRepository.save(new Token(email,token));
+            tokenRepository.save(new Token(email, token));
             return HttpStatus.OK;
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,25 +63,32 @@ public class SysAdminController {
     }
 
     @GetMapping(value = "/companies")
-    public List<CompanyDto> findAllCompanies(){
+    public List<CompanyDto> findAllCompanies() {
         List<Company> companies = companyRepository.findAllByOrderById();
         return Odt.CompanyListToDtoList(companies);
     }
 
     @PostMapping(value = "/companies/changeStatus")
-    public boolean changeActiveStatus(@RequestBody String companyId){
+    public boolean changeActiveStatus(@RequestBody String companyId) {
         Long compId = Long.parseLong(companyId);
         Company company = companyRepository.findCompanyById(compId);
         int isActive = company.getActive();
-        if(isActive==1){
+        if (isActive == 1) {
             company.setActive(0);
-        } else company.setActive(1);
+        } else {
+            company.setActive(1);
+            company.setLockerId(null);
+            company.setLockDate(null);
+            company.setLockComment(null);
+        }
         return companyRepository.save(company) != null;
     }
 
     @PostMapping(value = "/companies/disable/{companyId}")
-    public boolean disableCompany(@RequestBody String description, @PathVariable Long companyId){
+    public boolean disableCompany(@RequestBody String description, @PathVariable Long companyId) {
         Company company = companyRepository.findCompanyById(companyId);
+        User sysAdmin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        company.setLockerId(sysAdmin);
         company.setLockComment(description);
         company.setActive(0);
         company.setLockDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
@@ -93,7 +100,7 @@ public class SysAdminController {
         Company companyById = companyRepository.findCompanyById(companyId);
         try {
             return Odt.CompanyListToDtoList(Collections.singletonList(companyById)).get(0);
-        }catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             return null;
         }
     }

@@ -46,8 +46,11 @@ export default class SendEmail extends Component {
         fetch('http://localhost:8080/api/sendEmail', {body: formData, method: 'POST', headers: {'Auth-token':localStorage.getItem('Auth-token')}}).then(response=>{
             return response.json();
         }).then(data => {
+            console.log(data);
             if (data.error === undefined){
                 this.props.history.push('/usersList');
+            }else{
+                document.getElementById('error-span').innerText = 'Проверьте правильность почты';
             }
         })
     };
@@ -65,6 +68,7 @@ export default class SendEmail extends Component {
                     <div className="controls">
                         <div className="row">
                             <div className="col-md-6">
+                                <span className="error-span" id="error-span"/>
                                 <div className="form-group">
                                     <label htmlFor="receiverEmail">Email *</label>
                                     <input id="receiverEmail" type="email" onChange={this.changeInput} value={this.state.receiverEmail} className="form-control"
