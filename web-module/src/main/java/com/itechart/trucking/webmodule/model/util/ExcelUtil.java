@@ -22,7 +22,8 @@ public class ExcelUtil {
             Cell cell = row.createCell(i);
             cell.setCellValue(strings[i]);
         }
-        book.write(new FileOutputStream(String.format("%s/%s-%s.xls", path, user.getUsername(), new Date().toString())));
+        book.write(new FileOutputStream(String.format("%s/%s.xls", path, user.getUsername())));
+//        book.write(new FileOutputStream(String.format("%s/%s-%s.xls", path, user.getUsername(), new Date().toString())));
         book.close();
     }
 

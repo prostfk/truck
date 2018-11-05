@@ -18,11 +18,13 @@ public class Product {
     private ProductState status;
     private String description;
     private Integer price;
-    @OneToOne
-    @JoinColumn(name = "product_consignment")
-    private Consignment consignment;
-    @OneToOne
+
+    @ManyToOne
     @JoinColumn(name = "cancellation_act")
     private CancellationAct cancellationAct;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_consignment")
+    private Consignment consignment;
 }

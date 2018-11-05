@@ -24,6 +24,8 @@ class DriverOrderList extends React.Component{
         }).then(function (result) {
             console.log(result);
             return result;
+        }).catch((err) => {
+            console.log(err);
         });
     }
 
@@ -39,7 +41,7 @@ class DriverOrderList extends React.Component{
                 <Link to={`/myorders/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой лист</Link>
             </div>
             <div className="col-md-2">
-                <Link to={`/myorders/consignment/${order.id}`} className="table_button bg-secondary text-white">Тов. партия</Link>
+                <Link to={`/driver/consignment/${order.id}`} className="table_button bg-secondary text-white">Тов. партия</Link>
             </div>
         </div>
     }

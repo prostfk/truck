@@ -25,4 +25,10 @@ public interface WaybillRepository extends CrudRepository<Waybill, Long> {
     @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where (:dDep between w.dateDeparture and w.dateArrival) or (:dArr between w.dateDeparture and w.dateArrival) and w.auto.id = :companyId GROUP BY w.auto.id)")
     List<Auto> findCustomQueryAutoByDate(@Param("dDep") java.util.Date dDep, @Param("dArr") java.util.Date dArr, @Param("companyId") Long companyId);
 
+    @Query(value = "UPDATE waybill set status=:waybillStatus, driver=:driverId, auto=:autoId,date_departure=:dateDeparture,date_arrival=:dateArrival WHERE id=:waybillId",nativeQuery = true)
+    void updateWaybill(@Param("waybillId")Long waybillId,@Param("waybillStatus")String waybillStatus, @Param("driverId")Long driverId,@Param("autoId")Long autoId,@Param("dateDeparture")String dateDeparture,@Param("dateArrival")String dateArrival);
+
+    @Query(value = "INSERT INTO waybill(status, driver, auto, date_departure, date_arrival) VALUES (:waybillStatus, :driverId, :autoId, :dateDeparture, :dateArrival)", nativeQuery = true)
+    Waybill saveWaybill(@Param("waybillStatus")String waybillStatus, @Param("driverId")Long driverId,@Param("autoId")Long autoId,@Param("dateDeparture")String dateDeparture,@Param("dateArrival")String dateArrival);
+
 }

@@ -15,14 +15,37 @@ import com.itechart.trucking.routeList.repository.RouteListRepository;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.itechart.trucking.formData.WaybillFormData;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.order.dto.OrderDto;
+import com.itechart.trucking.order.entity.Order;
+import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.product.dto.ProductDto;
+import com.itechart.trucking.product.entity.Product;
+import com.itechart.trucking.product.entity.ProductState;
+import com.itechart.trucking.product.repository.ProductRepository;
+import com.itechart.trucking.routeList.dto.RouteListDto;
+import com.itechart.trucking.routeList.entity.RouteList;
+import com.itechart.trucking.routeList.repository.RouteListRepository;
+import com.itechart.trucking.user.entity.User;
+import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.waybill.dto.WaybillDto;
+import com.itechart.trucking.waybill.entity.Waybill;
+import com.itechart.trucking.waybill.repository.WaybillRepository;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.sql.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@PreAuthorize("hasAuthority('ROLE_MANAGER')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -41,118 +64,124 @@ public class ManagerController {
     private CancellationActRepository cancellationActRepository;
     @Autowired
     private WaybillRepository waybillRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    @GetMapping(value = "/manager/orders")
-    public List<Order> findActiveOrders() {
-        return orderRepository.findAllByStatus("ACTIVE");
+    @GetMapping(value = "/manager/orders")//todo findByStatus change on number value(Murat, please)
+    public List<OrderDto> findActiveOrders() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        List<Order> active = orderRepository.findAllByStatusAndCompanyId("ACTIVE", userByUsername.getCompany().getId());
+
+        return Odt.OrderToDtoList(active);
     }
 
     @GetMapping(value = "/manager/orders/{id}")
     public Order findOrderById(@PathVariable Long id) {
+        System.out.println(orderRepository.findOrderById(id));
         return orderRepository.findOrderById(id);
     }
 
     @GetMapping(value = "/manager/products/{id}")
-    public List<Product> findProductsByOrderId(@PathVariable Long id) {
-        List<Product> products = new ArrayList<>();
+    public List<ProductDto> findProductsByOrderId(@PathVariable Long id) {
         Optional<Order> order = orderRepository.findById(id);
-
-        if(order.isPresent()) {
-            Consignment consignment = consignmentRepository.findConsignmentByOrder(order.get());
-            products = productRepository.findAllByConsignment(consignment);
-        }
-        return products;
+        List<Product> productList = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
+        return Odt.ProductToDtoList(productList);
     }
 
-    @GetMapping(value = "manager/routelist/{id}")
-    public List<RouteList> getRouteList(@PathVariable Long id) {
+    @GetMapping(value = "/manager/routeList/{id}")
+    public List<RouteListDto> getRouteList(@PathVariable Long id) {
         Optional<Order> order = orderRepository.findById(id);
-        if(!order.isPresent()) return null;
-
-        System.out.println(order.get().getWaybill());
-        List<RouteList> routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
-
-        System.out.println(routeLists.size());
-        return routeLists;
+        return order.map(order1 -> Odt.RouteListToDtoList(order1.getWaybill().getRouteListList())).orElse(null);
     }
 
-    @GetMapping(value = "/manager/updateProductStatus/{id}")
-    public Optional<Product> changeStatus(@PathVariable Long id, @RequestParam("status") String status) {
+    @PostMapping(value = "/manager/updateProductStatus/{id}")
+    public Object changeStatus(@PathVariable Long id, @RequestBody String status) throws JSONException {
         Optional<Product> product = productRepository.findById(id);
-
-        if(product.isPresent()) {
+        if (product.isPresent()) {
             product.get().setStatus(ProductState.valueOf(status));
-            productRepository.save(product.get());
+            Product save = productRepository.save(product.get());
+            return new ProductDto(save);
+        } else {
+            JSONObject json = new JSONObject();
+            json.put("error", "invalid data");
+            return json;
         }
-
-        return product;
     }
 
-    @DeleteMapping(value = "/manager/deletepoint/{id}")
+    @DeleteMapping(value = "/manager/deletePoint/{id}")
     public boolean deletePoint(@PathVariable Long id) {
-        System.out.println(id);
-        routeListRepository.deleteById(id);
-        return true;
+        try {
+            routeListRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @PostMapping(value = "/manager/{orderId}/createPoint")
     public boolean createPoint(@PathVariable Long orderId, @RequestBody RouteList routeList) {
         Optional<Order> order = orderRepository.findById(orderId);
-        if(!order.isPresent())
+        if (!order.isPresent())
             return false;
-
         routeList.setWaybill(order.get().getWaybill());
-        System.out.println("routeList");
-        System.out.println(routeList);
-        routeListRepository.save(routeList);
-        return true;
+        return routeListRepository.save(routeList) != null;
+
     }
 
-    @PostMapping(value = "/manager/{productId}/cancelProduct")
-    public Optional<Product> cancelProduct(@PathVariable Long productId, @RequestParam("orderId") Long orderId, @RequestParam("isLost") Boolean isLost) {
-        Optional<Order> order = orderRepository.findById(orderId);
-        Consignment consignment = consignmentRepository.findConsignmentByOrder(order.get());
-        CancellationAct cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
-
+    @GetMapping(value = "/manager/{productId}/cancelProduct")
+    public ProductDto cancelProduct(@PathVariable Long productId, @RequestParam("isLost") Boolean isLost) {
         Optional<Product> product = productRepository.findById(productId);
+        if (!product.isPresent())
+            return null;
+        CancellationAct cancellationAct = product.get().getCancellationAct();
 
-        if(product.isPresent()) {
-            if(isLost) {
-                product.get().setStatus(ProductState.valueOf("LOST"));
-                cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
-                Integer amount = cancellationAct.getAmount() + 1;
-                cancellationAct.setAmount(amount);
-            } else {
-                product.get().setStatus(ProductState.valueOf("ACCEPTED"));
-                cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice());
-                Integer amount = cancellationAct.getAmount() - 1;
-                cancellationAct.setAmount(amount);
-            }
-
-            productRepository.save(product.get());
-            cancellationActRepository.save(cancellationAct);
+        if (isLost) {
+            product.get().setStatus(ProductState.valueOf("LOST"));
+            cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
+            Integer amount = cancellationAct.getAmount() + 1;
+            cancellationAct.setAmount(amount);
+        } else {
+            product.get().setStatus(ProductState.valueOf("ACCEPTED"));
+            cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice());
+            Integer amount = cancellationAct.getAmount() - 1;
+            cancellationAct.setAmount(amount);
         }
 
-        return product;
+        productRepository.save(product.get());
+        cancellationActRepository.save(cancellationAct);
+
+        return new ProductDto(product.get());
     }
 
     @GetMapping(value = "/manager/finishChecking/{orderId}")
-    public Order finishChecking(@PathVariable Long orderId) {
+    public OrderDto finishChecking(@PathVariable Long orderId) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
 
-        Order order = orderRepository.findOrderById(orderId);
-        Waybill waybill = order.getWaybill();
+        Optional<Order> order = orderRepository.findById(orderId);
+        Waybill waybill = order.get().getWaybill();
         waybill.setStatus("DONE");
         waybill.setCheckDate(new Date((new java.util.Date()).getTime()));
+        waybill.setUser(userByUsername);
 
-        Consignment consignment = consignmentRepository.findConsignmentByOrder(order);
-        CancellationAct cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
-        //cancellation.setDate(new Date());
+        List<CancellationAct> cancellationActList = order.get().getConsignment().getCancellationActList();
 
-        cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
-        cancellationActRepository.save(cancellationAct);
-        waybillRepository.save(waybill);
-        order.setWaybill(waybill);
+        for(CancellationAct cancellationAct: cancellationActList) {
+            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
+            cancellationActRepository.save(cancellationAct);
+            waybillRepository.save(waybill);
+        }
 
-        return order;
+        order.get().setWaybill(waybill);
+
+        return new OrderDto(order.get());
     }
+
+    @PostMapping(value = "/manager/createRouteList")
+    public Object createRouteList(RouteList routeListDto, WaybillFormData waybill) {
+        //todo CREATE FORM SAVING IN DB
+        return null;//!!!
+    }
+
 }

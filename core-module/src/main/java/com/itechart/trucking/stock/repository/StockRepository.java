@@ -10,7 +10,10 @@ import java.util.List;
 @Repository
 public interface StockRepository extends CrudRepository<Stock, Long> {
 
+    @Deprecated
     List<Stock> findStocksByCompany(Company company);
+
+    List<Stock> findStockByCompanyAndActive(Company company,Boolean active);
 
     Stock findStockById(Long id);
 

@@ -105,4 +105,10 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+.error-span{
+    color: red;
+}
+.logoutForm{
+    text-align: center;
+}
 
