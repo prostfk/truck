@@ -31,4 +31,13 @@ public class Client {
         this.type = type;
         this.company = company;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                '}';
+    }
 }

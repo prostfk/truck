@@ -13,6 +13,7 @@ import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.entity.Waybill;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,9 @@ public class OrderService {
     //check for selects
     public Order getOrderFromDto(OrderFormData orderFormData, String currentUserName) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        User userByUsername = userRepository.findUserByUsername(currentUserName);
+        Company company = userByUsername.getCompany();
         Auto autoById = autoRepository.findAutoById(orderFormData.getAutoId());
-        Company company = userRepository.findUserByUsername(currentUserName).getCompany();
         Driver driverById = driverRepository.findDriverById(orderFormData.getDriverId());
         Order order = new Order();
         order.setCompany(company);

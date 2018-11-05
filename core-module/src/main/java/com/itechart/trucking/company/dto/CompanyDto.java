@@ -41,7 +41,7 @@ public class CompanyDto {
         this.name = company.getName();
         this.active = company.getActive();
         this.lockComment = company.getLockComment();
-/*        this.lockDate = company.getLockDate;*/
+        this.lockDate = Odt.convertToLocalDateViaInstant(company.getLockDate());
     }
 
     public void setLockerId(User lockerId) {

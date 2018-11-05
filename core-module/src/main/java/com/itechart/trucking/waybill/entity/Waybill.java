@@ -47,4 +47,14 @@ public class Waybill {
         this.dateDeparture = dateDeparture;
         this.dateArrival = dateArrival;
     }
+
+    @Override
+    public String toString() {
+        return "Waybill{" +
+                "id=" + id +
+                ", status='" + status + '\'' +
+                ", dateDeparture=" + dateDeparture +
+                ", dateArrival=" + dateArrival +
+                '}';
+    }
 }
