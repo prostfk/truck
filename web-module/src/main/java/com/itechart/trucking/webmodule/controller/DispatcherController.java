@@ -2,6 +2,8 @@ package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.cancellationAct.entity.CancellationAct;
+import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
@@ -33,6 +35,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,6 +78,10 @@ public class DispatcherController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CancellationActRepository cancellationActRepository;
+
 
     @GetMapping(value = "/company/findFreeDrivers")
     public List<DriverDto> findFreeDrivers(@RequestParam String dateFrom, @RequestParam String dateTo) {
@@ -129,14 +136,13 @@ public class DispatcherController {
         Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
         Order savedOrder = orderRepository.save(orderToSave);
         Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
+        CancellationAct cancellationAct = cancellationActRepository.save(new CancellationAct(new java.sql.Date(new Date().getTime()), 0, 0, savedConsignment, savedConsignment.getProductList()));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), product.getPrice() + 0.0));
-            System.out.println(savedConsignment);
+            productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), cancellationAct.getId(),product.getPrice() + 0.0);
         }
-
         return HttpStatus.OK;
     }
 
@@ -157,7 +163,7 @@ public class DispatcherController {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), product.getPrice() + 0.0));
+            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationActList().get(0).getId(), product.getPrice() + 0.0));
         }
         return HttpStatus.OK;
 

@@ -29,4 +29,14 @@ public class CancellationAct {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cancellationAct")
     private List<Product> product;
 
+    public CancellationAct() {
+    }
+
+    public CancellationAct(Date date, @Min(0) Integer amount, @Min(0) Integer price, Consignment consignment, List<Product> product) {
+        this.date = date;
+        this.amount = amount;
+        this.price = price;
+        this.consignment = consignment;
+        this.product = product;
+    }
 }
