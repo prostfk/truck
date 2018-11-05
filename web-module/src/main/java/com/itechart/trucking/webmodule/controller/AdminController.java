@@ -206,6 +206,46 @@ public class AdminController {
         return new StockDto(stock);
     }
 
+    @GetMapping(value = "/getCompanyName")
+    public String getCompanyName(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("companyName",userByUsername.getCompany().getName());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
+    }
+
+    @PutMapping(value = "/changeCompanyName")
+    public boolean changeCompanyName(@RequestBody String companyName) {
+        if(companyName.equals("")) return false;
+        Company company = companyRepository.findCompanyByName(companyName);
+        if(company!=null) return false;
+
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        company = null;
+        company = userByUsername.getCompany();
+        company.setName(companyName);
+        companyRepository.save(company);
+        return true;
+
+/*        Company company = companyRepository.findCompanyById(compId);
+        int isActive = company.getActive();
+        if (isActive == 1) {
+            company.setActive(0);
+        } else {
+            company.setActive(1);
+            company.setLockerId(null);
+            company.setLockDate(null);
+            company.setLockComment(null);
+        }
+        return companyRepository.save(company) != null;*/
+    }
+
 
     private JSONObject getInvalidDataJsonMessage() throws JSONException {
         JSONObject json = new JSONObject();
