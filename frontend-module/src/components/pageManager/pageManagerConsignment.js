@@ -91,7 +91,7 @@ class ManagerConsignment extends Component {
         let formData = new FormData();
         formData.append("orderId", orderId);
         formData.append("isLost", isLost);
-        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct`, {method: "POST", body:formData, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -109,7 +109,7 @@ class ManagerConsignment extends Component {
         else if(event.target.value==="Доставлен") status="DELIVERED";
         else if(event.target.value==="Утерян") status="LOST";
 
-        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}/?status=${status}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
+        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}`, {method: "POST", body:status, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {

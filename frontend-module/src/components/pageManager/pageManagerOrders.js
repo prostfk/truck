@@ -50,16 +50,16 @@ class pageManagerOrders extends Component {
         if(order.waybill.status === "DONE")
             isDone = true;
         return <div className="row table_row">
-            <div className="col-md-2">{order.client.name}</div>
+            <div className="col-md-1">{order.client.name}</div>
             <div className="col-md-2">{order.sender.name}</div>
-            <div className="col-md-2">{order.receiver.address}</div>
-            <div className="col-md-1">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
+            <div className="col-md-1">{order.receiver.address}</div>
+            <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
             <div className="col-md-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
-            <div className="col-md-4" style={{display: isDone ? 'block' : 'none'}}>Проверка завершена</div>
+            <div className="col-md-3" style={{display: isDone ? 'block' : 'none'}}><b>Проверка завершена</b></div>
             <div className="col-md-2" style={{display: isDone ? 'none' : 'block'}}>
                 <Link to={`/manager/edit/consignment/${order.id}`} className="table_button bg-secondary text-white">Товарная партия</Link>
             </div>
-            <div className="col-md-1" style={{display: isDone ? 'none' : 'block'}}>
+            <div className="col-md-2" style={{display: isDone ? 'none' : 'block'}}>
                 <Link to={`/manager/edit/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой лист</Link>
             </div>
             <div className="col-md-1" style={{display: isDone ? 'none' : 'block'}}><a onClick={this.finishCheck.bind(this, order.id)} className="table_button bg-secondary text-white">Проверен</a></div>
@@ -82,16 +82,16 @@ class pageManagerOrders extends Component {
     render() {
         return (
             <div className="row">
-                <div className=" col-md-10 superuserform_companylist">
-                    <div className="container">
+                <div className="offset-md-1 col-md-10 superuserform_companylist">
+                    <div className="container-fluid">
                         <div className="row table_header">
-                            <div className="col-md-2"><b>Клиент</b></div>
+                            <div className="col-md-1"><b>Клиент</b></div>
                             <div className="col-md-2"><b>Название склада (отправитель)</b></div>
-                            <div className="col-md-2"><b>Название склада (получатель)</b></div>
-                            <div className="col-md-1"><b>Дата отправления</b></div>
+                            <div className="col-md-1"><b>Название склада (получатель)</b></div>
+                            <div className="col-md-2"><b>Дата отправления</b></div>
                             <div className="col-md-1"><b>Дата получения</b></div>
                             <div className="col-md-2"><b></b></div>
-                            <div className="col-md-1"><b></b></div>
+                            <div className="col-md-2"><b></b></div>
                             <div className="col-md-1"><b></b></div>
                         </div>
                         {
