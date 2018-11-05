@@ -1,7 +1,0 @@
-INSERT INTO public.consignment (id, name, order_id) VALUES (2, 'consignment #2', 5);
-INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) values(2, '2018-11-03', 0, 0, 2);
-
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) values(5,  'product #5', 'CHECK_DONE', 'desc', 2, 2, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) values(6,  'product #6', 'DELIVERED','desc', 2, 2, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) values(7, 'product #7', 'CHECK_DONE', 'desc', 2, 2, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) values(8, 'product #8', 'CHECK_DONE', 'desc', 2, 2, 123);

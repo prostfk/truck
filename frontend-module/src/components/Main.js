@@ -25,7 +25,7 @@ import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
-import EditUser from "./pageSysAdmin/pageEditUser";
+// import EditUser from "./pageSysAdmin/pageEditUser";
 import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
