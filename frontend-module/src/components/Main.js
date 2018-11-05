@@ -23,11 +23,13 @@ import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
 import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
-import UsersList from "./pageSysAdmin/pageUsersList";
+import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
 import EditUser from "./pageSysAdmin/pageEditUser";
 import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
+import EditUser from "./pageAdmin/pageEditUser";
+import SendEmail from "./pageAdmin/emailSendPage";
 
 class MainController extends React.Component {
 
@@ -40,6 +42,7 @@ class MainController extends React.Component {
                     <Route path="/registration" component={registration}/>
                     <Route path="/usersList" component={UsersList}/>
                     <Route path="/user/:userId/edit" component={EditUser}/>
+                    <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={testComponent}/>
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}

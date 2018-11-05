@@ -2,14 +2,17 @@ package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
-import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,48 +34,40 @@ public class DriverController {
     private RouteListRepository routeListRepository;
 
     @RequestMapping(value = "/orders/getMyOrders",method = RequestMethod.GET)
-    public List<Order> getMyOrders(){
-        String name="driverUser";
-        User user = userRepository.findUserByUsername(name);
-        if(user==null) return null;
-        Driver driver = driverRepository.findDriverByUser(user);
-        if(driver==null) return null;
+    public List<OrderDto> getMyOrders(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Driver driver = driverRepository.findDriverByUser(userRepository.findUserByUsername(name));
         List<Order> orders = orderRepository.findCustomQueryOrderByDriver(driver.getId());
-        return orders;
+
+        List<OrderDto> orderDtos = Odt.OrderToDtoList(orders);
+        return orderDtos;
     }
 
     @RequestMapping(value ="/orders/getMyOrders/{orderId}/routelist",method = RequestMethod.GET)
-    public  List<RouteList> getRouteList(@PathVariable Long orderId){
-        String name="driverUser";
-        Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
-        List<RouteList> routeLists = null;
-        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
-        return routeLists;
+    public  List<RouteListDto> getRouteList(@PathVariable Long orderId){
+        String name= SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<Order> order = orderRepository.findById(orderId);
+        if(!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) return null;
+       return Odt.RouteListToDtoList(order.get().getWaybill().getRouteListList());
     }
-/*    @RequestMapping(value ="/orders/getMyOrders/{orderId}/routelist/{pointId}",method = RequestMethod.GET)
-    public  RouteList getRouteListPoint(@PathVariable Long orderId,@PathVariable Long pointId){
-        String name="driverUser";
-        Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
-        Optional<RouteList> routeList = null;
-        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeList = routeListRepository.findById(pointId);
-        return routeList.get();
-    }*/
+
 
     @RequestMapping(value ="/orders/getMyOrders/{orderId}/markpoint/{pointId}",method = RequestMethod.PUT)
-    public Optional<RouteList> markorder(@PathVariable Long orderId,@PathVariable Long pointId){
-        String name="driverUser";
+    public RouteListDto markOrder(@PathVariable Long orderId,@PathVariable Long pointId){
+        String name= SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Order> order = orderRepository.findById(orderId); if(!order.isPresent()) return null;
-        List<RouteList> routeLists = null;
-        if(order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
-        else return null;
+        Optional<Order> order = orderRepository.findById(orderId);
+        if(!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name)) return null;
+
         Optional<RouteList> point = routeListRepository.findById(pointId);
-        if(point.isPresent()){
+        if(!point.isPresent() || point.get().getWaybill().getId() != order.get().getWaybill().getId()) return null;
+        else {
             if(point.get().getMarked()==null) point.get().setMarked(false);
             if(point.get().getMarked()) point.get().setMarked(false);
             else point.get().setMarked(true);
         }
         routeListRepository.save(point.get());
-        return point;
+        return new RouteListDto(point.get());
     }
 }

@@ -46,7 +46,7 @@ public class AnonController {
     @Autowired
     private CompanyRepository companyRepository;
 
-    @PostMapping(value = "/auth")//auth rest
+    @PostMapping(value = "/auth")
     @ResponseBody
     public String getToken(@ModelAttribute final User user) throws JSONException {
         JSONObject json = new JSONObject();
@@ -63,7 +63,7 @@ public class AnonController {
 
     }
 
-    @PostMapping(value = "/registration")//redo for rest
+    @PostMapping(value = "/registration")
     @ResponseBody
     public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -71,7 +71,7 @@ public class AnonController {
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
         if (tokenByTokenValue==null){
             jsonObject.put("error", "Invalid link!");
-            return jsonObject;
+            return jsonObject.toString();
         }
         user.setEmail(tokenByTokenValue.getEmail());
         if (!bindingResult.hasErrors() && userRepository.findUserByUsername(user.getUsername())==null && companyRepository.findCompanyByName(companyName)==null) {
@@ -88,7 +88,7 @@ public class AnonController {
             }
         }
         jsonObject.put("error", "Invalid data!");
-        return jsonObject;
+        return jsonObject.toString();
     }
 
 

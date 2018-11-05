@@ -47,7 +47,7 @@ class PageStockList extends React.Component {
         fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
             response.json().then(data => {
                 console.log(data);
-                this.forceUpdateHandler();
+                this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
             })
         }, err => console.log(err))
     }
@@ -85,13 +85,13 @@ class PageStockList extends React.Component {
     submiteDelete(stockId){
         const ref = this;
         fetch('http://localhost:8080/api/stocks', {
-            method: "DELETE",
+            method: 'DELETE',
             body: stockId,
             headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            console.log(result)
+            console.log(result);
             if (result) {
                 ref.setState({stocks:result})
             }

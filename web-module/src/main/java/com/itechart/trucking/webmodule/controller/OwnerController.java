@@ -23,18 +23,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
 @Controller
-@RequestMapping(value = "/api")
+@PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
 public class OwnerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private CompanyRepository companyRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -50,7 +46,7 @@ public class OwnerController {
 
 //    TEST
 
-    @GetMapping(value = "/company/statistics")//check xls method
+    @GetMapping(value = "/xls")//check xls method
     @ResponseBody
     public String createXls(@Value("${excel.path}")String path){
         Optional<User> byId = userRepository.findById(1L);

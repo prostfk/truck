@@ -30,7 +30,12 @@ class DispatcherCreateOrderPage extends React.Component {
             company: "",
             consignment: [],
             newConsignmentName: "",
-            newOrderId: ''
+            newOrderId: "",
+            newProductName: "",
+            newProductStatus: "",
+            newProductDescription: "",
+            newProductPrice: "",
+            newProduct: {}
         };
         document.title = "Создать заказ";
         this.fetchToSenderStocks();
@@ -42,6 +47,7 @@ class DispatcherCreateOrderPage extends React.Component {
         this.setState({
             [event.target.id]: [event.target.value]
         });
+        console.log(event.target.id + " " + event.target.value)
     }
 
     changeSelectInput(event) {
@@ -63,10 +69,7 @@ class DispatcherCreateOrderPage extends React.Component {
         formData.append("autoId", this.state.auto);
         formData.append("driverId", this.state.driver);
         let array = [];
-        for (let i = 0; i < this.state.consignment.length; i++) {
-            array.push(this.state.consignment[i].join(''))
-        }
-        formData.append("consignments", array.join('`'));
+        formData.append("consignment", JSON.stringify(this.state.consignment));
         formData.forEach((v, k) => {
             console.log(`${v} - ${k}`);
         });
@@ -80,7 +83,7 @@ class DispatcherCreateOrderPage extends React.Component {
             if (data.error === undefined) {
                 document.getElementById('order-form').style.display = 'none';
                 document.getElementById('consignment-form').style.display = 'none';
-                this.props.history.push('/orders/' + data.id);
+                this.props.history.push('/orders/');
             }
         });
     }
@@ -101,18 +104,6 @@ class DispatcherCreateOrderPage extends React.Component {
             document.getElementById('client_id').style.display = 'none';
         }
 
-    }
-
-    fetchToStocks(id) {
-        fetch(`http://localhost:8080/api/companies/${id}/stocks`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
-            let html = '';
-            if (data.status === 404) return;
-            data.map(stock => {
-                html += `<option value="${stock.id}">${stock.address}</option>`
-            });
-            document.getElementById('delivery_stock').innerHTML = html;
-            this.setDefault();
-        })
     }
 
     fetchToSenderStocks() {
@@ -150,21 +141,22 @@ class DispatcherCreateOrderPage extends React.Component {
     findAutos() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`http://localhost:8080/api/orders/createOrder/getAutosByDates?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        fetch(`http://localhost:8080/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
             });
             document.getElementById('auto').innerHTML = autoHtml;
             this.setDefault();
-
-        }))
+        })).catch(err=>{
+            throw new Error('Нет доступа к свободным авто');
+        })
     }
 
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`http://localhost:8080/api/orders/createOrder/getDriversByDates?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             console.log(data);
             let driverHtml = '';
             data.map(driver => {
@@ -186,18 +178,31 @@ class DispatcherCreateOrderPage extends React.Component {
         this.setState({auto: document.getElementById('auto').value});
     }
 
+    changeDate = () =>{
+        this.findAutos();
+        this.findDrivers();
+    };
+
     //Consignment
 
-    addConsignment = (event) => {
+    addProduct = (event) => {
         event.preventDefault();
+        let product = {
+            name: this.state.newProductName.join(''),
+            status: this.state.newProductStatus.join(''),
+            description: this.state.newProductDescription.join(''),
+            price: this.state.newProductPrice.join('')
+        };
         this.setState({
-            consignment: [...this.state.consignment, this.state.newConsignmentName],
+            consignment: [...this.state.consignment, product],
             newConsignmentName: ''
         });
+        console.log(product);
+        document.getElementById('newProductName').focus();
     };
 
     //trbl
-    removeConsignment = (name) => {
+    removeProduct = (name) => {
         let tmp = this.state.consignment;
         let index = tmp.indexOf(name);
         tmp.splice(index, 1);
@@ -223,13 +228,13 @@ class DispatcherCreateOrderPage extends React.Component {
         return (
             <div>
                 <div className="row" id={'order-form'}>
-                    <div className="offset-md-1 col-md-6 superuserform_companylist">
+                    <div className="offset-md-2 col-md-8 superuserform_companylist">
                         <div className="row">
                             <div className="col-md-6">
                                 <h3>Основное</h3>
-                                <small className="form-text text-muted">Наименование товара</small>
+                                <small className="form-text text-muted">Наименование заказа</small>
                                 <input value={this.state.name} onChange={this.changeInput} type="text"
-                                       className="form-control" id="name" placeholder="Наименование товара"/>
+                                       className="form-control" id="name" placeholder="Наименование заказа"/>
 
                                 <small className="form-text text-muted">Компания- заказчик перевозки</small>
                                 <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany}
@@ -281,11 +286,11 @@ class DispatcherCreateOrderPage extends React.Component {
 
 
                                 <small className="form-text text-muted">Дата отправления</small>
-                                <input value={this.state.date_departure} onChange={this.changeInput} type="text"
+                                <input value={this.state.date_departure} onBlur={this.changeDate} onChange={this.changeInput} type="text"
                                        className="form-control" id="date_departure" placeholder="14.10.2015"/>
 
                                 <small className="form-text text-muted">Дата прибытия</small>
-                                <input value={this.state.date_arrival} onChange={this.changeInput} type="text"
+                                <input value={this.state.date_arrival} onBlur={this.changeDate} onChange={this.changeInput} type="text"
                                        className="form-control" id="date_arrival" placeholder="15.10.2016"/>
 
                                 <small className="form-text text-muted">Водитель</small>
@@ -312,13 +317,35 @@ class DispatcherCreateOrderPage extends React.Component {
                 </div>
                 <div className={'pb-3'} style={customerCompanyStyle} id={'consignment-form'}>
                     <div className="d-flex justify-content-center align-items-center" style={marginTop}>
-                        <form className="form-inline align-content-center" onSubmit={(e) => {e.preventDefault()}}>
+                        <form className="align-content-center" onSubmit={(e) => {e.preventDefault()}}>
                             <div className="form-group">
-                                <label htmlFor="consignment">Название товара</label>
-                                <input type="text" id="newConsignmentName" value={this.state.newConsignmentName}
+                                <label htmlFor="newProductName">Название товара</label>
+                                <input type="text" id="newProductName" value={this.state.newProductName}
                                        onChange={this.changeInput} className="form-control mx-sm-3"/>
+                                <div className="form-group">
+                                    <label htmlFor="newProductStatus">Статус</label>
+                                    <select className="form-control" onChange={this.changeInput} value={this.state.newProductStatus} id="newProductStatus">
+                                        <option value={'ACCEPTED'}>Принят</option>
+                                        <option value={'CHECK_DONE'}>Проверка завершена</option>
+                                        <option value={'DELIVERED'}>Доставлен</option>
+                                        <option value={'LOST'}>Утерян</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="newProductDescription">Описание</label>
+                                    <input type="text" id="newProductDescription" value={this.state.newProductDescription}
+                                           onChange={this.changeInput} className="form-control mx-sm-3"/>
+
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="newProductPrice">Цена</label>
+                                    <input type="number" id="newProductPrice" value={this.state.newProductPrice}
+                                           onChange={this.changeInput} className="form-control mx-sm-3"/>
+
+                                </div>
+
                                 <button type={'button'} className="btn btn-info"
-                                        onClick={this.addConsignment}>Добавить
+                                        onClick={this.addProduct}>Добавить
                                 </button>
                             </div>
                         </form>
@@ -327,10 +354,8 @@ class DispatcherCreateOrderPage extends React.Component {
                         <ul id='lis' className="list-group">
                             {
                                 this.state.consignment.map((item, index) =>
-                                        <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{item}   -
-                                            <span aria-hidden="true">&times;</span>
-                                        </li>
-
+                                    <li className={'list-group-item list-group-item-secondary text-center'} key={index}>{`${item.name} - ${item.status} - ${item.description} - ${item.price}` }
+                                    </li>
                                 )
                             }
                         </ul>
