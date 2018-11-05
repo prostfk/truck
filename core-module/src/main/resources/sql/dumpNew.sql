@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.5
--- Dumped by pg_dump version 10.5
+-- Dumped from database version 11.0
+-- Dumped by pg_dump version 11.0
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -36,20 +36,6 @@ SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
 
 SET default_tablespace = '';
 
@@ -173,7 +159,10 @@ ALTER SEQUENCE public.client_id_seq OWNED BY public.client.id;
 CREATE TABLE public.company (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
-    active smallint DEFAULT '0'::smallint NOT NULL
+    active smallint DEFAULT '0'::smallint NOT NULL,
+    lock_comment character varying(255),
+    locker_id integer,
+    lock_date date
 );
 
 
@@ -325,7 +314,8 @@ CREATE TABLE public.product (
     status character varying(45) DEFAULT NULL::character varying,
     description character varying(100) NOT NULL,
     product_consignment integer,
-    cancellation_act bigint NOT NULL
+    cancellation_act bigint,
+    price integer
 );
 
 
@@ -361,7 +351,8 @@ CREATE TABLE public.route_list (
     id integer NOT NULL,
     point character varying(200),
     point_level integer,
-    waybill_id bigint
+    waybill_id bigint,
+    marked boolean DEFAULT false
 );
 
 
@@ -397,7 +388,8 @@ CREATE TABLE public.stock (
     id integer NOT NULL,
     name character varying(45) NOT NULL,
     company_id integer NOT NULL,
-    address character varying(50) NOT NULL
+    address character varying(50) NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -509,7 +501,9 @@ CREATE TABLE public.waybill (
     driver integer NOT NULL,
     auto integer NOT NULL,
     date_departure date,
-    date_arrival date
+    date_arrival date,
+    check_date date,
+    user_id integer
 );
 
 
@@ -647,6 +641,8 @@ INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_o
 -- Data for Name: cancellation_act; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (2, '2018-11-03', 3, 369, 2);
+INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (1, '2018-11-05', 2, 246, 1);
 
 
 --
@@ -668,15 +664,17 @@ INSERT INTO public.client (id, name, type, client_owner) VALUES (9, 'Chole Pizza
 -- Data for Name: company; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.company (id, name, active) VALUES (1, 'Express Bus', 1);
-INSERT INTO public.company (id, name, active) VALUES (2, 'GoTrans', 1);
-INSERT INTO public.company (id, name, active) VALUES (3, 'International Trucking', 1);
+INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date) VALUES (3, 'International Trucking', 1, '', NULL, NULL);
+INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date) VALUES (2, 'GoTrans', 1, 'Блокировка за неуплату', NULL, '2018-10-27');
+INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date) VALUES (1, 'Express Bus', 0, 'asd', NULL, '2018-10-30');
 
 
 --
 -- Data for Name: consignment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.consignment (id, name, order_id) VALUES (1, 'consignment #1', 11);
+INSERT INTO public.consignment (id, name, order_id) VALUES (2, 'consignment #2', 5);
 
 
 --
@@ -698,44 +696,58 @@ INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid)
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (3, 'Заказ #414', 1, 'Accepted', 3, 5, '2018-10-24', NULL, 1, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (4, 'Заказ #415', 1, 'Accepted', 5, 4, '2018-10-24', NULL, 2, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (5, 'Заказ #416', 1, 'Accepted', 3, 6, '2018-10-24', NULL, 3, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (6, 'Заказ #417', 1, 'Accepted', 6, 3, '2018-10-24', NULL, 4, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (3, 'Заказ #414', 1, 'ACCEPTED', 3, 3, '1970-01-01', '2018-10-24', 1, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (9, 'ывыа', 1, 'ACCEPTED', 8, 8, '2018-11-11', '2018-11-11', 7, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (8, 'Название', 1, 'ACCEPTED', 8, 8, '2018-12-16', '2018-12-14', 6, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (10, 'Тестовый заказ', 1, 'ACCEPTED', 1, 1, '2018-11-03', '2018-11-01', 8, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (5, 'Заказ #416', 1, 'ACCEPTED', 3, 6, '2018-10-24', NULL, 3, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (4, 'Заказ #415', 1, 'ACCEPTED', 5, 4, '2018-10-24', NULL, 2, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (7, 'Товар 100', 3, 'ACCEPTED', 1, 1, '2018-01-30', '2018-03-01', 5, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (6, 'Заказ #417', 1, 'ACCEPTED', 6, 3, '2018-10-24', NULL, 4, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (11, 'Заказ #415', 1, 'ACTIVE', 3, 3, '1970-01-01', '2018-10-24', 1, 1);
 
 
 --
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (6, 'product #6', 'ACCEPTED', 'desc', 2, 2, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (5, 'product #5', 'LOST', 'desc', 2, 2, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (8, 'product #8', 'LOST', 'desc', 2, 2, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (7, 'product #7', 'LOST', 'desc', 2, 2, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (1, 'product #1', 'ACCEPTED', 'desc', 1, 1, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (2, 'product #2', 'LOST', 'desc', 1, 1, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (3, 'product #3', 'DELIVERED', 'desc', 1, 1, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (4, 'product #4', 'LOST', 'desc', 1, 1, 123);
 
 
 --
 -- Data for Name: route_list; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (1, 'Минскс', 1, 1);
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (2, 'Брагин', 2, 1);
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (3, 'Иваневичи', 3, 1);
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (4, 'Гродно', 1, 1);
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (5, 'Грозный', 1, 2);
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (6, 'Пушкино', 2, 2);
-INSERT INTO public.route_list (id, point, point_level, waybill_id) VALUES (7, 'Павлово', 3, 2);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (6, 'Пушкино', 2, 2, false);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (7, 'Павлово', 3, 2, false);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (5, 'Грозный', 1, 2, false);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (12, 'Могилёв', 1, 1, NULL);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (14, 'Minsk', 2, 3, true);
 
 
 --
 -- Data for Name: stock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.stock (id, name, company_id, address) VALUES (1, 'Склад 1', 1, 'Брусничная 12');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (3, 'Склад 3', 1, 'Иванова 44');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (8, 'Склад CV4', 3, 'Портовая 17');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (6, 'Склад 16', 1, 'Шаманова 17');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (7, 'Склад 12', 2, 'Демидова 10');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (4, 'Склад 17', 1, 'Држный берег 7');
-INSERT INTO public.stock (id, name, company_id, address) VALUES (5, 'Склд 10', 1, 'Кольная 3');
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (1, 'Склад 1', 1, 'Брусничная 12', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (3, 'Склад 3', 1, 'Иванова 44', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (8, 'Склад CV4', 3, 'Портовая 17', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (7, 'Склад 12', 2, 'Демидова 10', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (4, 'Склад 17', 1, 'Држный берег 7', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (10, 'Склад 12', 1, 'Адрес', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (12, 'Склад 12', 1, 'Адрес', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (5, 'Склд 10', 1, 'Кольная 3', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (6, 'Склад 16', 1, 'Шаманова 17', true);
+INSERT INTO public.stock (id, name, company_id, address, active) VALUES (11, 'Складское помещение', 1, 'Белого В.А.', true);
 
 
 --
@@ -752,23 +764,27 @@ INSERT INTO public.users (id, username, email, password, user_role, company, bir
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (29, 'user2', 'user2@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN', 1, '1983-06-17');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (30, 'user3', 'user3@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DISPATCHER', 1, '1983-06-11');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (31, 'user4', 'user4@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_MANAGER', 1, '1984-01-21');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (32, 'user5', 'user5@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1985-03-02');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (33, 'user6', 'user6@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-10');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (34, 'user7', 'user7@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-16');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (35, 'user8', 'user8@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 2, '1981-07-10');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (36, 'user9', 'user9@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN,', 2, '1987-01-22');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (1, 'sysamin', 'sysamin', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_SYS_ADMIN', NULL, '1987-05-07');
 INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (37, 'user10', 'user10@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 3, '1983-07-16');
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (32, 'driverUser', 'driverUser@mail.ru', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1985-03-02');
 
 
 --
 -- Data for Name: waybill; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (1, 'DONE', 4, 19, '2018-10-26', '2018-10-28');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (2, 'DONE', 4, 19, '2018-10-29', '2018-10-30');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (3, 'DONE', 5, 20, '2018-10-26', '2018-10-27');
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival) VALUES (4, 'DONE', 5, 20, '2018-10-30', '2018-10-31');
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (2, 'ACCEPTED', 1, 19, '2018-10-29', '2018-10-30', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (3, 'ACCEPTED', 2, 20, '2018-10-26', '2018-10-27', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (8, 'ACCEPTED', 7, 21, '2018-11-03', '2018-11-01', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (4, 'ACCEPTED', 3, 20, '2018-10-30', '2018-10-31', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (5, 'ACCEPTED', 7, 22, '2018-01-30', '2018-03-01', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (6, 'ACCEPTED', 9, 26, '2018-12-16', '2018-12-14', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (7, 'ACCEPTED', 8, 20, '2018-11-11', '2018-11-11', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (1, 'ACCEPTED', 1, 19, '1970-01-01', '2018-10-24', '2018-11-05', 31);
 
 
 --
@@ -817,7 +833,7 @@ SELECT pg_catalog.setval('public.driver_id_seq', 9, true);
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orders_id_seq', 6, true);
+SELECT pg_catalog.setval('public.orders_id_seq', 10, true);
 
 
 --
@@ -831,14 +847,14 @@ SELECT pg_catalog.setval('public.product_id_seq', 1, false);
 -- Name: route_list_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.route_list_id_seq', 7, true);
+SELECT pg_catalog.setval('public.route_list_id_seq', 13, true);
 
 
 --
 -- Name: stock_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.stock_id_seq', 9, true);
+SELECT pg_catalog.setval('public.stock_id_seq', 12, true);
 
 
 --
@@ -859,7 +875,7 @@ SELECT pg_catalog.setval('public.users_id_seq', 37, true);
 -- Name: waybill_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.waybill_id_seq', 4, true);
+SELECT pg_catalog.setval('public.waybill_id_seq', 8, true);
 
 
 --
@@ -1079,6 +1095,22 @@ ALTER TABLE ONLY public.stock
 
 
 --
+-- Name: company sysadmin_id_ref; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.company
+    ADD CONSTRAINT sysadmin_id_ref FOREIGN KEY (locker_id) REFERENCES public.users(id);
+
+
+--
+-- Name: waybill user_checker_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.waybill
+    ADD CONSTRAINT user_checker_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- Name: users users_company_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1100,13 +1132,6 @@ ALTER TABLE ONLY public.waybill
 
 ALTER TABLE ONLY public.waybill
     ADD CONSTRAINT waybill_driver_fkey FOREIGN KEY (driver) REFERENCES public.driver(id);
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 --
