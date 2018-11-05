@@ -188,6 +188,24 @@ public class AdminController {
         return new UserDto(userById);
     }
 
+    @PutMapping(value = "/editStock/")
+    @ResponseBody
+    public Object processEditingStock(@Valid StockDto stockDto, BindingResult result) throws JSONException {
+        if (result.hasErrors()) {
+            return getInvalidDataJsonMessage();
+        }
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+
+        Stock stock= stockRepository.findStockById(stockDto.getId());
+        if(stock.getCompany().getId()==userByUsername.getCompany().getId()){
+            if(!stockDto.getName().equals("")) stock.setName(stockDto.getName());
+            if(!stockDto.getAddress().equals("")) stock.setAddress(stockDto.getAddress());
+            stockRepository.save(stock);
+        }
+        return new StockDto(stock);
+    }
+
 
     private JSONObject getInvalidDataJsonMessage() throws JSONException {
         JSONObject json = new JSONObject();

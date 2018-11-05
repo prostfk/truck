@@ -1,5 +1,6 @@
 import React from "react";
 import ModalAcceptDelete from "./modalAcceptDelete";
+import ModalComponentStockEdit from "./modalComponentStockEdit";
 
 class PageStockList extends React.Component {
     constructor(props) {
@@ -8,8 +9,9 @@ class PageStockList extends React.Component {
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.setCompanyName = this.setCompanyName.bind(this);
         this.setCompanyAddress = this.setCompanyAddress.bind(this);
-        this.addNewCompany = this.addNewCompany.bind(this);
+        this.addNewStock = this.addNewStock.bind(this);
         this.submiteDelete = this.submiteDelete.bind(this);
+        this.submitEdit = this.submitEdit.bind(this);
         this.state = {
             stocks:[],
             stockName:"",
@@ -37,7 +39,7 @@ class PageStockList extends React.Component {
             stockAddress: event.target.value
         })
     }
-    addNewCompany(event){
+    addNewStock(event){
         let stockaddress = this.state.stockAddress;
         let stockname = this.state.stockName;
         let formData = new FormData();
@@ -48,6 +50,7 @@ class PageStockList extends React.Component {
             response.json().then(data => {
                 console.log(data);
                 this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
+                this.setState({stockName:"",stockAddress:""})
             })
         }, err => console.log(err))
     }
@@ -65,6 +68,36 @@ class PageStockList extends React.Component {
             this.setState({stocks:data});
         });
     }
+    submitEdit(newStockName,newStockAdress,stockId,event){
+        let refThis=this;
+        let formData = new FormData();
+        formData.append("id", stockId);
+        formData.append("name", newStockName);
+        formData.append("address", newStockAdress);
+
+        fetch('http://localhost:8080/api/editStock/', {
+            method: "PUT",
+            body: formData,
+            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+        }).then(response => {
+            console.log(response);
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            if (data.error === undefined) {
+                refThis.state.stocks.find((element, index, array) => {
+                    if (element.id === data.id) {
+                        const newStocks = refThis.state.stocks;
+                        newStocks[index] = data;
+                        refThis.setState({companies: newStocks});
+                    }
+                });
+            } else {
+                /* document.getElementById('error-form-span').innerText = data.error;*/
+            }
+        })
+    }
+
     renderTable(stock){
         console.log("stock name"+ stock.name);
         console.log(stock);
@@ -74,7 +107,7 @@ class PageStockList extends React.Component {
             <div className={"col-md-4"}>{stock.name}</div>
             <div className={"col-md-3"}>{stock.address}</div>
             <div className={"col-md-1"}>
-                <a className={"table_button bg-secondary text-white"}>edit</a>
+                <ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>
             </div>
             <div className={"col-md-3"}>
                 <ModalAcceptDelete clickfunc={this.submiteDelete} className={"table_button bg-secondary text-white"} stockId={stock.id}/>
@@ -135,7 +168,7 @@ class PageStockList extends React.Component {
                    <div class="form-group">
                        <input value={this.state.stockAddress} onChange={this.setCompanyAddress} type="text" class="form-control" id="inputstockadres" placeholder="Адрес" required=""/>
                    </div>
-                   <a onClick={this.addNewCompany} class="btn btn_fullsize btn-success">Добавить</a>
+                   <a onClick={this.addNewStock} class="btn btn_fullsize btn-success">Добавить</a>
                </form>
            </div>
 
