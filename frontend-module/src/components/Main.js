@@ -25,6 +25,9 @@ import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
+import EditUser from "./pageSysAdmin/pageEditUser";
+import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
+import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 
@@ -52,12 +55,14 @@ class MainController extends React.Component {
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
                     <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList}/> {/*driver*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
-                    <Route path="/manager/edit/*" component={ManagerHeader}/>
+                    {/*<Route path="/manager/edit/*" component={ManagerHeader}/>*/}
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
                     <Route exact path="/owner/orders" component={OwnerOrderList} /> {/*owner*/}
                     <Route exact path="/owner/routList/:orderrouteListId" component={OwnerRouteList} /> {/*owner*/}
+                    <Route exact path="/owner/waybill/:orderId" component={OwnerWaybill} /> {/*owner*/}
+                    <Route exact path="/owner/cancelAct/:orderId" component={CancellationAct} /> {/*owner*/}
                     <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
 
                 </div>

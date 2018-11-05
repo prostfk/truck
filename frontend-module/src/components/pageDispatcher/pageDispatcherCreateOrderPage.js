@@ -50,6 +50,12 @@ class DispatcherCreateOrderPage extends React.Component {
         console.log(event.target.id + " " + event.target.value)
     }
 
+    changeSelectInput(event) {
+        this.setState({
+            [event.target.id]: [event.target.selectedIndex]
+        });
+    }
+
     saveBtnClick() {
         let formData = new FormData();
         formData.append("clientId", this.state.client_id);
