@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import LogoutComponent from "../pageLogout/logoutComponent";
+import ModalComponentEditCompany from "../pageAdmin/modalComponentEditCompany";
 
 export default class AdminHeader extends Component {
 
@@ -23,7 +24,7 @@ export default class AdminHeader extends Component {
                             <Link to={`/stocks`} className="nav-link">Склады</Link>
                         </li>
                         <li className="nav-item active">
-                            <Link to={`/editCompany`} className="nav-link">Редактировать компанию</Link>
+                            <ModalComponentEditCompany className="nav-link" text={"Редактировать компанию"}></ModalComponentEditCompany>
                         </li>
                     </ul>
                     <li className="navbar-text">

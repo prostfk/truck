@@ -29,6 +29,15 @@ public class StockDto {
         this.active = stock.getActive();
     }
 
+    public StockDto(Long id, String name,String address) {
+        this.id = id;
+        this.address = address;
+        this.name = name;
+    }
+
+    public StockDto() {
+    }
+
     public void setCompany(Company company) {
         this.company = new CompanyDto(company);
     }
