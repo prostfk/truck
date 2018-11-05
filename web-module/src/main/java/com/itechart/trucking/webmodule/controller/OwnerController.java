@@ -2,10 +2,14 @@ package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
+import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
@@ -25,6 +29,7 @@ import java.util.Optional;
 
 @Controller
 @PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
+@RequestMapping(value = "/api")
 public class OwnerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerController.class);
@@ -46,7 +51,7 @@ public class OwnerController {
 
 //    TEST
 
-    @GetMapping(value = "/xls")//check xls method
+    @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
     public String createXls(@Value("${excel.path}")String path){
         Optional<User> byId = userRepository.findById(1L);
@@ -61,29 +66,32 @@ public class OwnerController {
 
     @GetMapping(value = "/company/user/{id}")
     @ResponseBody
-    public User findUserByIdAndCompany(@PathVariable Long id){
+    public UserDto findUserByIdAndCompany(@PathVariable Long id){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        return userRepository.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
+        User user = userRepository.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
+        return new UserDto(user);
     }
 
     @GetMapping(value = "/company/orders")
     @ResponseBody
-    public List<Order> fetchAllOrdersOfCompany(@ModelAttribute Order order) {
+    public List<OrderDto> fetchAllOrdersOfCompany(@ModelAttribute Order order) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
-        return orderRepository.findAllByCompany(company);
+        List<Order> allByCompany = orderRepository.findAllByCompany(company);
+        return Odt.OrderToDtoList(allByCompany);
     }
 
     @GetMapping(value = "/company/orders/{id}")
     @ResponseBody
-    public Order fetchOrderOfCompany(@PathVariable Long id) {
+    public OrderDto fetchOrderOfCompany(@PathVariable Long id) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             System.out.println("CALLED");
-            return order.get();
+            Order order1 = order.get();
+            return new OrderDto(order1);
         } else {
             System.out.println("access dined");
             return null;
@@ -92,7 +100,7 @@ public class OwnerController {
 
     @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public List<RouteList> fetchRoutListOfOrder(@PathVariable Long id){
+    public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
         Optional<Order> order = orderRepository.findById(id);
@@ -104,7 +112,6 @@ public class OwnerController {
         else {
             return null;
         }
-
-        return routeLists;
+        return Odt.RouteListToDtoList(routeLists);
     }
 }

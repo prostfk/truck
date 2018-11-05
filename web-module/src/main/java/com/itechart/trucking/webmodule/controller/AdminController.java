@@ -35,7 +35,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_COMP_OWNER')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
