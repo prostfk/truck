@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
+//@PreAuthorize("hasAuthority('ROLE_COMP_OWNER')")
 @Controller
 @RequestMapping(value = "/api")
 public class OwnerController {

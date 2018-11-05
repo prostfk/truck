@@ -26,6 +26,8 @@ import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageSysAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
 import EditUser from "./pageSysAdmin/pageEditUser";
+import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
+import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 
 class MainController extends React.Component {
 
@@ -56,6 +58,8 @@ class MainController extends React.Component {
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
                     <Route exact path="/owner/orders" component={OwnerOrderList} /> {/*owner*/}
                     <Route exact path="/owner/routList/:orderrouteListId" component={OwnerRouteList} /> {/*owner*/}
+                    <Route exact path="/owner/waybill/:orderId" component={OwnerWaybill} /> {/*owner*/}
+                    <Route exact path="/owner/cancelAct/:orderId" component={CancellationAct} /> {/*owner*/}
                     <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
 
                 </div>
