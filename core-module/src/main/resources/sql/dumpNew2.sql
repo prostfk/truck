@@ -2,8 +2,30 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.5
--- Dumped by pg_dump version 10.5
+-- Dumped from database version 11.0
+-- Dumped by pg_dump version 11.0
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP DATABASE truck;
+--
+-- Name: truck; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE truck WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Russian_Russia.1251' LC_CTYPE = 'Russian_Russia.1251';
+
+
+ALTER DATABASE truck OWNER TO postgres;
+
+\connect truck
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -619,6 +641,8 @@ INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_o
 -- Data for Name: cancellation_act; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (34, '2018-11-07', 2, 197, 34);
+INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (33, '2018-11-06', 0, 0, 33);
 
 
 --
@@ -649,6 +673,8 @@ INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date
 -- Data for Name: consignment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.consignment (id, name, order_id) VALUES (34, 'consignment #34', 34);
+INSERT INTO public.consignment (id, name, order_id) VALUES (33, 'consignment #34', 33);
 
 
 --
@@ -670,18 +696,31 @@ INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid)
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (34, 'order #34', 1, 'ACCEPTED', 3, 3, '2018-11-05', '2018-11-07', 34, 1);
+INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (33, 'order #33', 1, 'ACTIVE', 3, 3, '2018-11-07', '2018-11-10', 33, 1);
 
 
 --
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (35, 'product #35', 'CHECK_DONE', 'desc', 34, 34, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (37, 'product #37', 'CHECK_DONE', 'desc', 34, 34, 100);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (36, 'product #36', 'LOST', 'desc', 34, 34, 121);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (38, 'product #38', 'LOST', 'desc', 34, 34, 76);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (39, 'product #39', 'CHECK_DONE', 'desc', 33, 33, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (40, 'product #40', 'DELIVERED', 'desc', 33, 33, 121);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (41, 'product #41', 'DELIVERED', 'desc', 33, 33, 100);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (42, 'product #42', 'ACCEPTED', 'desc', 33, 33, 76);
 
 
 --
 -- Data for Name: route_list; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (35, 'Гродно', 2, 34, false);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (34, 'Минск', 1, 34, false);
+INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (14, 'Гродно', 2, 33, NULL);
 
 
 --
@@ -729,6 +768,8 @@ INSERT INTO public.users (id, username, email, password, user_role, company, bir
 -- Data for Name: waybill; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (34, 'ACCEPTED', 2, 19, '2018-11-07', '2018-11-20', NULL, NULL);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (33, 'ACCEPTED', 2, 19, '2018-11-05', '2018-11-09', '2018-11-06', 31);
 
 
 --
@@ -791,7 +832,7 @@ SELECT pg_catalog.setval('public.product_id_seq', 1, false);
 -- Name: route_list_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.route_list_id_seq', 13, true);
+SELECT pg_catalog.setval('public.route_list_id_seq', 15, true);
 
 
 --
@@ -927,15 +968,11 @@ ALTER TABLE ONLY public.waybill
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
---
-
---
 -- Name: auto auto_company_owner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.auto
-  ADD CONSTRAINT auto_company_owner_fkey FOREIGN KEY (company_owner) REFERENCES public.company(id) ON DELETE CASCADE;
+    ADD CONSTRAINT auto_company_owner_fkey FOREIGN KEY (company_owner) REFERENCES public.company(id) ON DELETE CASCADE;
 
 
 --
@@ -943,7 +980,7 @@ ALTER TABLE ONLY public.auto
 --
 
 ALTER TABLE ONLY public.cancellation_act
-  ADD CONSTRAINT cancellation_act_consignment_id_fkey FOREIGN KEY (consignment_id) REFERENCES public.consignment(id);
+    ADD CONSTRAINT cancellation_act_consignment_id_fkey FOREIGN KEY (consignment_id) REFERENCES public.consignment(id);
 
 
 --
@@ -951,7 +988,7 @@ ALTER TABLE ONLY public.cancellation_act
 --
 
 ALTER TABLE ONLY public.client
-  ADD CONSTRAINT client_client_owner_fkey FOREIGN KEY (client_owner) REFERENCES public.company(id);
+    ADD CONSTRAINT client_client_owner_fkey FOREIGN KEY (client_owner) REFERENCES public.company(id);
 
 
 --
@@ -959,7 +996,7 @@ ALTER TABLE ONLY public.client
 --
 
 ALTER TABLE ONLY public.consignment
-  ADD CONSTRAINT consignment_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
+    ADD CONSTRAINT consignment_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
 
 
 --
@@ -967,7 +1004,7 @@ ALTER TABLE ONLY public.consignment
 --
 
 ALTER TABLE ONLY public.driver
-  ADD CONSTRAINT driver_company_of_driver_fkey FOREIGN KEY (company_of_driver) REFERENCES public.company(id);
+    ADD CONSTRAINT driver_company_of_driver_fkey FOREIGN KEY (company_of_driver) REFERENCES public.company(id);
 
 
 --
@@ -975,7 +1012,7 @@ ALTER TABLE ONLY public.driver
 --
 
 ALTER TABLE ONLY public.orders
-  ADD CONSTRAINT orders_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id);
+    ADD CONSTRAINT orders_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id);
 
 
 --
@@ -983,7 +1020,7 @@ ALTER TABLE ONLY public.orders
 --
 
 ALTER TABLE ONLY public.orders
-  ADD CONSTRAINT orders_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
+    ADD CONSTRAINT orders_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
 
 
 --
@@ -991,7 +1028,7 @@ ALTER TABLE ONLY public.orders
 --
 
 ALTER TABLE ONLY public.orders
-  ADD CONSTRAINT orders_receiver_fkey FOREIGN KEY (receiver) REFERENCES public.stock(id);
+    ADD CONSTRAINT orders_receiver_fkey FOREIGN KEY (receiver) REFERENCES public.stock(id);
 
 
 --
@@ -999,7 +1036,7 @@ ALTER TABLE ONLY public.orders
 --
 
 ALTER TABLE ONLY public.orders
-  ADD CONSTRAINT orders_sender_fkey FOREIGN KEY (sender) REFERENCES public.stock(id);
+    ADD CONSTRAINT orders_sender_fkey FOREIGN KEY (sender) REFERENCES public.stock(id);
 
 
 --
@@ -1007,7 +1044,7 @@ ALTER TABLE ONLY public.orders
 --
 
 ALTER TABLE ONLY public.orders
-  ADD CONSTRAINT orders_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
+    ADD CONSTRAINT orders_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
 
 
 --
@@ -1015,7 +1052,7 @@ ALTER TABLE ONLY public.orders
 --
 
 ALTER TABLE ONLY public.product
-  ADD CONSTRAINT product_cancellation_act_fkey FOREIGN KEY (cancellation_act) REFERENCES public.cancellation_act(id);
+    ADD CONSTRAINT product_cancellation_act_fkey FOREIGN KEY (cancellation_act) REFERENCES public.cancellation_act(id);
 
 
 --
@@ -1023,7 +1060,7 @@ ALTER TABLE ONLY public.product
 --
 
 ALTER TABLE ONLY public.product
-  ADD CONSTRAINT product_product_consignment_fkey FOREIGN KEY (product_consignment) REFERENCES public.consignment(id);
+    ADD CONSTRAINT product_product_consignment_fkey FOREIGN KEY (product_consignment) REFERENCES public.consignment(id);
 
 
 --
@@ -1031,7 +1068,7 @@ ALTER TABLE ONLY public.product
 --
 
 ALTER TABLE ONLY public.route_list
-  ADD CONSTRAINT route_list_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
+    ADD CONSTRAINT route_list_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
 
 
 --
@@ -1039,7 +1076,7 @@ ALTER TABLE ONLY public.route_list
 --
 
 ALTER TABLE ONLY public.stock
-  ADD CONSTRAINT stock_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
+    ADD CONSTRAINT stock_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
 
 
 --
@@ -1047,7 +1084,7 @@ ALTER TABLE ONLY public.stock
 --
 
 ALTER TABLE ONLY public.company
-  ADD CONSTRAINT sysadmin_id_ref FOREIGN KEY (locker_id) REFERENCES public.users(id);
+    ADD CONSTRAINT sysadmin_id_ref FOREIGN KEY (locker_id) REFERENCES public.users(id);
 
 
 --
@@ -1055,7 +1092,7 @@ ALTER TABLE ONLY public.company
 --
 
 ALTER TABLE ONLY public.waybill
-  ADD CONSTRAINT user_checker_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
+    ADD CONSTRAINT user_checker_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1063,7 +1100,7 @@ ALTER TABLE ONLY public.waybill
 --
 
 ALTER TABLE ONLY public.users
-  ADD CONSTRAINT users_company_fkey FOREIGN KEY (company) REFERENCES public.company(id);
+    ADD CONSTRAINT users_company_fkey FOREIGN KEY (company) REFERENCES public.company(id);
 
 
 --
@@ -1071,7 +1108,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.waybill
-  ADD CONSTRAINT waybill_auto_fkey FOREIGN KEY (auto) REFERENCES public.auto(id);
+    ADD CONSTRAINT waybill_auto_fkey FOREIGN KEY (auto) REFERENCES public.auto(id);
 
 
 --
@@ -1079,14 +1116,7 @@ ALTER TABLE ONLY public.waybill
 --
 
 ALTER TABLE ONLY public.waybill
-  ADD CONSTRAINT waybill_driver_fkey FOREIGN KEY (driver) REFERENCES public.driver(id);
-
-
---
--- PostgreSQL database dump complete
---
-
-GRANT ALL ON SCHEMA public TO PUBLIC;
+    ADD CONSTRAINT waybill_driver_fkey FOREIGN KEY (driver) REFERENCES public.driver(id);
 
 
 --
