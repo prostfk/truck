@@ -22,7 +22,8 @@ public class EmailUtil {
         MimeMessage msg = new MimeMessage(session);
         msg.setFrom(new InternetAddress(username, "Truck system"));
         msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toMail));
-        msg.setSubject(subject);
+        msg.setHeader("Content-Type", "text/plain; charset=\"utf-8\"");
+        msg.setSubject(subject, "UTF-8");
         msg.setContent(messageText, "text/html; charset=UTF-8");
         msg.setHeader("X-SES-CONFIGURATION-SET", "ConfigSet");
         Transport transport = session.getTransport();

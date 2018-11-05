@@ -17,11 +17,14 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductState status;
     private String description;
-    @OneToOne
-    @JoinColumn(name = "product_consignment")
-    private Consignment consignment;
-    @OneToOne
+    private Integer price;
+
+    @ManyToOne
     @JoinColumn(name = "cancellation_act")
     private CancellationAct cancellationAct;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_consignment")
+    private Consignment consignment;
 }

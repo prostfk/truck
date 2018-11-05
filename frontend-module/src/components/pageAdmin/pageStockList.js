@@ -1,4 +1,6 @@
 import React from "react";
+import ModalAcceptDelete from "./modalAcceptDelete";
+import ModalComponentStockEdit from "./modalComponentStockEdit";
 
 class PageStockList extends React.Component {
     constructor(props) {
@@ -7,7 +9,9 @@ class PageStockList extends React.Component {
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.setCompanyName = this.setCompanyName.bind(this);
         this.setCompanyAddress = this.setCompanyAddress.bind(this);
-        this.addNewCompany = this.addNewCompany.bind(this);
+        this.addNewStock = this.addNewStock.bind(this);
+        this.submiteDelete = this.submiteDelete.bind(this);
+        this.submitEdit = this.submitEdit.bind(this);
         this.state = {
             stocks:[],
             stockName:"",
@@ -35,7 +39,7 @@ class PageStockList extends React.Component {
             stockAddress: event.target.value
         })
     }
-    addNewCompany(event){
+    addNewStock(event){
         let stockaddress = this.state.stockAddress;
         let stockname = this.state.stockName;
         let formData = new FormData();
@@ -45,7 +49,8 @@ class PageStockList extends React.Component {
         fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
             response.json().then(data => {
                 console.log(data);
-                this.forceUpdateHandler();
+                this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
+                this.setState({stockName:"",stockAddress:""})
             })
         }, err => console.log(err))
     }
@@ -63,18 +68,69 @@ class PageStockList extends React.Component {
             this.setState({stocks:data});
         });
     }
+    submitEdit(newStockName,newStockAdress,stockId,event){
+        let refThis=this;
+        let formData = new FormData();
+        formData.append("id", stockId);
+        formData.append("name", newStockName);
+        formData.append("address", newStockAdress);
+
+        fetch('http://localhost:8080/api/editStock/', {
+            method: "PUT",
+            body: formData,
+            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+        }).then(response => {
+            console.log(response);
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            if (data.error === undefined) {
+                refThis.state.stocks.find((element, index, array) => {
+                    if (element.id === data.id) {
+                        const newStocks = refThis.state.stocks;
+                        newStocks[index] = data;
+                        refThis.setState({companies: newStocks});
+                    }
+                });
+            } else {
+                /* document.getElementById('error-form-span').innerText = data.error;*/
+            }
+        })
+    }
+
     renderTable(stock){
         console.log("stock name"+ stock.name);
         console.log(stock);
         if(!stock) return;
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{stock.id}</div>
-            <div className={"col-md-5"}>{stock.name}</div>
+            <div className={"col-md-4"}>{stock.name}</div>
             <div className={"col-md-3"}>{stock.address}</div>
+            <div className={"col-md-1"}>
+                <ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>
+            </div>
             <div className={"col-md-3"}>
-                <a className={"table_button bg-secondary text-white"}>edit</a>
+                <ModalAcceptDelete clickfunc={this.submiteDelete} className={"table_button bg-secondary text-white"} stockId={stock.id}/>
             </div>
         </div>
+    }
+
+    submiteDelete(stockId){
+        const ref = this;
+        fetch('http://localhost:8080/api/stocks', {
+            method: 'DELETE',
+            body: stockId,
+            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            console.log(result);
+            if (result) {
+                ref.setState({stocks:result})
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
     }
     render(){
        return <div class="row">
@@ -82,8 +138,9 @@ class PageStockList extends React.Component {
                    <div className="row table_header">
                        <div className="col-md-1">ID</div>
                        <div className="col-md-5">Название склада</div>
-                       <div className="col-md-3">Адрес</div>
-                       <div className="col-md-3">Действие</div>
+                       <div className="col-md-4">Адрес</div>
+                       <div className="col-md-1"></div>
+                       <div className="col-md-1"></div>
                    </div>
                    {
                        this.state.stocks.map((element)=>{
@@ -111,7 +168,7 @@ class PageStockList extends React.Component {
                    <div class="form-group">
                        <input value={this.state.stockAddress} onChange={this.setCompanyAddress} type="text" class="form-control" id="inputstockadres" placeholder="Адрес" required=""/>
                    </div>
-                   <a onClick={this.addNewCompany} class="btn btn_fullsize btn-success">Добавить</a>
+                   <a onClick={this.addNewStock} class="btn btn_fullsize btn-success">Добавить</a>
                </form>
            </div>
 

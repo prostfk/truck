@@ -3,6 +3,8 @@ package com.itechart.trucking.webmodule.config;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.webmodule.model.entity.JwtAuthToken;
 import com.itechart.trucking.webmodule.model.entity.UserDetail;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -20,6 +22,8 @@ import java.util.List;
 @Component
 public class JwtAuthProvider extends AbstractUserDetailsAuthenticationProvider {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthProvider.class);
+
     @Autowired
     private JwtVal validator;
 
@@ -35,6 +39,7 @@ public class JwtAuthProvider extends AbstractUserDetailsAuthenticationProvider {
         User jwtUser = validator.validate(token);
 
         if (jwtUser == null) {
+            LOGGER.warn("JWT Token is incorrect");
             throw new RuntimeException("JWT Token is incorrect");
         }
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils

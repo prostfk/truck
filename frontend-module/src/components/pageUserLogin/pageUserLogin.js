@@ -30,7 +30,9 @@ class pageUserLogin extends Component {
     render() {
         return (
             <form className="form-signin" id="login-form">
-                <div id="loginicon"/>
+                <div id="loginicon">
+                    <img id="icon" src="/static/img/login.png" alt=""></img>
+                </div>
                 <input type="username" id="inputUsername" value={this.state.email} onChange={this.setUsername}
                        className="form-control"
                        placeholder="Логин" required=""
@@ -47,10 +49,10 @@ class pageUserLogin extends Component {
     }
 
     processLogin() {
-        let email = this.state.email;
+        let username = this.state.email;
         let password = this.state.password;
         let formData = new FormData();
-        formData.append("username", email);
+        formData.append("username", username);
         formData.append("password", password);
         console.log(formData.get('password'));
         fetch('http://localhost:8080/auth', {method: "POST", body: formData}).then(response => {
@@ -59,10 +61,13 @@ class pageUserLogin extends Component {
                 if (data.error === undefined) {
                     document.getElementById('login-form').style.display = 'none';
                     console.log(`SUCCESS: ${data.token}`);
-                    sessionStorage.setItem("Auth-token", data.token);
-                    let headers = new Headers();
-                    headers.append("Auth-token", data.token);//put token in header for api-access
-                    this.props.history.push('/')
+                    sessionStorage.setItem("Auth-token", data.token);//deprecated
+                    sessionStorage.setItem("username", username);//deprecated
+                    sessionStorage.setItem("role", data.role);//deprecated
+                    localStorage.setItem("Auth-token", data.token);
+                    localStorage.setItem("username", username);
+                    localStorage.setItem("role", data.role);
+                    this.props.history.push('/');
                 }else{
                     document.getElementById('error-span').innerText = "Check your data";
                 }
