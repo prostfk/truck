@@ -22,7 +22,7 @@ class OwnerOrderList extends React.Component {
 
     /*get all orders list for current company*/
     getOrderList() {
-        return fetch('http://localhost:8080/api/compamy/orders/', {
+        return fetch('http://localhost:8080/api/company/orders/', {
             method: "GET",
             headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -43,13 +43,13 @@ class OwnerOrderList extends React.Component {
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateDeparture)}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateArrival)}</div>
             <div className="col-md-1">
-                <Link to={{/*NEED URL*/}} className="table_button bg-secondary text-white">Принять</Link>
+                <Link to={`/owner/waybill/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
             </div>
             <div className="col-md-1">
-                <Link to={`/owner/routList/${order.id}`} className="table_button bg-secondary text-white">Принять</Link>
+                <Link to={`/owner/routList/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
             </div>
             <div className="col-md-1">
-                <Link to={{/*NEED URL*/}} className="table_button bg-secondary text-white">Принять</Link>
+                <Link to={`/owner/cancelAct/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
             </div>
         </div>
     }
