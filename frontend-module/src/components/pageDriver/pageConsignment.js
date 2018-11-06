@@ -52,11 +52,10 @@ class DriverConsignment extends Component {
         if (!product) return;
 
         let status;
-        if(product.status==="") status="Не выбран";
-        else if(product.status==="ACCEPTED") status="Принят";
-        else if(product.status==="CHECK_DONE") status="Проверен";
-        else if(product.status==="DELIVERED") status="Доставлен";
-        else if(product.status==="LOST") status="Утерян";
+        if(product.status===1) status="Принят";
+        else if(product.status===2) status="Проверен";
+        else if(product.status===3) status="Доставлен";
+        else if(product.status===4) status="Утерян";
 
         let isLost=false;
         if(status === "Утерян")

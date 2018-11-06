@@ -47,7 +47,7 @@ class pageManagerOrders extends Component {
         if (!order) return;
 
         let isDone = false;
-        if(order.waybill.status === "DONE")
+        if(order.waybill.status === 2)
             isDone = true;
         return <div className="row table_row">
             <div className="col-md-1">{order.client.name}</div>

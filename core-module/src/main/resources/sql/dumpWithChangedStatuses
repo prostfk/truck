@@ -1122,4 +1122,3 @@ ALTER TABLE ONLY public.waybill
 --
 -- PostgreSQL database dump complete
 --
-

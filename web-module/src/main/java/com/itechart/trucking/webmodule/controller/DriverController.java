@@ -94,7 +94,7 @@ public class DriverController {
         if(cancellationAct == null)
             return null;
 
-        product.get().setStatus(ProductState.valueOf("LOST"));
+        product.get().setStatus(4);
         cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
         Integer amount = cancellationAct.getAmount() + 1;
         cancellationAct.setAmount(amount);

@@ -12,7 +12,7 @@ import lombok.Data;
 public class ProductDto {
     private Long id;
     private String name;
-    private ProductState status;
+    private Integer status;
     private String description;
     private int price;
 

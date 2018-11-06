@@ -32,7 +32,7 @@ class DispatcherCreateOrderPage extends React.Component {
             newConsignmentName: "",
             newOrderId: "",
             newProductName: "",
-            newProductStatus: ["ACCEPTED"],
+            newProductStatus: ["1"],
             newProductDescription: "",
             newProductPrice: "",
             newProduct: {}
@@ -270,10 +270,10 @@ class DispatcherCreateOrderPage extends React.Component {
                                             className="form-control"
                                             id="status">
                                         <option selected disabled>Статус</option>
-                                        <option>Принят</option>
-                                        <option>Отклонен</option>
-                                        <option>Выполен</option>
-                                        <option>Не выполнен</option>
+                                        <option value={'1'}>Принят</option>
+                                        <option value={'2'}>Отклонен</option>
+                                        <option value={'3'}>Выполен</option>
+                                        <option value={'4'}>Не выполнен</option>
                                     </select>
                                 </div>
                             </div>
@@ -285,9 +285,9 @@ class DispatcherCreateOrderPage extends React.Component {
                                         className="form-control"
                                         id="waybill_status">
                                     <option selected disabled>Статус</option>
-                                    <option>Оформлен</option>
-                                    <option>Проверка завершена</option>
-                                    <option>Доставлен</option>
+                                    <option value={'1'}>Оформлен</option>
+                                    <option value={'2'}>Проверка завершена</option>
+                                    <option value={'3'}>Доставлен</option>
                                 </select>
 
 
@@ -339,10 +339,10 @@ class DispatcherCreateOrderPage extends React.Component {
                                 <div className="col-md-2">
                                     <select className="custom-select" onChange={this.changeInput}
                                             value={this.state.newProductStatus} id="newProductStatus">
-                                        <option value={'ACCEPTED'}>Принят</option>
-                                        <option value={'CHECK_DONE'}>Проверка завершена</option>
-                                        <option value={'DELIVERED'}>Доставлен</option>
-                                        <option value={'LOST'}>Утерян</option>
+                                        <option value={'1'}>Принят</option>
+                                        <option value={'2'}>Проверка завершена</option>
+                                        <option value={'3'}>Доставлен</option>
+                                        <option value={'4'}>Утерян</option>
                                     </select>
                                 </div>
                                 <div className="col-md-3">

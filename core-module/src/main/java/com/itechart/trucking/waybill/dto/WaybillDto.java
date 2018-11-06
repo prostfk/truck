@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class WaybillDto {
     private Long id;
-    private String status;
+    private Integer status;
     private LocalDate dateDeparture;
     private LocalDate dateArrival;
 

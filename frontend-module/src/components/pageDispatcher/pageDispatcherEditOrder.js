@@ -306,10 +306,10 @@ class DispatcherEditOrder extends Component {
                                             className="form-control"
                                             id="status">
                                         <option selected disabled>Статус</option>
-                                        <option>Принят</option>
-                                        <option>Отклонен</option>
-                                        <option>Выполен</option>
-                                        <option>Не выполнен</option>
+                                        <option value={'1'}>Принят</option>
+                                        <option value={'2'}>Отклонен</option>
+                                        <option value={'3'}>Выполен</option>
+                                        <option value={'4'}>Не выполнен</option>
                                     </select>
                                 </div>
                             </div>
@@ -321,9 +321,9 @@ class DispatcherEditOrder extends Component {
                                         className="form-control"
                                         id="waybill_status">
                                     <option selected disabled>Статус</option>
-                                    <option>Оформлен</option>
-                                    <option>Проверка завершена</option>
-                                    <option>Доставлен</option>
+                                    <option value={'1'}>Оформлен</option>
+                                    <option value={'2'}>Проверка завершена</option>
+                                    <option value={'3'}>Доставлен</option>
                                 </select>
 
 

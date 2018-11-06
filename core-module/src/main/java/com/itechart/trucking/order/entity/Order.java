@@ -8,6 +8,8 @@ import com.itechart.trucking.waybill.entity.Waybill;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -20,7 +22,8 @@ public class Order {//enum
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String status;
+    @Min(0) @Max(4)
+    private Integer status;
     private Date dateAccepted;
     private Date dateExecuted;
 

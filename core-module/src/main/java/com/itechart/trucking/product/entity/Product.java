@@ -14,8 +14,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Enumerated(EnumType.STRING)
-    private ProductState status;
+    private Integer status;
     private String description;
     private Integer price;
 

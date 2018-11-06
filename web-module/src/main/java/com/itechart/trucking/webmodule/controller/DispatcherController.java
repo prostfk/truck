@@ -141,7 +141,8 @@ public class DispatcherController {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), cancellationAct.getId(),product.getPrice() + 0.0);
+            //changed product.getStatus().name() on product.getStatus()
+            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), cancellationAct.getId(),product.getPrice() + 0.0);
         }
         return HttpStatus.OK;
     }
@@ -163,7 +164,7 @@ public class DispatcherController {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationActList().get(0).getId(), product.getPrice() + 0.0));
+            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationActList().get(0).getId(), product.getPrice() + 0.0));
         }
         return HttpStatus.OK;
 
@@ -256,7 +257,8 @@ public class DispatcherController {
                 case "price": product.setPrice(Integer.parseInt(jsonObject.getString(next)));break;
                 case "name": product.setName(jsonObject.getString(next));break;
                 case "description": product.setDescription(jsonObject.getString(next));break;
-                case "status": product.setStatus(ProductState.valueOf(jsonObject.getString(next)));break;
+                //cahnge ProductState.valueOf(jsonObject.getString(next)) on Integer.valueOf(jsonObject.getString(next))
+                case "status": product.setStatus(Integer.valueOf(jsonObject.getString(next)));break;
             }
         }
         return product;

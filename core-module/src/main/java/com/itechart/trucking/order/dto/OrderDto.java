@@ -21,7 +21,7 @@ import java.time.ZoneId;
 public class OrderDto {
     private Long id;
     private String name;
-    private String status;
+    private Integer status;
     private LocalDate dateAccepted;
     private LocalDate dateExecuted;
 
