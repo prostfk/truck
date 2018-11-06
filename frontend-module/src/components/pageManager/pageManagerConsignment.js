@@ -37,7 +37,7 @@ class ManagerConsignment extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -90,7 +90,7 @@ class ManagerConsignment extends Component {
         let formData = new FormData();
         formData.append("orderId", orderId);
         formData.append("isLost", isLost);
-        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -108,7 +108,7 @@ class ManagerConsignment extends Component {
         else if(event.target.value==="Доставлен") status=3;
         else if(event.target.value==="Утерян") status=4;
 
-        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}`, {method: "POST", body:status, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
+        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}`, {method: "POST", body:status, headers: {'Auth-token': localStorage.getItem("Auth-token")}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {

@@ -12,9 +12,9 @@ export default class LogoutComponent extends Component {
     }
 
     submitLogout = () => {
-        sessionStorage.removeItem('Auth-token');
-        sessionStorage.removeItem('username');
-        sessionStorage.removeItem('role');
+        localStorage.removeItem('Auth-token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
         this.toggle();
         window.location.href = "/";
     };

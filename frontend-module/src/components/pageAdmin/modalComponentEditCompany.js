@@ -27,7 +27,7 @@ export default class ModalComponentEditCompany extends React.Component {
         const myres = fetch('http://localhost:8080/api/changeCompanyName', {
             method: "PUT",
             body: this.state.companyName,
-            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -41,7 +41,7 @@ export default class ModalComponentEditCompany extends React.Component {
         });
     }
     getCompanyName(){
-        const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response => {
+        const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         });
         return fetchResult;

@@ -15,7 +15,7 @@ export default class AdminHeader extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className={'nav-link'}>{sessionStorage.getItem('username')}</a>
+                            <a className={'nav-link'}>{localStorage.getItem('username')}</a>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/usersList`} className="nav-link">Список пользователей компании</Link>
@@ -24,7 +24,7 @@ export default class AdminHeader extends Component {
                             <Link to={`/stocks`} className="nav-link">Склады</Link>
                         </li>
                         <li className="nav-item active">
-                            <ModalComponentEditCompany className="nav-link" text={"Редактировать компанию"}></ModalComponentEditCompany>
+                            <ModalComponentEditCompany className="nav-link" text={"Редактировать компанию"}/>
                         </li>
                     </ul>
                     <li className="navbar-text">

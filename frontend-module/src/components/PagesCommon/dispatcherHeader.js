@@ -14,7 +14,7 @@ export default class DispatcherHeader extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className={'nav-link'}>{sessionStorage.getItem('username')}</a>
+                            <a className={'nav-link'}>{localStorage.getItem('username')}</a>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/orders`} className="nav-link">Заказы</Link>
