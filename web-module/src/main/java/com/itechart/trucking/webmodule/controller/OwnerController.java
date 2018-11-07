@@ -89,7 +89,6 @@ public class OwnerController {
         Company company = userRepository.findUserByUsername(name).getCompany();
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            System.out.println("CALLED");
             Order order1 = order.get();
             return new OrderDto(order1);
         } else {

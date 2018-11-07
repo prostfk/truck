@@ -18,7 +18,7 @@ export default class CompanyOwnerHeader extends Component {
                             <a className={'nav-link'}>{localStorage.getItem('username')}</a>
                         </li>
                         <li className="nav-item active">
-                            <Link to={`/usersList`} className="nav-link">Список пользователей компании</Link>
+                            <Link to={`owner/usersList`} className="nav-link">Список пользователей компании</Link>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/stocks`} className="nav-link">Склады</Link>

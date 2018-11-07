@@ -31,6 +31,7 @@ import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
+import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 
 class MainController extends React.Component {
 
@@ -66,6 +67,7 @@ class MainController extends React.Component {
                     <Route exact path="/owner/waybill/:orderId" component={OwnerWaybill} /> {/*owner*/}
                     <Route exact path="/owner/cancelAct/:orderId" component={CancellationAct} /> {/*owner*/}
                     <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
+                    <Route exact path="/owner/usersList" component={OwnerUsersList}/>
 
                 </div>
 
