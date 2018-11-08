@@ -1,5 +1,6 @@
 import React from "react";
 import CommonUtil from "../commonUtil/commontUtil";
+import ValidationUtil from "../commonUtil/validationUtil";
 
 class DispatcherCreateOrderPage extends React.Component {
     constructor(props) {
@@ -35,6 +36,7 @@ class DispatcherCreateOrderPage extends React.Component {
             newProductStatus: ["1"],
             newProductDescription: "",
             newProductPrice: "",
+            newProductCount: 1,
             newProduct: {}
         };
         document.title = "Создать заказ";
@@ -44,48 +46,66 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     changeInput(event) {
+        console.log(event.target.id + " " + event.target.value + " " + ValidationUtil.validateStringForLength(event.target.value, 3, 20));
         this.setState({
             [event.target.id]: [event.target.value]
         });
-        console.log(this.state.newProductStatus)
     }
 
-    changeSelectInput(event) {
-        this.setState({
-            [event.target.id]: [event.target.selectedIndex]
-        });
-    }
+    validateForm = () => {
+        let clientIdValidation = ValidationUtil.validateForNumber(this.state.client_id);
+        let nameValidation = ValidationUtil.validateStringForLength(this.state.name, 3, 20);
+        let dateArrivalValidation = ValidationUtil.validateDateToPattern(this.state.date_arrival);
+        let dateDepartureValidation = ValidationUtil.validateDateToPattern(this.state.date_departure);
+        if (!clientIdValidation) {
+            document.getElementById('client-error-span').innerText = "Неправильные данные";
+        }
+        if (!nameValidation) {
+            document.getElementById('name-error-span').innerText = "Неправильное название";
+        }
+        if (!dateArrivalValidation || !dateDepartureValidation) {
+            document.getElementById('date-error-span').innerText = "Неправильная дата";
+        }
+        console.log(`${clientIdValidation} - ${nameValidation} - ${dateDepartureValidation} - ${dateArrivalValidation}`);
+        return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation;
+    };
 
     saveBtnClick() {
-        let formData = new FormData();
-        formData.append("clientId", this.state.client_id);
-        formData.append("name", this.state.name);
-        formData.append("status", this.state.status);
-        formData.append("departureStock", this.state.departure_stock);
-        formData.append("deliveryStock", this.state.delivery_stock);
-        formData.append("dateArrival", this.state.date_departure);
-        formData.append("dateDeparture", this.state.date_arrival);
-        formData.append("waybillStatus", this.state.waybill_status);
-        formData.append("autoId", this.state.auto);
-        formData.append("driverId", this.state.driver);
-        let array = [];
-        formData.append("consignment", JSON.stringify(this.state.consignment));
-        formData.forEach((v, k) => {
-            console.log(`${v} - ${k}`);
-        });
-        fetch('http://localhost:8080/api/orders/createOrder', {
-            method: "POST",
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(response => {
-            return response.json()
-        }).then(data => {
-            if (data.error === undefined) {
-                document.getElementById('order-form').style.display = 'none';
-                document.getElementById('consignment-form').style.display = 'none';
-                this.props.history.push('/orders/');
-            }
-        });
+        if (this.validateForm()) {
+            let formData = new FormData();
+            formData.append("clientId", this.state.client_id);
+            formData.append("name", this.state.name);
+            formData.append("status", this.state.status);
+            formData.append("departureStock", this.state.departure_stock);
+            formData.append("deliveryStock", this.state.delivery_stock);
+            formData.append("dateArrival", this.state.date_departure);
+            formData.append("dateDeparture", this.state.date_arrival);
+            formData.append("waybillStatus", this.state.waybill_status);
+            formData.append("autoId", this.state.auto);
+            formData.append("driverId", this.state.driver);
+            formData.append("consignment", JSON.stringify(this.state.consignment));
+            formData.forEach((v, k) => {
+                console.log(`${v} - ${k}`);
+            });
+
+            fetch('http://localhost:8080/api/orders/createOrder', {
+                method: "POST",
+                body: formData,
+                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                if (data.error === undefined) {
+                    document.getElementById('order-form').style.display = 'none';
+                    document.getElementById('consignment-form').style.display = 'none';
+                    this.props.history.push('/orders/');
+                }
+            });
+        } else {
+            console.log("Form validation is failed");
+            this.showOrderHideConsignment();
+        }
+
     }
 
     fetchToCompany(event) {
@@ -148,7 +168,7 @@ class DispatcherCreateOrderPage extends React.Component {
             });
             document.getElementById('auto').innerHTML = autoHtml;
             this.setDefault();
-        })).catch(err=>{
+        })).catch(err => {
             throw new Error('Нет доступа к свободным авто');
         })
     }
@@ -164,7 +184,7 @@ class DispatcherCreateOrderPage extends React.Component {
             });
             document.getElementById('driver').innerHTML = driverHtml;
             this.setDefault();
-        }).catch(err=>{
+        }).catch(err => {
             throw new Error('Нет доступа к свободным водителям');
         })
     }
@@ -178,7 +198,7 @@ class DispatcherCreateOrderPage extends React.Component {
         this.setState({auto: document.getElementById('auto').value});
     }
 
-    changeDate = () =>{
+    changeDate = () => {
         this.findAutos();
         this.findDrivers();
     };
@@ -187,10 +207,12 @@ class DispatcherCreateOrderPage extends React.Component {
 
     addProduct = (event) => {
         event.preventDefault();
+        console.log(this.state.newProductCount);
         let product = {
             name: this.state.newProductName.join(''),
             status: this.state.newProductStatus.join(''),
             description: this.state.newProductDescription.join(''),
+            count: this.state.newProductCount.join(''),
             price: this.state.newProductPrice.join('')
         };
         this.setState({
@@ -241,6 +263,7 @@ class DispatcherCreateOrderPage extends React.Component {
                                 <small className="form-text text-muted">Наименование заказа</small>
                                 <input value={this.state.name} onChange={this.changeInput} type="text"
                                        className="form-control" id="name" placeholder="Наименование заказа"/>
+                                <span id="name-error-span" className={'error-span'}/>
 
                                 <small className="form-text text-muted">Компания- заказчик перевозки</small>
                                 <input value={this.state.companyNameForSearch} onChange={this.fetchToCompany}
@@ -252,6 +275,7 @@ class DispatcherCreateOrderPage extends React.Component {
                                         onClick={this.setCustomerCompany} onChange={this.changeInput}
                                         style={customerCompanyStyle} name="client_id" id="client_id">
                                 </select>
+                                <span id="client-error-span" className={'error-span'}/>
 
                                 <small className="form-text text-muted">Адрес Отправления</small>
                                 <select value={this.state.departure_stock} onChange={this.changeInput}
@@ -292,12 +316,15 @@ class DispatcherCreateOrderPage extends React.Component {
 
 
                                 <small className="form-text text-muted">Дата отправления</small>
-                                <input value={this.state.date_departure} onBlur={this.changeDate} onChange={this.changeInput} type="text"
+                                <input value={this.state.date_departure} onBlur={this.changeDate}
+                                       onChange={this.changeInput} type="text"
                                        className="form-control" id="date_departure" placeholder="14.10.2015"/>
 
                                 <small className="form-text text-muted">Дата прибытия</small>
-                                <input value={this.state.date_arrival} onBlur={this.changeDate} onChange={this.changeInput} type="text"
+                                <input value={this.state.date_arrival} onBlur={this.changeDate}
+                                       onChange={this.changeInput} type="text"
                                        className="form-control" id="date_arrival" placeholder="15.10.2016"/>
+                                <span id="date-error-span" className={'error-span'}/>
 
                                 <small className="form-text text-muted">Водитель</small>
                                 <select onChange={this.changeInput} value={this.state.driver} className="form-control"
@@ -354,7 +381,13 @@ class DispatcherCreateOrderPage extends React.Component {
                                 </div>
                                 <div className="col-md-2">
                                     <input type="number" id="newProductPrice" value={this.state.newProductPrice}
-                                           onChange={this.changeInput} className="form-control" placeholder={"цена"}/>
+                                           onChange={this.changeInput} className="form-control"
+                                           placeholder={"Количество"}/>
+
+                                </div>
+                                <div className="col-md-2">
+                                    <input type="number" id="newProductCount" value={this.state.newProductCount}
+                                           onChange={this.changeInput} className="form-control" placeholder={"Цена"}/>
 
                                 </div>
                                 <div className="col-md-2">
@@ -370,16 +403,17 @@ class DispatcherCreateOrderPage extends React.Component {
                                             <div className="col-md-3">{item.name}</div>
                                             <div className="col-md-2">{item.status}</div>
                                             <div className="col-md-3">{item.description}</div>
+                                            <div className="col-md-2">{item.count}</div>
                                             <div className="col-md-2">{item.price}</div>
-                                            <div className="col-md-2"><a href="" className="btn-sm btn-dark">Удалить</a>
-                                            </div>
+                                            {/*<div className="col-md-2"><a onClick={this.removeProduct(item.name)} id={`item-${item.name}`} className="btn-sm btn-dark">Удалить</a></div>*/}
                                         </div>
                                     }
                                 )
                             }
                         </form>
                     </div>
-                    <div className="offset-md-2 col-md-8 form_clear" id={'sendOrderRequestButton'} style={customerCompanyStyle}>
+                    <div className="offset-md-2 col-md-8 form_clear" id={'sendOrderRequestButton'}
+                         style={customerCompanyStyle}>
                         <a onClick={this.saveBtnClick} className="btn btn-success btn_fullsize">Сохранить</a>
                     </div>
                 </div>

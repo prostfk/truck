@@ -31,6 +31,7 @@ import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
+import AdminCharts from "./pageOwner/pageCharts";
 
 class MainController extends React.Component {
 
@@ -39,9 +40,9 @@ class MainController extends React.Component {
             <Router>
                 <div>
                     <Route path="/*" component={HeaderElement}/>
-                    <Route path="/" component={IndexComponent}/>
                     <Route path="/registration" component={registration}/>
                     <Route path="/usersList" component={UsersList}/>
+                    {localStorage.getItem('role')==='ROLE_COMP_OWNER' ? <Route exact path="/" component={AdminCharts}/> : <Route path="/" component={IndexComponent}/>}
                     <Route path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>

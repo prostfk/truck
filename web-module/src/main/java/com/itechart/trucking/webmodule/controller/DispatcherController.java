@@ -136,13 +136,12 @@ public class DispatcherController {
         Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
         Order savedOrder = orderRepository.save(orderToSave);
         Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
-        CancellationAct cancellationAct = cancellationActRepository.save(new CancellationAct(new java.sql.Date(new Date().getTime()), 0, 0, savedConsignment, savedConsignment.getProductList()));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
             //changed product.getStatus().name() on product.getStatus()
-            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), cancellationAct.getId(),product.getPrice() + 0.0);
+            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), null,product.getPrice() + 0.0);
         }
         return HttpStatus.OK;
     }
@@ -164,7 +163,7 @@ public class DispatcherController {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationActList().get(0).getId(), product.getPrice() + 0.0));
+            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationAct().getId(), product.getPrice() + 0.0));
         }
         return HttpStatus.OK;
 
