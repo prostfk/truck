@@ -32,6 +32,7 @@ import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
+import OwnerStockList from "./pageOwner/pageOwnerStockList";
 
 class MainController extends React.Component {
 
@@ -63,11 +64,12 @@ class MainController extends React.Component {
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
                     <Route exact path="/owner/orders" component={OwnerOrderList} /> {/*owner*/}
-                    <Route exact path="/owner/routList/:orderrouteListId" component={OwnerRouteList} /> {/*owner*/}
+                    <Route exact path="/owner/routList/:orderId" component={OwnerRouteList} /> {/*owner*/}
                     <Route exact path="/owner/waybill/:orderId" component={OwnerWaybill} /> {/*owner*/}
                     <Route exact path="/owner/cancelAct/:orderId" component={CancellationAct} /> {/*owner*/}
-                    <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
+                    <Route exact path="/owner/statistics" component={CompanyOwnerStatistics}/>
                     <Route exact path="/owner/usersList" component={OwnerUsersList}/>
+                    <Route exact path="/owner/stocks" component={OwnerStockList}/>
 
                 </div>
 
