@@ -46,32 +46,48 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     changeInput(event) {
-        console.log(event.target.id + " " + event.target.value + " " + ValidationUtil.validateStringForLength(event.target.value, 3, 20));
         this.setState({
             [event.target.id]: [event.target.value]
         });
     }
 
-    validateForm = () => {
+    validateOrderForm = () => {
         let clientIdValidation = ValidationUtil.validateForNumber(this.state.client_id);
-        let nameValidation = ValidationUtil.validateStringForLength(this.state.name, 3, 20);
+        let nameValidation = ValidationUtil.validateStringForLength(this.state.name.join(''), 3, 20);
         let dateArrivalValidation = ValidationUtil.validateDateToPattern(this.state.date_arrival);
         let dateDepartureValidation = ValidationUtil.validateDateToPattern(this.state.date_departure);
+        let validateAuto = ValidationUtil.validateForNumber(this.state.auto);
+        let validateDriver = ValidationUtil.validateForNumber(this.state.driver);
         if (!clientIdValidation) {
             document.getElementById('client-error-span').innerText = "Неправильные данные";
+        } else {
+            document.getElementById('client-error-span').innerText = "";
         }
         if (!nameValidation) {
-            document.getElementById('name-error-span').innerText = "Неправильное название";
+            document.getElementById('name-error-span').innerText = `Неправильное название ${this.state.name}`;
+        }else{
+            document.getElementById('name-error-span').innerText = "";
         }
         if (!dateArrivalValidation || !dateDepartureValidation) {
             document.getElementById('date-error-span').innerText = "Неправильная дата";
+        }else{
+            document.getElementById('date-error-span').innerText = "";
         }
-        console.log(`${clientIdValidation} - ${nameValidation} - ${dateDepartureValidation} - ${dateArrivalValidation}`);
-        return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation;
+        if (!validateAuto){
+            document.getElementById('auto-error-span').innerText = 'Неправильное значение';
+        }else{
+            document.getElementById('auto-error-span').innerText = '';
+        }
+        if (!validateDriver){
+            document.getElementById('driver-error-span').innerText = 'Неправильное значение';
+        }else{
+            document.getElementById('driver-error-span').innerText = '';
+        }
+        return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation && validateAuto && validateDriver;
     };
 
     saveBtnClick() {
-        if (this.validateForm()) {
+        if (this.validateOrderForm()) {
             let formData = new FormData();
             formData.append("clientId", this.state.client_id);
             formData.append("name", this.state.name);
@@ -102,7 +118,6 @@ class DispatcherCreateOrderPage extends React.Component {
                 }
             });
         } else {
-            console.log("Form validation is failed");
             this.showOrderHideConsignment();
         }
 
@@ -177,7 +192,6 @@ class DispatcherCreateOrderPage extends React.Component {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
         fetch(`http://localhost:8080/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
-            console.log(data);
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
@@ -190,12 +204,15 @@ class DispatcherCreateOrderPage extends React.Component {
     }
 
     setDefault() {
-        this.setState({departure_stock: document.getElementById('departure_stock').value});
-        this.setState({delivery_stock: document.getElementById('delivery_stock').value});
-        this.setState({status: document.getElementById('status').value});
-        this.setState({waybill_status: document.getElementById('waybill_status').value});
-        this.setState({driver: document.getElementById('driver').value});
-        this.setState({auto: document.getElementById('auto').value});
+        this.setState({
+            departure_stock: document.getElementById('departure_stock').value,
+            delivery_stock: document.getElementById('delivery_stock').value,
+            status: document.getElementById('status').value,
+            waybill_status: document.getElementById('waybill_status').value,
+            driver: document.getElementById('driver').value,
+            auto: document.getElementById('auto').value,
+            client_id: document.getElementById('client_id').value
+        });
     }
 
     changeDate = () => {
@@ -207,7 +224,6 @@ class DispatcherCreateOrderPage extends React.Component {
 
     addProduct = (event) => {
         event.preventDefault();
-        console.log(this.state.newProductCount);
         let product = {
             name: this.state.newProductName.join(''),
             status: this.state.newProductStatus.join(''),
@@ -219,7 +235,6 @@ class DispatcherCreateOrderPage extends React.Component {
             consignment: [...this.state.consignment, product],
             newConsignmentName: ''
         });
-        console.log(product);
         document.getElementById('newProductName').focus();
     };
 
@@ -239,9 +254,11 @@ class DispatcherCreateOrderPage extends React.Component {
     };
 
     showConsignment = () => {
-        document.getElementById('order-form').style.display = 'none';
-        document.getElementById('consignment-form').style.display = '';
-        document.getElementById('sendOrderRequestButton').style.display = '';
+        if (this.validateOrderForm()) {
+            document.getElementById('order-form').style.display = 'none';
+            document.getElementById('consignment-form').style.display = '';
+            document.getElementById('sendOrderRequestButton').style.display = '';
+        }
         // this.setState({newProductStatus: 'ACCEPTED'})
     };
 
@@ -332,6 +349,8 @@ class DispatcherCreateOrderPage extends React.Component {
                                     <option selected disabled>Водитель</option>
 
                                 </select>
+                                <span id="driver-error-span" className={'error-span'}/>
+
 
                                 <small className="form-text text-muted">Автомобиль</small>
                                 <select onChange={this.changeInput} value={this.state.auto} className="form-control"
@@ -339,6 +358,8 @@ class DispatcherCreateOrderPage extends React.Component {
                                     <option selected disabled>Авто</option>
 
                                 </select>
+                                <span id="auto-error-span" className={'error-span'}/>
+
 
                             </div>
                         </div>
@@ -380,13 +401,13 @@ class DispatcherCreateOrderPage extends React.Component {
 
                                 </div>
                                 <div className="col-md-2">
-                                    <input type="number" id="newProductPrice" value={this.state.newProductPrice}
+                                    <input type="number" id="newProductCount" value={this.state.newProductCount}
                                            onChange={this.changeInput} className="form-control"
                                            placeholder={"Количество"}/>
 
                                 </div>
                                 <div className="col-md-2">
-                                    <input type="number" id="newProductCount" value={this.state.newProductCount}
+                                    <input type="number" id="newProductPrice" value={this.state.newProductPrice}
                                            onChange={this.changeInput} className="form-control" placeholder={"Цена"}/>
 
                                 </div>
