@@ -281,20 +281,21 @@ public class AdminController {
 
     }
 
-    @PostMapping(value = "/auto/{id}/edit")
+    @PutMapping(value = "/auto/edit")
     @ResponseBody
-    public Object processEditingAuto(@PathVariable Long id, @Valid Auto auto, BindingResult result) throws JSONException {
+    public AutoDto processEditingAuto(@Valid AutoDto autoDto) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        if(userByEmail.getCompany().getId()!=id) return null;
-        if (result.hasErrors()) {
-            return getInvalidDataJsonMessage();
-        }
-        auto.setId(id);
-        auto.setActive(true);
+
+        Auto auto = autoRepository.findAutoById(autoDto.getId());
+        if(auto.getCompany().getId()!=userByEmail.getCompany().getId()) return null;
+
+        auto.setName(autoDto.getName());
+        auto.setCarNumber(autoDto.getCarNumber());
+        auto.setType(autoDto.getType());
+        auto.setFuelConsumption(autoDto.getFuelConsumption());
         autoRepository.save(auto);
         return new AutoDto(auto);
-
     }
 
     @DeleteMapping(value = "/auto/")

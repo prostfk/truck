@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 
 import { withBaseIcon } from 'react-icons-kit'
-import {remove} from 'react-icons-kit/fa/remove'
 import {edit} from 'react-icons-kit/fa/edit'
 import ModalAcceptDelete from "./modalAcceptDelete";
+import ModalComponentEditAuto from "./modalComponentEditAuto";
 
 const SideIconContainer = withBaseIcon({ size: 24, style: {color: '#50505d'}});
-const RedIconContainer = withBaseIcon({ size: 24, style: {color: '#8d2a27'}});
-export const RemoveIcon = () => <RedIconContainer icon={remove}/>
 export const EditIcon = () => <SideIconContainer icon={edit}/>
 
 export default class AutoList extends Component {
@@ -16,6 +14,7 @@ export default class AutoList extends Component {
     constructor(props) {
         super(props);
         this.submiteDelete = this.submiteDelete.bind(this);
+        this.submitEdit = this.submitEdit.bind(this);
         this.state = {
             autos: [],
             newAutoName: '',
@@ -89,8 +88,10 @@ export default class AutoList extends Component {
             <div className={'col-md-2'}>{auto.type}</div>
             <div className={'col-md-2'}>{auto.fuelConsumption}</div>
             <div className={'col-md-1'}>
-                <a href={`/auto/${auto.id}/edit`}><EditIcon></EditIcon></a>
-             </div>
+                <div className={"col-md-2"}>
+                    <ModalComponentEditAuto clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} autoId={auto.id} autoName={auto.name} autoCarNumber={auto.carNumber} autoType={auto.type} autoFuelConsumption={auto.fuelConsumption} />
+                </div>
+            </div>
             <div className={"col-md-1"}>
                 <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={auto.id} headerText={"Вы действительно хотите удалить авто?"} bodyText={"Восстановить авто будет невозможно"} />
             </div>
@@ -113,6 +114,37 @@ export default class AutoList extends Component {
         }).catch((err) => {
             console.log(err);
         });
+    }
+
+    submitEdit(autoId,autoName,autoCarNumber,autoType,autoFuelConsumption,event){
+        let refThis=this;
+        let formData = new FormData();
+        formData.append("id", autoId);
+        formData.append("name", autoName);
+        formData.append("carNumber", autoCarNumber);
+        formData.append("type", autoType);
+        formData.append("fuelConsumption", autoFuelConsumption);
+
+        fetch('http://localhost:8080/api/auto/edit', {
+            method: "PUT",
+            body: formData,
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            console.log(data);
+            if (data.error === undefined) {
+                refThis.state.autos.find((element, index, array) => {
+                    if (element.id === data.id) {
+                        const newAutos = refThis.state.autos;
+                        newAutos[index] = data;
+                        refThis.setState({autos: newAutos});
+                    }
+                });
+            } else {
+                /* document.getElementById('error-form-span').innerText = data.error;*/
+            }
+        })
     }
 
     render() {
