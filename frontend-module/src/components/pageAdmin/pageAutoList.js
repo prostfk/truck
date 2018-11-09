@@ -16,7 +16,10 @@ export default class AutoList extends Component {
         super(props);
         this.state = {
             autos: [],
-            newautoEmail: '',
+            newAutoName: '',
+            newAutoNumber: '',
+            newAutoType: '',
+            newAutoFuelConsumption: '',
         };
         this.fetchToAutos();
     }
@@ -41,57 +44,38 @@ export default class AutoList extends Component {
         });
     };
 
-    russianRole = (role) => {
-        switch (role) {
-            case 'ROLE_ADMIN':
-                return 'Администратор';
-            case 'ROLE_DISPATCHER':
-                return 'Диспетчер';
-            case 'ROLE_MANAGER':
-                return 'Менеджер';
-            case 'ROLE_DRIVER':
-                return 'Водитель';
-            default:
-                return role;
-        }
-    };
-
     saveNewAuto = () => {
         let formData = new FormData();
-        formData.append('autoname',this.state.newUserUsername);
-        formData.append('email',this.state.newUserEmail);
-        formData.append('userRole',this.state.newUserRole);
-        formData.append('password',this.state.newUserPassword);
-        formData.append('birthDay', this.state.newUserDate);
-        fetch('http://localhost:8080/api/saveUser', {
-            method: 'POST',
+        formData.append('name',this.state.newAutoName);
+        formData.append('type',this.state.newAutoType);
+        formData.append('fuelConsumption',this.state.newAutoFuelConsumption);
+        formData.append('carNumber',this.state.newAutoNumber);
+
+        fetch('http://localhost:8080/api/saveAuto/', {
+            method: "POST",
             body: formData,
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
-            if (response.status > 199 && response.status < 300) {
-                return response.json();
-            }
-        }).then(data=>{
-            //todo add backend processing!
+            console.log(response);
+            return response.json();
+        }).then(data => {
             console.log(data);
-            if (data.error === undefined){
-                document.getElementById('message-span').innerText = 'Сохранено';
-                document.getElementById('from-content').style.display = 'none';
-                setTimeout(function () {
-                    // document.getElementById('add-user-form').style.display = 'none';
-                    document.getElementById('message-span').innerText = '';
-                    document.getElementById('from-content').style.display = '';
-                    document.getElementById('newUserEmail').value = '';
-                    document.getElementById('newUserPassword').value = '';
-                    document.getElementById('newUserUsername').value = '';
-                    document.getElementById('newUserRole').value = '';
-                    document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
+            this.setState({
+                newAutoFuelConsumption:"",
+                newAutoType:"",
+                newAutoName:"",
+                newAutoNumber:""
+            });
+            this.forceUpdateHandler();
+        });
+    };
 
-
-                },2000);
-            }else{
-                document.getElementById('error-form-span').innerText = data.error;
-            }
+    forceUpdateHandler(){
+        const refthis = this;
+        fetch('http://localhost:8080/api/autos/', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            refthis.setState({autos:result})
         })
     };
 
@@ -146,11 +130,25 @@ export default class AutoList extends Component {
                         <span id="message-span"/>
                         <div id={'from-content'}>
                             <h5>Регистрация нового авто</h5>
-                            <span className={'error-span'} id={'error-form-span'}/>
                             <div className="form-group">
-                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
-                                <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
-                                       placeholder="newUser@gmail.com" required=""/>
+                                <label htmlFor="newUserEmail" id="emailLabel">Название</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newAutoName"
+                                       placeholder="Mazda 1000" required="" value={this.state.newAutoName}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserEmail" id="emailLabel">Номер</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newAutoNumber"
+                                       placeholder="0000 AH-7" required="" value={this.state.newAutoNumber} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserEmail" id="emailLabel">Тип</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newAutoType"
+                                       placeholder="Крытый кузов" required="" value={this.state.newAutoType}/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserEmail" id="emailLabel">Расход на 100км</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newAutoFuelConsumption"
+                                       placeholder="20" required="" value={this.state.newAutoFuelConsumption}/>
                             </div>
                             <a onClick={this.saveNewAuto} className="btn btn-success btn_fullsize">Сохранить</a>
                         </div>
