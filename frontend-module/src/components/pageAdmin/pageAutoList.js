@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 
 import { withBaseIcon } from 'react-icons-kit'
+import {remove} from 'react-icons-kit/fa/remove'
 import {edit} from 'react-icons-kit/fa/edit'
 import ModalAcceptDelete from "./modalAcceptDelete";
 import ModalComponentEditAuto from "./modalComponentEditAuto";
 
 const SideIconContainer = withBaseIcon({ size: 24, style: {color: '#50505d'}});
+const RedIconContainer = withBaseIcon({ size: 24, style: {color: '#8d2a27'}});
+export const RemoveIcon = () => <RedIconContainer icon={remove}/>
 export const EditIcon = () => <SideIconContainer icon={edit}/>
 
 export default class AutoList extends Component {
@@ -91,7 +94,7 @@ export default class AutoList extends Component {
                 <div className={"col-md-2"}>
                     <ModalComponentEditAuto clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} autoId={auto.id} autoName={auto.name} autoCarNumber={auto.carNumber} autoType={auto.type} autoFuelConsumption={auto.fuelConsumption} />
                 </div>
-             </div>
+            </div>
             <div className={"col-md-1"}>
                 <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={auto.id} headerText={"Вы действительно хотите удалить авто?"} bodyText={"Восстановить авто будет невозможно"} />
             </div>
