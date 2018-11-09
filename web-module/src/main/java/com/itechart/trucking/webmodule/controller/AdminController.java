@@ -1,5 +1,7 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.auto.dto.AutoDto;
+import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
@@ -244,6 +246,16 @@ public class AdminController {
             company.setLockComment(null);
         }
         return companyRepository.save(company) != null;*/
+    }
+
+    @GetMapping(value = "/autos")
+    public List<AutoDto> findAutos() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        List<Auto> autos = userByEmail.getCompany().getCompanyAutos();
+        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
+        return autoDtos;
     }
 
 

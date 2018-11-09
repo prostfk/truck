@@ -24,6 +24,9 @@ export default class AdminHeader extends Component {
                             <Link to={`/stocks`} className="nav-link">Склады</Link>
                         </li>
                         <li className="nav-item active">
+                            <Link to={`/autos`} className="nav-link">Автомобили</Link>
+                        </li>
+                        <li className="nav-item active">
                             <ModalComponentEditCompany className="nav-link" text={"Редактировать компанию"}/>
                         </li>
                     </ul>
