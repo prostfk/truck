@@ -105,12 +105,12 @@ class PageStockList extends React.Component {
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"col-md-4"}>{stock.name}</div>
-            <div className={"col-md-3"}>{stock.address}</div>
-            <div className={"col-md-1"}>
+            <div className={"col-md-4"}>{stock.address}</div>
+            <div className={"col-md-2"}>
                 <ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>
             </div>
-            <div className={"col-md-3"}>
-                <ModalAcceptDelete clickfunc={this.submiteDelete} className={"table_button bg-secondary text-white"} stockId={stock.id}/>
+            <div className={"col-md-1"}>
+                <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={stock.id} headerText={"Вы действительно хотите удалить склад?"} bodyText={"Восстановить склад будет невозможно"} />
             </div>
         </div>
     }

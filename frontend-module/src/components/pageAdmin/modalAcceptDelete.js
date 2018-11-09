@@ -1,6 +1,12 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
+import { withBaseIcon } from 'react-icons-kit'
+import {remove} from 'react-icons-kit/fa/remove'
+
+const RedIconContainer = withBaseIcon({ size: 24, style: {color: '#8d2a27'}});
+export const RemoveIcon = () => <RedIconContainer icon={remove}/>;
+
 export default class ModalAcceptDelete extends React.Component {
     constructor(props) {
         super(props);
@@ -16,7 +22,7 @@ export default class ModalAcceptDelete extends React.Component {
     }
 
     handleSubmit(event) {
-        this.props.clickfunc(this.props.stockId);
+        this.props.clickfunc(this.props.componentId);
         this.setState({
             modal: !this.state.modal,
         });
@@ -28,14 +34,14 @@ export default class ModalAcceptDelete extends React.Component {
         return (
 
             <div>
-                <a className={this.props.className} onClick={this.toggle}>Удалить</a>
+                <a onClick={this.toggle}><RemoveIcon ></RemoveIcon></a>
                 <Modal isOpen={this.state.modal}>
                     <form onSubmit={this.handleSubmit}>
-                        <ModalHeader>Вы действительно хотите удалить склад?</ModalHeader>
+                        <ModalHeader>{this.props.headerText}</ModalHeader>
                         <ModalBody>
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
-                                    Восстановить склад будет невозможно
+                                    {this.props.bodyText}
                                 </div>
                             </div>
                         </ModalBody>

@@ -257,7 +257,7 @@ public class AdminController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
 
-        List<Auto> autos = userByEmail.getCompany().getCompanyAutos();
+        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
         List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
         return autoDtos;
     }
@@ -273,11 +273,43 @@ public class AdminController {
         auto.setFuelConsumption(autoDto.getFuelConsumption());
         auto.setType(autoDto.getType());
         auto.setCompany(userByEmail.getCompany());
+        auto.setActive(true);
         autoRepository.save(auto);
         AutoDto autoDto1 = new AutoDto(auto);
         System.out.println(autoDto1);
         return autoDto1;
 
+    }
+
+    @PostMapping(value = "/auto/{id}/edit")
+    @ResponseBody
+    public Object processEditingAuto(@PathVariable Long id, @Valid Auto auto, BindingResult result) throws JSONException {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        if(userByEmail.getCompany().getId()!=id) return null;
+        if (result.hasErrors()) {
+            return getInvalidDataJsonMessage();
+        }
+        auto.setId(id);
+        auto.setActive(true);
+        autoRepository.save(auto);
+        return new AutoDto(auto);
+
+    }
+
+    @DeleteMapping(value = "/auto/")
+    @ResponseBody
+    public  List<AutoDto> processRemoveAuto(@RequestBody String idS) throws JSONException {
+        final Long id = Long.parseLong(idS);
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Auto auto = autoRepository.findAutoById(id);
+        if(userByEmail.getCompany().getId()!=auto.getCompany().getId()) return null;
+        auto.setActive(false);
+        autoRepository.save(auto);
+        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
+        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
+        return autoDtos;
     }
 
 

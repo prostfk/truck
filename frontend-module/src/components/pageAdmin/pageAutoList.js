@@ -4,6 +4,7 @@ import CommonUtil from "../commonUtil/commontUtil";
 import { withBaseIcon } from 'react-icons-kit'
 import {remove} from 'react-icons-kit/fa/remove'
 import {edit} from 'react-icons-kit/fa/edit'
+import ModalAcceptDelete from "./modalAcceptDelete";
 
 const SideIconContainer = withBaseIcon({ size: 24, style: {color: '#50505d'}});
 const RedIconContainer = withBaseIcon({ size: 24, style: {color: '#8d2a27'}});
@@ -14,6 +15,7 @@ export default class AutoList extends Component {
 
     constructor(props) {
         super(props);
+        this.submiteDelete = this.submiteDelete.bind(this);
         this.state = {
             autos: [],
             newAutoName: '',
@@ -89,11 +91,29 @@ export default class AutoList extends Component {
             <div className={'col-md-1'}>
                 <a href={`/auto/${auto.id}/edit`}><EditIcon></EditIcon></a>
              </div>
-            <div className={'col-md-1'}>
-                <a href={`/auto/${auto.id}/remove`}><RemoveIcon></RemoveIcon></a>
-             </div>
+            <div className={"col-md-1"}>
+                <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={auto.id} headerText={"Вы действительно хотите удалить авто?"} bodyText={"Восстановить авто будет невозможно"} />
+            </div>
         </div>
     };
+
+    submiteDelete(autoId){
+        const ref = this;
+        fetch('http://localhost:8080/api/auto/', {
+            method: 'DELETE',
+            body: autoId,
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            console.log(result);
+            if (result) {
+                ref.setState({autos:result})
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
 
     render() {
         return (
