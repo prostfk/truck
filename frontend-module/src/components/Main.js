@@ -8,7 +8,6 @@ import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
 import PageStockList from "./pageAdmin/pageStockList";
 import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
-import testComponent from "./testComponent/testComponent";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
@@ -32,8 +31,12 @@ import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
+
+import {TestComponent} from "./testComponent/testComponent";
+
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 import OwnerStockList from "./pageOwner/pageOwnerStockList";
+
 
 class MainController extends React.Component {
 
@@ -42,13 +45,12 @@ class MainController extends React.Component {
             <Router>
                 <div>
                     <Route path="/*" component={HeaderElement}/>
-                    <Route path="/" component={IndexComponent}/>
                     <Route path="/registration" component={registration}/>
                     <Route path="/usersList" component={UsersList}/>
                     <Route path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
-                    <Route exact path="/test" component={testComponent}/>
+                    <Route exact path="/test" component={TestComponent}/>
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
                     <Route exact path="/stocks" component={PageStockList}/> {/* stock list for admin */}
                     <Route exact path="/autos" component={AutoList}/> {/* auto list for admin */}

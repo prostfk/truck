@@ -14,15 +14,15 @@ export default class DispatcherHeader extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className={'nav-link'}>{localStorage.getItem('username')}</a>
-                        </li>
-                        <li className="nav-item active">
                             <Link to={`/orders`} className="nav-link">Заказы</Link>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/stocks`} className="nav-link">Склады</Link>
                         </li>
                     </ul>
+                    <div className="active">
+                        <span className={'nav-link user-role'}>Диспетчер</span>
+                    </div>
                     <li className="navbar-text">
                         <LogoutComponent/>
                     </li>

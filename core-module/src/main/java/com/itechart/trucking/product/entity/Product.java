@@ -16,7 +16,8 @@ public class Product {
     private String name;
     private Integer status;
     private String description;
-    private Integer price;
+    private Double price;
+    private Integer count;
 
     @ManyToOne
     @JoinColumn(name = "cancellation_act")

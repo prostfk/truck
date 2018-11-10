@@ -60,8 +60,6 @@ public class OwnerController {
         return "index";
     }
 
-//    TEST
-
     @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
     public String createXls(@Value("${excel.path}")String path){
@@ -95,16 +93,23 @@ public class OwnerController {
 
     @GetMapping(value = "/company/orders/{id}")
     @ResponseBody
-    public OrderDto findOrderById(@PathVariable Long id) {
-        Order orderById = orderRepository.findOrderById(id);
-        OrderDto orderDto = new OrderDto(orderById);
-        //orderDto.setClient(orderById.getClient());
-        orderDto.setCompany(orderById.getCompany());
-        orderDto.getWaybill().setAuto(orderById.getWaybill().getAuto());
-        orderDto.getWaybill().setDriver(orderById.getWaybill().getDriver());
-        //orderDto.setConsignment(orderById.getConsignment());
-        return orderDto;
-    }
+
+    public OrderDto fetchOrderOfCompany(@PathVariable Long id) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Company company = userRepository.findUserByUsername(name).getCompany();
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
+            System.out.println("CALLED");
+            Order order1 = order.get();
+            OrderDto orderDto = new OrderDto(order1);
+            orderDto.getWaybill().setAuto(order.get().getWaybill().getAuto());
+            orderDto.getWaybill().setDriver(order.get().getWaybill().getDriver());
+            orderDto.setCompany(company);
+            return orderDto;
+        } else {
+            System.out.println("access dined");
+            return null;
+        }
 
     @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody

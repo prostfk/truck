@@ -25,8 +25,8 @@ public class Consignment {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "consignment")
     private List<Product> productList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "consignment")
-    private List<CancellationAct> cancellationActList;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "consignment")
+    private CancellationAct cancellationAct;
 
     public Consignment() {
     }
