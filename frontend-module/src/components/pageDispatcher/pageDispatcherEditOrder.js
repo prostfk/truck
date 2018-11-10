@@ -410,7 +410,7 @@ class DispatcherEditOrder extends Component {
                     <div className="offset-md-2 col-md-8 form_clear">
                         <form className="align-content-center" onSubmit={(e) => {e.preventDefault()}}>
                             <button className="btn btn-light" onClick={this.showOrderHideConsignment}>Вернуться к заказу</button>
-                            <h3>Товарная патрия</h3>
+                            <h3>Товарная партия</h3>
                             <div className="row">
                                 <div className="col-md-3">
                                     <input type="text" id="newProductName" value={this.state.newProductName}

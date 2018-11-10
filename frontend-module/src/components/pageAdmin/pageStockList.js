@@ -105,12 +105,12 @@ class PageStockList extends React.Component {
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"col-md-4"}>{stock.name}</div>
-            <div className={"col-md-3"}>{stock.address}</div>
-            <div className={"col-md-1"}>
+            <div className={"col-md-4"}>{stock.address}</div>
+            <div className={"col-md-2"}>
                 <ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>
             </div>
-            <div className={"col-md-3"}>
-                <ModalAcceptDelete clickfunc={this.submiteDelete} className={"table_button bg-secondary text-white"} stockId={stock.id}/>
+            <div className={"col-md-1"}>
+                <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={stock.id} headerText={"Вы действительно хотите удалить склад?"} bodyText={"Восстановить склад будет невозможно"} />
             </div>
         </div>
     }
@@ -133,8 +133,8 @@ class PageStockList extends React.Component {
         });
     }
     render(){
-       return <div class="row">
-           <div class="offset-md-1 col-md-6 superuserform_companylist">
+       return <div className="row">
+           <div className="offset-md-1 col-md-6 superuserform_companylist">
                    <div className="row table_header">
                        <div className="col-md-1">ID</div>
                        <div className="col-md-5">Название склада</div>
@@ -149,26 +149,26 @@ class PageStockList extends React.Component {
                    }
 
                <nav aria-label="...">
-                   <ul class="pagination pagination-sm">
-                       <li class="page-item disabled">
-                           <a class="page-link" href="#" tabindex="-1">1</a>
+                   <ul className="pagination pagination-sm">
+                       <li className="page-item disabled">
+                           <a className="page-link" href="#" tabIndex="-1">1</a>
                        </li>
-                       <li class="page-item"><a class="page-link" href="#">2</a></li>
-                       <li class="page-item"><a class="page-link" href="#">3</a></li>
+                       <li className="page-item"><a className="page-link" href="#">2</a></li>
+                       <li className="page-item"><a className="page-link" href="#">3</a></li>
                    </ul>
                </nav>
            </div>
 
-           <div class="offset-md-1 col-md-3">
-               <form class="superuserform_newaccountform grey_form">
+           <div className="offset-md-1 col-md-3">
+               <form className="superuserform_newaccountform grey_form">
                    <h5>Добавить склад</h5>
-                   <div class="form-group">
-                       <input value={this.state.stockName} onChange={this.setCompanyName} type="text" class="form-control" id="inputname" placeholder="Склад #201" required=""/>
+                   <div className="form-group">
+                       <input value={this.state.stockName} onChange={this.setCompanyName} type="text" className="form-control" id="inputname" placeholder="Склад #201" required=""/>
                    </div>
-                   <div class="form-group">
-                       <input value={this.state.stockAddress} onChange={this.setCompanyAddress} type="text" class="form-control" id="inputstockadres" placeholder="Адрес" required=""/>
+                   <div className="form-group">
+                       <input value={this.state.stockAddress} onChange={this.setCompanyAddress} type="text" className="form-control" id="inputstockadres" placeholder="Адрес" required=""/>
                    </div>
-                   <a onClick={this.addNewStock} class="btn btn_fullsize btn-success">Добавить</a>
+                   <a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>
                </form>
            </div>
 

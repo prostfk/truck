@@ -22,7 +22,7 @@ class OwnerOrderList extends React.Component {
 
     /*get all orders list for current company*/
     getOrderList() {
-        return fetch('http://localhost:8080/api/company/orders/', {
+        return fetch('/api/company/orders/', {
             method: "GET",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -57,7 +57,7 @@ class OwnerOrderList extends React.Component {
 
     render() {
         return <div className="row">
-            <div className="offset-md-1 col-md-7 superuserform_companylist">
+            <div className="offset-md-1 col-md-10 superuserform_companylist">
                 <div className="row table_header">
                     <div className="col-md-1">Клиент</div>
                     <div className="col-md-2">Название склада (отправитель)</div>

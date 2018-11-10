@@ -1,5 +1,8 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.auto.dto.AutoDto;
+import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.auto.repository.AutoRepository;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
@@ -43,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AutoRepository autoRepository;
 
     @Autowired
     private CompanyRepository companyRepository;
@@ -244,6 +250,67 @@ public class AdminController {
             company.setLockComment(null);
         }
         return companyRepository.save(company) != null;*/
+    }
+
+    @GetMapping(value = "/autos")
+    public List<AutoDto> findAutos() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
+        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
+        return autoDtos;
+    }
+
+    @PostMapping(value = "/saveAuto")
+    public AutoDto saveAuto(@Valid AutoDto autoDto) throws JSONException {
+        if(autoDto==null) return null;
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Auto auto = new Auto();
+        auto.setName(autoDto.getName());
+        auto.setCarNumber(autoDto.getCarNumber());
+        auto.setFuelConsumption(autoDto.getFuelConsumption());
+        auto.setType(autoDto.getType());
+        auto.setCompany(userByEmail.getCompany());
+        auto.setActive(true);
+        autoRepository.save(auto);
+        AutoDto autoDto1 = new AutoDto(auto);
+        System.out.println(autoDto1);
+        return autoDto1;
+
+    }
+
+    @PutMapping(value = "/auto/edit")
+    @ResponseBody
+    public AutoDto processEditingAuto(@Valid AutoDto autoDto) throws JSONException {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        Auto auto = autoRepository.findAutoById(autoDto.getId());
+        if(auto.getCompany().getId()!=userByEmail.getCompany().getId()) return null;
+
+        auto.setName(autoDto.getName());
+        auto.setCarNumber(autoDto.getCarNumber());
+        auto.setType(autoDto.getType());
+        auto.setFuelConsumption(autoDto.getFuelConsumption());
+        autoRepository.save(auto);
+        return new AutoDto(auto);
+    }
+
+    @DeleteMapping(value = "/auto/")
+    @ResponseBody
+    public  List<AutoDto> processRemoveAuto(@RequestBody String idS) throws JSONException {
+        final Long id = Long.parseLong(idS);
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Auto auto = autoRepository.findAutoById(id);
+        if(userByEmail.getCompany().getId()!=auto.getCompany().getId()) return null;
+        auto.setActive(false);
+        autoRepository.save(auto);
+        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
+        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
+        return autoDtos;
     }
 
 
