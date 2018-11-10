@@ -8,7 +8,6 @@ import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
 import PageStockList from "./pageAdmin/pageStockList";
 import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
-import testComponent from "./testComponent/testComponent";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
@@ -31,7 +30,7 @@ import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
-import AdminCharts from "./pageOwner/pageCharts";
+import {TestComponent} from "./testComponent/testComponent";
 
 class MainController extends React.Component {
 
@@ -42,11 +41,10 @@ class MainController extends React.Component {
                     <Route path="/*" component={HeaderElement}/>
                     <Route path="/registration" component={registration}/>
                     <Route path="/usersList" component={UsersList}/>
-                    {localStorage.getItem('role')==='ROLE_COMP_OWNER' ? <Route exact path="/" component={AdminCharts}/> : <Route path="/" component={IndexComponent}/>}
                     <Route path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
-                    <Route exact path="/test" component={testComponent}/>
+                    <Route exact path="/test" component={TestComponent}/>
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
                     <Route exact path="/stocks" component={PageStockList}/> {/* stock list for admin */}
                     <Route exact path="/orders/" component={DispatcherOrderList}/>
