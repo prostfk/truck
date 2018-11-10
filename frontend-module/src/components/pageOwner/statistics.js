@@ -8,13 +8,13 @@ export default class CompanyOwnerStatistics extends Component {
     }
 
     xlsSender = () => {
-        fetch("http://localhost:8080/api/company/statistics",  {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(response=>{
+        fetch("http://localhost:8080/api/company/statistics",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
             return response.blob()
         }).then(blob=>{
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement('a');
             a.href = url;
-            a.download = `${sessionStorage.getItem('username')}.xls`;
+            a.download = `${localStorage.getItem('username')}.xls`;
             document.body.appendChild(a);
             a.click();
             a.remove();

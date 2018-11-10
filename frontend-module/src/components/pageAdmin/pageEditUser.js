@@ -25,7 +25,7 @@ export default class EditUser extends Component {
     initForm = () => {
         let link = window.location.href.split("/");
         let id = link[link.length - 2];
-        fetch(`http://localhost:8080/api/user/${id}`, {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
+        fetch(`http://localhost:8080/api/user/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             return response.json()
         }).then(data => {
             console.log(data);
@@ -55,7 +55,7 @@ export default class EditUser extends Component {
         fetch('http://localhost:8080/api/updateUser', {
             method: "POST",
             body: formData,
-            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response=>response.json()).then(data=>{
             console.log(data);
             if (data.error === undefined){

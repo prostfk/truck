@@ -96,7 +96,7 @@ public class DispatcherController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        List<Driver> customQueryDriverByDate = waybillRepository.findCustomQueryDriverByDate(dateDeparture, dateArrival, user.getCompany().getId());
+        List<Driver> customQueryDriverByDate = waybillRepository.findFreeDrivers(dateDeparture, dateArrival, user.getCompany().getId());
         return Odt.DriverListToDtoList(customQueryDriverByDate);
     }
 
@@ -113,7 +113,7 @@ public class DispatcherController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        List<Auto> customQueryAutoByDate = waybillRepository.findCustomQueryAutoByDate(dateDeparture, dateArrival, user.getCompany().getId());
+        List<Auto> customQueryAutoByDate = waybillRepository.findFreeAutos(dateDeparture, dateArrival, user.getCompany().getId());
         return Odt.AutoListToDtoList(customQueryAutoByDate);
     }
 
@@ -136,12 +136,12 @@ public class DispatcherController {
         Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
         Order savedOrder = orderRepository.save(orderToSave);
         Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
-        CancellationAct cancellationAct = cancellationActRepository.save(new CancellationAct(new java.sql.Date(new Date().getTime()), 0, 0, savedConsignment, savedConsignment.getProductList()));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), cancellationAct.getId(),product.getPrice() + 0.0);
+            //changed product.getStatus().name() on product.getStatus()
+            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
         return HttpStatus.OK;
     }
@@ -163,7 +163,8 @@ public class DispatcherController {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            System.out.println(productRepository.saveProduct(product.getName(), product.getStatus().name(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationActList().get(0).getId(), product.getPrice() + 0.0));
+            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
+//            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationAct().getId(), product.getPrice() + 0.0,product.getCount());
         }
         return HttpStatus.OK;
 
@@ -253,10 +254,12 @@ public class DispatcherController {
         while (keys.hasNext()) {
             String next = keys.next().toString();
             switch (next){
-                case "price": product.setPrice(Integer.parseInt(jsonObject.getString(next)));break;
+                case "price": product.setPrice(Double.parseDouble(jsonObject.getString(next)));break;
                 case "name": product.setName(jsonObject.getString(next));break;
                 case "description": product.setDescription(jsonObject.getString(next));break;
-                case "status": product.setStatus(ProductState.valueOf(jsonObject.getString(next)));break;
+                //changed ProductState.valueOf(jsonObject.getString(next)) on Integer.valueOf(jsonObject.getString(next))
+                case "status": product.setStatus(Integer.valueOf(jsonObject.getString(next)));break;
+                case "count": product.setCount(Integer.parseInt(jsonObject.getString(next)));
             }
         }
         return product;

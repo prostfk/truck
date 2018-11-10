@@ -91,7 +91,11 @@ public class OwnerController {
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             System.out.println("CALLED");
             Order order1 = order.get();
-            return new OrderDto(order1);
+            OrderDto orderDto = new OrderDto(order1);
+            orderDto.getWaybill().setAuto(order.get().getWaybill().getAuto());
+            orderDto.getWaybill().setDriver(order.get().getWaybill().getDriver());
+            orderDto.setCompany(company);
+            return orderDto;
         } else {
             System.out.println("access dined");
             return null;

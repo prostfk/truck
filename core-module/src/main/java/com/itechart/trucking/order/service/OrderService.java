@@ -58,12 +58,12 @@ public class OrderService {
         order.setCompany(company);
         order.setClient(clientRepository.findClientById(orderFormData.getClientId()));
         order.setName(orderFormData.getName());
-        order.setStatus(orderFormData.getStatus());
+        order.setStatus(Integer.valueOf(orderFormData.getStatus()));
         order.setSender(stockRepository.findStockById(orderFormData.getDepartureStock()));
         order.setReceiver(stockRepository.findStockById(orderFormData.getDepartureStock()));
         order.setDateAccepted(new Date(format.parse(orderFormData.getDateDeparture()).getTime()));
         order.setDateExecuted(new Date(format.parse(orderFormData.getDateArrival()).getTime()));
-        order.setWaybill(new Waybill(orderFormData.getWaybillStatus(), driverById,autoById,order.getDateAccepted(),order.getDateExecuted()));
+        order.setWaybill(new Waybill(Integer.valueOf(orderFormData.getWaybillStatus()), driverById,autoById,order.getDateAccepted(),order.getDateExecuted()));
 //        order.setCompany(company);
         return order;
     }

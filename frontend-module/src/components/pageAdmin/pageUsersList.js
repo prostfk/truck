@@ -17,7 +17,7 @@ export default class UsersList extends Component {
     }
 
     fetchToUsers = () => {
-        fetch('http://localhost:8080/api/users', {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(response => {
+        fetch('http://localhost:8080/api/users', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
@@ -72,7 +72,7 @@ export default class UsersList extends Component {
         fetch('http://localhost:8080/api/saveUser', {
             method: 'POST',
             body: formData,
-            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status > 199 && response.status < 300) {
                 return response.json();

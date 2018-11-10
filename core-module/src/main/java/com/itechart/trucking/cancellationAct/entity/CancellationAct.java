@@ -20,9 +20,9 @@ public class CancellationAct {
     @Min(0)
     private Integer amount;
     @Min(0)
-    private Integer price;
+    private Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consignment_id")
     private Consignment consignment;
 
@@ -32,7 +32,7 @@ public class CancellationAct {
     public CancellationAct() {
     }
 
-    public CancellationAct(Date date, @Min(0) Integer amount, @Min(0) Integer price, Consignment consignment, List<Product> product) {
+    public CancellationAct(Date date, @Min(0) Integer amount, @Min(0) Double price, Consignment consignment, List<Product> product) {
         this.date = date;
         this.amount = amount;
         this.price = price;

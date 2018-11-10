@@ -24,7 +24,7 @@ class OwnerOrderList extends React.Component {
     getOrderList() {
         return fetch('http://localhost:8080/api/company/orders/', {
             method: "GET",
-            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

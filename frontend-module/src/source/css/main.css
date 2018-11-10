@@ -111,4 +111,6 @@ body {
 .logoutForm{
     text-align: center;
 }
-
+.user-role{
+    color: #F3EEEE;
+}

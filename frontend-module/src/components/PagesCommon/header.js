@@ -12,7 +12,7 @@ class HeaderElement extends React.Component{
     // ROLE_USER,
 
     render(){
-        switch (sessionStorage.getItem('role')) {
+        switch (localStorage.getItem('role')) {
             case "ROLE_COMP_OWNER": return <CompanyOwnerHeader/>;
             case "ROLE_ADMIN": return <AdminHeader/>;
             case "ROLE_MANAGER": return <ManagerHeader/>;

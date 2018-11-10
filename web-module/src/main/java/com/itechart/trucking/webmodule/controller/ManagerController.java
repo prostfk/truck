@@ -71,7 +71,7 @@ public class ManagerController {
     public List<OrderDto> findActiveOrders() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        List<Order> active = orderRepository.findAllByStatusAndCompanyId("ACTIVE", userByUsername.getCompany().getId());
+        List<Order> active = orderRepository.findAllByStatusAndCompanyId(1, userByUsername.getCompany().getId());
 
         return Odt.OrderToDtoList(active);
     }
@@ -99,7 +99,7 @@ public class ManagerController {
     public Object changeStatus(@PathVariable Long id, @RequestBody String status) throws JSONException {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
-            product.get().setStatus(ProductState.valueOf(status));
+            product.get().setStatus(Integer.valueOf(status));
             Product save = productRepository.save(product.get());
             return new ProductDto(save);
         } else {
@@ -137,12 +137,12 @@ public class ManagerController {
         CancellationAct cancellationAct = product.get().getCancellationAct();
 
         if (isLost) {
-            product.get().setStatus(ProductState.valueOf("LOST"));
+            product.get().setStatus(4);
             cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
             Integer amount = cancellationAct.getAmount() + 1;
             cancellationAct.setAmount(amount);
         } else {
-            product.get().setStatus(ProductState.valueOf("ACCEPTED"));
+            product.get().setStatus(1);
             cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice());
             Integer amount = cancellationAct.getAmount() - 1;
             cancellationAct.setAmount(amount);
@@ -161,18 +161,14 @@ public class ManagerController {
 
         Optional<Order> order = orderRepository.findById(orderId);
         Waybill waybill = order.get().getWaybill();
-        waybill.setStatus("DONE");
+        waybill.setStatus(2);
         waybill.setCheckDate(new Date((new java.util.Date()).getTime()));
         waybill.setUser(userByUsername);
 
-        List<CancellationAct> cancellationActList = order.get().getConsignment().getCancellationActList();
-
-        for(CancellationAct cancellationAct: cancellationActList) {
-            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
-            cancellationActRepository.save(cancellationAct);
-            waybillRepository.save(waybill);
-        }
-
+        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
+        cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
+        cancellationActRepository.save(cancellationAct);
+        waybillRepository.save(waybill);
         order.get().setWaybill(waybill);
 
         return new OrderDto(order.get());

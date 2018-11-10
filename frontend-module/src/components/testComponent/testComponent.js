@@ -1,31 +1,37 @@
 import React, {Component} from "react";
+import GoogleMapReact from 'google-map-react'
 
-class testComponent extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            out: ''
-        };
-        this.checkSecurity = this.checkSecurity.bind(this);
-        document.title = "Test page"
-    }
+const AnyReactComponent = ({text}) => <div>{text}</div>;
+
+export class TestComponent extends Component {
+
+    static defaultProps = {
+        center: {lat: 40.7446790, lng: -73.9485420},
+        zoom: 11
+    };
 
     render() {
-        return <div>
-        </div>;
-    }
+        let design = {
+            color: 'red'
+        };
+        return (
+            <div>
 
-    checkSecurity() {
-        return fetch(`http://localhost:8080/api/orders/5`, {method: "get"}).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
-            return result;
-        });
+                <div className='google-map'>
+                    <GoogleMapReact style={{height: '80%'}}
+                        defaultCenter={this.props.center}
+                        defaultZoom={this.props.zoom}>
+
+                    </GoogleMapReact>
+                </div>
+            </div>
+        );
     }
 
 
 }
 
-export default testComponent;
+// export default GoogleApiWrapper({
+//     apiKey: ('AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI')
+// })(TestComponent)

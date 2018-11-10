@@ -26,7 +26,7 @@ class OwnerRouteList extends React.Component {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
         return fetch(`http://localhost:8080/api/company/routList/${id}`, {
-            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

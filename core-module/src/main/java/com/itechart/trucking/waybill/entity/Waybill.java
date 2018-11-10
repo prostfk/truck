@@ -7,6 +7,8 @@ import com.itechart.trucking.user.entity.User;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.sql.Date;
 import java.util.List;
 
@@ -17,7 +19,8 @@ public class Waybill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String status;
+    @Min(0) @Max(4)
+    private Integer status;
     private Date dateDeparture;
     private Date dateArrival;
     private Date checkDate;
@@ -40,7 +43,7 @@ public class Waybill {
     public Waybill() {
     }
 
-    public Waybill(String status, Driver driver, Auto auto, Date dateDeparture, Date dateArrival) {
+    public Waybill(@Min(0) @Max(4) Integer status, Driver driver, Auto auto, Date dateDeparture, Date dateArrival) {
         this.status = status;
         this.driver = driver;
         this.auto = auto;

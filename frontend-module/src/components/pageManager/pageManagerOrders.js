@@ -34,7 +34,7 @@ class pageManagerOrders extends Component {
     }
     /*get active orders*/
     getOrderList() {
-        return fetch('http://localhost:8080/api/manager/orders', {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('http://localhost:8080/api/manager/orders', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -47,7 +47,7 @@ class pageManagerOrders extends Component {
         if (!order) return;
 
         let isDone = false;
-        if(order.waybill.status === "DONE")
+        if(order.waybill.status === 2)
             isDone = true;
         return <div className="row table_row">
             <div className="col-md-1">{order.client.name}</div>
@@ -69,7 +69,7 @@ class pageManagerOrders extends Component {
     finishCheck(orderId) {
         const ref = this;
         console.log(orderId);
-        fetch(`http://localhost:8080/api/manager/finishChecking/${orderId}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/manager/finishChecking/${orderId}`, {method: "GET", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);

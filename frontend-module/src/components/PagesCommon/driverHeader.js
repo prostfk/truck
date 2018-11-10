@@ -14,12 +14,14 @@ export default class DriverHeader extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className={'nav-link'}>{sessionStorage.getItem('username')}</a>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/myorders`} className="nav-link">Заказы</Link>
                         </li>
                     </ul>
+                    <div className="active">
+                        <span className={'nav-link user-role'}>Водитель</span>
+                    </div>
                     <li className="navbar-text">
                         <LogoutComponent/>
                     </li>

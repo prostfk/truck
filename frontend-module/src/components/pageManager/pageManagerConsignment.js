@@ -10,7 +10,7 @@ class ManagerConsignment extends Component {
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.state = {
             products: [],
-            isLost: false
+            isLost: false,
         };
         document.title = "Товарная партия"
     }
@@ -37,7 +37,7 @@ class ManagerConsignment extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -53,11 +53,10 @@ class ManagerConsignment extends Component {
         if (!product) return;
 
         let status;
-        if(product.status==="") status="Не выбран";
-        else if(product.status==="ACCEPTED") status="Принят";
-        else if(product.status==="CHECK_DONE") status="Проверен";
-        else if(product.status==="DELIVERED") status="Доставлен";
-        else if(product.status==="LOST") status="Утерян";
+        if(product.status===1) status="Принят";
+        else if(product.status===2) status="Проверен";
+        else if(product.status===3) status="Доставлен";
+        else if(product.status===4) status="Утерян";
 
         let isLost=false;
         if(status === "Утерян")
@@ -67,7 +66,7 @@ class ManagerConsignment extends Component {
             <div className="col-md-3">{product.name}</div>
             <div className="col-md-2" style={{display: isLost ? 'block' : 'none' }}>Утерян</div>
             <div className="col-md-2" style={{display: isLost ? 'none' : 'block' }}>
-                <select className="form-control" defaultValue={status} onChange = {this.changeProductStatus.bind(this, product.id)}>
+                <select className="form-control" value={status} onChange = {this.changeProductStatus.bind(this, product.id)}>
                     <option>Принят</option>
                     <option>Доставлен</option>
                     <option>Проверен</option>
@@ -91,7 +90,7 @@ class ManagerConsignment extends Component {
         let formData = new FormData();
         formData.append("orderId", orderId);
         formData.append("isLost", isLost);
-        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -104,12 +103,12 @@ class ManagerConsignment extends Component {
     changeProductStatus(productId, event) {
         let status;
         let ref = this;
-        if(event.target.value==="Принят") status="ACCEPTED";
-        else if(event.target.value==="Проверен") status="CHECK_DONE";
-        else if(event.target.value==="Доставлен") status="DELIVERED";
-        else if(event.target.value==="Утерян") status="LOST";
+        if(event.target.value==="Принят") status=1;
+        else if(event.target.value==="Проверен") status=2;
+        else if(event.target.value==="Доставлен") status=3;
+        else if(event.target.value==="Утерян") status=4;
 
-        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}`, {method: "POST", body:status, headers: {'Auth-token': sessionStorage.getItem("Auth-token")}})
+        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}`, {method: "POST", body:status, headers: {'Auth-token': localStorage.getItem("Auth-token")}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {

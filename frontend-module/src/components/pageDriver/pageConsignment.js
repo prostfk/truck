@@ -36,7 +36,7 @@ class DriverConsignment extends Component {
     getProductList() {
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        return fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/consignment`, {method: "get", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/consignment`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -52,11 +52,10 @@ class DriverConsignment extends Component {
         if (!product) return;
 
         let status;
-        if(product.status==="") status="Не выбран";
-        else if(product.status==="ACCEPTED") status="Принят";
-        else if(product.status==="CHECK_DONE") status="Проверен";
-        else if(product.status==="DELIVERED") status="Доставлен";
-        else if(product.status==="LOST") status="Утерян";
+        if(product.status===1) status="Принят";
+        else if(product.status===2) status="Проверен";
+        else if(product.status===3) status="Доставлен";
+        else if(product.status===4) status="Утерян";
 
         let isLost=false;
         if(status === "Утерян")
@@ -75,7 +74,7 @@ class DriverConsignment extends Component {
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
         const ref = this;
-        fetch(`http://localhost:8080/api/orders/getMyOrders/cancelProduct/${productId}`, {method: "GET", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/orders/getMyOrders/cancelProduct/${productId}`, {method: "GET", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);

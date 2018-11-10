@@ -17,7 +17,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     Product findProductById(Long id);
 
-    List<Product> findProductsByStatus(ProductState status);
+    List<Product> findProductsByStatus(Integer status);
 
     List<Product> findProductsByDescriptionLikeIgnoreCase(String description);
 
@@ -30,6 +30,6 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO product(name, status, description, product_consignment,cancellation_act,  price) VALUES (:productName, :productStatus, :description,:consignmentId, :cancellationActId, :price)", nativeQuery = true)
-    int saveProduct(@Param("productName") String name, @Param("productStatus") String status, @Param("description") String description, @Param("consignmentId") Long consignmentId,@Param("cancellationActId") Long cancellationActId, @Param("price") Double price);
+    @Query(value = "INSERT INTO product(name, status, description, product_consignment, price, count) VALUES (:productName, :productStatus, :description,:consignmentId, :price, :productCount)", nativeQuery = true)
+    int saveProduct(@Param("productName") String name, @Param("productStatus") Integer status, @Param("description") String description, @Param("consignmentId") Long consignmentId, @Param("price") Double price, @Param("productCount")Integer productCount);
 }
