@@ -10,11 +10,9 @@ class IndexComponent extends Component {
 
 
     render() {
-        let style = {
-            backgroundImage: "url('https://fortunedotcom.files.wordpress.com/2017/11/semi_front_78.jpg')"
-        };
+
         return (
-            <div style={style}>
+            <div>
 
             </div>
         );

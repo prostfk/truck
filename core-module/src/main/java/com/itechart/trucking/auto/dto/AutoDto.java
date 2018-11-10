@@ -29,6 +29,9 @@ public class AutoDto {
         this.carNumber = auto.getCarNumber();
     }
 
+    public AutoDto() {
+    }
+
     public void setCompany(Company company) {
         this.company = new CompanyDto(company);
     }

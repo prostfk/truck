@@ -8,7 +8,13 @@ class CommonUtil {
     static getCorrectDateFromLong(longValue){
         let d = new Date(longValue);
         let dd = d.getDate();
+        if (dd > 0 && dd < 10){
+            dd = `0${dd}`;
+        }
         let mm = d.getMonth() + 1;
+        if (mm > 0 && mm < 10){
+            mm = `0${mm}`;
+        }
         let yyyy = d.getFullYear();
         return `${dd}/${mm}/${yyyy}`;
     }

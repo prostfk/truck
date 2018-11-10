@@ -18,6 +18,7 @@ public class Auto {
     private Integer fuelConsumption;
     private String name;
     private String carNumber;
+    private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_owner", nullable = false)

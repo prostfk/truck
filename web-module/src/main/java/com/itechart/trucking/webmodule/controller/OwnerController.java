@@ -1,7 +1,11 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
+import com.itechart.trucking.cancellationAct.entity.CancellationAct;
+import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
 import com.itechart.trucking.company.entity.Company;
-import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.consignment.entity.Consignment;
+import com.itechart.trucking.consignment.repository.ConsignmentRepository;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
@@ -43,13 +47,18 @@ public class OwnerController {
     @Autowired
     private RouteListRepository routeListRepository;
 
+    @Autowired
+    private CancellationActRepository cancellationActRepository;
+
+    @Autowired
+    private ConsignmentRepository consignmentRepository;
+
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
         LOGGER.debug("'get' request on index page");
         return "index";
     }
-
-//    TEST
 
     @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
@@ -84,6 +93,7 @@ public class OwnerController {
 
     @GetMapping(value = "/company/orders/{id}")
     @ResponseBody
+
     public OrderDto fetchOrderOfCompany(@PathVariable Long id) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
@@ -91,12 +101,15 @@ public class OwnerController {
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             System.out.println("CALLED");
             Order order1 = order.get();
-            return new OrderDto(order1);
+            OrderDto orderDto = new OrderDto(order1);
+            orderDto.getWaybill().setAuto(order.get().getWaybill().getAuto());
+            orderDto.getWaybill().setDriver(order.get().getWaybill().getDriver());
+            orderDto.setCompany(company);
+            return orderDto;
         } else {
             System.out.println("access dined");
             return null;
         }
-    }
 
     @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -105,7 +118,7 @@ public class OwnerController {
         Company company = userRepository.findUserByUsername(name).getCompany();
         Optional<Order> order = orderRepository.findById(id);
 
-        List<RouteList> routeLists = null;
+        List<RouteList> routeLists;
         if(order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
         }
@@ -113,5 +126,24 @@ public class OwnerController {
             return null;
         }
         return Odt.RouteListToDtoList(routeLists);
+    }
+
+    @GetMapping(value = "/company/cancelAct/{id}")
+    @ResponseBody
+    public CancellationActDto fetchCancelActOfCompany(@PathVariable Long id) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        Company company = userRepository.findUserByUsername(name).getCompany();
+        Optional<Order> order = orderRepository.findById(id);
+
+        Consignment consignment;
+        CancellationAct cancellationAct;
+        if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
+            consignment = consignmentRepository.findConsignmentByOrder(order.get());
+            cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
+        } else {
+            return null;
+        }
+
+        return new CancellationActDto(cancellationAct);
     }
 }

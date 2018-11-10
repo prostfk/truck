@@ -15,18 +15,21 @@ export default class AdminHeader extends Component {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav mr-auto">
                         <li className="nav-item active">
-                            <a className={'nav-link'}>{localStorage.getItem('username')}</a>
-                        </li>
-                        <li className="nav-item active">
                             <Link to={`/usersList`} className="nav-link">Список пользователей компании</Link>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/stocks`} className="nav-link">Склады</Link>
                         </li>
                         <li className="nav-item active">
+                            <Link to={`/autos`} className="nav-link">Автомобили</Link>
+                        </li>
+                        <li className="nav-item active">
                             <ModalComponentEditCompany className="nav-link" text={"Редактировать компанию"}/>
                         </li>
                     </ul>
+                    <div className="active">
+                        <span className={'nav-link user-role'}>Администратор</span>
+                    </div>
                     <li className="navbar-text">
                         <LogoutComponent/>
                     </li>

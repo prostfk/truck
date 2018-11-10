@@ -165,14 +165,10 @@ public class ManagerController {
         waybill.setCheckDate(new Date((new java.util.Date()).getTime()));
         waybill.setUser(userByUsername);
 
-        List<CancellationAct> cancellationActList = order.get().getConsignment().getCancellationActList();
-
-        for(CancellationAct cancellationAct: cancellationActList) {
-            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
-            cancellationActRepository.save(cancellationAct);
-            waybillRepository.save(waybill);
-        }
-
+        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
+        cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
+        cancellationActRepository.save(cancellationAct);
+        waybillRepository.save(waybill);
         order.get().setWaybill(waybill);
 
         return new OrderDto(order.get());

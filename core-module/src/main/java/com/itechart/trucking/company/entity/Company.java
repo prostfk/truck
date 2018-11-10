@@ -1,12 +1,14 @@
 package com.itechart.trucking.company.entity;
 
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.auto.repository.AutoRepository;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.user.entity.User;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -18,7 +20,6 @@ import java.util.List;
 @Entity
 @Data
 public class Company {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -22,7 +22,7 @@ public class CancellationAct {
     @Min(0)
     private Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "consignment_id")
     private Consignment consignment;
 
