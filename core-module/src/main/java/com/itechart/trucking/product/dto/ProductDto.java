@@ -14,7 +14,8 @@ public class ProductDto {
     private String name;
     private Integer status;
     private String description;
-    private int price;
+    private Double price;
+    private Integer count;
 
     private CancellationActDto cancellationAct;
     private ConsignmentDto consignment;
@@ -25,6 +26,7 @@ public class ProductDto {
         this.status = product.getStatus();
         this.description = product.getDescription();
         this.price = product.getPrice();
+        this.count = product.getCount();
     }
 
     public void setCancellationAct(CancellationAct cancellationAct) {

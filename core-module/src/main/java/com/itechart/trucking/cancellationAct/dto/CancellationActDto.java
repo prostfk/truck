@@ -14,7 +14,7 @@ public class CancellationActDto {
     private Long id;
     private Date date;
     private Integer amount;
-    private Integer price;
+    private Double price;
 
     private ConsignmentDto consignment;
     private ProductDto product;

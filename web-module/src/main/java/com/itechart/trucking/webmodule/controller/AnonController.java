@@ -67,7 +67,7 @@ public class AnonController {
     @ResponseBody
     public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        user.setUserRole(UserRole.ROLE_ADMIN);
+        user.setUserRole(UserRole.ROLE_COMP_OWNER);
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
         if (tokenByTokenValue==null){
             jsonObject.put("error", "Invalid link!");
