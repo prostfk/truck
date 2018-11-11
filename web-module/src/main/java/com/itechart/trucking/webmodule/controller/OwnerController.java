@@ -110,6 +110,7 @@ public class OwnerController {
             System.out.println("access dined");
             return null;
         }
+    }
 
     @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
