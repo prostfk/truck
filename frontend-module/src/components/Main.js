@@ -32,8 +32,6 @@ import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
 
-import {TestComponent} from "./testComponent/testComponent";
-
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 import OwnerStockList from "./pageOwner/pageOwnerStockList";
 import TestComponent from "./testComponent/testComponent";
