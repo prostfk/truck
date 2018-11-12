@@ -5,7 +5,7 @@ import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 
-export default class TestComponent extends Component {
+export default class CreateStockModal extends Component {
 
     state = {
         modal: false,
@@ -43,9 +43,18 @@ export default class TestComponent extends Component {
 
     submitForm = () => {
         if (this.state.successAddress !== '') {
-            //fetch().then().then()
             console.log(this.state.successAddress);
             console.log(this.state.suggest.place_id);
+            let formData = new FormData();
+            formData.append("name", this.state.successAddress);
+            formData.append("address", this.state.suggest.place_id);
+            fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
+                    this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
+                })
+            }, err => console.log(err));
             this.toggle();
         } else {
             document.getElementById('info').style.color = 'red';
@@ -71,7 +80,7 @@ export default class TestComponent extends Component {
                                 <div id={'react-google-maps-searcher'}>
                                     <ReactGoogleMapLoader
                                         params={{
-                                            key: API_KEY,
+                                            key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI',
                                             libraries: "places,geocode",
                                         }}
                                         render={googleMaps =>
@@ -114,7 +123,6 @@ export default class TestComponent extends Component {
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
 const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";
-TestComponent.propTypes = {
+CreateStockModal.propTypes = {
     googleMaps: PropTypes.object,
 };
-
