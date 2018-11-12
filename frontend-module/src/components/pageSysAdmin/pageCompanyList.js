@@ -32,7 +32,7 @@ class SysAdminPage extends React.Component{
         })
     };
     changeMail(event){
-        this.setState({
+        thispa.setState({
             inputMail: event.target.value
         })
     }
@@ -43,9 +43,13 @@ class SysAdminPage extends React.Component{
         fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             response.json().then(function (data) {
                 if (data.error===undefined){
-                    document.getElementById('emaillabel').innerText = 'Check your email';
+                    document.getElementById('result-span').innerText = 'Check your email';
+                    setTimeout(()=>{
+                        document.getElementById('user-new-form').style.display = 'none';
+                    },2000);
+                    document.getElementById('user-new-form').style.display = '';
                 }else{
-                    document.getElementById('emaillabel').innerText = 'check you data';
+                    document.getElementById('result-span').innerText = 'Check you data';
                 }
             })
         })
@@ -151,7 +155,8 @@ class SysAdminPage extends React.Component{
             </div>
 
             <div className="offset-md-1 col-md-3">
-                <form className="superuserform_newaccountform grey_form">
+                <span id="result-span"/>
+                <form className="superuserform_newaccountform grey_form" id={'user-new-form'}>
                     <h5>Регистрация новой компании</h5>
                     <div className="form-group">
                         <label htmlFor="id" id="emaillabel">Email</label>

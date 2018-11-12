@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
+import ValidationUtil from "../commonUtil/validationUtil";
 
 export default class UsersList extends Component {
 
@@ -23,6 +24,23 @@ export default class UsersList extends Component {
         };
         this.fetchToUsers();
     }
+
+    validateUserForm = () => {
+        let usernameVal = ValidationUtil.validateStringForLength(this.state.newUserUsername, 5, 20);
+        let nameVal = ValidationUtil.validateStringForLength(this.state.newUserFirstName, 2, 50);
+        let surnameVal = ValidationUtil.validateStringForLength(this.state.newUserSecondName, 4, 50);
+        let passwordVal = ValidationUtil.validateStringForLength(this.state.newUserPassword, 6, 20);
+        if (!usernameVal) document.getElementById('error-username-span').innerText = "Никнейм должен быть от 5 до 20 символов";
+        else document.getElementById('error-username-span').innerText = '';
+        if (!nameVal) document.getElementById('error-name-span').innerText = "Имя должно быть от 2 до 20 символов";
+        else document.getElementById('error-name-span').innerText = '';
+        if (!surnameVal) document.getElementById('error-surname-span').innerText = "Фамилия должна быть от 4 до 20 символов";
+        else document.getElementById('error-surname-span').innerText = '';
+        if (!usernameVal) document.getElementById('error-password-span').innerText = "Пароль должен быть от 6 до 20 символов";
+        else document.getElementById('error-password-span').innerText = '';
+        console.log(this.state);
+        return usernameVal && nameVal && surnameVal && passwordVal;
+    };
 
     fetchToUsers = () => {
         fetch('http://localhost:8080/api/users', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
@@ -71,57 +89,59 @@ export default class UsersList extends Component {
     };
 
     saveNewUser = () => {
-        let formData = new FormData();
-        formData.append('username',this.state.newUserUsername);
-        formData.append('email',this.state.newUserEmail);
-        formData.append('userRole',this.state.newUserRole);
-        formData.append('password',this.state.newUserPassword);
-        formData.append('birthDay', this.state.newUserDate);
-        formData.append('firstName', this.state.newUserFirstName);
-        formData.append('secondName', this.state.newUserSecondName);
-        formData.append('thirdName', this.state.newUserThirdName);
-        formData.append('country', this.state.newUserCountry);
-        formData.append('city', this.state.newUserCity);
-        formData.append('street', this.state.newUserStreet);
-        formData.append('houseNumber', this.state.newUserHouseNumber);
-        formData.append('flatNumber', this.state.newUserFlatNumber);
-        fetch('http://localhost:8080/api/saveUser', {
-            method: 'POST',
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(response => {
-            if (response.status > 199 && response.status < 300) {
-                return response.json();
-            }
-        }).then(data=>{
-            //todo add backend processing!
-            console.log(data);
-            if (data.error === undefined){
-                document.getElementById('message-span').innerText = 'Сохранено';
-                document.getElementById('from-content').style.display = 'none';
-                setTimeout(function () {
-                    // document.getElementById('add-user-form').style.display = 'none';
-                    document.getElementById('message-span').innerText = '';
-                    document.getElementById('from-content').style.display = '';
-                    document.getElementById('newUserEmail').value = '';
-                    document.getElementById('newUserPassword').value = '';
-                    document.getElementById('newUserUsername').value = '';
-                    document.getElementById('newUserRole').value = '';
-                    document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
-                    document.getElementById('newUserFirstName').value = '';
-                    document.getElementById('newUserSecondName').value = '';
-                    document.getElementById('newUserThirdName').value = '';
-                    document.getElementById('newUserCountry').value = '';
-                    document.getElementById('newUserCity').value = '';
-                    document.getElementById('newUserStreet').value = '';
-                    document.getElementById('newUserHouseNumber').value = '';
-                    document.getElementById('newUserFlatNumber').value = '';
+        if (this.validateUserForm()){
+            let formData = new FormData();
+            formData.append('username',this.state.newUserUsername);
+            formData.append('email',this.state.newUserEmail);
+            formData.append('userRole',this.state.newUserRole);
+            formData.append('password',this.state.newUserPassword);
+            formData.append('birthDay', this.state.newUserDate);
+            formData.append('firstName', this.state.newUserFirstName);
+            formData.append('secondName', this.state.newUserSecondName);
+            formData.append('thirdName', this.state.newUserThirdName);
+            formData.append('country', this.state.newUserCountry);
+            formData.append('city', this.state.newUserCity);
+            formData.append('street', this.state.newUserStreet);
+            formData.append('houseNumber', this.state.newUserHouseNumber);
+            formData.append('flatNumber', this.state.newUserFlatNumber);
+            fetch('http://localhost:8080/api/saveUser', {
+                method: 'POST',
+                body: formData,
+                headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            }).then(response => {
+                if (response.status > 199 && response.status < 300) {
+                    return response.json();
+                }
+            }).then(data=>{
+                //todo add backend processing!
+                console.log(data);
+                if (data.error === undefined){
+                    document.getElementById('message-span').innerText = 'Сохранено';
+                    document.getElementById('from-content').style.display = 'none';
+                    setTimeout(function () {
+                        // document.getElementById('add-user-form').style.display = 'none';
+                        document.getElementById('message-span').innerText = '';
+                        document.getElementById('from-content').style.display = '';
+                        document.getElementById('newUserEmail').value = '';
+                        document.getElementById('newUserPassword').value = '';
+                        document.getElementById('newUserUsername').value = '';
+                        document.getElementById('newUserRole').value = '';
+                        document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
+                        document.getElementById('newUserFirstName').value = '';
+                        document.getElementById('newUserSecondName').value = '';
+                        document.getElementById('newUserThirdName').value = '';
+                        document.getElementById('newUserCountry').value = '';
+                        document.getElementById('newUserCity').value = '';
+                        document.getElementById('newUserStreet').value = '';
+                        document.getElementById('newUserHouseNumber').value = '';
+                        document.getElementById('newUserFlatNumber').value = '';
 
-                },2000);
-            }else{
-                document.getElementById('error-form-span').innerText = data.error;
-            }
-        })
+                    },2000);
+                }else{
+                    document.getElementById('error-form-span').innerText = data.error;
+                }
+            })
+        }
     };
 
     render() {
@@ -159,26 +179,35 @@ export default class UsersList extends Component {
                             <h5>Регистрация нового пользователя</h5>
                             <span className={'error-span'} id={'error-form-span'}/>
                             <div className="form-group">
-                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
-                                <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
-                                       placeholder="newUser@gmail.com" required=""/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserUsername" id="usernameLabel">Никнейм</label>
+                                <label htmlFor="newUserUsername" id="usernameLabel">Никнейм*</label>
                                 <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
                                        placeholder="bestWorker2018" required=""/>
+                                <span className="error-span" id="error-username-span"/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserSecondName" id="userSecondNameLabel">Фамилия*</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserSecondName" required=""/>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserSecondName" placeholder={'Фамилия'} required=""/>
+                                <span className="error-span" id="error-surname-span"/>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="newUserFirstName" id="userFirstNameLabel">Имя</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserFirstName"/>
+                                <label htmlFor="newUserFirstName" id="userFirstNameLabel">Имя*</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" placeholder={'Имя'} id="newUserFirstName"/>
+                                <span className="error-span" id="error-name-span"/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserThirdName" id="userThirdNameLabel">Отчество</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserThirdName" />
+                                <input onChange={this.changeInput} type="text" className="form-control" placeholder={'Отчество'} id="newUserThirdName" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
+                                <input onChange={this.changeInput} type="password" className="form-control"
+                                       id="newUserPassword" placeholder="qwerty" required=""/>
+                                <span className="error-span" id="error-password-span"/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
+                                <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
+                                       placeholder="newUser@gmail.com" required=""/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserAddress" id="userAddressLabel">Адрес</label>
@@ -208,11 +237,7 @@ export default class UsersList extends Component {
                                     <option value={'ROLE_DRIVER'}>Водитель</option>
                                 </select>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserPassword" id="passwordLabel">Пароль</label>
-                                <input onChange={this.changeInput} type="password" className="form-control"
-                                       id="newUserPassword" placeholder="qwerty" required=""/>
-                            </div>
+
                             <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
                         </div>
                     </form>

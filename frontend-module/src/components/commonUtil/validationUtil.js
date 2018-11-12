@@ -1,7 +1,7 @@
 export default class ValidationUtil {
 
     static validateStringForLength(string, min,max){
-        return string.length >= min && string.length <= max;
+        return string!==undefined && string.toString().length >= min && string.toString().length <= max;
     }
 
     static validateDate(date){
