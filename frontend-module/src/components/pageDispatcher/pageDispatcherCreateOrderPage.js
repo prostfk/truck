@@ -53,7 +53,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
 
     validateOrderForm = () => {
         let clientIdValidation = ValidationUtil.validateForNumber(this.state.client_id);
-        let nameValidation = ValidationUtil.validateStringForLength(this.state.name.join(''), 3, 20);
+        let nameValidation = ValidationUtil.validateStringForLength(Array.isArray(this.state.name) ? this.state.name.join('') : this.state.name, 3, 20);
         let dateArrivalValidation = ValidationUtil.validateDateToPattern(this.state.date_arrival);
         let dateDepartureValidation = ValidationUtil.validateDateToPattern(this.state.date_departure);
         let validateAuto = ValidationUtil.validateForNumber(this.state.auto);
@@ -426,7 +426,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                             <div className="col-md-3">{item.description}</div>
                                             <div className="col-md-2">{item.count}</div>
                                             <div className="col-md-2">{item.price}</div>
-                                            {/*<div className="col-md-2"><a onClick={this.removeProduct(item.name)} id={`item-${item.name}`} className="btn-sm btn-dark">Удалить</a></div>*/}
+                                            <div className="col-md-2"><a onClick={this.removeProduct(item.name)} id={`item-${item.name}`} className="btn-sm btn-dark">Удалить</a></div>
                                         </div>
                                     }
                                 )

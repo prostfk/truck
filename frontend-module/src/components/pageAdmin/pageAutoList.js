@@ -40,7 +40,7 @@ export default class AutoList extends Component {
         else document.getElementById('error-number-span').innerText = '';
         if (!typeVal) document.getElementById('error-type-span').innerText = 'Тип должен быть от 3 до 25 символов';
         else document.getElementById('error-type-span').innerText = '';
-        if (!fuelVal) document.getElementById('error-fuel-span').innerText = 'Расход должен быть от 5 до 45 символов';
+        if (!fuelVal) document.getElementById('error-fuel-span').innerText = 'Расход должен быть от 3 до 150 литров';
         else document.getElementById('error-fuel-span').innerText = '';
         console.log(`Number: ${numberVal}, Name: ${nameVal}, Type: ${typeVal}, Fuel: ${fuelVal}`);
         return nameVal && numberVal && typeVal && fuelVal;

@@ -22,9 +22,6 @@ export default class CompanyOwnerHeader extends Component {
                             <Link to={`/owner/stocks`} className="nav-link">Склады</Link>
                         </li>
                         <li className="nav-item active">
-                            <Link to={`/editCompany`} className="nav-link">Редактировать компанию</Link>
-                        </li>
-                        <li className="nav-item active">
                             <Link to={`/owner/statistics`} className="nav-link">Статистика</Link>
                         </li>
                         <li className="nav-item active">

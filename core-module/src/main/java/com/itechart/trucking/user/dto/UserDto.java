@@ -50,6 +50,14 @@ public class UserDto {
         this.flatNumber = user.getFlatNumber();
     }
 
+    public void setUserRole(String userRole) {
+        this.userRole = UserRole.valueOf(userRole);
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
     public void setCompany(Company company) {
         this.company = new CompanyDto(company);
     }

@@ -20,7 +20,8 @@ export default class UsersList extends Component {
             newUserCity: '',
             newUserStreet: '',
             newUserHouseNumber: '',
-            newUserFlatNumber: ''
+            newUserFlatNumber: '',
+            newUserPassport: ''
         };
         this.fetchToUsers();
     }
@@ -30,6 +31,7 @@ export default class UsersList extends Component {
         let nameVal = ValidationUtil.validateStringForLength(this.state.newUserFirstName, 2, 50);
         let surnameVal = ValidationUtil.validateStringForLength(this.state.newUserSecondName, 4, 50);
         let passwordVal = ValidationUtil.validateStringForLength(this.state.newUserPassword, 6, 20);
+        let emailVal = ValidationUtil.validateEmailForPattern(this.state.newUserEmail);
         if (!usernameVal) document.getElementById('error-username-span').innerText = "Никнейм должен быть от 5 до 20 символов";
         else document.getElementById('error-username-span').innerText = '';
         if (!nameVal) document.getElementById('error-name-span').innerText = "Имя должно быть от 2 до 20 символов";
@@ -38,6 +40,14 @@ export default class UsersList extends Component {
         else document.getElementById('error-surname-span').innerText = '';
         if (!usernameVal) document.getElementById('error-password-span').innerText = "Пароль должен быть от 6 до 20 символов";
         else document.getElementById('error-password-span').innerText = '';
+        if (!emailVal) document.getElementById('error-email-span').innerText = "Неправильная почта";
+        else document.getElementById('error-email-span').innerText = '';
+        if (this.state.newUserRole.join('') === 'ROLE_DRIVER' && this.state.newUserPassport === ''){
+            console.log(this.state.newUserPassport);
+
+            document.getElementById('error-passport-span').innerText = "Неправильные данные";
+            return false;
+        }
         console.log(this.state);
         return usernameVal && nameVal && surnameVal && passwordVal;
     };
@@ -104,6 +114,9 @@ export default class UsersList extends Component {
             formData.append('street', this.state.newUserStreet);
             formData.append('houseNumber', this.state.newUserHouseNumber);
             formData.append('flatNumber', this.state.newUserFlatNumber);
+            if (this.state.newUserPassport !== ''){
+                formData.append('passport', this.state.newUserPassport)
+            }
             fetch('http://localhost:8080/api/saveUser', {
                 method: 'POST',
                 body: formData,
@@ -208,6 +221,8 @@ export default class UsersList extends Component {
                                 <label htmlFor="newUserEmail" id="emailLabel">Email</label>
                                 <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
                                        placeholder="newUser@gmail.com" required=""/>
+                                <span className="error-span" id="error-email-span"/>
+
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserAddress" id="userAddressLabel">Адрес</label>
@@ -237,6 +252,13 @@ export default class UsersList extends Component {
                                     <option value={'ROLE_DRIVER'}>Водитель</option>
                                 </select>
                             </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта</label>
+                                <input onChange={this.changeInput} value={this.state.newUserPassport} type="text" className="form-control" id="newUserPassport" required=""/>
+                                <span className="error-span" id="error-passport-span"/>
+
+                            </div>
+
 
                             <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
                         </div>
