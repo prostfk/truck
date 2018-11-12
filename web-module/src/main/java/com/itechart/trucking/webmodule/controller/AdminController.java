@@ -6,6 +6,8 @@ import com.itechart.trucking.auto.repository.AutoRepository;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
@@ -63,6 +65,8 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private DriverRepository driverRepository;
 
     @GetMapping(value = "/users")
     public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
@@ -137,7 +141,9 @@ public class AdminController {
             } else {
                 if (password.length() > 5 && password.length() < 20) {
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    userRepository.updateUser(userDto.getId(), userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), userDto.getBirthDay());
+                    userRepository.updateUser(userDto.getId(), userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), userDto.getBirthDay(),
+                            userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(),
+                            userDto.getStreet(), userDto.getHouseNumber(), userDto.getFlatNumber());
                     json.put("username", userDto.getUsername());
                     json.put("email", userDto.getEmail());
                     json.put("birthDay", userDto.getBirthDay());
@@ -151,13 +157,24 @@ public class AdminController {
     }
 
     @PostMapping(value = "/saveUser")
-    public Object saveUser(@Valid UserDto userDto, String password, String birthDay) throws JSONException {
+    public Object saveUser(@Valid UserDto userDto, String password, String passport, String birthDay) throws JSONException {
         JSONObject json = new JSONObject();
         User userByUsername = userRepository.findUserByUsername(userDto.getUsername());
         if (userByUsername == null) {
             if (password.length() > 5 && password.length() < 20) {
                 User admin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay());
+                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay(),
+                        userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
+                        userDto.getHouseNumber(), userDto.getFlatNumber());
+                //КОСТЫЛЬ
+                if (userDto.getUserRole().equals(UserRole.ROLE_DRIVER)){
+                    User savedUser = userRepository.findUserByUsername(userDto.getUsername());
+                    driverRepository.saveDriver(
+                            String.format("%s %s", savedUser.getFirstName(), savedUser.getSecondName()),
+                            passport,savedUser.getCompany().getId(),savedUser.getId()
+                    );
+                }
+                //КОСТЫЛЬ
                 json.put("username", userDto.getUsername());
                 json.put("email", userDto.getEmail());
                 json.put("birthDay", userDto.getBirthDay());

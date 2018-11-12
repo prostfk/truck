@@ -5,7 +5,7 @@ import LogoutComponent from "../pageLogout/logoutComponent";
 export default class CompanyOwnerHeader extends Component {
     render() {
         return (
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+            <nav className="navbar navbar-expand-lg navbar-dark" style={{backgroundColor: '#4e4e4e'}}>
                 <Link to={`/`} className="navbar-brand">Trucking</Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -20,9 +20,6 @@ export default class CompanyOwnerHeader extends Component {
                         </li>
                         <li className="nav-item active">
                             <Link to={`/owner/stocks`} className="nav-link">Склады</Link>
-                        </li>
-                        <li className="nav-item active">
-                            <Link to={`/editCompany`} className="nav-link">Редактировать компанию</Link>
                         </li>
                         <li className="nav-item active">
                             <Link to={`/owner/statistics`} className="nav-link">Статистика</Link>

@@ -3,6 +3,7 @@ package com.itechart.trucking.webmodule.controller;
 import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
+import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.odt.Odt;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -111,19 +113,23 @@ public class DriverController {
         return Odt.ProductToDtoList(products);
     }
 
-    @RequestMapping(value = "/orders/getMyOrders/cancelProduct/{productId}", method = RequestMethod.GET)
-    public ProductDto cancelProduct(@PathVariable Long productId) {
+    @RequestMapping(value = "/orders/getMyOrders/{orderId}/cancelProduct/{productId}", method = RequestMethod.GET)
+    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId) {
+        Consignment consignment = orderRepository.findOrderById(orderId).getConsignment();
+        CancellationAct cancellationAct = consignment.getCancellationAct();
+
+        if (cancellationAct == null) {
+            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
+            cancellationActRepository.save(cancellationAct);
+        }
+
         Optional<Product> product = productRepository.findById(productId);
-        CancellationAct cancellationAct = product.isPresent() ? product.get().getCancellationAct() : null;
-
-        if (cancellationAct == null)
-            return null;
-
         product.get().setStatus(4);
         cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
         Integer amount = cancellationAct.getAmount() + 1;
         cancellationAct.setAmount(amount);
 
+        product.get().setCancellationAct(cancellationAct);
         productRepository.save(product.get());
         cancellationActRepository.save(cancellationAct);
 

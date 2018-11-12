@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 
-import { withBaseIcon } from 'react-icons-kit'
+import {withBaseIcon} from 'react-icons-kit'
 import {remove} from 'react-icons-kit/fa/remove'
 import {edit} from 'react-icons-kit/fa/edit'
 import ModalAcceptDelete from "./modalAcceptDelete";
 import ModalComponentEditAuto from "./modalComponentEditAuto";
+import ValidationUtil from "../commonUtil/validationUtil";
 
-const SideIconContainer = withBaseIcon({ size: 24, style: {color: '#50505d'}});
-const RedIconContainer = withBaseIcon({ size: 24, style: {color: '#8d2a27'}});
+const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
+const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
 export const RemoveIcon = () => <RedIconContainer icon={remove}/>
 export const EditIcon = () => <SideIconContainer icon={edit}/>
 
@@ -16,7 +17,7 @@ export default class AutoList extends Component {
 
     constructor(props) {
         super(props);
-        this.submiteDelete = this.submiteDelete.bind(this);
+        this.submitDelete = this.submitDelete.bind(this);
         this.submitEdit = this.submitEdit.bind(this);
         this.state = {
             autos: [],
@@ -27,6 +28,23 @@ export default class AutoList extends Component {
         };
         this.fetchToAutos();
     }
+
+    validateAuto = () => {
+        let nameVal = ValidationUtil.validateStringForLength(this.state.newAutoName, 3, 45);
+        let numberVal = ValidationUtil.validateStringForLength(this.state.newAutoNumber, 5, 45);
+        let typeVal = ValidationUtil.validateStringForLength(this.state.newAutoType, 3, 25);
+        let fuelVal = ValidationUtil.validateNumberInTheRage(this.state.newAutoFuelConsumption, 3, 150);
+        if (!nameVal) document.getElementById('error-name-span').innerText = 'Название должно быть от 3 до 45 символов';
+        else document.getElementById('error-name-span').innerText = '';
+        if (!numberVal) document.getElementById('error-number-span').innerText = 'Номер должен быть от 5 до 45 символов';
+        else document.getElementById('error-number-span').innerText = '';
+        if (!typeVal) document.getElementById('error-type-span').innerText = 'Тип должен быть от 3 до 25 символов';
+        else document.getElementById('error-type-span').innerText = '';
+        if (!fuelVal) document.getElementById('error-fuel-span').innerText = 'Расход должен быть от 3 до 150 литров';
+        else document.getElementById('error-fuel-span').innerText = '';
+        console.log(`Number: ${numberVal}, Name: ${nameVal}, Type: ${typeVal}, Fuel: ${fuelVal}`);
+        return nameVal && numberVal && typeVal && fuelVal;
+    };
 
     fetchToAutos = () => {
         fetch('http://localhost:8080/api/autos', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
@@ -49,37 +67,41 @@ export default class AutoList extends Component {
     };
 
     saveNewAuto = () => {
-        let formData = new FormData();
-        formData.append('name',this.state.newAutoName);
-        formData.append('type',this.state.newAutoType);
-        formData.append('fuelConsumption',this.state.newAutoFuelConsumption);
-        formData.append('carNumber',this.state.newAutoNumber);
-
-        fetch('http://localhost:8080/api/saveAuto/', {
-            method: "POST",
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(response => {
-            console.log(response);
-            return response.json();
-        }).then(data => {
-            console.log(data);
-            this.setState({
-                newAutoFuelConsumption:"",
-                newAutoType:"",
-                newAutoName:"",
-                newAutoNumber:""
+        if (this.validateAuto()) {
+            let formData = new FormData();
+            formData.append('name', this.state.newAutoName);
+            formData.append('type', this.state.newAutoType);
+            formData.append('fuelConsumption', this.state.newAutoFuelConsumption);
+            formData.append('carNumber', this.state.newAutoNumber);
+            fetch('http://localhost:8080/api/saveAuto/', {
+                method: "POST",
+                body: formData,
+                headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            }).then(response => {
+                console.log(response);
+                return response.json();
+            }).then(data => {
+                console.log(data);
+                this.setState({
+                    newAutoFuelConsumption: "",
+                    newAutoType: "",
+                    newAutoName: "",
+                    newAutoNumber: ""
+                });
+                this.forceUpdateHandler();
             });
-            this.forceUpdateHandler();
-        });
+        }
     };
 
-    forceUpdateHandler(){
+    forceUpdateHandler() {
         const refthis = this;
-        fetch('http://localhost:8080/api/autos/', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch('http://localhost:8080/api/autos/', {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            refthis.setState({autos:result})
+            refthis.setState({autos: result})
         })
     };
 
@@ -92,16 +114,21 @@ export default class AutoList extends Component {
             <div className={'col-md-2'}>{auto.fuelConsumption}</div>
             <div className={'col-md-1'}>
                 <div className={"col-md-2"}>
-                    <ModalComponentEditAuto clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} autoId={auto.id} autoName={auto.name} autoCarNumber={auto.carNumber} autoType={auto.type} autoFuelConsumption={auto.fuelConsumption} />
+                    <ModalComponentEditAuto clickfunc={this.submitEdit}
+                                            className={"table_button bg-secondary text-white"} autoId={auto.id}
+                                            autoName={auto.name} autoCarNumber={auto.carNumber} autoType={auto.type}
+                                            autoFuelConsumption={auto.fuelConsumption}/>
                 </div>
             </div>
             <div className={"col-md-1"}>
-                <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={auto.id} headerText={"Вы действительно хотите удалить авто?"} bodyText={"Восстановить авто будет невозможно"} />
+                <ModalAcceptDelete clickfunc={this.submitDelete} componentId={auto.id}
+                                   headerText={"Вы действительно хотите удалить авто?"}
+                                   bodyText={"Восстановить авто будет невозможно"}/>
             </div>
         </div>
     };
 
-    submiteDelete(autoId){
+    submitDelete(autoId) {
         const ref = this;
         fetch('http://localhost:8080/api/auto/', {
             method: 'DELETE',
@@ -112,15 +139,15 @@ export default class AutoList extends Component {
         }).then(function (result) {
             console.log(result);
             if (result) {
-                ref.setState({autos:result})
+                ref.setState({autos: result})
             }
         }).catch((err) => {
             console.log(err);
         });
     }
 
-    submitEdit(autoId,autoName,autoCarNumber,autoType,autoFuelConsumption,event){
-        let refThis=this;
+    submitEdit(autoId, autoName, autoCarNumber, autoType, autoFuelConsumption, event) {
+        let refThis = this;
         let formData = new FormData();
         formData.append("id", autoId);
         formData.append("name", autoName);
@@ -160,7 +187,7 @@ export default class AutoList extends Component {
                         <div className="col-md-2">Номер</div>
                         <div className="col-md-2">Тип</div>
                         <div className="col-md-2">Расход на 100км</div>
-                        <div className="col-md-2"></div>
+                        <div className="col-md-2"/>
                     </div>
                     {
                         this.state.autos.map((auto) => {
@@ -189,21 +216,29 @@ export default class AutoList extends Component {
                                 <label htmlFor="newUserEmail" id="emailLabel">Название</label>
                                 <input onChange={this.changeInput} type="text" className="form-control" id="newAutoName"
                                        placeholder="Mazda 1000" required="" value={this.state.newAutoName}/>
+                                <span className="error-span" id="error-name-span"/>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserEmail" id="emailLabel">Номер</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newAutoNumber"
-                                       placeholder="0000 AH-7" required="" value={this.state.newAutoNumber} />
+                                <input onChange={this.changeInput} type="text" className="form-control"
+                                       id="newAutoNumber"
+                                       placeholder="0000 AH-7" required="" value={this.state.newAutoNumber}/>
+                                <span className="error-span" id="error-number-span"/>
+
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserEmail" id="emailLabel">Тип</label>
                                 <input onChange={this.changeInput} type="text" className="form-control" id="newAutoType"
                                        placeholder="Крытый кузов" required="" value={this.state.newAutoType}/>
+                                <span className="error-span" id="error-type-span"/>
+
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserEmail" id="emailLabel">Расход на 100км</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newAutoFuelConsumption"
+                                <input onChange={this.changeInput} type="text" className="form-control"
+                                       id="newAutoFuelConsumption"
                                        placeholder="20" required="" value={this.state.newAutoFuelConsumption}/>
+                                <span className="error-span" id="error-fuel-span"/>
                             </div>
                             <a onClick={this.saveNewAuto} className="btn btn-success btn_fullsize">Сохранить</a>
                         </div>

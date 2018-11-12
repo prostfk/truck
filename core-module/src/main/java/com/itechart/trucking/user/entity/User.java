@@ -27,6 +27,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     private Date birthDay;
+    private String firstName;
+    private String secondName;
+    private String thirdName;
+    private String country;
+    private String city;
+    private String street;
+    private String houseNumber;
+    private String flatNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company", nullable = false)

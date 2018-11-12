@@ -1,6 +1,18 @@
 ﻿import React, {Component} from "react";
+import GoogleMapReact from 'google-map-react';
+import InfoWindow from 'google-map-react';
+
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 class ManagerRouteList extends Component {
+
+    static defaultProps = {
+        center: {
+            lat: 59.95,
+            lng: 30.33
+        },
+        zoom: 11
+    };
 
     constructor(props) {
         super(props);
@@ -121,6 +133,21 @@ class ManagerRouteList extends Component {
 
     render() {
         return (
+            <div style={{ height: '100vh', width: '100%' }}>
+                <GoogleMapReact
+                    bootstrapURLKeys={{ key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI' }}
+                    defaultCenter={this.props.center}
+                    defaultZoom={this.props.zoom}
+                >
+                    <InfoWindow
+                        marker={this.state.activeMarker}
+                        visible={this.state.showingInfoWindow}>
+                        <div>
+                            <h1>{this.state.selectedPlace.name}</h1>
+                        </div>
+                    </InfoWindow>
+                </GoogleMapReact>
+            </div>
             /*<Map google={this.props.google}
                  onClick={this.onMapClicked}>
                 <Marker onClick={this.onMarkerClick}
@@ -134,7 +161,7 @@ class ManagerRouteList extends Component {
                     </div>
                 </InfoWindow>
             </Map>*/
-           <div className="row" id="managerroutelist">
+          /* <div className="row" id="managerroutelist">
                 <div className="offset-md-2 col-md-8 form_clear">
                     <div className="row">
                         <div className="col-md-5">
@@ -161,7 +188,7 @@ class ManagerRouteList extends Component {
                         })
                     }
                 </div>
-            </div>
+            </div> */
         );
     }
 }
