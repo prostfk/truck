@@ -17,11 +17,14 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.EmailUtil;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +42,7 @@ import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_COMP_OWNER')")
 @CrossOrigin
@@ -65,12 +69,27 @@ public class AdminController {
     private DriverRepository driverRepository;
 
     @GetMapping(value = "/users")
-    public List<UserDto> findUsers() {
+    public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        List<User> usersByCompany = userByEmail.getCompany().getCompanyUsers();
-        List<UserDto> userDtos = Odt.UserListToDtoList(usersByCompany);
-        return userDtos;
+
+        Page<User> userPage = userRepository.findAllByCompany(userByEmail.getCompany(),PageRequest.of(pageId-1, 5));
+
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (User user:userPage.getContent()) {
+            JSONObject jsonObject;
+            UserDto userDto = new UserDto(user);
+            jsonObject = new JSONObject(UserDto.toMap(userDto));
+            jsonArray.put(jsonObject);
+        }
+
+        json.put("users",jsonArray);
+        json.put("currentPage",userPage.getNumber());
+        json.put("totalElements",userPage.getTotalElements());
+
+        return json.toString();
     }
 
     @PostMapping(value = "/editCompany")

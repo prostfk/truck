@@ -3,6 +3,8 @@ package com.itechart.trucking.user.repository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -21,7 +23,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findUsersByUserRole(UserRole userRole);
     User findUserByUsernameOrEmail(String username, String email);
     User findUserByEmailAndCompany(String email, Company company);
+
     List<User> findUsersByCompany(Company company);
+
+    Page<User> findAllByCompany(Company company, Pageable pageable);
 
     @Modifying
     @Transactional
@@ -42,7 +47,9 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query(value = "SELECT * FROM users WHERE CAST(birth_day AS text) LIKE :birthDay", nativeQuery = true)
     List<User> customFindUsersByBirthDay(@Param("birthDay") String birthDay);
+
     User findUserByIdAndUsername(Long id, String username);
+
     @Query(value = "SELECT * FROM users WHERE id=:userId AND company=:companyId", nativeQuery = true)
     User customFindUserByIdAndCompanyId(@Param("userId")Long userId, @Param("companyId")Long companyId);
 

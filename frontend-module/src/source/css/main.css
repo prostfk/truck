@@ -114,3 +114,6 @@ body {
 .user-role{
     color: #F3EEEE;
 }
+.activePage{
+    background-color: #f5f5f5;
+}

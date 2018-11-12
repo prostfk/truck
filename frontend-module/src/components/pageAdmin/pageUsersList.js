@@ -1,13 +1,18 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
+import Pagination from "react-js-pagination";
 import ValidationUtil from "../commonUtil/validationUtil";
 
 export default class UsersList extends Component {
 
     constructor(props) {
         super(props);
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.getUsersRequest = this.getUsersRequest.bind(this);
         this.state = {
             users: [],
+            totalElements:0,
+            currentPage:0,
             newUserEmail: '',
             newUserUsername: '',
             newUserPassword: '',
@@ -23,8 +28,9 @@ export default class UsersList extends Component {
             newUserFlatNumber: '',
             newUserPassport: ''
         };
-        this.fetchToUsers();
+        this.getUsersRequest();
     }
+
 
     validateUserForm = () => {
         let usernameVal = ValidationUtil.validateStringForLength(this.state.newUserUsername, 5, 20);
@@ -52,17 +58,23 @@ export default class UsersList extends Component {
         return usernameVal && nameVal && surnameVal && passwordVal;
     };
 
-    fetchToUsers = () => {
-        fetch('http://localhost:8080/api/users', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+
+ getUsersRequest = (pageid=1) => {
+        console.log(pageid);
+        fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
+        }).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
                 return response.json();
             }
         }).then(data => {
-            console.log(data);
+            let gettedusers =data.users;
+            console.log(gettedusers);
             this.setState({
-                users: data
+                users: gettedusers,
+                totalElements:data.totalElements,
+                currentPage:++data.currentPage
             })
         })
     };
@@ -72,6 +84,11 @@ export default class UsersList extends Component {
             [event.target.id]: [event.target.value]
         });
     };
+
+    handlePageChange(pageNumber) {
+        this.getUsersRequest(pageNumber);
+        this.setState({currentPage: pageNumber});
+    }
 
     renderUser = (user) => {
         return <div className={'row table_row'}>
@@ -158,32 +175,34 @@ export default class UsersList extends Component {
     };
 
     render() {
-        return (
-            <div className={'row'}>
-                <div className="offset-md-1 col-md-6 superuserform_companylist">
-                    <div className="row table_header">
-                        <div className="col-md-1">Id</div>
-                        <div className="col-md-5">Никнейм</div>
-                        <div className="col-md-3">Роль</div>
-                        <div className="col-md-3">Почта</div>
-                    </div>
-                    {
-                        this.state.users.map((user) => {
-                            return this.renderUser(user);
-                        })
-                    }
-                    <div className="row">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
+        return <div className={'row'}>
+            <div className="offset-md-1 col-md-6 superuserform_companylist">
+                <div className="row table_header">
+                    <div className="col-md-1">Id</div>
+                    <div className="col-md-5">Никнейм</div>
+                    <div className="col-md-3">Роль</div>
+                    <div className="col-md-3">Почта</div>
+                </div>
+                {
+                    this.state.users.map((user) => {
+                        return this.renderUser(user);
+                    })
+                }
+                <div className="row">
+                    <div>
+                        <Pagination
+                            activePage={this.state.currentPage}
+                            totalItemsCount={this.state.totalElements}
+                            itemsCountPerPage={5}
+                            pageRangeDisplayed={5}
+                            hideDisabled={true}
+                            itemClass={"page-link page-item"}
+                            activeClass={"activePage"}
+                            onChange={this.handlePageChange}
+                        />
                     </div>
                 </div>
+            </div>
 
                 <div className="offset-md-1 col-md-4" id={'add-user-form'}>
                     <form className="superuserform_newaccountform grey_form">
@@ -261,11 +280,39 @@ export default class UsersList extends Component {
 
 
                             <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
+
                         </div>
-                    </form>
-                </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserUsername" id="usernameLabel">Никнейм</label>
+                            <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
+                                   placeholder="bestWorker2018" required=""/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserDate" id="dateLabel">Дата рождения</label>
+                            <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
+                                   className="form-control" id="newUserDate"
+                                   placeholder="01/01/2018" required=""/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserRole" id="roleLabel">Роль</label>
+                            <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole}
+                                    onChange={this.changeInput}>
+                                <option value={'ROLE_ADMIN'}>Администратор</option>
+                                <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
+                                <option value={'ROLE_MANAGER'}>Менеджер</option>
+                                <option value={'ROLE_DRIVER'}>Водитель</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserPassword" id="passwordLabel">Пароль</label>
+                            <input onChange={this.changeInput} type="password" className="form-control"
+                                   id="newUserPassword" placeholder="qwerty" required=""/>
+                        </div>
+                        <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
+                    </div>
+                </form>
             </div>
-        );
+        </div>;
     }
 
 
