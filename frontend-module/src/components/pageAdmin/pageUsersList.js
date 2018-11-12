@@ -11,7 +11,15 @@ export default class UsersList extends Component {
             newUserUsername: '',
             newUserPassword: '',
             newUserRole: '',
-            newUserDate: CommonUtil.getCorrectDateFromLong(new Date().getTime())
+            newUserDate: CommonUtil.getCorrectDateFromLong(new Date().getTime()),
+            newUserFirstName: '',
+            newUserSecondName: '',
+            newUserThirdName: '',
+            newUserCountry: '',
+            newUserCity: '',
+            newUserStreet: '',
+            newUserHouseNumber: '',
+            newUserFlatNumber: ''
         };
         this.fetchToUsers();
     }
@@ -69,6 +77,14 @@ export default class UsersList extends Component {
         formData.append('userRole',this.state.newUserRole);
         formData.append('password',this.state.newUserPassword);
         formData.append('birthDay', this.state.newUserDate);
+        formData.append('firstName', this.state.newUserFirstName);
+        formData.append('secondName', this.state.newUserSecondName);
+        formData.append('thirdName', this.state.newUserThirdName);
+        formData.append('country', this.state.newUserCountry);
+        formData.append('city', this.state.newUserCity);
+        formData.append('street', this.state.newUserStreet);
+        formData.append('houseNumber', this.state.newUserHouseNumber);
+        formData.append('flatNumber', this.state.newUserFlatNumber);
         fetch('http://localhost:8080/api/saveUser', {
             method: 'POST',
             body: formData,
@@ -92,7 +108,14 @@ export default class UsersList extends Component {
                     document.getElementById('newUserUsername').value = '';
                     document.getElementById('newUserRole').value = '';
                     document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
-
+                    document.getElementById('newUserFirstName').value = '';
+                    document.getElementById('newUserSecondName').value = '';
+                    document.getElementById('newUserThirdName').value = '';
+                    document.getElementById('newUserCountry').value = '';
+                    document.getElementById('newUserCity').value = '';
+                    document.getElementById('newUserStreet').value = '';
+                    document.getElementById('newUserHouseNumber').value = '';
+                    document.getElementById('newUserFlatNumber').value = '';
 
                 },2000);
             }else{
@@ -129,7 +152,7 @@ export default class UsersList extends Component {
                     </div>
                 </div>
 
-                <div className="offset-md-1 col-md-3" id={'add-user-form'}>
+                <div className="offset-md-1 col-md-4" id={'add-user-form'}>
                     <form className="superuserform_newaccountform grey_form">
                         <span id="message-span"/>
                         <div id={'from-content'}>
@@ -144,6 +167,32 @@ export default class UsersList extends Component {
                                 <label htmlFor="newUserUsername" id="usernameLabel">Никнейм</label>
                                 <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
                                        placeholder="bestWorker2018" required=""/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserSecondName" id="userSecondNameLabel">Фамилия*</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserSecondName" required=""/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserFirstName" id="userFirstNameLabel">Имя</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserFirstName"/>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserThirdName" id="userThirdNameLabel">Отчество</label>
+                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserThirdName" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newUserAddress" id="userAddressLabel">Адрес</label>
+                                <div className="col-md-12 row" id="newUserAddress">
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-6" placeholder="Страна" id="newUserCountry" />
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-5 offset-md-1" placeholder="Город" id="newUserCity" />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div className="col-md-12 row">
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-4" placeholder="Улица" id="newUserStreet" />
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Дом" id="newUserHouseNumber" />
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Квартира" id="newUserFlatNumber" />
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="newUserDate" id="dateLabel">Дата рождения</label>

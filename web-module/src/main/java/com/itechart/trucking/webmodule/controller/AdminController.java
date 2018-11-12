@@ -140,7 +140,9 @@ public class AdminController {
         if (userByUsername == null) {
             if (password.length() > 5 && password.length() < 20) {
                 User admin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay());
+                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay(),
+                        userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
+                        userDto.getHouseNumber(), userDto.getFlatNumber());
                 json.put("username", userDto.getUsername());
                 json.put("email", userDto.getEmail());
                 json.put("birthDay", userDto.getBirthDay());

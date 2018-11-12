@@ -25,8 +25,11 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO users(username, email, password, user_role, company, birth_day) VALUES (:username, :email, :userPassword, :userRole, :companyId, :birthDay)",nativeQuery = true)
-    void saveUser(@Param("username")String username, @Param("email")String email, @Param("userPassword")String userPassword, @Param("userRole")String userRole, @Param("companyId")Long companyId,@Param("birthDay") Date birthDay);
+    @Query(value = "INSERT INTO users(username, email, password, user_role, company, birth_day, first_name, second_name, third_name, country, city, street, house_number, flat_number) VALUES (:username, :email, :userPassword, :userRole, :companyId, :birthDay, :firstName, :secondName," +
+            ":thirdName, :country, :city, :street, :houseNumber, :flatNumber)",nativeQuery = true)
+    void saveUser(@Param("username")String username, @Param("email")String email, @Param("userPassword")String userPassword, @Param("userRole")String userRole, @Param("companyId")Long companyId,@Param("birthDay") Date birthDay,
+                  @Param("firstName")String firstName, @Param("secondName") String secondName, @Param("thirdName") String thirdName, @Param("country") String country,
+                  @Param("city") String city, @Param("street") String street, @Param("houseNumber") String houseNumber, @Param("flatNumber") String flatNumber);
 
     @Modifying
     @Transactional
