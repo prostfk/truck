@@ -1,5 +1,6 @@
 package com.itechart.trucking.user.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.user.entity.User;
@@ -9,6 +10,7 @@ import lombok.Data;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Map;
 
 @Data
 public class UserDto {
@@ -36,5 +38,11 @@ public class UserDto {
 
     public void setCompany(Company company) {
         this.company = new CompanyDto(company);
+    }
+
+    public static Map<String, Object> toMap(UserDto userDto){
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<java.lang.String, java.lang.Object> map = oMapper.convertValue(userDto, Map.class);
+        return map;
     }
 }

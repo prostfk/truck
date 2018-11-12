@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
+import Pagination from "react-js-pagination";
 
 export default class UsersList extends Component {
 
@@ -7,16 +8,18 @@ export default class UsersList extends Component {
         super(props);
         this.state = {
             users: [],
+            pagesAmmount:0,
+            currentPage:0,
             newUserEmail: '',
             newUserUsername: '',
             newUserPassword: '',
             newUserRole: '',
             newUserDate: CommonUtil.getCorrectDateFromLong(new Date().getTime())
         };
-        this.fetchToUsers();
+        this.getUsersRequest();
     }
 
-    fetchToUsers = () => {
+    getUsersRequest = () => {
         fetch('http://localhost:8080/api/users', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
@@ -24,9 +27,12 @@ export default class UsersList extends Component {
                 return response.json();
             }
         }).then(data => {
-            console.log(data);
+            let gettedusers =data.users;
+            console.log(gettedusers);
             this.setState({
-                users: data
+                users: gettedusers,
+                pagesAmmount:data.pagesAmmount,
+                currentPage:data.currentPage
             })
         })
     };
@@ -36,6 +42,10 @@ export default class UsersList extends Component {
             [event.target.id]: [event.target.value]
         });
     };
+
+    handlePageChange(pageNumber) {
+        this.setState({currentPage: pageNumber});
+    }
 
     renderUser = (user) => {
         return <div className={'row table_row'}>
@@ -102,74 +112,74 @@ export default class UsersList extends Component {
     };
 
     render() {
-        return (
-            <div className={'row'}>
-                <div className="offset-md-1 col-md-6 superuserform_companylist">
-                    <div className="row table_header">
-                        <div className="col-md-1">Id</div>
-                        <div className="col-md-5">Никнейм</div>
-                        <div className="col-md-3">Роль</div>
-                        <div className="col-md-3">Почта</div>
-                    </div>
-                    {
-                        this.state.users.map((user) => {
-                            return this.renderUser(user);
-                        })
-                    }
-                    <div className="row">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
-                    </div>
+        return <div className={'row'}>
+            <div className="offset-md-1 col-md-6 superuserform_companylist">
+                <div className="row table_header">
+                    <div className="col-md-1">Id</div>
+                    <div className="col-md-5">Никнейм</div>
+                    <div className="col-md-3">Роль</div>
+                    <div className="col-md-3">Почта</div>
                 </div>
-
-                <div className="offset-md-1 col-md-3" id={'add-user-form'}>
-                    <form className="superuserform_newaccountform grey_form">
-                        <span id="message-span"/>
-                        <div id={'from-content'}>
-                            <h5>Регистрация нового пользователя</h5>
-                            <span className={'error-span'} id={'error-form-span'}/>
-                            <div className="form-group">
-                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
-                                <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
-                                       placeholder="newUser@gmail.com" required=""/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserUsername" id="usernameLabel">Никнейм</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
-                                       placeholder="bestWorker2018" required=""/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserDate" id="dateLabel">Дата рождения</label>
-                                <input onChange={this.changeInput} value={this.state.newUserDate} type="text" className="form-control" id="newUserDate"
-                                       placeholder="01/01/2018" required=""/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserRole" id="roleLabel">Роль</label>
-                                <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole} onChange={this.changeInput}>
-                                    <option value={'ROLE_ADMIN'}>Администратор</option>
-                                    <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
-                                    <option value={'ROLE_MANAGER'}>Менеджер</option>
-                                    <option value={'ROLE_DRIVER'}>Водитель</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserPassword" id="passwordLabel">Пароль</label>
-                                <input onChange={this.changeInput} type="password" className="form-control"
-                                       id="newUserPassword" placeholder="qwerty" required=""/>
-                            </div>
-                            <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
-                        </div>
-                    </form>
+                {
+                    this.state.users.map((user) => {
+                        return this.renderUser(user);
+                    })
+                }
+                <div className="row">
+                    <div>
+                        <Pagination
+                            activePage={this.state.currentPage}
+                            itemsCountPerPage={10}
+                            totalItemsCount={450}
+                            pageRangeDisplayed={5}
+                            onChange={this.handlePageChange}
+                        />
+                    </div>
                 </div>
             </div>
-        );
+
+            <div className="offset-md-1 col-md-3" id={'add-user-form'}>
+                <form className="superuserform_newaccountform grey_form">
+                    <span id="message-span"/>
+                    <div id={'from-content'}>
+                        <h5>Регистрация нового пользователя</h5>
+                        <span className={'error-span'} id={'error-form-span'}/>
+                        <div className="form-group">
+                            <label htmlFor="newUserEmail" id="emailLabel">Email</label>
+                            <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
+                                   placeholder="newUser@gmail.com" required=""/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserUsername" id="usernameLabel">Никнейм</label>
+                            <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
+                                   placeholder="bestWorker2018" required=""/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserDate" id="dateLabel">Дата рождения</label>
+                            <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
+                                   className="form-control" id="newUserDate"
+                                   placeholder="01/01/2018" required=""/>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserRole" id="roleLabel">Роль</label>
+                            <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole}
+                                    onChange={this.changeInput}>
+                                <option value={'ROLE_ADMIN'}>Администратор</option>
+                                <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
+                                <option value={'ROLE_MANAGER'}>Менеджер</option>
+                                <option value={'ROLE_DRIVER'}>Водитель</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="newUserPassword" id="passwordLabel">Пароль</label>
+                            <input onChange={this.changeInput} type="password" className="form-control"
+                                   id="newUserPassword" placeholder="qwerty" required=""/>
+                        </div>
+                        <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
+                    </div>
+                </form>
+            </div>
+        </div>;
     }
 
 
