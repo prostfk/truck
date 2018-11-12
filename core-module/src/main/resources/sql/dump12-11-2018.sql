@@ -37,6 +37,22 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -85,7 +101,7 @@ ALTER SEQUENCE public.auto_id_seq OWNED BY public.auto.id;
 
 CREATE TABLE public.cancellation_act (
     id integer NOT NULL,
-    date date NOT NULL,
+    date date,
     amount integer NOT NULL,
     price integer NOT NULL,
     consignment_id bigint NOT NULL
@@ -311,11 +327,12 @@ ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 CREATE TABLE public.product (
     id integer NOT NULL,
     name character varying(45) DEFAULT NULL::character varying,
-    status integer default 0,
+    status integer DEFAULT 0,
     description character varying(100) NOT NULL,
-    product_consignment integer,
+    product_consignment integer NOT NULL,
     cancellation_act bigint,
-    price integer
+    price integer,
+    count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -463,7 +480,15 @@ CREATE TABLE public.users (
     password character varying(100),
     user_role character varying(20),
     company bigint,
-    birth_day date
+    birth_day date,
+    first_name character varying(50),
+    second_name character varying(50) NOT NULL,
+    third_name character varying(50),
+    city character varying(60),
+    country character varying(60),
+    street character varying(60),
+    house_number character varying(60),
+    flat_number character varying(60)
 );
 
 
@@ -497,7 +522,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 CREATE TABLE public.waybill (
     id integer NOT NULL,
-    status integer default 0,
+    status integer DEFAULT 0,
     driver integer NOT NULL,
     auto integer NOT NULL,
     date_departure date,
@@ -641,8 +666,8 @@ INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_o
 -- Data for Name: cancellation_act; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (34, '2018-11-07', 2, 197, 34);
 INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (33, '2018-11-06', 0, 0, 33);
+INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (2, NULL, 0, 0, 34);
 
 
 --
@@ -704,14 +729,14 @@ INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_a
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (35, 'product #35', 2, 'desc', 34, NULL, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (37, 'product #37', 2, 'desc', 34, NULL, 100);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (36, 'product #36', 1, 'desc', 34, NULL, 121);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (38, 'product #38', 1, 'desc', 34, NULL, 76);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (39, 'product #39', 2, 'desc', 33, NULL, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (40, 'product #40', 3, 'desc', 33, NULL, 121);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (41, 'product #41', 3, 'desc', 33, NULL, 100);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (42, 'product #42', 1, 'desc', 33, NULL, 76);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (40, 'product #40', 3, 'desc', 33, NULL, 121, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (41, 'product #41', 3, 'desc', 33, NULL, 100, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (42, 'product #42', 1, 'desc', 33, NULL, 76, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (36, 'product #36', 1, 'desc', 34, NULL, 121, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (38, 'product #38', 1, 'desc', 34, NULL, 76, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (39, 'product #39', 1, 'desc', 33, NULL, 123, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (37, 'product #37', 1, 'desc', 34, NULL, 100, 0);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price, count) VALUES (35, 'product #35', 1, 'desc', 34, NULL, 123, 0);
 
 
 --
@@ -751,25 +776,25 @@ INSERT INTO public.stock (id, name, company_id, address, active) VALUES (11, 'С
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (28, 'user1', 'user1@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 1, '1983-05-12');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (29, 'user2', 'user2@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN', 1, '1983-06-17');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (30, 'user3', 'user3@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DISPATCHER', 1, '1983-06-11');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (31, 'user4', 'user4@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_MANAGER', 1, '1984-01-21');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (33, 'user6', 'user6@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-10');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (34, 'user7', 'user7@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-16');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (35, 'user8', 'user8@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 2, '1981-07-10');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (36, 'user9', 'user9@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN,', 2, '1987-01-22');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (1, 'sysamin', 'sysamin', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_SYS_ADMIN', NULL, '1987-05-07');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (37, 'user10', 'user10@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 3, '1983-07-16');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (32, 'driverUser', 'driverUser@mail.ru', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1985-03-02');
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (29, 'user2', 'user2@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN', 1, '1983-06-17', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (30, 'user3', 'user3@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DISPATCHER', 1, '1983-06-11', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (33, 'user6', 'user6@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-10', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (34, 'user7', 'user7@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-16', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (35, 'user8', 'user8@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 2, '1981-07-10', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (36, 'user9', 'user9@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN,', 2, '1987-01-22', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (1, 'sysamin', 'sysamin', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_SYS_ADMIN', NULL, '1987-05-07', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (37, 'user10', 'user10@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 3, '1983-07-16', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (32, 'driverUser', 'driverUser@mail.ru', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1985-03-02', NULL, 'surname', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (28, 'user1', 'user1@', '$2a$10$N3mldylSkzcMR1gzF90oSe9u17lsc40BfERyK/cKXY748XTfHMArO', 'ROLE_COMP_OWNER', 1, '1983-12-05', 'null', 'surname', '', 'Minsk', 'Belarus', 'Kolasa', '29', '1');
+INSERT INTO public.users (id, username, email, password, user_role, company, birth_day, first_name, second_name, third_name, city, country, street, house_number, flat_number) VALUES (31, 'user4', 'user4@', '$2a$10$Bhf9EKzsDVGXfNgFAyf4t.MBhYPtthEbQQWfPT91VzLfOoHksuw2G', 'ROLE_MANAGER', 1, '1985-01-09', 'managerName', 'surname', '', '', '', '', '', '');
 
 
 --
 -- Data for Name: waybill; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (34, 1, 2, 19, '2018-11-07', '2018-11-20', NULL, NULL);
 INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (33, 1, 2, 19, '2018-11-05', '2018-11-09', '2018-11-06', 31);
+INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (34, 3, 2, 19, '2018-11-07', '2018-11-20', NULL, NULL);
 
 
 --
@@ -783,7 +808,7 @@ SELECT pg_catalog.setval('public.auto_id_seq', 27, true);
 -- Name: cancellation_act_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.cancellation_act_id_seq', 1, false);
+SELECT pg_catalog.setval('public.cancellation_act_id_seq', 2, true);
 
 
 --
@@ -1122,3 +1147,4 @@ ALTER TABLE ONLY public.waybill
 --
 -- PostgreSQL database dump complete
 --
+

@@ -1,6 +1,7 @@
 ﻿import React, {Component} from "react";
 import {render} from 'react-dom'
 import {Link} from "react-router-dom";
+import ModalChooseWaybillStatus from "./modalChooseWaybillStatus";
 
 class pageManagerOrders extends Component {
 
@@ -9,6 +10,7 @@ class pageManagerOrders extends Component {
         this.getOrderList = this.getOrderList.bind(this);
         this.renderTable = this.renderTable.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
+        this.changeWaybillStatus = this.changeWaybillStatus.bind(this);
         this.state = {
             orders: []
         };
@@ -55,7 +57,14 @@ class pageManagerOrders extends Component {
             <div className="col-md-1">{order.receiver.address}</div>
             <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
             <div className="col-md-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
-            <div className="col-md-3" style={{display: isDone ? 'block' : 'none'}}><b>Проверка завершена</b></div>
+            <div className="col-md-3" style={{display: isDone ? 'block' : 'none'}}>
+                <div className="row">
+                    <div className="col-md-9">
+                        <ModalChooseWaybillStatus className={"table_button bg-secondary text-white"} clickfunc={this.changeWaybillStatus} orderId={order.id} waybillStatus={order.waybill.status}></ModalChooseWaybillStatus>
+                    </div>
+                    <div className="col-md-3"><b>Проверка завершена</b></div>
+                </div>
+            </div>
             <div className="col-md-2" style={{display: isDone ? 'none' : 'block'}}>
                 <Link to={`/manager/edit/consignment/${order.id}`} className="table_button bg-secondary text-white">Товарная партия</Link>
             </div>
@@ -64,6 +73,25 @@ class pageManagerOrders extends Component {
             </div>
             <div className="col-md-1" style={{display: isDone ? 'none' : 'block'}}><a onClick={this.finishCheck.bind(this, order.id)} className="table_button bg-secondary text-white">Проверен</a></div>
         </div>
+    }
+
+    changeWaybillStatus(orderId, waybillStatus) {
+        console.log(orderId);
+        console.log(waybillStatus);
+        const ref = this;
+        fetch(`http://localhost:8080/api/manager/cancelChecking/${orderId}/?status=${waybillStatus}`, {
+            method: 'GET',
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            console.log(result);
+            if (result) {
+                ref.forceUpdateHandler(result);
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
     }
 
     finishCheck(orderId) {

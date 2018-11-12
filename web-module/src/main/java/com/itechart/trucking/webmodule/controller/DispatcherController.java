@@ -164,7 +164,6 @@ public class DispatcherController {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
             productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
-//            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), consignment1.getCancellationAct().getId(), product.getPrice() + 0.0,product.getCount());
         }
         return HttpStatus.OK;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
+//deprecated
 export default class ModalComponentStockEdit extends React.Component {
     constructor(props) {
         super(props);
@@ -30,8 +30,6 @@ export default class ModalComponentStockEdit extends React.Component {
         this.props.clickfunc(this.state.stockName,this.state.stockAddress,this.props.stockId);
         this.setState({
             modal: !this.state.modal,
-            stockName:'',
-            stockAddress:''
         });
     }
 

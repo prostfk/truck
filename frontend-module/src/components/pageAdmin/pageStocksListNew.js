@@ -1,8 +1,10 @@
 import React from "react";
 import ModalAcceptDelete from "./modalAcceptDelete";
-import ModalComponentStockEdit from "./modalComponentStockEdit";
+import CreateStockModal from "./modalComponentCreateStock";
+import EditStockModal from "./modalComponentEditStock";
+import PropTypes from "prop-types";
 
-class PageStockList extends React.Component {
+export default class PageStockListNew extends React.Component {
     constructor(props) {
         super(props);
         this.getStockList = this.getStockList.bind(this);
@@ -49,7 +51,7 @@ class PageStockList extends React.Component {
         fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             response.json().then(data => {
                 console.log(data);
-                this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
+                // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
                 this.setState({stockName:"",stockAddress:""})
             })
         }, err => console.log(err))
@@ -107,7 +109,8 @@ class PageStockList extends React.Component {
             <div className={"col-md-4"}>{stock.name}</div>
             <div className={"col-md-4"}>{stock.address}</div>
             <div className={"col-md-2"}>
-                <ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>
+                <EditStockModal stockName={stock.name} stockId={stock.id}/>
+                {/*<ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>*/}
             </div>
             <div className={"col-md-1"}>
                 <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={stock.id} headerText={"Вы действительно хотите удалить склад?"} bodyText={"Восстановить склад будет невозможно"} />
@@ -133,47 +136,39 @@ class PageStockList extends React.Component {
         });
     }
     render(){
-       return <div className="row">
-           <div className="offset-md-1 col-md-6 superuserform_companylist">
-                   <div className="row table_header">
-                       <div className="col-md-1">ID</div>
-                       <div className="col-md-5">Название склада</div>
-                       <div className="col-md-4">Адрес</div>
-                       <div className="col-md-1"></div>
-                       <div className="col-md-1"></div>
-                   </div>
-                   {
-                       this.state.stocks.map((element)=>{
-                           return this.renderTable(element);
-                       })
-                   }
+        return <div className="row">
+            <div className="offset-md-1 col-md-6 superuserform_companylist">
+                <div className="row table_header">
+                    <div className="col-md-1">ID</div>
+                    <div className="col-md-5">Название склада</div>
+                    <div className="col-md-4">Адрес</div>
+                    <div className="col-md-1"/>
+                    <div className="col-md-1"/>
+                </div>
+                {
+                    this.state.stocks.map((element)=>{
+                        return this.renderTable(element);
+                    })
+                }
 
-               <nav aria-label="...">
-                   <ul className="pagination pagination-sm">
-                       <li className="page-item disabled">
-                           <a className="page-link" href="#" tabIndex="-1">1</a>
-                       </li>
-                       <li className="page-item"><a className="page-link" href="#">2</a></li>
-                       <li className="page-item"><a className="page-link" href="#">3</a></li>
-                   </ul>
-               </nav>
-           </div>
+                <nav aria-label="...">
+                    <ul className="pagination pagination-sm">
+                        <li className="page-item disabled">
+                            <a className="page-link" href="#" tabIndex="-1">1</a>
+                        </li>
+                        <li className="page-item"><a className="page-link" href="#">2</a></li>
+                        <li className="page-item"><a className="page-link" href="#">3</a></li>
+                    </ul>
+                </nav>
+            </div>
 
-           <div className="offset-md-1 col-md-3">
-               <form className="superuserform_newaccountform grey_form">
-                   <h5>Добавить склад</h5>
-                   <div className="form-group">
-                       <input value={this.state.stockName} onChange={this.setCompanyName} type="text" className="form-control" id="inputname" placeholder="Склад #201" required=""/>
-                   </div>
-                   <div className="form-group">
-                       <input value={this.state.stockAddress} onChange={this.setCompanyAddress} type="text" className="form-control" id="inputstockadres" placeholder="Адрес" required=""/>
-                   </div>
-                   <a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>
-               </form>
-           </div>
+            <div className="offset-md-1 col-md-3">
+                <form className="superuserform_newaccountform grey_form">
+                    <CreateStockModal/>
+                    {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
+                </form>
+            </div>
 
-       </div>
+        </div>
     }
 }
-
-export default PageStockList;

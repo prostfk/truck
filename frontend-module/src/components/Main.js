@@ -24,13 +24,20 @@ import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
+import AutoList from "./pageAdmin/pageAutoList";
 // import EditUser from "./pageSysAdmin/pageEditUser";
 import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
-import {TestComponent} from "./testComponent/testComponent";
+
+import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
+import OwnerStockList from "./pageOwner/pageOwnerStockList";
+import TestComponent from "./testComponent/testComponent";
+import PageStockListNew from "./pageAdmin/pageStocksListNew";
+import CreateStockModal from "./pageAdmin/modalComponentCreateStock";
+
 
 class MainController extends React.Component {
 
@@ -44,9 +51,11 @@ class MainController extends React.Component {
                     <Route path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
-                    <Route exact path="/test" component={TestComponent}/>
+                    <Route exact path="/test" component={CreateStockModal}/>{/*ADD STOCKS IN THIS PATH*/}
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
-                    <Route exact path="/stocks" component={PageStockList}/> {/* stock list for admin */}
+                    {/*<Route exact path="/stocks" component={PageStockList}/> /!* stock list for admin *!/*/}
+                    <Route exact path="/stocks" component={PageStockListNew}/> {/* stock list for admin */}
+                    <Route exact path="/autos" component={AutoList}/> {/* auto list for admin */}
                     <Route exact path="/orders/" component={DispatcherOrderList}/>
                     <Route exact path="/orders/:orderId/edit"
                            component={DispatcherEditOrder}/> {/*edit waybill(ttn) and order*/}
@@ -61,10 +70,12 @@ class MainController extends React.Component {
                     <Route exact path="/manager/edit/cancelletion" component={ManagerCancelletion}/>
                     <Route exact path="/manager/edit/routelist/:orderId" component={ManagerRouteList}/>
                     <Route exact path="/owner/orders" component={OwnerOrderList} /> {/*owner*/}
-                    <Route exact path="/owner/routList/:orderrouteListId" component={OwnerRouteList} /> {/*owner*/}
+                    <Route exact path="/owner/routList/:orderId" component={OwnerRouteList} /> {/*owner*/}
                     <Route exact path="/owner/waybill/:orderId" component={OwnerWaybill} /> {/*owner*/}
                     <Route exact path="/owner/cancelAct/:orderId" component={CancellationAct} /> {/*owner*/}
-                    <Route exact path="/statistics" component={CompanyOwnerStatistics}/>
+                    <Route exact path="/owner/statistics" component={CompanyOwnerStatistics}/>
+                    <Route exact path="/owner/usersList" component={OwnerUsersList}/>
+                    <Route exact path="/owner/stocks" component={OwnerStockList}/>
 
                 </div>
 

@@ -5,20 +5,25 @@ import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 
-export default class TestComponent extends Component {
+export default class EditStockModal extends Component {
+
+    constructor(props) {
+        super(props);
+    }
 
     state = {
         modal: false,
         search: "",
-        value: "",
+        value: this.props.stockName,
         suggest: "",
-        successAddress: ''
+        successAddress: this.props.stockName
     };
 
     toggle = () => {
         this.setState({
             modal: !this.state.modal
         });
+        console.log(this.state)
     };
 
     handleInputChange = (e) => {
@@ -43,9 +48,18 @@ export default class TestComponent extends Component {
 
     submitForm = () => {
         if (this.state.successAddress !== '') {
-            //fetch().then().then()
             console.log(this.state.successAddress);
             console.log(this.state.suggest.place_id);
+            let formData = new FormData();
+            formData.append("id", this.props.stockId);
+            formData.append("name", this.state.successAddress);
+            formData.append("address", this.state.suggest.place_id);
+            fetch('http://localhost:8080/api/editStock', {method: "PUT", body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
+                })
+            }, err => console.log(err));
             this.toggle();
         } else {
             document.getElementById('info').style.color = 'red';
@@ -58,7 +72,7 @@ export default class TestComponent extends Component {
         const {search, value} = this.state;
         return (
             <div>
-                <a className={'btn btn-success'} onClick={this.toggle}>Добавить адрес</a>
+                <a className={"table_button bg-secondary text-white"} onClick={this.toggle}>Изменить</a>
                 <Modal isOpen={this.state.modal}>
                     <ModalHeader>
                         <h4>Добавление склада</h4>
@@ -71,7 +85,7 @@ export default class TestComponent extends Component {
                                 <div id={'react-google-maps-searcher'}>
                                     <ReactGoogleMapLoader
                                         params={{
-                                            key: API_KEY,
+                                            key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI',
                                             libraries: "places,geocode",
                                         }}
                                         render={googleMaps =>
@@ -114,7 +128,6 @@ export default class TestComponent extends Component {
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
 const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";
-TestComponent.propTypes = {
+EditStockModal.propTypes = {
     googleMaps: PropTypes.object,
 };
-

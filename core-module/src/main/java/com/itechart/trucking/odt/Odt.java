@@ -1,5 +1,6 @@
 package com.itechart.trucking.odt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
@@ -25,10 +26,7 @@ import com.itechart.trucking.waybill.entity.Waybill;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /*Object Type Definition*/
 public class Odt {

@@ -1,8 +1,13 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.auto.dto.AutoDto;
+import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.auto.repository.AutoRepository;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
@@ -12,11 +17,14 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.EmailUtil;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +42,7 @@ import javax.validation.Valid;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_COMP_OWNER')")
 @CrossOrigin
@@ -45,6 +54,9 @@ public class AdminController {
     private UserRepository userRepository;
 
     @Autowired
+    private AutoRepository autoRepository;
+
+    @Autowired
     private CompanyRepository companyRepository;
 
     @Autowired
@@ -53,14 +65,31 @@ public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private DriverRepository driverRepository;
 
     @GetMapping(value = "/users")
-    public List<UserDto> findUsers() {
+    public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        List<User> usersByCompany = userByEmail.getCompany().getCompanyUsers();
-        List<UserDto> userDtos = Odt.UserListToDtoList(usersByCompany);
-        return userDtos;
+
+        Page<User> userPage = userRepository.findAllByCompany(userByEmail.getCompany(),PageRequest.of(pageId-1, 5));
+
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (User user:userPage.getContent()) {
+            JSONObject jsonObject;
+            UserDto userDto = new UserDto(user);
+            jsonObject = new JSONObject(UserDto.toMap(userDto));
+            jsonArray.put(jsonObject);
+        }
+
+        json.put("users",jsonArray);
+        json.put("currentPage",userPage.getNumber());
+        json.put("totalElements",userPage.getTotalElements());
+
+        return json.toString();
     }
 
     @PostMapping(value = "/editCompany")
@@ -112,7 +141,9 @@ public class AdminController {
             } else {
                 if (password.length() > 5 && password.length() < 20) {
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    userRepository.updateUser(userDto.getId(), userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), userDto.getBirthDay());
+                    userRepository.updateUser(userDto.getId(), userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), userDto.getBirthDay(),
+                            userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(),
+                            userDto.getStreet(), userDto.getHouseNumber(), userDto.getFlatNumber());
                     json.put("username", userDto.getUsername());
                     json.put("email", userDto.getEmail());
                     json.put("birthDay", userDto.getBirthDay());
@@ -126,13 +157,24 @@ public class AdminController {
     }
 
     @PostMapping(value = "/saveUser")
-    public Object saveUser(@Valid UserDto userDto, String password, String birthDay) throws JSONException {
+    public Object saveUser(@Valid UserDto userDto, String password, String passport, String birthDay) throws JSONException {
         JSONObject json = new JSONObject();
         User userByUsername = userRepository.findUserByUsername(userDto.getUsername());
         if (userByUsername == null) {
             if (password.length() > 5 && password.length() < 20) {
                 User admin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay());
+                userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay(),
+                        userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
+                        userDto.getHouseNumber(), userDto.getFlatNumber());
+                //КОСТЫЛЬ
+                if (userDto.getUserRole().equals(UserRole.ROLE_DRIVER)){
+                    User savedUser = userRepository.findUserByUsername(userDto.getUsername());
+                    driverRepository.saveDriver(
+                            String.format("%s %s", savedUser.getFirstName(), savedUser.getSecondName()),
+                            passport,savedUser.getCompany().getId(),savedUser.getId()
+                    );
+                }
+                //КОСТЫЛЬ
                 json.put("username", userDto.getUsername());
                 json.put("email", userDto.getEmail());
                 json.put("birthDay", userDto.getBirthDay());
@@ -244,6 +286,67 @@ public class AdminController {
             company.setLockComment(null);
         }
         return companyRepository.save(company) != null;*/
+    }
+
+    @GetMapping(value = "/autos")
+    public List<AutoDto> findAutos() {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
+        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
+        return autoDtos;
+    }
+
+    @PostMapping(value = "/saveAuto")
+    public AutoDto saveAuto(@Valid AutoDto autoDto) throws JSONException {
+        if(autoDto==null) return null;
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Auto auto = new Auto();
+        auto.setName(autoDto.getName());
+        auto.setCarNumber(autoDto.getCarNumber());
+        auto.setFuelConsumption(autoDto.getFuelConsumption());
+        auto.setType(autoDto.getType());
+        auto.setCompany(userByEmail.getCompany());
+        auto.setActive(true);
+        autoRepository.save(auto);
+        AutoDto autoDto1 = new AutoDto(auto);
+        System.out.println(autoDto1);
+        return autoDto1;
+
+    }
+
+    @PutMapping(value = "/auto/edit")
+    @ResponseBody
+    public AutoDto processEditingAuto(@Valid AutoDto autoDto) throws JSONException {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        Auto auto = autoRepository.findAutoById(autoDto.getId());
+        if(auto.getCompany().getId()!=userByEmail.getCompany().getId()) return null;
+
+        auto.setName(autoDto.getName());
+        auto.setCarNumber(autoDto.getCarNumber());
+        auto.setType(autoDto.getType());
+        auto.setFuelConsumption(autoDto.getFuelConsumption());
+        autoRepository.save(auto);
+        return new AutoDto(auto);
+    }
+
+    @DeleteMapping(value = "/auto/")
+    @ResponseBody
+    public  List<AutoDto> processRemoveAuto(@RequestBody String idS) throws JSONException {
+        final Long id = Long.parseLong(idS);
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Auto auto = autoRepository.findAutoById(id);
+        if(userByEmail.getCompany().getId()!=auto.getCompany().getId()) return null;
+        auto.setActive(false);
+        autoRepository.save(auto);
+        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
+        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
+        return autoDtos;
     }
 
 

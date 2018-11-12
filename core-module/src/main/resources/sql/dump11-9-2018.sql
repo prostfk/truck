@@ -20,7 +20,7 @@ DROP DATABASE truck;
 -- Name: truck; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE truck WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Russian_Russia.1251' LC_CTYPE = 'Russian_Russia.1251';
+CREATE DATABASE truck WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Belarusian_Belarus.1251' LC_CTYPE = 'Belarusian_Belarus.1251';
 
 
 ALTER DATABASE truck OWNER TO postgres;
@@ -47,11 +47,12 @@ SET default_with_oids = false;
 
 CREATE TABLE public.auto (
     id integer NOT NULL,
-    type character varying(15) NOT NULL,
+    type character varying(25) NOT NULL,
     fuel_consumption integer NOT NULL,
     name character varying(45) NOT NULL,
     car_number character varying(45) NOT NULL,
-    company_owner integer NOT NULL
+    company_owner integer NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -87,7 +88,7 @@ CREATE TABLE public.cancellation_act (
     id integer NOT NULL,
     date date NOT NULL,
     amount integer NOT NULL,
-    price integer NOT NULL,
+    price double precision NOT NULL,
     consignment_id bigint NOT NULL
 );
 
@@ -311,7 +312,7 @@ ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 CREATE TABLE public.product (
     id integer NOT NULL,
     name character varying(45) DEFAULT NULL::character varying,
-    status integer default 0,
+    status integer DEFAULT 0,
     description character varying(100) NOT NULL,
     product_consignment integer,
     cancellation_act bigint,
@@ -497,7 +498,7 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 CREATE TABLE public.waybill (
     id integer NOT NULL,
-    status integer default 0,
+    status integer DEFAULT 0,
     driver integer NOT NULL,
     auto integer NOT NULL,
     date_departure date,
@@ -626,157 +627,186 @@ ALTER TABLE ONLY public.waybill ALTER COLUMN id SET DEFAULT nextval('public.wayb
 -- Data for Name: auto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (19, 'крытый кузов', 20, 'Tata LPT ', '9412 BY-3', 1);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (20, 'крытый кузов', 21, 'MAN TGX 18.400 ', '1421 BY-7', 1);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (21, 'крытый кузов', 25, 'MAN 18 18.224 ', '1245 BY-7', 1);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (22, 'крытый кузов', 25, 'MAN 18 18.224 ', '5812 BY-5', 2);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (23, 'крытый кузов', 31, 'Hyundai HD78 ', '1251 BY-5', 2);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (24, 'цистерна', 32, 'Hyundai Porter', '8725 BY-4', 2);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (25, 'цистерна', 23, 'LIAZ 110 ', '7124 BY-2', 3);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (26, 'крытый кузов', 25, 'Scania 124 ', '4851 BY-2', 3);
-INSERT INTO public.auto (id, type, fuel_consumption, name, car_number, company_owner) VALUES (27, 'Кртый кузов', 24, 'Scania 124 ', '5991 BY-6', 3);
+COPY public.auto (id, type, fuel_consumption, name, car_number, company_owner, active) FROM stdin;
+20	крытый кузов	21	MAN TGX 18.400 	1421 BY-7	1	t
+22	крытый кузов	25	MAN 18 18.224 	5812 BY-5	2	t
+23	крытый кузов	31	Hyundai HD78 	1251 BY-5	2	t
+24	цистерна	32	Hyundai Porter	8725 BY-4	2	t
+25	цистерна	23	LIAZ 110 	7124 BY-2	3	t
+26	крытый кузов	25	Scania 124 	4851 BY-2	3	t
+27	Кртый кузов	24	Scania 124 	5991 BY-6	3	t
+21	крытый кузов	25	MAN 18 18.224	1245 BY-7	1	t
+34	кузов для теста	22	Авто номер 1	0001-BY0	1	f
+19	крытый кузов	20	Tata LPT	9412 BY-3	1	t
+35	тип авто	14	название авто	ah1202	1	f
+\.
 
 
 --
 -- Data for Name: cancellation_act; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (34, '2018-11-07', 2, 197, 34);
-INSERT INTO public.cancellation_act (id, date, amount, price, consignment_id) VALUES (33, '2018-11-06', 0, 0, 33);
+COPY public.cancellation_act (id, date, amount, price, consignment_id) FROM stdin;
+34	2018-11-07	2	197	34
+33	2018-11-06	0	0	33
+\.
 
 
 --
 -- Data for Name: client; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.client (id, name, type, client_owner) VALUES (1, 'Евроопт Минск', 'deafult', 1);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (2, 'Евроопт Гродно', 'deafult', 1);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (3, 'Брусничка', 'deafult', 1);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (4, 'IBSO', 'deafult', 2);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (5, 'KolTo service', 'deafult', 2);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (6, 'Ximik DK', 'deafult', 2);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (7, 'SoperDay', 'deafult', 3);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (8, 'Choks Pizza', 'deafult', 3);
-INSERT INTO public.client (id, name, type, client_owner) VALUES (9, 'Chole Pizza', 'deafult', 3);
+COPY public.client (id, name, type, client_owner) FROM stdin;
+1	Евроопт Минск	deafult	1
+2	Евроопт Гродно	deafult	1
+3	Брусничка	deafult	1
+4	IBSO	deafult	2
+5	KolTo service	deafult	2
+6	Ximik DK	deafult	2
+7	SoperDay	deafult	3
+8	Choks Pizza	deafult	3
+9	Chole Pizza	deafult	3
+\.
 
 
 --
 -- Data for Name: company; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date) VALUES (3, 'International Trucking', 1, '', NULL, NULL);
-INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date) VALUES (2, 'GoTrans', 1, 'Блокировка за неуплату', NULL, '2018-10-27');
-INSERT INTO public.company (id, name, active, lock_comment, locker_id, lock_date) VALUES (1, 'Express Bus', 0, 'asd', NULL, '2018-10-30');
+COPY public.company (id, name, active, lock_comment, locker_id, lock_date) FROM stdin;
+3	International Trucking	1		\N	\N
+2	GoTrans	1	Блокировка за неуплату	\N	2018-10-27
+1	Express Bus	0	asd	\N	2018-10-30
+\.
 
 
 --
 -- Data for Name: consignment; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.consignment (id, name, order_id) VALUES (34, 'consignment #34', 34);
-INSERT INTO public.consignment (id, name, order_id) VALUES (33, 'consignment #34', 33);
+COPY public.consignment (id, name, order_id) FROM stdin;
+34	consignment #34	34
+33	consignment #34	33
+\.
 
 
 --
 -- Data for Name: driver; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (4, 'Павел Конюшин', 'HB 65717294', 2, NULL);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (5, 'Дмитрий Гребешков', 'HB 42342112', 2, NULL);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (6, 'Григорий Солнцев', 'HB 02130294', 2, NULL);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (7, 'Мирон Корсаков', 'HB 24100492', 3, NULL);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (8, 'Павел Ковалев', 'HB 94918590', 3, NULL);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (9, 'Григорий коновалов', 'HB 10850953', 3, NULL);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (1, 'Павел Иванов', 'HB 72180123', 1, 32);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (3, 'Алексей Гребешков', 'HB 12342182', 1, 34);
-INSERT INTO public.driver (id, name, passport_number, company_of_driver, userid) VALUES (2, 'Дмитрий Петров ', 'HB 98220918', 1, 33);
+COPY public.driver (id, name, passport_number, company_of_driver, userid) FROM stdin;
+4	Павел Конюшин	HB 65717294	2	\N
+5	Дмитрий Гребешков	HB 42342112	2	\N
+6	Григорий Солнцев	HB 02130294	2	\N
+7	Мирон Корсаков	HB 24100492	3	\N
+8	Павел Ковалев	HB 94918590	3	\N
+9	Григорий коновалов	HB 10850953	3	\N
+1	Павел Иванов	HB 72180123	1	32
+3	Алексей Гребешков	HB 12342182	1	34
+2	Дмитрий Петров 	HB 98220918	1	33
+\.
 
 
 --
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (34, 'order #34', 1, 1, 3, 3, '2018-11-05', '2018-11-07', 34, 1);
-INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (33, 'order #33', 1, 1, 3, 3, '2018-11-07', '2018-11-10', 33, 1);
+COPY public.orders (id, name, client_id, status, sender, receiver, date_accepted, date_executed, waybill_id, company_id) FROM stdin;
+34	order #34	1	1	3	3	2018-11-05	2018-11-07	34	1
+33	order #33	1	1	3	3	2018-11-07	2018-11-10	33	1
+\.
 
 
 --
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (35, 'product #35', 2, 'desc', 34, NULL, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (37, 'product #37', 2, 'desc', 34, NULL, 100);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (36, 'product #36', 1, 'desc', 34, NULL, 121);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (38, 'product #38', 1, 'desc', 34, NULL, 76);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (39, 'product #39', 2, 'desc', 33, NULL, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (40, 'product #40', 3, 'desc', 33, NULL, 121);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (41, 'product #41', 3, 'desc', 33, NULL, 100);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (42, 'product #42', 1, 'desc', 33, NULL, 76);
+COPY public.product (id, name, status, description, product_consignment, cancellation_act, price) FROM stdin;
+35	product #35	2	desc	34	34	123
+37	product #37	2	desc	34	34	100
+36	product #36	1	desc	34	34	121
+38	product #38	1	desc	34	34	76
+39	product #39	2	desc	33	33	123
+40	product #40	3	desc	33	33	121
+41	product #41	3	desc	33	33	100
+42	product #42	1	desc	33	33	76
+\.
 
 
 --
 -- Data for Name: route_list; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (35, 'Гродно', 2, 34, false);
-INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (34, 'Минск', 1, 34, false);
-INSERT INTO public.route_list (id, point, point_level, waybill_id, marked) VALUES (14, 'Гродно', 2, 33, NULL);
+COPY public.route_list (id, point, point_level, waybill_id, marked) FROM stdin;
+35	Гродно	2	34	f
+34	Минск	1	34	f
+14	Гродно	2	33	\N
+\.
 
 
 --
 -- Data for Name: stock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (1, 'Склад 1', 1, 'Брусничная 12', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (3, 'Склад 3', 1, 'Иванова 44', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (8, 'Склад CV4', 3, 'Портовая 17', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (7, 'Склад 12', 2, 'Демидова 10', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (4, 'Склад 17', 1, 'Држный берег 7', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (10, 'Склад 12', 1, 'Адрес', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (12, 'Склад 12', 1, 'Адрес', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (5, 'Склд 10', 1, 'Кольная 3', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (6, 'Склад 16', 1, 'Шаманова 17', true);
-INSERT INTO public.stock (id, name, company_id, address, active) VALUES (11, 'Складское помещение', 1, 'Белого В.А.', true);
+COPY public.stock (id, name, company_id, address, active) FROM stdin;
+1	Склад 1	1	Брусничная 12	t
+3	Склад 3	1	Иванова 44	t
+8	Склад CV4	3	Портовая 17	t
+9	Склад CV11	3	Красноармейская 91	t
+7	Склад 12	2	Демидова 10	t
+4	Склад 17	1	Држный берег 7	t
+10	Склад 12	1	Адрес	t
+12	Склад 12	1	Адрес	t
+2	Склад 2	1	Солнечный берег 19	t
+5	Склд 10	1	Кольная 3	t
+6	Склад 16	1	Шаманова 17	t
+11	Складское помещение	1	Белого В.А.	t
+16	Склад тест 2	1	тестовый адрес 2	f
+\.
 
 
 --
 -- Data for Name: tokens; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+COPY public.tokens (id, email, token_value) FROM stdin;
+\.
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (28, 'user1', 'user1@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 1, '1983-05-12');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (29, 'user2', 'user2@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN', 1, '1983-06-17');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (30, 'user3', 'user3@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DISPATCHER', 1, '1983-06-11');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (31, 'user4', 'user4@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_MANAGER', 1, '1984-01-21');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (33, 'user6', 'user6@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-10');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (34, 'user7', 'user7@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1987-01-16');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (35, 'user8', 'user8@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 2, '1981-07-10');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (36, 'user9', 'user9@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_ADMIN,', 2, '1987-01-22');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (1, 'sysamin', 'sysamin', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_SYS_ADMIN', NULL, '1987-05-07');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (37, 'user10', 'user10@', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_COMP_OWNER', 3, '1983-07-16');
-INSERT INTO public.users (id, username, email, password, user_role, company, birth_day) VALUES (32, 'driverUser', 'driverUser@mail.ru', '$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu', 'ROLE_DRIVER', 1, '1985-03-02');
+COPY public.users (id, username, email, password, user_role, company, birth_day) FROM stdin;
+28	user1	user1@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_COMP_OWNER	1	1983-05-12
+29	user2	user2@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_ADMIN	1	1983-06-17
+30	user3	user3@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_DISPATCHER	1	1983-06-11
+31	user4	user4@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_MANAGER	1	1984-01-21
+33	user6	user6@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_DRIVER	1	1987-01-10
+34	user7	user7@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_DRIVER	1	1987-01-16
+35	user8	user8@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_COMP_OWNER	2	1981-07-10
+36	user9	user9@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_ADMIN,	2	1987-01-22
+1	sysamin	sysamin	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_SYS_ADMIN	\N	1987-05-07
+37	user10	user10@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_COMP_OWNER	3	1983-07-16
+32	driverUser	driverUser@mail.ru	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_DRIVER	1	1985-03-02
+\.
 
 
 --
 -- Data for Name: waybill; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (34, 1, 2, 19, '2018-11-07', '2018-11-20', NULL, NULL);
-INSERT INTO public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) VALUES (33, 1, 2, 19, '2018-11-05', '2018-11-09', '2018-11-06', 31);
+COPY public.waybill (id, status, driver, auto, date_departure, date_arrival, check_date, user_id) FROM stdin;
+34	1	2	19	2018-11-07	2018-11-20	\N	\N
+33	1	2	19	2018-11-05	2018-11-09	2018-11-06	31
+\.
 
 
 --
 -- Name: auto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.auto_id_seq', 27, true);
+SELECT pg_catalog.setval('public.auto_id_seq', 35, true);
 
 
 --
@@ -839,7 +869,7 @@ SELECT pg_catalog.setval('public.route_list_id_seq', 15, true);
 -- Name: stock_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.stock_id_seq', 12, true);
+SELECT pg_catalog.setval('public.stock_id_seq', 16, true);
 
 
 --
@@ -1122,3 +1152,4 @@ ALTER TABLE ONLY public.waybill
 --
 -- PostgreSQL database dump complete
 --
+

@@ -90,7 +90,7 @@ class ManagerConsignment extends Component {
         let formData = new FormData();
         formData.append("orderId", orderId);
         formData.append("isLost", isLost);
-        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/${orderId}/?isLost=${isLost}`, {method: "GET", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);

@@ -39,4 +39,11 @@ public class CancellationAct {
         this.consignment = consignment;
         this.product = product;
     }
+
+    public CancellationAct(Date date, @Min(0) Integer amount, @Min(0) Double price, Consignment consignment) {
+        this.date = date;
+        this.amount = amount;
+        this.price = price;
+        this.consignment = consignment;
+    }
 }
