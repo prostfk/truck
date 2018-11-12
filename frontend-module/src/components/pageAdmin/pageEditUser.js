@@ -110,38 +110,38 @@ export default class EditUser extends Component {
                 <div className="form-group row">
                     <label htmlFor="secondName" className="col-2 col-form-label">Фамилия*</label>
                     <div className="col-10">
-                        <input className="form-control" value={this.state.secondName} onChange={this.changeInput} type="email" id="secondName" required={true}/>
+                        <input className="form-control" value={this.state.secondName} onChange={this.changeInput} type="text" id="secondName" required={true}/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <label htmlFor="firstName" className="col-2 col-form-label">Имя</label>
                     <div className="col-10">
-                        <input className="form-control" value={this.state.firstName} onChange={this.changeInput} type="email" id="firstName"/>
+                        <input className="form-control" value={this.state.firstName} onChange={this.changeInput} type="text" id="firstName"/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <label htmlFor="thirdName" className="col-2 col-form-label">Отчество</label>
                     <div className="col-10">
-                        <input className="form-control" value={this.state.thirdName} onChange={this.changeInput} type="email" id="thirdName"/>
+                        <input className="form-control" value={this.state.thirdName} onChange={this.changeInput} type="text" id="thirdName"/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <label htmlFor="address" className="col-2 col-form-label">Адрес</label>
                     <div className="col-10 row" id="address">
                         <div className="col-2">
-                            <input className="form-control" value={this.state.country} onChange={this.changeInput} type="email" id="country"/>
+                            <input className="form-control" value={this.state.country} onChange={this.changeInput} placeholder="Страна" type="text" id="country"/>
                         </div>
                         <div className="col-3">
-                            <input className="form-control" value={this.state.city} onChange={this.changeInput} type="email" id="city"/>
+                            <input className="form-control" value={this.state.city} onChange={this.changeInput} placeholder="Город" type="text" id="city"/>
                         </div>
                         <div className="col-3">
-                            <input className="form-control" value={this.state.street} onChange={this.changeInput} type="email" id="street"/>
+                            <input className="form-control" value={this.state.street} onChange={this.changeInput} placeholder="Улица" type="text" id="street"/>
                         </div>
                         <div className="col-2">
-                            <input className="form-control" value={this.state.houseNumber} onChange={this.changeInput} type="email" id="houseNumber"/>
+                            <input className="form-control" value={this.state.houseNumber} onChange={this.changeInput} placeholder="Дом" type="text" id="houseNumber"/>
                         </div>
                         <div className="col-2">
-                            <input className="form-control" value={this.state.flatNumber} onChange={this.changeInput} type="email" id="flatNumber"/>
+                            <input className="form-control" value={this.state.flatNumber} onChange={this.changeInput} placeholder="Квартира" type="text" id="flatNumber"/>
                         </div>
                     </div>
                 </div>
