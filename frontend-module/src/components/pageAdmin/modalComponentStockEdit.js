@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-
+//deprecated
 export default class ModalComponentStockEdit extends React.Component {
     constructor(props) {
         super(props);

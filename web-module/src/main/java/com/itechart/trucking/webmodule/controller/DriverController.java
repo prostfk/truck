@@ -119,7 +119,7 @@ public class DriverController {
         CancellationAct cancellationAct = consignment.getCancellationAct();
 
         if (cancellationAct == null) {
-            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, new Double(0), consignment);
+            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
             cancellationActRepository.save(cancellationAct);
         }
 

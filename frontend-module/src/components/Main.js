@@ -53,7 +53,8 @@ class MainController extends React.Component {
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={CreateStockModal}/>{/*ADD STOCKS IN THIS PATH*/}
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
-                    <Route exact path="/stocks" component={PageStockList}/> {/* stock list for admin */}
+                    {/*<Route exact path="/stocks" component={PageStockList}/> /!* stock list for admin *!/*/}
+                    <Route exact path="/stocks" component={PageStockListNew}/> {/* stock list for admin */}
                     <Route exact path="/autos" component={AutoList}/> {/* auto list for admin */}
                     <Route exact path="/orders/" component={DispatcherOrderList}/>
                     <Route exact path="/orders/:orderId/edit"
