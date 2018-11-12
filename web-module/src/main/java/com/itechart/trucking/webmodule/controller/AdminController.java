@@ -65,11 +65,11 @@ public class AdminController {
 
 
     @GetMapping(value = "/users")
-    public Object findUsers() throws JSONException {
+    public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
 
-        Page<User> userPage = userRepository.findAllByCompany(userByEmail.getCompany(),PageRequest.of(0, 5));
+        Page<User> userPage = userRepository.findAllByCompany(userByEmail.getCompany(),PageRequest.of(pageId-1, 5));
 
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
@@ -82,8 +82,8 @@ public class AdminController {
         }
 
         json.put("users",jsonArray);
-        json.put("pagesAmmount",userPage.getTotalPages());
         json.put("currentPage",userPage.getNumber());
+        json.put("totalElements",userPage.getTotalElements());
 
         return json.toString();
     }

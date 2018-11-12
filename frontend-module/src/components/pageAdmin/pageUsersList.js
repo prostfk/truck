@@ -6,9 +6,11 @@ export default class UsersList extends Component {
 
     constructor(props) {
         super(props);
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.getUsersRequest = this.getUsersRequest.bind(this);
         this.state = {
             users: [],
-            pagesAmmount:0,
+            totalElements:0,
             currentPage:0,
             newUserEmail: '',
             newUserUsername: '',
@@ -19,8 +21,11 @@ export default class UsersList extends Component {
         this.getUsersRequest();
     }
 
-    getUsersRequest = () => {
-        fetch('http://localhost:8080/api/users', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+    getUsersRequest = (pageid=1) => {
+        console.log(pageid);
+        fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
+
+        }).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
@@ -31,8 +36,8 @@ export default class UsersList extends Component {
             console.log(gettedusers);
             this.setState({
                 users: gettedusers,
-                pagesAmmount:data.pagesAmmount,
-                currentPage:data.currentPage
+                totalElements:data.totalElements,
+                currentPage:++data.currentPage
             })
         })
     };
@@ -44,6 +49,7 @@ export default class UsersList extends Component {
     };
 
     handlePageChange(pageNumber) {
+        this.getUsersRequest(pageNumber);
         this.setState({currentPage: pageNumber});
     }
 
@@ -129,9 +135,12 @@ export default class UsersList extends Component {
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}
-                            itemsCountPerPage={10}
-                            totalItemsCount={450}
+                            totalItemsCount={this.state.totalElements}
+                            itemsCountPerPage={5}
                             pageRangeDisplayed={5}
+                            hideDisabled={true}
+                            itemClass={"page-link page-item"}
+                            activeClass={"activePage"}
                             onChange={this.handlePageChange}
                         />
                     </div>
