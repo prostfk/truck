@@ -129,23 +129,31 @@ public class ManagerController {
 
     }
 
-    @GetMapping(value = "/manager/{productId}/cancelProduct")
-    public ProductDto cancelProduct(@PathVariable Long productId, @RequestParam("isLost") Boolean isLost) {
+    @GetMapping(value = "/manager/{productId}/cancelProduct/{orderId}")
+    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam("isLost") Boolean isLost) {
+        Consignment consignment = orderRepository.findOrderById(orderId).getConsignment();
+        CancellationAct cancellationAct = consignment.getCancellationAct();
+        if(cancellationAct == null) {
+            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, new Double(0), consignment);
+            cancellationActRepository.save(cancellationAct);
+        }
+
         Optional<Product> product = productRepository.findById(productId);
         if (!product.isPresent())
             return null;
-        CancellationAct cancellationAct = product.get().getCancellationAct();
 
         if (isLost) {
             product.get().setStatus(4);
             cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
             Integer amount = cancellationAct.getAmount() + 1;
             cancellationAct.setAmount(amount);
+            product.get().setCancellationAct(cancellationAct);
         } else {
             product.get().setStatus(1);
             cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice());
             Integer amount = cancellationAct.getAmount() - 1;
             cancellationAct.setAmount(amount);
+            product.get().setCancellationAct(null);
         }
 
         productRepository.save(product.get());
@@ -166,8 +174,32 @@ public class ManagerController {
         waybill.setUser(userByUsername);
 
         CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
-        cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
-        cancellationActRepository.save(cancellationAct);
+        if(cancellationAct != null) {
+            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
+            cancellationActRepository.save(cancellationAct);
+        }
+        waybillRepository.save(waybill);
+        order.get().setWaybill(waybill);
+
+        return new OrderDto(order.get());
+    }
+
+    @GetMapping(value = "/manager/cancelChecking/{orderId}")
+    public OrderDto cancelWaybillCheck(@PathVariable Long orderId, @RequestParam("status") String status) {
+        System.out.println(orderId);
+        System.out.println(status);
+        Optional<Order> order = orderRepository.findById(orderId);
+        System.out.println(order.isPresent());
+        Waybill waybill = order.get().getWaybill();
+        waybill.setStatus(Integer.valueOf(status));
+        waybill.setCheckDate(null);
+        waybill.setUser(null);
+
+        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
+        if(cancellationAct != null) {
+            cancellationAct.setDate(null);
+            cancellationActRepository.save(cancellationAct);
+        }
         waybillRepository.save(waybill);
         order.get().setWaybill(waybill);
 

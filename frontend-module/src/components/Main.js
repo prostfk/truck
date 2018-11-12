@@ -50,7 +50,7 @@ class MainController extends React.Component {
                     <Route path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
-                    <Route exact path="/test" component={TestComponent}/>
+                    {/*<Route exact path="/test" component={TestComponent}/>*/}
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
                     <Route exact path="/stocks" component={PageStockList}/> {/* stock list for admin */}
                     <Route exact path="/autos" component={AutoList}/> {/* auto list for admin */}

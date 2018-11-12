@@ -704,14 +704,14 @@ INSERT INTO public.orders (id, name, client_id, status, sender, receiver, date_a
 -- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (35, 'product #35', 2, 'desc', 34, 34, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (37, 'product #37', 2, 'desc', 34, 34, 100);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (36, 'product #36', 1, 'desc', 34, 34, 121);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (38, 'product #38', 1, 'desc', 34, 34, 76);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (39, 'product #39', 2, 'desc', 33, 33, 123);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (40, 'product #40', 3, 'desc', 33, 33, 121);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (41, 'product #41', 3, 'desc', 33, 33, 100);
-INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (42, 'product #42', 1, 'desc', 33, 33, 76);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (35, 'product #35', 2, 'desc', 34, NULL, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (37, 'product #37', 2, 'desc', 34, NULL, 100);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (36, 'product #36', 1, 'desc', 34, NULL, 121);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (38, 'product #38', 1, 'desc', 34, NULL, 76);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (39, 'product #39', 2, 'desc', 33, NULL, 123);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (40, 'product #40', 3, 'desc', 33, NULL, 121);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (41, 'product #41', 3, 'desc', 33, NULL, 100);
+INSERT INTO public.product (id, name, status, description, product_consignment, cancellation_act, price) VALUES (42, 'product #42', 1, 'desc', 33, NULL, 76);
 
 
 --

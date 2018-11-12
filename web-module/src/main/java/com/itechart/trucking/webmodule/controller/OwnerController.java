@@ -110,8 +110,9 @@ public class OwnerController {
             System.out.println("access dined");
             return null;
         }
+    }
 
-    @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
+   @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
     public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
