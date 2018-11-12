@@ -32,7 +32,7 @@ class SysAdminPage extends React.Component{
         })
     };
     changeMail(event){
-        thispa.setState({
+        this.setState({
             inputMail: event.target.value
         })
     }
