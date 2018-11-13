@@ -9,6 +9,7 @@ export default class UsersList extends Component {
             totalElements: 0,
             currentPage: 0
         };
+        document.title = "Пользователи компании";
         this.fetchToUsers();
     }
 

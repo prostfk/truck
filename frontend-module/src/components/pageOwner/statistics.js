@@ -4,7 +4,7 @@ export default class CompanyOwnerStatistics extends Component {
 
     constructor(props){
         super(props);
-
+        document.title = "Статистика";
     }
 
     xlsSender = () => {

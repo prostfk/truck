@@ -3,6 +3,9 @@ package com.itechart.trucking.webmodule.controller;
 import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
+import com.itechart.trucking.client.dto.ClientDto;
+import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.client.repository.ClientRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.consignment.repository.ConsignmentRepository;
@@ -17,10 +20,15 @@ import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -53,6 +61,8 @@ public class OwnerController {
     @Autowired
     private ConsignmentRepository consignmentRepository;
 
+    @Autowired
+    private ClientRepository clientRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
@@ -146,5 +156,35 @@ public class OwnerController {
         }
 
         return new CancellationActDto(cancellationAct);
+    }
+
+    @GetMapping(value = "/company/clients")
+    @ResponseBody
+    public Object fetchCompanyClients(@RequestParam(name = "page") int page) throws JSONException {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
+        Page<Client> clientPage = clientRepository.findAllByCompany(userByEmail.getCompany(), PageRequest.of(page - 1, 5));
+
+        for (Client client : clientPage) {
+            System.out.println(client);
+        }
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (Client client:clientPage.getContent()) {
+            JSONObject jsonObject;
+            ClientDto clientDto = new ClientDto(client);
+            jsonObject = new JSONObject(ClientDto.toMap(clientDto));
+            jsonArray.put(jsonObject);
+        }
+
+        json.put("clients", jsonArray);
+        json.put("currentPage", clientPage.getNumber());
+        json.put("totalElements", clientPage.getTotalElements());
+
+        System.out.println(json);
+
+        return json.toString();
     }
 }
