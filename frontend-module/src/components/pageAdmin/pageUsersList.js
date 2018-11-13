@@ -40,15 +40,15 @@ export default class UsersList extends Component {
         let emailVal = ValidationUtil.validateEmailForPattern(this.state.newUserEmail);
         if (!usernameVal) document.getElementById('error-username-span').innerText = "Никнейм должен быть от 5 до 20 символов";
         else document.getElementById('error-username-span').innerText = '';
-        if (!nameVal) document.getElementById('error-name-span').innerText = "Имя должно быть от 2 до 20 символов";
-        else document.getElementById('error-name-span').innerText = '';
-        if (!surnameVal) document.getElementById('error-surname-span').innerText = "Фамилия должна быть от 4 до 20 символов";
-        else document.getElementById('error-surname-span').innerText = '';
+        if (!nameVal) document.getElementById('newUserFirstName').style.border = '1px solid red';//document.getElementById('error-name-span').innerText = "Имя должно быть от 2 до 20 символов";
+        else document.getElementById('newUserFirstName').style.border = '';//document.getElementById('error-name-span').innerText = '';
+        if (!surnameVal) document.getElementById('newUserSecondName').style.border = '1px solid red'; //document.getElementById('error-surname-span').innerText = "Фамилия должна быть от 4 до 20 символов";
+        else document.getElementById('newUserSecondName').style.border = '';//document.getElementById('error-surname-span').innerText = '';
         if (!usernameVal) document.getElementById('error-password-span').innerText = "Пароль должен быть от 6 до 20 символов";
         else document.getElementById('error-password-span').innerText = '';
         if (!emailVal) document.getElementById('error-email-span').innerText = "Неправильная почта";
         else document.getElementById('error-email-span').innerText = '';
-        if (this.state.newUserRole.join('') === 'ROLE_DRIVER' && this.state.newUserPassport === ''){
+        if ((Array.isArray(this.state.newUserRole)? this.state.newUserRole.join('') === 'ROLE_DRIVER': false) && this.state.newUserPassport === ''){
             console.log(this.state.newUserPassport);
 
             document.getElementById('error-passport-span').innerText = "Неправильные данные";
@@ -83,6 +83,7 @@ export default class UsersList extends Component {
         this.setState({
             [event.target.id]: [event.target.value]
         });
+        console.log(this.state)
     };
 
     handlePageChange(pageNumber) {
@@ -208,7 +209,7 @@ export default class UsersList extends Component {
                     <form className="superuserform_newaccountform grey_form">
                         <span id="message-span"/>
                         <div id={'from-content'}>
-                            <h5>Регистрация нового пользователя</h5>
+                            <h6>Регистрация нового пользователя</h6>
                             <span className={'error-span'} id={'error-form-span'}/>
                             <div className="form-group">
                                 <label htmlFor="newUserUsername" id="usernameLabel">Никнейм*</label>
@@ -217,19 +218,27 @@ export default class UsersList extends Component {
                                 <span className="error-span" id="error-username-span"/>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="newUserSecondName" id="userSecondNameLabel">Фамилия*</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserSecondName" placeholder={'Фамилия'} required=""/>
-                                <span className="error-span" id="error-surname-span"/>
+                                <label htmlFor="newUserSecondName" id="newUserSecondNameLabel">ФИО*</label>
+                                <div className="col-md-12 row">
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-4" placeholder="Фамилия" id="newUserSecondName" />
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Имя" id="newUserFirstName" />
+                                    <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Отчество" id="newUserThirdName" />
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserFirstName" id="userFirstNameLabel">Имя*</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" placeholder={'Имя'} id="newUserFirstName"/>
-                                <span className="error-span" id="error-name-span"/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserThirdName" id="userThirdNameLabel">Отчество</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" placeholder={'Отчество'} id="newUserThirdName" />
-                            </div>
+                            {/*<div className="form-group">*/}
+                                {/*<label htmlFor="newUserSecondName" id="userSecondNameLabel">Фамилия*</label>*/}
+                                {/*<input onChange={this.changeInput} type="text" className="form-control" id="newUserSecondName" placeholder={'Фамилия'} required=""/>*/}
+                                {/*<span className="error-span" id="error-surname-span"/>*/}
+                            {/*</div>*/}
+                            {/*<div className="form-group">*/}
+                                {/*<label htmlFor="newUserFirstName" id="userFirstNameLabel">Имя*</label>*/}
+                                {/*<input onChange={this.changeInput} type="text" className="form-control" placeholder={'Имя'} id="newUserFirstName"/>*/}
+                                {/*<span className="error-span" id="error-name-span"/>*/}
+                            {/*</div>*/}
+                            {/*<div className="form-group">*/}
+                                {/*<label htmlFor="newUserThirdName" id="userThirdNameLabel">Отчество</label>*/}
+                                {/*<input onChange={this.changeInput} type="text" className="form-control" placeholder={'Отчество'} id="newUserThirdName" />*/}
+                            {/*</div>*/}
                             <div className="form-group">
                                 <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
                                 <input onChange={this.changeInput} type="password" className="form-control"
@@ -271,11 +280,22 @@ export default class UsersList extends Component {
                                     <option value={'ROLE_DRIVER'}>Водитель</option>
                                 </select>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта</label>
-                                <input onChange={this.changeInput} value={this.state.newUserPassport} type="text" className="form-control" id="newUserPassport" required=""/>
-                                <span className="error-span" id="error-passport-span"/>
-                            </div>
+                            {
+                                this.state.newUserRole === 'ROLE_DRIVER' || (Array.isArray(this.state.newUserRole) ? this.state.newUserRole.includes('ROLE_DRIVER') : false)? (
+                                    <div className="form-group">
+                                        <label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта *</label>
+                                        <input onChange={this.changeInput} value={this.state.newUserPassport} type="text" className="form-control" id="newUserPassport" required=""/>
+                                        <span className="error-span" id="error-passport-span"/>
+                                    </div>
+                                ) : <div/>
+
+
+                            }
+                            {/*<div className="form-group">*/}
+                                {/*<label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта</label>*/}
+                                {/*<input onChange={this.changeInput} value={this.state.newUserPassport} type="text" className="form-control" id="newUserPassport" required=""/>*/}
+                                {/*<span className="error-span" id="error-passport-span"/>*/}
+                            {/*</div>*/}
                             <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
                         </div>
                     </form>
