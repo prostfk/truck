@@ -204,7 +204,7 @@ export default class AutoList extends Component {
                             return this.renderAuto(auto);
                         })
                     }
-                    <div className="row pagination_row">
+                    <div className="table_footer">
                         <div>
                             <Pagination
                                 activePage={this.state.number}
@@ -212,7 +212,8 @@ export default class AutoList extends Component {
                                 itemsCountPerPage={5}
                                 pageRangeDisplayed={5}
                                 hideDisabled={true}
-                                itemClass={"page-link page-item"}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
                                 activeClass={"activePage"}
                                 onChange={this.handlePageChange}
                             />

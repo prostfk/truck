@@ -172,7 +172,7 @@ export default class PageStockListNew extends React.Component {
                     })
                 }
 
-                <div className="row pagination_row">
+                <div className="table_footer">
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}
@@ -180,7 +180,8 @@ export default class PageStockListNew extends React.Component {
                             itemsCountPerPage={5}
                             pageRangeDisplayed={5}
                             hideDisabled={true}
-                            itemClass={"page-link page-item"}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
                             activeClass={"activePage"}
                             onChange={this.handlePageChange}
                         />

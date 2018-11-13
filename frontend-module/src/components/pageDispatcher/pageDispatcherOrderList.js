@@ -105,7 +105,7 @@ class DispatcherOrderList extends React.Component{
                         return this.renderTable(element);
                     })
                 }
-                <div className="row pagination_row">
+                <div className="table_footer">
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}
@@ -113,7 +113,8 @@ class DispatcherOrderList extends React.Component{
                             itemsCountPerPage={5}
                             pageRangeDisplayed={5}
                             hideDisabled={true}
-                            itemClass={"page-link page-item"}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
                             activeClass={"activePage"}
                             onChange={this.handlePageChange}
                         />

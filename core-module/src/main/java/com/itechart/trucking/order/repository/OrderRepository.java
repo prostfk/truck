@@ -32,7 +32,10 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     @Query(value = "UPDATE orders SET name=:orderName, client_id=:clientId, sender=:sender, receiver=:receiver, date_accepted=:dateDeparture, date_executed=:dateArrival, waybill_id=:waybillId, company_id=:companyId WHERE id=:orderId", nativeQuery = true)
     Order updateOrder(@Param("orderId")Long orderId, @Param("orderName") String orderName,@Param("clientId") Long clientId, @Param("sender") Long sender,@Param("receiver") Long receiver, @Param("dateDeparture") String dateDeparture, @Param("dateArrival") String dateArrival,@Param("waybillId")Long waybillId,@Param("companyId") Long companyId);
+
     List<Order> findAllByStatusAndCompanyId(Integer active, Long companyId);
+
+    Page<Order> findAllByStatusAndCompanyId(Integer active, Long companyId,Pageable pageable);
 
 
 /*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")

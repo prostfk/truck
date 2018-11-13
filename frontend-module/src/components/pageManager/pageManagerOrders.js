@@ -2,6 +2,7 @@
 import {render} from 'react-dom'
 import {Link} from "react-router-dom";
 import ModalChooseWaybillStatus from "./modalChooseWaybillStatus";
+import Pagination from "react-js-pagination";
 
 class pageManagerOrders extends Component {
 
@@ -11,15 +12,20 @@ class pageManagerOrders extends Component {
         this.renderTable = this.renderTable.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.changeWaybillStatus = this.changeWaybillStatus.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
-            orders: []
+            orders: [],
+            totalElements:0,
+            currentPage:1
         };
         document.title = "Заказы"
     }
 
     componentDidMount() {
          this.getOrderList().then(data => {
-             this.setState({orders:data});
+             this.setState({orders: data.content,
+                 totalElements:data.totalElements,
+                 currentPage:++data.number});
          });
     }
 
@@ -35,13 +41,18 @@ class pageManagerOrders extends Component {
         });
     }
     /*get active orders*/
-    getOrderList() {
-        return fetch('http://localhost:8080/api/manager/orders', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+    getOrderList(pageid=1) {
+        return fetch('http://localhost:8080/api/manager/orders?page='+pageid, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
             return result;
         });
+    }
+
+    handlePageChange(pageNumber) {
+        this.getOrderList(pageNumber);
+        this.setState({currentPage: pageNumber});
     }
 
     /*render row of table ( calls from html ) */
@@ -128,15 +139,17 @@ class pageManagerOrders extends Component {
                             })
                         }
                         <div className="table_footer">
-                            <nav aria-label="...">
-                                <ul className="pagination pagination-sm">
-                                    <li className="page-item disabled">
-                                        <a className="page-link" href="#" tabIndex="-1">1</a>
-                                    </li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                </ul>
-                            </nav>
+                            <Pagination
+                                activePage={this.state.currentPage}
+                                totalItemsCount={this.state.totalElements}
+                                itemsCountPerPage={5}
+                                pageRangeDisplayed={5}
+                                hideDisabled={true}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
+                                activeClass={"activePage"}
+                                onChange={this.handlePageChange}
+                            />
                         </div>
                     </div>
 

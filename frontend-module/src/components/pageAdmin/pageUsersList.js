@@ -187,7 +187,7 @@ export default class UsersList extends Component {
                         return this.renderUser(user);
                     })
                 }
-                <div className="row pagination_row">
+                <div className="table_footer">
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}
@@ -195,7 +195,8 @@ export default class UsersList extends Component {
                             itemsCountPerPage={5}
                             pageRangeDisplayed={5}
                             hideDisabled={true}
-                            itemClass={"page-link page-item"}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
                             activeClass={"activePage"}
                             onChange={this.handlePageChange}
                         />
