@@ -6,7 +6,6 @@ import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrde
 import DispatcherOrderList from "./pageDispatcher/pageDispatcherOrderList"
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
-import PageStockList from "./pageAdmin/pageStockList";
 import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";

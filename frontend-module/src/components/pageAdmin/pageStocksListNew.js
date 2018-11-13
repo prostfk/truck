@@ -72,18 +72,18 @@ export default class PageStockListNew extends React.Component {
     componentDidMount(){
         this.getStockList().then(data => {
             this.setState({
-                stocks:data.stocks,
+                stocks:data.content,
                 totalElements:data.totalElements,
-                currentPage:++data.currentPage
+                currentPage:++data.number
             });
         });
     }
     handlePageChange(pageNumber) {
         this.getStockList(pageNumber).then(data => {
             this.setState({
-                stocks:data.stocks,
+                stocks:data.content,
                 totalElements:data.totalElements,
-                currentPage:++data.currentPage
+                currentPage:++data.number
             });
         });
 
@@ -172,7 +172,7 @@ export default class PageStockListNew extends React.Component {
                     })
                 }
 
-                <div className="row">
+                <div className="row pagination_row">
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}

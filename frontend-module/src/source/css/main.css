@@ -117,3 +117,7 @@ body {
 .activePage{
     background-color: #f5f5f5;
 }
+.pagination_row{
+    margin-left: 40%;
+    margin-top: 20px;
+}

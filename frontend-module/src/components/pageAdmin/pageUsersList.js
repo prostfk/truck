@@ -69,12 +69,12 @@ export default class UsersList extends Component {
                 return response.json();
             }
         }).then(data => {
-            let gettedusers =data.users;
+            let gettedusers =data.content;
             console.log(gettedusers);
             this.setState({
                 users: gettedusers,
                 totalElements:data.totalElements,
-                currentPage:++data.currentPage
+                currentPage:++data.number
             })
         })
     };
@@ -188,7 +188,7 @@ export default class UsersList extends Component {
                         return this.renderUser(user);
                     })
                 }
-                <div className="row">
+                <div className="row pagination_row">
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}
