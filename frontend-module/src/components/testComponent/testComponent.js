@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types"
-import ReactGoogleMapLoader from "react-google-maps-loader"
+import ReactGoogleMapLoader from "react-google-maps-l oader"
 import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
