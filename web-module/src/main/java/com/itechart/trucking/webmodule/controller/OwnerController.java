@@ -20,6 +20,7 @@ import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,6 +35,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -72,14 +77,25 @@ public class OwnerController {
 
     @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
-    public String createXls(@Value("${excel.path}")String path){
-        Optional<User> byId = userRepository.findById(1L);
-        User user = byId.get();
+    public void createXls(@Value("${excel.path}")String path, HttpServletResponse response){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        List<Order> companyOrders = userByUsername.getCompany().getCompanyOrders();
         try {
-            new ExcelUtil().writeInExcel(path, user,new Date(),new Date(),"","","");
-            return "Success";
+            String filename = new ExcelUtil().writeInExcel(path, userByUsername, new Date(), new Date(), companyOrders);
+            ServletOutputStream outputStream = response.getOutputStream();
+            File file = new File(path + filename);
+            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer= new byte[8192];
+            int length;
+
+            while ((length = fis.read(buffer)) > 0){
+                outputStream.write(buffer, 0, length);
+            }
+            fis.close();
+            outputStream.close();
         } catch (IOException e) {
-            return "Fail";
+            LOGGER.warn("Something went wrong: ", e);
         }
     }
 

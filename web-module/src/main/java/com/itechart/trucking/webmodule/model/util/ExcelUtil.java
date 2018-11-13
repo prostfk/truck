@@ -1,5 +1,6 @@
 package com.itechart.trucking.webmodule.model.util;
 
+import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.user.entity.User;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -10,10 +11,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 public class ExcelUtil {
 
-    public void writeInExcel(String path, User user, Date startDate, Date endDate, String consumption, String income, String profit) throws IOException {
+    public String writeInExcel(String path, User user, Date startDate, Date endDate, List<Order> orders) throws IOException {//todo create really company info
         Workbook book = new HSSFWorkbook();
         Sheet sheet = book.createSheet("Stats");
         String[] strings = {user.getUsername(), user.getEmail(), user.getPassword(), user.getUserRole().name()};
@@ -23,8 +25,8 @@ public class ExcelUtil {
             cell.setCellValue(strings[i]);
         }
         book.write(new FileOutputStream(String.format("%s/%s.xls", path, user.getUsername())));
-//        book.write(new FileOutputStream(String.format("%s/%s-%s.xls", path, user.getUsername(), new Date().toString())));
         book.close();
+        return user.getUsername() + ".xls";
     }
 
 }
