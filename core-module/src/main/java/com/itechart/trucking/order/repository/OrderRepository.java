@@ -4,6 +4,8 @@ import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +21,8 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     List<Order> findCustomQueryOrderByDriver(@Param("driverId") Long driverId);*/
 
     Order findOrderById(Long id);
+
+    Page<Order> findByCompany(Company company, Pageable pageable);
 
     @Query("select o From Order o where o.waybill IN (select w.id FROM Waybill w where w.driver.id = :driverId) and o.status = 1 ")
     List<Order> findCustomQueryOrderByDriver(@Param("driverId") Long driverId);

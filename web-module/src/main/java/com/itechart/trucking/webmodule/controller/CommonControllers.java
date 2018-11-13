@@ -37,12 +37,13 @@ public class CommonControllers {
 
 
     // dispatcher | manager
-    @RequestMapping(value = "/orders/",method = RequestMethod.GET)
-    public List<OrderDto> getOrders(@ModelAttribute Order order){
+    @RequestMapping(value = "/orders",method = RequestMethod.GET)
+    public Object getOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
-        List<Order> orders = user.getCompany().getCompanyOrders();
-        return Odt.OrderToDtoList(orders);
+
+        Page<Order> orderPage = orderRepository.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
+        return orderPage.map(order -> new OrderDto(order));
     }
 
     @GetMapping(value = "/stocks")
