@@ -204,7 +204,7 @@ export default class UsersList extends Component {
                 </div>
             </div>
 
-                <div className="offset-md-1 col-md-4" id={'add-user-form'}>
+            <div className="offset-md-1 col-md-4" id={'add-user-form'}>
                     <form className="superuserform_newaccountform grey_form">
                         <span id="message-span"/>
                         <div id={'from-content'}>
@@ -275,44 +275,12 @@ export default class UsersList extends Component {
                                 <label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта</label>
                                 <input onChange={this.changeInput} value={this.state.newUserPassport} type="text" className="form-control" id="newUserPassport" required=""/>
                                 <span className="error-span" id="error-passport-span"/>
-
                             </div>
-
-
                             <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
-
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserUsername" id="usernameLabel">Никнейм</label>
-                            <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
-                                   placeholder="bestWorker2018" required=""/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserDate" id="dateLabel">Дата рождения</label>
-                            <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
-                                   className="form-control" id="newUserDate"
-                                   placeholder="01/01/2018" required=""/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserRole" id="roleLabel">Роль</label>
-                            <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole}
-                                    onChange={this.changeInput}>
-                                <option value={'ROLE_ADMIN'}>Администратор</option>
-                                <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
-                                <option value={'ROLE_MANAGER'}>Менеджер</option>
-                                <option value={'ROLE_DRIVER'}>Водитель</option>
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserPassword" id="passwordLabel">Пароль</label>
-                            <input onChange={this.changeInput} type="password" className="form-control"
-                                   id="newUserPassword" placeholder="qwerty" required=""/>
-                        </div>
-                        <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
-                    </div>
-                </form>
+                    </form>
             </div>
-        </div>;
+        </div>
     }
 
 
