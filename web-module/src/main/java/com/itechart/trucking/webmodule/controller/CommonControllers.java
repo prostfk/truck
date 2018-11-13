@@ -52,21 +52,21 @@ public class CommonControllers {
 
         Page<Stock> stockPage = stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true, PageRequest.of(pageId-1, 5));
 
-        JSONObject json = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
+//        JSONObject json = new JSONObject();
+//        JSONArray jsonArray = new JSONArray();
+//
+//        for (Stock stock:stockPage.getContent()) {
+//            JSONObject jsonObject;
+//            StockDto stockDto = new StockDto(stock);
+//            jsonObject = new JSONObject(StockDto.toMap(stockDto));
+//            jsonArray.put(jsonObject);
+//        }
+//
+//        json.put("stocks",jsonArray);
+//        json.put("currentPage",stockPage.getNumber());
+//        json.put("totalElements",stockPage.getTotalElements());
 
-        for (Stock stock:stockPage.getContent()) {
-            JSONObject jsonObject;
-            StockDto stockDto = new StockDto(stock);
-            jsonObject = new JSONObject(StockDto.toMap(stockDto));
-            jsonArray.put(jsonObject);
-        }
-
-        json.put("stocks",jsonArray);
-        json.put("currentPage",stockPage.getNumber());
-        json.put("totalElements",stockPage.getTotalElements());
-
-        return json.toString();
+        return stockPage.map(stock -> new StockDto(stock));
     }
 
     @DeleteMapping(value = "/stocks")
