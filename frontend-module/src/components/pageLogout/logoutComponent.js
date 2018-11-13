@@ -34,7 +34,7 @@ export default class LogoutComponent extends Component {
         };
         return (
             <div>
-                <a className={this.props.className} style={red} onClick={this.toggle}><b>Выйти</b></a>
+                <a className={this.props.className} style={red} onClick={this.toggle}><span className={'btn'}><b>Выйти</b></span></a>
                 <Modal isOpen={this.state.modal}>
                     <form>
                         <ModalHeader>Выйти?</ModalHeader>
