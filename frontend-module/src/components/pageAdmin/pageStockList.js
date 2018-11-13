@@ -1,6 +1,7 @@
 import React from "react";
 import ModalAcceptDelete from "./modalAcceptDelete";
 import ModalComponentStockEdit from "./modalComponentStockEdit";
+import Pagination from "react-js-pagination";
 
 class PageStockList extends React.Component {
     constructor(props) {
@@ -12,20 +13,27 @@ class PageStockList extends React.Component {
         this.addNewStock = this.addNewStock.bind(this);
         this.submiteDelete = this.submiteDelete.bind(this);
         this.submitEdit = this.submitEdit.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
             stocks:[],
             stockName:"",
-            stockAddress:""
+            stockAddress:"",
+            totalElements:0,
+            currentPage:0
         };
         document.title = "Склады"
     }
 
     forceUpdateHandler(){
         const refthis = this;
-        fetch('http://localhost:8080/api/stocks/', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch('http://localhost:8080/api/stocks?='+this.state.currentPage, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
-            refthis.setState({stocks:result})
+            refthis.setState({
+                stocks:result.stocks,
+                totalElements:result.totalElements,
+                currentPage:++result.currentPage
+            })
         })
     };
 
@@ -55,19 +63,35 @@ class PageStockList extends React.Component {
         }, err => console.log(err))
     }
 
-    getStockList(){
-        const fetchResult = fetch('http://localhost:8080/api/stocks', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+    getStockList(pageid=1){
+        const fetchResult = fetch('http://localhost:8080/api/stocks?page='+pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
         });
         return fetchResult;
     }
+
     componentDidMount(){
         this.getStockList().then(data => {
-            this.setState({stocks:data});
+            this.setState({
+                stocks:data.stocks,
+                totalElements:data.totalElements,
+                currentPage:++data.currentPage
+            });
         });
     }
+    handlePageChange(pageNumber) {
+        this.getStockList(pageNumber).then(data => {
+            this.setState({
+                stocks:data.stocks,
+                totalElements:data.totalElements,
+                currentPage:++data.currentPage
+            });
+        });
+        this.setState({currentPage: pageNumber});
+    }
+
     submitEdit(newStockName,newStockAdress,stockId,event){
         let refThis=this;
         let formData = new FormData();
@@ -148,15 +172,20 @@ class PageStockList extends React.Component {
                        })
                    }
 
-               <nav aria-label="...">
-                   <ul className="pagination pagination-sm">
-                       <li className="page-item disabled">
-                           <a className="page-link" href="#" tabIndex="-1">1</a>
-                       </li>
-                       <li className="page-item"><a className="page-link" href="#">2</a></li>
-                       <li className="page-item"><a className="page-link" href="#">3</a></li>
-                   </ul>
-               </nav>
+               <div className="row">
+                   <div>
+                       <Pagination
+                           activePage={this.state.currentPage}
+                           totalItemsCount={this.state.totalElements}
+                           itemsCountPerPage={5}
+                           pageRangeDisplayed={5}
+                           hideDisabled={true}
+                           itemClass={"page-link page-item"}
+                           activeClass={"activePage"}
+                           onChange={this.handlePageChange}
+                       />
+                   </div>
+               </div>
            </div>
 
            <div className="offset-md-1 col-md-3">

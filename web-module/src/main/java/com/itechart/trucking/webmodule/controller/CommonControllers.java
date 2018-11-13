@@ -9,7 +9,12 @@ import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -41,10 +46,27 @@ public class CommonControllers {
     }
 
     @GetMapping(value = "/stocks")
-    public List<StockDto> stocks() {
+    public Object stocks(@RequestParam(value = "page") int pageId) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        return Odt.StockListToDtoList(stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true));
+
+        Page<Stock> stockPage = stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true, PageRequest.of(pageId-1, 5));
+
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (Stock stock:stockPage.getContent()) {
+            JSONObject jsonObject;
+            StockDto stockDto = new StockDto(stock);
+            jsonObject = new JSONObject(StockDto.toMap(stockDto));
+            jsonArray.put(jsonObject);
+        }
+
+        json.put("stocks",jsonArray);
+        json.put("currentPage",stockPage.getNumber());
+        json.put("totalElements",stockPage.getTotalElements());
+
+        return json.toString();
     }
 
     @DeleteMapping(value = "/stocks")
