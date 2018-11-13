@@ -6,12 +6,14 @@ export default class UsersList extends Component {
         super(props);
         this.state = {
             users: [],
+            totalElements: 0,
+            currentPage: 0
         };
         this.fetchToUsers();
     }
 
-    fetchToUsers = () => {
-        fetch('/api/users', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+    fetchToUsers = (pageid = 1) => {
+        fetch('/api/users?page=' + pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
@@ -20,7 +22,9 @@ export default class UsersList extends Component {
         }).then(data => {
             console.log(data);
             this.setState({
-                users: data
+                users: data.users,
+                totalElements:data.totalElements,
+                currentPage:++data.currentPage
             })
         })
     };
