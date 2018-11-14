@@ -240,12 +240,12 @@ export default class DispatcherCreateOrderPage extends React.Component {
 
     //trbl
     removeProduct = (name) => {
-        let tmp = this.state.consignment;
+/*        let tmp = this.state.consignment;
         let index = tmp.indexOf(name);
         tmp.splice(index, 1);
         this.setState({
             consignment: tmp
-        })
+        })*/
     };
 
     showOrderHideConsignment = () => {

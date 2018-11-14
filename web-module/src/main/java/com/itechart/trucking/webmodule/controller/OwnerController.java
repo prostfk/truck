@@ -13,6 +13,7 @@ import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.pagesDto.OwnerPageStatisticsDto;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
@@ -73,6 +74,22 @@ public class OwnerController {
     public String mainPage() {
         LOGGER.debug("'get' request on index page");
         return "index";
+    }
+    @GetMapping(value = "/company/getFullStat")//check xls method
+    @ResponseBody
+    public OwnerPageStatisticsDto getFullStat(){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+
+        OwnerPageStatisticsDto ownerPageStatisticsDto = new OwnerPageStatisticsDto();
+        ownerPageStatisticsDto.setWorkersAmmount(userByUsername.getCompany().getWorkersAmmount());
+        System.out.println(ownerPageStatisticsDto.getWorkersAmmount());
+/*        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_ADMIN",);
+        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_DISPATCHER",);
+        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_MANAGER",);
+        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_DRIVER",);*/
+
+        return ownerPageStatisticsDto;
     }
 
     @GetMapping(value = "/company/statistics")//check xls method

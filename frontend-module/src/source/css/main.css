@@ -121,3 +121,9 @@ body {
     margin-left: 40%;
     margin-top: 20px;
 }
+.info-block{
+    color: #495057;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 50px;
+}
