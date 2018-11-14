@@ -27,9 +27,17 @@ import com.itechart.trucking.waybill.entity.Waybill;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /*Object Type Definition*/
 public class Odt {
+
+    public static <T, R> List<R> sad(List<T> objects, Function<T, R> mapper) {
+        return objects.stream()
+                .map(mapper)
+                .collect(Collectors.toList());
+    }
 
     public static List<WaybillDto> WayBilToDtoList(List<Waybill> waybills){
         if(waybills==null) return null;

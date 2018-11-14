@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
 import ErrorUiHandler from "../errorWindows/errorHandler";
+import Pagination from "react-js-pagination";
 
 class DispatcherOrderList extends React.Component{
     constructor(props) {
@@ -9,15 +10,20 @@ class DispatcherOrderList extends React.Component{
         this.getOrderList = this.getOrderList.bind(this);
         this.renderTable = this.renderTable.bind(this);
         this.getCompany = this.getCompany.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
             orders:[],
-            company:{}
+            company:{},
+            totalElements:0,
+            currentPage:1
         };
         document.title = "Заказы"
     }
     componentDidMount(){
         this.getOrderList().then(data => {
-            this.setState({orders:data});
+            this.setState({orders: data.content,
+                totalElements:data.totalElements,
+                currentPage:++data.number});
         });
         this.getCompany().then(data => {
             this.setState({company:data});
@@ -26,16 +32,21 @@ class DispatcherOrderList extends React.Component{
     }
 
     /*get all company list*/
-    getOrderList() {
-        return fetch('http://localhost:8080/api/orders/', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+    getOrderList(pageid=1) {
+        return fetch('http://localhost:8080/api/orders?page='+pageid, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
-            console.log(result);
             return result;
         }).catch(err=>{
             throw new Error('Ошибка доступа')
         });
     }
+
+    handlePageChange(pageNumber) {
+        this.getOrderList(pageNumber);
+        this.setState({currentPage: pageNumber});
+    }
+
     getCompany() {
         return fetch('http://localhost:8080/api/getCompany/', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
@@ -94,6 +105,21 @@ class DispatcherOrderList extends React.Component{
                         return this.renderTable(element);
                     })
                 }
+                <div className="table_footer">
+                    <div>
+                        <Pagination
+                            activePage={this.state.currentPage}
+                            totalItemsCount={this.state.totalElements}
+                            itemsCountPerPage={5}
+                            pageRangeDisplayed={5}
+                            hideDisabled={true}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
+                            activeClass={"activePage"}
+                            onChange={this.handlePageChange}
+                        />
+                    </div>
+                </div>
             </div>
             <div class="offset-md-1 col-md-2">
                 <form class="superuserform_newaccountform grey_form">

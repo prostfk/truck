@@ -12,7 +12,7 @@ export default class UsersList extends Component {
         this.state = {
             users: [],
             totalElements:0,
-            currentPage:0,
+            currentPage:1,
             newUserEmail: '',
             newUserUsername: '',
             newUserPassword: '',
@@ -60,7 +60,6 @@ export default class UsersList extends Component {
 
 
  getUsersRequest = (pageid=1) => {
-        console.log(pageid);
         fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
@@ -69,12 +68,12 @@ export default class UsersList extends Component {
                 return response.json();
             }
         }).then(data => {
-            let gettedusers =data.users;
+            let gettedusers =data.content;
             console.log(gettedusers);
             this.setState({
                 users: gettedusers,
                 totalElements:data.totalElements,
-                currentPage:++data.currentPage
+                currentPage:++data.number
             })
         })
     };
@@ -189,7 +188,7 @@ export default class UsersList extends Component {
                         return this.renderUser(user);
                     })
                 }
-                <div className="row">
+                <div className="table_footer">
                     <div>
                         <Pagination
                             activePage={this.state.currentPage}
@@ -197,7 +196,8 @@ export default class UsersList extends Component {
                             itemsCountPerPage={5}
                             pageRangeDisplayed={5}
                             hideDisabled={true}
-                            itemClass={"page-link page-item"}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
                             activeClass={"activePage"}
                             onChange={this.handlePageChange}
                         />

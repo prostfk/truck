@@ -75,21 +75,7 @@ public class AdminController {
 
         Page<User> userPage = userRepository.findAllByCompany(userByEmail.getCompany(),PageRequest.of(pageId-1, 5));
 
-        JSONObject json = new JSONObject();
-        JSONArray jsonArray = new JSONArray();
-
-        for (User user:userPage.getContent()) {
-            JSONObject jsonObject;
-            UserDto userDto = new UserDto(user);
-            jsonObject = new JSONObject(UserDto.toMap(userDto));
-            jsonArray.put(jsonObject);
-        }
-
-        json.put("users",jsonArray);
-        json.put("currentPage",userPage.getNumber());
-        json.put("totalElements",userPage.getTotalElements());
-
-        return json.toString();
+        return userPage.map(user -> new UserDto(user));
     }
 
     @PostMapping(value = "/editCompany")
@@ -274,28 +260,15 @@ public class AdminController {
         company.setName(companyName);
         companyRepository.save(company);
         return true;
-
-/*        Company company = companyRepository.findCompanyById(compId);
-        int isActive = company.getActive();
-        if (isActive == 1) {
-            company.setActive(0);
-        } else {
-            company.setActive(1);
-            company.setLockerId(null);
-            company.setLockDate(null);
-            company.setLockComment(null);
-        }
-        return companyRepository.save(company) != null;*/
     }
 
     @GetMapping(value = "/autos")
-    public List<AutoDto> findAutos() {
+    public Object findAutos(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
 
-        List<Auto> autos = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true);
-        List<AutoDto> autoDtos = Odt.AutoListToDtoList(autos);
-        return autoDtos;
+        Page<Auto> autoPage = autoRepository.findAllByCompanyAndActive(userByEmail.getCompany(),true,PageRequest.of(pageId-1, 5));
+        return autoPage.map(auto -> new AutoDto(auto));
     }
 
     @PostMapping(value = "/saveAuto")
