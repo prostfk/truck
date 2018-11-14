@@ -11,8 +11,13 @@ export default class CompanyOwnerStatistics extends Component {
         super(props);
         this.getFullStatistics = this.getFullStatistics.bind(this);
         this.setCompanyWorkers = this.setCompanyWorkers.bind(this);
+        this.generateAcceptedTable = this.generateAcceptedTable.bind(this);
         this.state = {
-            rolesAmmount:{}
+            rolesAmmount:{},
+            acceptedAmmount:{},
+            executedAmmount:{},
+            acceptedAmmounthMonthNames:[],
+            acceptedAmmountMonthValues:[]
         };
         document.title = "Статистика";
     }
@@ -32,12 +37,59 @@ export default class CompanyOwnerStatistics extends Component {
     };
     componentDidMount(){
         this.getFullStatistics().then(data => {
-          this.setState({
-              rolesAmmount:data.workersAmmount
-          })
+            this.setState({
+                rolesAmmount:data.workersAmmount,
+                acceptedAmmount:data.acceptedAmmount,
+                executedAmmount:data.executedAmmount
+            })
         }).then(()=>{
             this.setCompanyWorkers();
+            for (var k in this.state.acceptedAmmount){
+
+                let newarr = this.state.acceptedAmmounthMonthNames;
+                let newArrOfVals = this.state.acceptedAmmountMonthValues;
+
+                newarr.push(this.getMonthName(k));
+                newArrOfVals.push(this.state.acceptedAmmount[k]);
+
+                this.setState({
+                    acceptedAmmounthMonthNames:newarr,
+                    acceptedAmmountMonthValues:newArrOfVals
+                })
+                console.log(this.state);
+            }
         });
+    }
+
+    getMonthName(k){
+        let b = "";
+        switch(k){
+            case "1": b = "January";
+                break;
+            case "2": b = "February";
+                break;
+            case "3": b = "March";
+                break;
+            case "4": b = "April";
+                break;
+            case "5": b = "May";
+                break;
+            case "6": b = "June";
+                break;
+            case "7": b = "July";
+                break;
+            case "8": b = "August";
+                break;
+            case "9": b = "September";
+                break;
+            case "10": b = "October";
+                break;
+            case "11": b = "November";
+                break;
+            case "12": b = "December";
+                break;
+        }
+        return b;
     }
 
     setCompanyWorkers(){
@@ -91,13 +143,12 @@ export default class CompanyOwnerStatistics extends Component {
             throw new Error('Ошибка доступа')
         });
     }
-
-    //todo statistics ui
-
-
-    render() {
-        const dataAccepted = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    generateAcceptedTable(data){
+        if(data.length<6) return;
+        let newarr = this.state.acceptedAmmounthMonthNames;
+        console.log(newarr);
+        let dataAccepted = {
+            labels: newarr,
             datasets: [
                 {
                     label: 'Принятые заказы',
@@ -118,36 +169,19 @@ export default class CompanyOwnerStatistics extends Component {
                     pointHoverBorderWidth: 2,
                     pointRadius: 1,
                     pointHitRadius: 10,
-                    data: [1, 2, 5, 4, 4, 2, 3]
+                    data: this.state.acceptedAmmountMonthValues
                 }
             ]
         };
-        const dataExecuted = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            datasets: [
-                {
-                    label: 'Выполненные заказы',
-                    fill: false,
-                    lineTension: 0.1,
-                    backgroundColor: '#848484',
-                    borderColor: '#848484',
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: '#848484',
-                    pointBackgroundColor: '#fff',
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: '#848484',
-                    pointHoverBorderColor: 'rgba(220,220,220,1)',
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 1,
-                    pointHitRadius: 10,
-                    data: [0, 2,4, 5, 3, 6, 9]
-                }
-            ]
-        };
+        return <Container>
+            <Line data={dataAccepted} />
+        </Container>
+    }
+
+    //todo statistics ui
+
+
+    render() {
 
         return (
             <div>
@@ -156,14 +190,11 @@ export default class CompanyOwnerStatistics extends Component {
                         <h2> Заказы:</h2>
                         <div className="row">
                             <div className="col-xl-6">
-                                <Container>
-                                    <Line data={dataAccepted} />
-                                </Container>
+                                {
+                                    this.generateAcceptedTable(this.state.acceptedAmmounthMonthNames)
+                                }
                             </div>
                             <div className="col-xl-6">
-                                <Container>
-                                    <Line data={dataExecuted} />
-                                </Container>
                             </div>
                         </div>
                     </div>
@@ -180,7 +211,7 @@ export default class CompanyOwnerStatistics extends Component {
                         </div>
                     </div>
                 </div>
-{/*                <div className="row">
+                {/*                <div className="row">
                     <div className="offset-md-1 col-md-10 superuserform_companylist info-block">
                         <h2> Сотрудники:</h2>
                         <div className="row">

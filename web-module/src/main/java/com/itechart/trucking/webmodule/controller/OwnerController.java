@@ -83,11 +83,12 @@ public class OwnerController {
 
         OwnerPageStatisticsDto ownerPageStatisticsDto = new OwnerPageStatisticsDto();
         ownerPageStatisticsDto.setWorkersAmmount(userByUsername.getCompany().getWorkersAmmount());
-        System.out.println(ownerPageStatisticsDto.getWorkersAmmount());
-/*        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_ADMIN",);
-        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_DISPATCHER",);
-        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_MANAGER",);
-        ownerPageStatisticsDto.getWorkersAmmount().put("ROLE_DRIVER",);*/
+
+        List<Order> orders = orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId());
+        ownerPageStatisticsDto.setAcceptedAmmount(userByUsername.getCompany().getOrderAcceptedAmmount(orders));
+
+        List<Order> ordersExecuted = orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
+        ownerPageStatisticsDto.setExecutedAmmount(userByUsername.getCompany().getOrderExcutedAmmount(ordersExecuted));
 
         return ownerPageStatisticsDto;
     }

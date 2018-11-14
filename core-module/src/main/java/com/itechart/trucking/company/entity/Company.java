@@ -3,6 +3,7 @@ package com.itechart.trucking.company.entity;
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.user.entity.User;
@@ -13,6 +14,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +88,54 @@ public class Company {
         workersAmmount.put("ROLE_MANAGER",ROLE_MANAGER);
         workersAmmount.put("ROLE_DRIVER",ROLE_DRIVER);
         return workersAmmount;
+    }
+
+    public Map getOrderAcceptedAmmount(List<Order> lastOrders){
+        Map month = new HashMap<String,Integer>();
+        month.put(LocalDate.now().minus(Period.ofMonths(5)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(4)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(3)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(2)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(1)).getMonthValue(),0);
+        month.put(LocalDate.now().getMonthValue(),0);
+
+
+        LocalDate dateFrom = LocalDate.now().minus(Period.ofMonths(6));
+
+        for (Order order:lastOrders) {
+            LocalDate dateAccepted = Odt.convertToLocalDateViaInstant(order.getDateAccepted());
+            if(dateAccepted.isAfter(dateFrom) && dateAccepted.isBefore(LocalDate.now())){
+                if(month.containsKey(dateAccepted.getMonthValue()))
+                    month.put(dateAccepted.getMonthValue(),(Integer)month.get(dateAccepted.getMonthValue()) +1);
+                else month.put(dateAccepted.getMonthValue(),1);
+            }
+        }
+
+        return month;
+    }
+
+    public Map getOrderExcutedAmmount(List<Order> lastOrders){
+        Map month = new HashMap<String,Integer>();
+        month.put(LocalDate.now().minus(Period.ofMonths(5)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(4)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(3)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(2)).getMonthValue(),0);
+        month.put(LocalDate.now().minus(Period.ofMonths(1)).getMonthValue(),0);
+        month.put(LocalDate.now().getMonthValue(),0);
+
+
+        LocalDate dateFrom = LocalDate.now().minus(Period.ofMonths(6));
+
+        for (Order order:lastOrders) {
+            LocalDate dateExecuted = Odt.convertToLocalDateViaInstant(order.getDateExecuted());
+            if(dateExecuted.isAfter(dateFrom) && dateExecuted.isBefore(LocalDate.now())){
+                if(month.containsKey(dateExecuted.getMonthValue()))
+                    month.put(dateExecuted.getMonthValue(),(Integer)month.get(dateExecuted.getMonthValue()) +1);
+                else month.put(dateExecuted.getMonthValue(),1);
+            }
+        }
+
+        return month;
     }
 
 
