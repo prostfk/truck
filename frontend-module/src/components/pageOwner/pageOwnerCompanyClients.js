@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
+import Pagination from "react-js-pagination";
 
 export default class CompanyClients extends Component {
 
@@ -39,7 +40,6 @@ export default class CompanyClients extends Component {
             <div className={'col-md-1'}>{client.id}</div>
             <div className={'col-md-5'}>{client.name}</div>
             <div className={'col-md-3'}>{client.type}</div>
-            {/*<div className={'col-md-3'}>{user.email}</div>*/}
             <div className="col-md-3">
                 <Link to={`/owner/client/${client.id}`} className="table_button bg-secondary text-white">Перейти</Link>
             </div>
@@ -61,16 +61,20 @@ export default class CompanyClients extends Component {
                             return this.renderUser(user, index);
                         })
                     }
-                    <div className="row">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
+                    <div className="table_footer">
+                        <div>
+                            <Pagination
+                                activePage={this.state.currentPage}
+                                totalItemsCount={this.state.totalElements}
+                                itemsCountPerPage={5}
+                                pageRangeDisplayed={5}
+                                hideDisabled={true}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
+                                activeClass={"activePage"}
+                                onChange={this.handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
