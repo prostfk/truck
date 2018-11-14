@@ -11,8 +11,14 @@ export default class CompanyOwnerStatistics extends Component {
         super(props);
         this.getFullStatistics = this.getFullStatistics.bind(this);
         this.setCompanyWorkers = this.setCompanyWorkers.bind(this);
+        this.generateAcceptedTable = this.generateAcceptedTable.bind(this);
         this.state = {
-            rolesAmmount:{}
+            rolesAmmount:{},
+            acceptedAmmount:{},
+            executedAmmount:{},
+            mmonthNames:[],
+            acceptedAmmountMonthValues:[],
+            executedAmmountMonthValues:[],
         };
         document.title = "Статистика";
     }
@@ -32,12 +38,65 @@ export default class CompanyOwnerStatistics extends Component {
     };
     componentDidMount(){
         this.getFullStatistics().then(data => {
-          this.setState({
-              rolesAmmount:data.workersAmmount
-          })
+            this.setState({
+                rolesAmmount:data.workersAmmount,
+                acceptedAmmount:data.acceptedAmmount,
+                executedAmmount:data.executedAmmount
+            })
         }).then(()=>{
             this.setCompanyWorkers();
+            for (var k in this.state.acceptedAmmount){
+
+                let newarr = this.state.mmonthNames;
+                let newArrOfVals = this.state.acceptedAmmountMonthValues;
+
+                newarr.push(this.getMonthName(k));
+                newArrOfVals.push(this.state.acceptedAmmount[k]);
+
+                this.setState({
+                    mmonthNames:newarr,
+                    acceptedAmmountMonthValues:newArrOfVals
+                })
+            }
+            for (var k in this.state.executedAmmount){
+                let newArrOfVals = this.state.executedAmmountMonthValues;
+                newArrOfVals.push(this.state.executedAmmount[k]);
+                this.setState({
+                    executedAmmountMonthValues:newArrOfVals
+                })
+            }
         });
+    }
+
+    getMonthName(k){
+        let b = "";
+        switch(k){
+            case "1": b = "Январь";
+                break;
+            case "2": b = "Февраль";
+                break;
+            case "3": b = "Март";
+                break;
+            case "4": b = "Апрель";
+                break;
+            case "5": b = "Май";
+                break;
+            case "6": b = "Июнь";
+                break;
+            case "7": b = "Июль";
+                break;
+            case "8": b = "Август";
+                break;
+            case "9": b = "Сентябрь";
+                break;
+            case "10": b = "Октябрь";
+                break;
+            case "11": b = "Ноябрь";
+                break;
+            case "12": b = "Декабрь";
+                break;
+        }
+        return b;
     }
 
     setCompanyWorkers(){
@@ -92,12 +151,12 @@ export default class CompanyOwnerStatistics extends Component {
         });
     }
 
-    //todo statistics ui
-
-
-    render() {
-        const dataAccepted = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    generateAcceptedTable(data,mmonthNames){
+        if(data.length<6 || mmonthNames.length<6) return;
+        let newarr = this.state.mmonthNames;
+        console.log(newarr);
+        let dataAccepted = {
+            labels: newarr,
             datasets: [
                 {
                     label: 'Принятые заказы',
@@ -118,12 +177,21 @@ export default class CompanyOwnerStatistics extends Component {
                     pointHoverBorderWidth: 2,
                     pointRadius: 1,
                     pointHitRadius: 10,
-                    data: [1, 2, 5, 4, 4, 2, 3]
+                    data: this.state.acceptedAmmountMonthValues
                 }
             ]
         };
-        const dataExecuted = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        return <Container>
+            <Line data={dataAccepted} />
+        </Container>
+    }
+
+    generateExecutedTable(data,mmonthNames){
+        if(data.length<6 || mmonthNames.length<6) return;
+        let newarr = this.state.mmonthNames;
+        console.log(newarr);
+        let dataAccepted = {
+            labels: newarr,
             datasets: [
                 {
                     label: 'Выполненные заказы',
@@ -144,10 +212,19 @@ export default class CompanyOwnerStatistics extends Component {
                     pointHoverBorderWidth: 2,
                     pointRadius: 1,
                     pointHitRadius: 10,
-                    data: [0, 2,4, 5, 3, 6, 9]
+                    data: this.state.executedAmmountMonthValues
                 }
             ]
         };
+        return <Container>
+            <Line data={dataAccepted} />
+        </Container>
+    }
+
+    //todo statistics ui
+
+
+    render() {
 
         return (
             <div>
@@ -156,15 +233,16 @@ export default class CompanyOwnerStatistics extends Component {
                         <h2> Заказы:</h2>
                         <div className="row">
                             <div className="col-xl-6">
-                                <Container>
-                                    <Line data={dataAccepted} />
-                                </Container>
+                                {
+                                    this.generateAcceptedTable(this.state.acceptedAmmountMonthValues,this.state.mmonthNames)
+                                }
                             </div>
                             <div className="col-xl-6">
-                                <Container>
-                                    <Line data={dataExecuted} />
-                                </Container>
+                                {
+                                    this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
+                                }
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -180,18 +258,6 @@ export default class CompanyOwnerStatistics extends Component {
                         </div>
                     </div>
                 </div>
-{/*                <div className="row">
-                    <div className="offset-md-1 col-md-10 superuserform_companylist info-block">
-                        <h2> Сотрудники:</h2>
-                        <div className="row">
-                            <div className="col-md-2">Администраторы: {this.state.rolesAmmount.ROLE_ADMIN}</div>
-                            <div className="col-md-2">Диспетчеры:  {this.state.rolesAmmount.ROLE_DISPATCHER}</div>
-                            <div className="col-md-2">Менеджеры:  {this.state.rolesAmmount.ROLE_MANAGER}</div>
-                            <div className="col-md-2">Водители:  {this.state.rolesAmmount.ROLE_DRIVER}</div>
-                            <div className="col-md-2">Владельцы:  {this.state.rolesAmmount.ROLE_COMP_OWNER}</div>
-                        </div>
-                    </div>
-                </div>*/}
             </div>
         );
     }
