@@ -1,34 +1,43 @@
 import React, {Component} from 'react';
+import Pagination from "react-js-pagination";
 
 export default class UsersList extends Component {
 
     constructor(props) {
         super(props);
+        this.handlePageChange = this.handlePageChange.bind(this);
+        this.getUsersRequest = this.getUsersRequest.bind(this);
         this.state = {
             users: [],
-            totalElements: 0,
-            currentPage: 0
+            totalElements:0,
+            currentPage:1
         };
-        document.title = "Пользователи компании";
-        this.fetchToUsers();
+        this.getUsersRequest();
     }
 
-    fetchToUsers = (pageid = 1) => {
-        fetch('/api/users?page=' + pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+    getUsersRequest = (pageid=1) => {
+        fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
+        }).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
                 return response.json();
             }
         }).then(data => {
-            console.log(data);
+            let gettedusers =data.content;
+            console.log(gettedusers);
             this.setState({
-                users: data.users,
+                users: gettedusers,
                 totalElements:data.totalElements,
-                currentPage:++data.currentPage
+                currentPage:++data.number
             })
         })
     };
+
+    handlePageChange(pageNumber) {
+        this.getUsersRequest(pageNumber);
+        this.setState({currentPage: pageNumber});
+    }
 
     renderUser = (user) => {
         return <div className={'row table_row'}>
@@ -55,33 +64,35 @@ export default class UsersList extends Component {
     };
 
     render() {
-        return (
-            <div className={'row'}>
-                <div className="offset-md-3 col-md-6 superuserform_companylist">
-                    <div className="row table_header">
-                        <div className="col-md-1">Id</div>
-                        <div className="col-md-5">Никнейм</div>
-                        <div className="col-md-3">Роль</div>
-                        <div className="col-md-3">Почта</div>
-                    </div>
-                    {
-                        this.state.users.map((user) => {
-                            return this.renderUser(user);
-                        })
-                    }
-                    <div className="row">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
+        return <div className={'row'}>
+            <div className="offset-md-3 col-md-6 superuserform_companylist">
+                <div className="row table_header">
+                    <div className="col-md-1">Id</div>
+                    <div className="col-md-5">Никнейм</div>
+                    <div className="col-md-3">Роль</div>
+                    <div className="col-md-3">Почта</div>
+                </div>
+                {
+                    this.state.users.map((user) => {
+                        return this.renderUser(user);
+                    })
+                }
+                <div className="table_footer">
+                    <div>
+                        <Pagination
+                            activePage={this.state.currentPage}
+                            totalItemsCount={this.state.totalElements}
+                            itemsCountPerPage={5}
+                            pageRangeDisplayed={5}
+                            hideDisabled={true}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
+                            activeClass={"activePage"}
+                            onChange={this.handlePageChange}
+                        />
                     </div>
                 </div>
             </div>
-        );
+        </div>
     }
 }

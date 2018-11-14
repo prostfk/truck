@@ -11,6 +11,7 @@
     "raf": "^3.3.2",
     "react": "^16.5.2",
     "react-bootstrap": "^0.32.4",
+    "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.5.2",
     "react-google-autocomplete": "^1.0.18",
     "react-google-maps": "^9.4.5",
