@@ -3,6 +3,20 @@ import CommonUtil from "../commonUtil/commontUtil";
 import Pagination from "react-js-pagination";
 import ValidationUtil from "../commonUtil/validationUtil";
 
+import {EditIcon} from "./pageAutoList";
+import {edit} from 'react-icons-kit/fa/edit'
+
+/*const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
+import Moment from 'react-moment';
+import {withBaseIcon} from "react-icons-kit";
+*/
+
+
+var moment = require('moment');
+require("moment/min/locales.min");
+
+
+
 export default class UsersList extends Component {
 
     constructor(props) {
@@ -91,12 +105,22 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user) => {
+        if(!user) return;
+        user.reg_date[6]=user.reg_date[6]/1000000;
+        let timezoneoffset = new Date().getTimezoneOffset();
+
+        let dateofreg = user.reg_date==null?"-":moment.utc(user.reg_date);
+        let localTime = moment(dateofreg).utcOffset(-timezoneoffset).format('YYYY-MM-DD HH:mm:ss');
+
+
         return <div className={'row table_row'}>
             <div className={'col-md-1'}>{user.id}</div>
-            <div className={'col-md-5'}>{user.username}</div>
-            <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
-            <div className={'col-md-3'}>{user.email}</div>
-            <div className={'col-md-3'}><a href={`/user/${user.id}/edit`}>Изменить</a></div>
+            <div className={'col-md-3'}>{user.username}</div>
+            <div className={'col-md-2'}>{this.russianRole(user.userRole)}</div>
+            <div className={'col-md-3'}>{localTime}</div>
+            <div className={'col-md-2'}>{user.email}</div>
+            <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a>
+            </div>
         </div>
     };
 
@@ -179,9 +203,10 @@ export default class UsersList extends Component {
             <div className="offset-md-1 col-md-6 superuserform_companylist">
                 <div className="row table_header">
                     <div className="col-md-1">Id</div>
-                    <div className="col-md-5">Никнейм</div>
-                    <div className="col-md-3">Роль</div>
-                    <div className="col-md-3">Почта</div>
+                    <div className="col-md-3">Никнейм</div>
+                    <div className="col-md-2">Роль</div>
+                    <div className="col-md-3">Дата регистрации</div>
+                    <div className="col-md-2">Почта</div>
                 </div>
                 {
                     this.state.users.map((user) => {
@@ -211,18 +236,35 @@ export default class UsersList extends Component {
                         <div id={'from-content'}>
                             <h6>Регистрация нового пользователя</h6>
                             <span className={'error-span'} id={'error-form-span'}/>
-                            <div className="form-group">
-                                <label htmlFor="newUserUsername" id="usernameLabel">Никнейм*</label>
-                                <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
-                                       placeholder="bestWorker2018" required=""/>
-                                <span className="error-span" id="error-username-span"/>
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="newUserUsername" id="usernameLabel">Никнейм*</label>
+                                        <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
+                                               placeholder="bestWorker2018" required=""/>
+                                        <span className="error-span" id="error-username-span"/>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
+                                        <input onChange={this.changeInput} type="password" className="form-control"
+                                               id="newUserPassword" placeholder="qwerty" required=""/>
+                                        <span className="error-span" id="error-password-span"/>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserSecondName" id="newUserSecondNameLabel">ФИО*</label>
-                                <div className="col-md-12 row">
-                                    <input onChange={this.changeInput} type="text" className="form-control col-md-4" placeholder="Фамилия" id="newUserSecondName" />
-                                    <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Имя" id="newUserFirstName" />
-                                    <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Отчество" id="newUserThirdName" />
+
+
+                            <div className="row">
+                                <div className="col-md-4">
+                                    <input onChange={this.changeInput} type="text" className="form-control" placeholder="Имя" id="newUserFirstName" />
+                                </div>
+                                <div className="col-md-4">
+                                    <input onChange={this.changeInput} type="text" className="form-control" placeholder="Фамилия" id="newUserSecondName" />
+                                </div>
+                                <div className="col-md-4">
+                                    <input onChange={this.changeInput} type="text" className="form-control" placeholder="Отчество" id="newUserThirdName" />
                                 </div>
                             </div>
                             {/*<div className="form-group">*/}
@@ -239,24 +281,31 @@ export default class UsersList extends Component {
                                 {/*<label htmlFor="newUserThirdName" id="userThirdNameLabel">Отчество</label>*/}
                                 {/*<input onChange={this.changeInput} type="text" className="form-control" placeholder={'Отчество'} id="newUserThirdName" />*/}
                             {/*</div>*/}
-                            <div className="form-group">
-                                <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
-                                <input onChange={this.changeInput} type="password" className="form-control"
-                                       id="newUserPassword" placeholder="qwerty" required=""/>
-                                <span className="error-span" id="error-password-span"/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
-                                <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
-                                       placeholder="newUser@gmail.com" required=""/>
-                                <span className="error-span" id="error-email-span"/>
 
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <label htmlFor="newUserEmail" id="emailLabel">Email</label>
+                                    <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
+                                           placeholder="newUser@gmail.com" required=""/>
+                                    <span className="error-span" id="error-email-span"/>
+                                </div>
+                                <div className="col-md-6">
+                                    <label htmlFor="newUserRole" id="roleLabel">Роль</label>
+                                    <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole} onChange={this.changeInput}>
+                                        <option value={'ROLE_ADMIN'}>Администратор</option>
+                                        <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
+                                        <option value={'ROLE_MANAGER'}>Менеджер</option>
+                                        <option value={'ROLE_DRIVER'}>Водитель</option>
+                                    </select></div>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserAddress" id="userAddressLabel">Адрес</label>
-                                <div className="col-md-12 row" id="newUserAddress">
-                                    <input onChange={this.changeInput} type="text" className="form-control col-md-6" placeholder="Страна" id="newUserCountry" />
-                                    <input onChange={this.changeInput} type="text" className="form-control col-md-5 offset-md-1" placeholder="Город" id="newUserCity" />
+                            <label>Адрес</label>
+                            <div className="row">
+
+                                <div className="col-md-6">
+                                    <input onChange={this.changeInput} type="text" className="form-control" placeholder="Страна" id="newUserCountry" />
+                                </div>
+                                <div className="col-md-6">
+                                    <input onChange={this.changeInput} type="text" className="form-control" placeholder="Город" id="newUserCity" />
                                 </div>
                             </div>
                             <div className="form-group">
@@ -271,15 +320,7 @@ export default class UsersList extends Component {
                                 <input onChange={this.changeInput} value={this.state.newUserDate} type="text" className="form-control" id="newUserDate"
                                        placeholder="01/01/2018" required=""/>
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="newUserRole" id="roleLabel">Роль</label>
-                                <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole} onChange={this.changeInput}>
-                                    <option value={'ROLE_ADMIN'}>Администратор</option>
-                                    <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
-                                    <option value={'ROLE_MANAGER'}>Менеджер</option>
-                                    <option value={'ROLE_DRIVER'}>Водитель</option>
-                                </select>
-                            </div>
+
                             {
                                 this.state.newUserRole === 'ROLE_DRIVER' || (Array.isArray(this.state.newUserRole) ? this.state.newUserRole.includes('ROLE_DRIVER') : false)? (
                                     <div className="form-group">

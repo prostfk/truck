@@ -9,6 +9,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class UserDto {
     private String houseNumber;
     private String flatNumber;
 //    private LocalDate birthDay;
+    private LocalDateTime reg_date;
 
     private CompanyDto company;
 
@@ -50,6 +52,7 @@ public class UserDto {
         this.street = user.getStreet();
         this.houseNumber = user.getHouseNumber();
         this.flatNumber = user.getFlatNumber();
+        if(user.getReg_date()!=null) this.reg_date = user.getReg_date().toLocalDateTime();
     }
 
     public void setUserRole(String userRole) {
