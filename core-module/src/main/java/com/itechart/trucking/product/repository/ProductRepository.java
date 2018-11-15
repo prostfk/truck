@@ -3,6 +3,8 @@ package com.itechart.trucking.product.repository;
 import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.product.entity.Product;
 import com.itechart.trucking.product.entity.ProductState;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -22,6 +24,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     List<Product> findProductsByDescriptionLikeIgnoreCase(String description);
 
     List<Product> findAllByConsignment(Consignment consignment);
+
+    Page<Product> findAllByConsignment(Consignment consignment, Pageable pageable);
 
     @Transactional
     @Modifying

@@ -1,5 +1,6 @@
 ﻿import React, {Component} from "react";
 import {Link} from "react-router-dom";
+import Pagination from "react-js-pagination";
 
 class ManagerConsignment extends Component {
 
@@ -8,6 +9,7 @@ class ManagerConsignment extends Component {
         this.getProductList = this.getProductList.bind(this);
         this.renderTable = this.renderTable.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
             products: [],
             isLost: false,
@@ -17,8 +19,19 @@ class ManagerConsignment extends Component {
 
     componentDidMount() {
         this.getProductList().then(data => {
-             this.setState({products:data});
+             this.setState({products:data.content,
+                 totalElements:data.totalElements,
+                 currentPage:++data.number});
          });
+    }
+
+    handlePageChange(pageNumber) {
+        this.getProductList(pageNumber).then(data => {
+            this.setState({products:data.content,
+                totalElements:data.totalElements,
+                currentPage:++data.number});
+        });
+        this.setState({currentPage: pageNumber});
     }
 
     forceUpdateHandler(product) {
@@ -33,11 +46,11 @@ class ManagerConsignment extends Component {
         });
     }
     /*get active orders*/
-    getProductList() {
+    getProductList(pageid=1) {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/products/${id}`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/products/${id}?page=${pageid}`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -138,15 +151,19 @@ class ManagerConsignment extends Component {
                         })
                     }
                     <div className="table_footer">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#1" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#2">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#3">3</a></li>
-                            </ul>
-                        </nav>
+                        <div>
+                            <Pagination
+                                activePage={this.state.currentPage}
+                                totalItemsCount={this.state.totalElements}
+                                itemsCountPerPage={5}
+                                pageRangeDisplayed={5}
+                                hideDisabled={true}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
+                                activeClass={"activePage"}
+                                onChange={this.handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

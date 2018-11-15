@@ -85,10 +85,16 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/manager/products/{id}")
-    public List<ProductDto> findProductsByOrderId(@PathVariable Long id) {
+    public Object findProductsByOrderId(@PathVariable Long id,@RequestParam(value = "page") int pageId) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
         Optional<Order> order = orderRepository.findById(id);
-        List<Product> productList = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
-        return Odt.ProductToDtoList(productList);
+        if(!order.isPresent() || order.get().getCompany().getId()!=userByEmail.getCompany().getId()) return null;
+
+        Page<Product> productPage = productRepository.findAllByConsignment(consignmentRepository.findConsignmentByOrder(order.get()),PageRequest.of(pageId-1, 5));
+
+        return productPage.map(product -> new ProductDto(product));
     }
 
     @GetMapping(value = "/manager/routeList/{id}")
