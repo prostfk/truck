@@ -8,6 +8,8 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -35,6 +37,7 @@ public class User {
     private String street;
     private String houseNumber;
     private String flatNumber;
+    private Timestamp reg_date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company", nullable = false)
