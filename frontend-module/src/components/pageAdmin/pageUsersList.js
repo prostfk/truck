@@ -2,9 +2,20 @@ import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 import Pagination from "react-js-pagination";
 import ValidationUtil from "../commonUtil/validationUtil";
+
+import {EditIcon} from "./pageAutoList";
+import {edit} from 'react-icons-kit/fa/edit'
+
+/*const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 import Moment from 'react-moment';
+import {withBaseIcon} from "react-icons-kit";
+*/
+
+
 var moment = require('moment');
 require("moment/min/locales.min");
+
+
 
 export default class UsersList extends Component {
 
@@ -94,14 +105,22 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user) => {
-        let dateofreg = user.reg_date==null?"-":moment(user.reg_date).format('YYYY/MM/DD h:mm:ss');
+        if(!user) return;
+        user.reg_date[6]=user.reg_date[6]/1000000;
+        let timezoneoffset = new Date().getTimezoneOffset();
+
+        let dateofreg = user.reg_date==null?"-":moment.utc(user.reg_date);
+        let localTime = moment(dateofreg).utcOffset(-timezoneoffset).format('YYYY-MM-DD HH:mm:ss');
+
+
         return <div className={'row table_row'}>
             <div className={'col-md-1'}>{user.id}</div>
             <div className={'col-md-3'}>{user.username}</div>
             <div className={'col-md-2'}>{this.russianRole(user.userRole)}</div>
-            <div className={'col-md-3'}>{dateofreg}</div>
+            <div className={'col-md-3'}>{localTime}</div>
             <div className={'col-md-2'}>{user.email}</div>
-            <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}>Изменить</a></div>
+            <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a>
+            </div>
         </div>
     };
 

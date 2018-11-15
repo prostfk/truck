@@ -4,6 +4,9 @@ import ReactGoogleMapLoader from "react-google-maps-loader"
 import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
+import {EditIcon} from "./pageAutoList";
+import {edit} from 'react-icons-kit/fa/edit'
+
 
 export default class EditStockModal extends Component {
 
@@ -72,7 +75,7 @@ export default class EditStockModal extends Component {
         const {search, value} = this.state;
         return (
             <div>
-                <a className={"table_button bg-secondary text-white"} onClick={this.toggle}>Изменить</a>
+                <a className={""} onClick={this.toggle}><EditIcon></EditIcon></a>
                 <Modal isOpen={this.state.modal}>
                     <ModalHeader>
                         <h4>Добавление склада</h4>
