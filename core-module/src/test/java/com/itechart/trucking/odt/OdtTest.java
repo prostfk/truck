@@ -13,7 +13,7 @@ public class OdtTest {
     @Test
     public void test(){
         String text = "abc";
-        List<String> result = Odt.sad(Collections.singletonList(text),
+        List<String> result = Odt.convertLists(Collections.singletonList(text),
                 item -> item.toUpperCase());
         Assert.assertTrue(result.contains("ABC"));
     }

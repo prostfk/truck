@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 /*Object Type Definition*/
 public class Odt {
 
-    public static <T, R> List<R> sad(List<T> objects, Function<T, R> mapper) {
+    public static <T, R> List<R> convertLists(List<T> objects, Function<T, R> mapper) {
         return objects.stream()
                 .map(mapper)
                 .collect(Collectors.toList());

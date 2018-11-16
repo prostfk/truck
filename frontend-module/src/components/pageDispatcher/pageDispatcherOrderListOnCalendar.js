@@ -2,6 +2,10 @@ import React from 'react';
 import FullCalendar from 'fullcalendar-reactwrapper';
 import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
 
+var moment = require('moment');
+require("moment/min/locales.min");
+
+
 
 class pageDispatcherOrderListOnCalendar extends React.Component{
     constructor(props) {
@@ -15,65 +19,53 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
             company:{},
             totalElements:0,
             currentPage:1,
-            events:[
-                {
-                    id:133,
-                    title: 'All Day Event',
-                    start: '2018-11-11'
-                },
-                {
-                    id:134,
-                    title: 'Long Event',
-                    start: '2018-11-07',
-                    end: '2018-11-09'
-                },
-                {
-                    id:34,
-                    title: 'order #34',
-                    url: 'http://localhost:3000/orders/'+34+'/edit',
-                    start: '2018-11-09',
-                    end: '2018-11-14'
-                }
-            ]
         };
         document.title = "Заказы"
     }
-    viewRender(view,element){
-        alert("new date");
-        console.log(view);
-        console.log(element);
+    viewRender(start, end, timezone, callback){
+        let from = moment(start._d).format('YYYY-MM-DD');
+        let to = moment(end._d).format('YYYY-MM-DD');
+        let refthis=this;
+        return fetch('http://localhost:8080/api/ordersByDate?from='+from+'&to='+to, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            let myres= result;
+
+            myres.forEach(function(item, i, arr) {
+                let tmpDate = moment(item.end);
+
+                tmpDate.add(1, 'days');
+
+                item.end =tmpDate;
+            });
+            return myres;
+        }).then(function (result) {
+            callback(result);
+        }).catch(err=>{
+            throw new Error('Ошибка доступа')
+        });
     }
 
-    eventDrop(event,days_offset) {
+
+    eventDrop(event,days_offset, revertFunc) {
         console.log(event);
         console.log(days_offset._days);
-   /*     const { events } = this.state;
-
-        const idx = events.indexOf(event);
-        const updatedEvent = { ...event, start, end };
-
-        const nextEvents = [...events];
-        nextEvents.splice(idx, 1, updatedEvent);
-
-        this.setState({
-            events: nextEvents
-        });*/
+/*        revertFunc();*/
     }
 
-    resizeEvent = (resizeType) => {
-        console.log(resizeType);
-        alert(resizeType.title + " was dropped on " + resizeType.start.format());
-        alert(resizeType.title + " end is now " + resizeType.end.format());
-
+    resizeEvent = (resizeType, delta, revertFunc) => {
+        console.log(resizeType.title + " was dropped on " + resizeType.start.format());
+        console.log(resizeType.title + " end is now " + resizeType.end.format());
+/*        revertFunc();*/
     };
 
 
     componentDidMount(){
-        this.getOrderList().then(data => {
+/*        this.getOrderList().then(data => {
             this.setState({orders: data.content,
                 totalElements:data.totalElements,
                 currentPage:++data.number});
-        });
+        });*/
 
     }
 
@@ -100,16 +92,16 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
                         header = {{
                             left: 'prev,next today myCustomButton',
                             center: 'title',
-                            /* right: 'month'*/
+                            right: 'month,basicWeek,basicDay,list'
                         }}
                         defaultDate={new Date()}
                         navLinks= {false} // can click day/week names to navigate views
                         editable= {true}
                         eventLimit= {true} // allow "more" link when too many events
-                        events = {this.state.events}
                         eventResize = {this.resizeEvent}
                         eventDrop = {this.eventDrop}
-                        viewRender = {this.viewRender}
+                        events = {this.viewRender}
+                        showNonCurrentDates ={false}
                     />
                 </div>
             </div>

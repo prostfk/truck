@@ -18,6 +18,7 @@ import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.formData.OrderFormData;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
+import com.itechart.trucking.order.dto.OrderDtoCalendar;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
@@ -44,6 +45,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
@@ -262,6 +265,22 @@ public class DispatcherController {
             }
         }
         return product;
+    }
+
+    @RequestMapping(value = "/ordersByDate",method = RequestMethod.GET)
+    public List<OrderDtoCalendar> getOrders(@RequestParam(value = "from") String from, @RequestParam(value = "to") String to) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(name);
+
+        LocalDate localDateFrom = LocalDate.parse(from);
+        Date localDateFromDate = Date.from(localDateFrom.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate localDateTo = LocalDate.parse(to);
+        Date localDateToDate = Date.from(localDateTo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        List<Order> orders = orderRepository.findBydates(localDateFromDate,localDateToDate,user.getCompany());
+
+        List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders,item -> new OrderDtoCalendar(item));
+        return orderDtoCalendars;
     }
 
 

@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -50,8 +51,12 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     Page<Order> findAllByStatusAndCompanyId(Integer active, Long companyId,Pageable pageable);
 
+    List<Order> findOrdersByDateAcceptedBetweenAndCompany(Date startDateAccepted, Date endDateAccepted,Company company);
 
-/*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")
+    @Query("select o From Order o where ((o.dateAccepted between :startDate and :endDate) or (o.dateExecuted between :startDate and :endDate) or (o.dateAccepted > :startDate and  o.dateExecuted<:endDate) )and o.company=:company")
+    List<Order> findBydates(@Param("startDate") Date startDateAccepted,@Param("endDate") Date endDateAccepted,@Param("company") Company company);
+
+    /*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")
     List<Auto> findCustomQueryAutoByDate(@Param("companyId") Long companyId);*/
     List<Order> findAllByStatus(Integer status);
 }
