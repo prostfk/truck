@@ -47,21 +47,32 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
     }
 
 
-    eventDrop(event,days_offset, revertFunc) {
-        console.log(event.id);
-        console.log(days_offset._days);
+    eventDrop(event,days_offset, revertFunc, jsEvent, ui, view) {
+
+
+        if((moment().isAfter(event._start)) || (moment().isAfter(event._start._i))){
+            revertFunc();
+            alert("Операция недоступна");
+            return;
+        }
         let formData = new FormData();
         formData.append("orderId", event.id);
         formData.append("daysOffset", days_offset._days);
 
         fetch('http://localhost:8080/api/waybill/changedate', {method: "PUT",body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}})
             .then(response => {
-            response.json()})
+                if(response.status==500){
+                    revertFunc();
+                    alert("Ошибка!");
+                }
+            return response.json()})
             .then(data => {
-
-            }).then(err=>{
-            revertFunc();
-            console.log(err);
+                if(data==false) {
+                    revertFunc();
+                    alert("Вы не можете изменить дату на дааную!");
+                }
+            }).catch(err=>{
+                revertFunc();
             })
     }
 
