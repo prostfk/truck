@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import ValidationUtil from "../commonUtil/validationUtil";
+import CommonUtil from "../commonUtil/commontUtil";
 
 class registration extends Component {
 
@@ -12,7 +13,7 @@ class registration extends Component {
             newUsername: '',
             newPassword: '',
             newCompanyName: '',
-            newBirthDate: '',
+            newBirthDate: CommonUtil.getCorrectDateFromLong(new Date().getTime()),
             newFirstName: '',
             newSecondName: '',
             newThirdName: '',
@@ -32,9 +33,9 @@ class registration extends Component {
             return response.json();
         }).then(data=>{
             console.log(data);
-            // if (data.error !== undefined){
-            //     window.location.href = '/';
-            // }
+            if (data.error !== undefined){
+                window.location.href = '/';
+            }
         })
     };
 
@@ -110,10 +111,22 @@ class registration extends Component {
 
     sendFetch() { //fixme: redo form sending and backend processing(16-11-18)
         let formData = new FormData();
-        formData.append('username', this.state.username);
-        formData.append('password', this.state.password);
-        formData.append('companyName', this.state.companyName);
+        formData.append('username', this.state.newUsername);
+        formData.append('firstName', this.state.newFirstName);
+        formData.append('secondName', this.state.newSecondName);
+        formData.append('thirdName', this.state.newThirdName);
+        formData.append('birthDay', this.state.newBirthDate);
+        formData.append('country', this.state.newCountry);
+        formData.append('city', this.state.newCity);
+        formData.append('street', this.state.newStreet);
+        formData.append('houseNumber', this.state.newHouseNumber);
+        formData.append('newFlatNumber', this.state.newFlatNumber);
+        formData.append('companyName', this.state.newCompanyName);
         formData.append('token', this.state.token);
+        formData.append('password', this.state.newPassword);
+        formData.forEach((v,k)=>{
+            console.log(k + " " + v)
+        });
         fetch(`http://localhost:8080/registration`, {
             method: "POST",
             body: formData
@@ -126,9 +139,8 @@ class registration extends Component {
                 window.location.href = '/auth'
             }else{
                 document.getElementById('error-span').style.color = "red";
-                document.getElementById('error-span').innerText = "Invalid data";
+                document.getElementById('error-span').innerText = "Ошибка";
             }
-
         })
     }
 
@@ -138,6 +150,7 @@ class registration extends Component {
                 <div className="offset-md-3 col-md-6">
                     <div className="form-group row">
                         <h1 className={'col-md-auto'}>Добро пожаловать!</h1>
+                        <span className="error-span" id="error-span"/>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newCompanyName" className="col-2 col-form-label">Название компании *</label>
@@ -170,18 +183,17 @@ class registration extends Component {
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label htmlFor="newFirstName" className="col-2 col-form-label">Имя *</label>
-                        <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newFirstName} onChange={this.changeInput} id="newFirstName"/>
-                            <small className="text-danger" id="error-name-span"/>
-                        </div>
-                    </div>
-
-                    <div className="form-group row">
                         <label htmlFor="newSecondName" className="col-2 col-form-label">Фамилия *</label>
                         <div className="col-10">
                             <input className="form-control" type="text" value={this.state.newSecondName} onChange={this.changeInput} id="newSecondName"/>
                             <small className="text-danger" id="error-surname-span"/>
+                        </div>
+                    </div>
+                    <div className="form-group row">
+                        <label htmlFor="newFirstName" className="col-2 col-form-label">Имя *</label>
+                        <div className="col-10">
+                            <input className="form-control" type="text" value={this.state.newFirstName} onChange={this.changeInput} id="newFirstName"/>
+                            <small className="text-danger" id="error-name-span"/>
                         </div>
                     </div>
                     <div className="form-group row">
@@ -222,7 +234,7 @@ class registration extends Component {
                         </div>
                     </div>
                     <div className={'form-group row'}>
-                        <button onClick={this.validateForm} className={'btn btn-success'}>Подтвердить</button>
+                        <button onClick={this.sendFetch} className={'btn btn-success'}>Подтвердить</button>
                     </div>
                 </div>
             </div>

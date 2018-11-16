@@ -152,7 +152,6 @@ public class AdminController {
                 userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay(),
                         userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
                         userDto.getHouseNumber(), userDto.getFlatNumber());
-                //КОСТЫЛЬ
                 if (userDto.getUserRole().equals(UserRole.ROLE_DRIVER)){
                     User savedUser = userRepository.findUserByUsername(userDto.getUsername());
                     driverRepository.saveDriver(
@@ -160,7 +159,6 @@ public class AdminController {
                             passport,savedUser.getCompany().getId(),savedUser.getId()
                     );
                 }
-                //КОСТЫЛЬ
                 json.put("username", userDto.getUsername());
                 json.put("email", userDto.getEmail());
                 json.put("birthDay", userDto.getBirthDay());

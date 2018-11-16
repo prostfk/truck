@@ -4,6 +4,7 @@ import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.token.entity.Token;
 import com.itechart.trucking.token.repository.TokenRepository;
+import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
@@ -63,26 +64,27 @@ public class AnonController {
     }
 
     @PostMapping(value = "/registration")
-    public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
+    public Object processAdminRegistration(@Valid UserDto userDto, String password, String companyName, String token, BindingResult bindingResult) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        user.setUserRole(UserRole.ROLE_COMP_OWNER);
+        userDto.setUserRole(UserRole.ROLE_COMP_OWNER);
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        if (tokenByTokenValue==null){
+        if (tokenByTokenValue == null) {
             jsonObject.put("error", "Invalid link!");
             return jsonObject.toString();
         }
-        user.setEmail(tokenByTokenValue.getEmail());
-        if (!bindingResult.hasErrors() && userRepository.findUserByUsername(user.getUsername())==null && companyRepository.findCompanyByName(companyName)==null) {
-            if (user.getEmail().equals(tokenByTokenValue.getEmail())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-                Company save1 = companyRepository.save(new Company(companyName, 1));
-                user.setCompany(save1);
-                @Valid User save = userRepository.save(user);
-                if (save!=null){
-                    tokenRepository.delete(tokenByTokenValue);
-                    jsonObject.put("status", "success");
-                    return jsonObject;
-                }
+        userDto.setEmail(tokenByTokenValue.getEmail());
+        if (!bindingResult.hasErrors() && userRepository.findUserByUsername(userDto.getUsername()) == null && companyRepository.findCompanyByName(companyName) == null) {
+            if (userDto.getEmail().equals(tokenByTokenValue.getEmail())) {
+                Company savedCompany = companyRepository.save(new Company(companyName, 1));
+                userDto.setCompany(savedCompany);
+                userRepository.saveUser(
+                        userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(),
+                        userDto.getCompany().getId(), userDto.getBirthDay(), userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(),
+                        userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getHouseNumber(), userDto.getFlatNumber()
+                );
+                tokenRepository.delete(tokenByTokenValue);
+                jsonObject.put("status", "success");
+                return jsonObject.toString();
             }
         }
         jsonObject.put("error", "Invalid data!");
@@ -93,9 +95,9 @@ public class AnonController {
     public Object validate(@RequestParam String token) throws JSONException {
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
         JSONObject json = new JSONObject();
-        if (tokenByTokenValue!=null){
+        if (tokenByTokenValue != null) {
             json.put("message", "token exists");
-        }else{
+        } else {
             json.put("error", "no such token");
         }
         return json.toString();
@@ -105,9 +107,9 @@ public class AnonController {
     public Object checkNameForExisting(@RequestParam String name) throws JSONException {
         Company companyByName = companyRepository.findCompanyByName(name);
         JSONObject json = new JSONObject();
-        if (companyByName!=null){
+        if (companyByName != null) {
             json.put("error", "such company already exists");
-        }else{
+        } else {
             json.put("message", "all fine");
         }
         return json.toString();

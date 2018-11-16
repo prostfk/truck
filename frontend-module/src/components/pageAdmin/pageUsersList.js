@@ -58,8 +58,7 @@ export default class UsersList extends Component {
         return usernameVal && nameVal && surnameVal && passwordVal;
     };
 
-
- getUsersRequest = (pageid=1) => {
+    getUsersRequest = (pageid=1) => {
         fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
@@ -225,20 +224,6 @@ export default class UsersList extends Component {
                                     <input onChange={this.changeInput} type="text" className="form-control col-md-3 offset-md-1" placeholder="Отчество" id="newUserThirdName" />
                                 </div>
                             </div>
-                            {/*<div className="form-group">*/}
-                                {/*<label htmlFor="newUserSecondName" id="userSecondNameLabel">Фамилия*</label>*/}
-                                {/*<input onChange={this.changeInput} type="text" className="form-control" id="newUserSecondName" placeholder={'Фамилия'} required=""/>*/}
-                                {/*<span className="error-span" id="error-surname-span"/>*/}
-                            {/*</div>*/}
-                            {/*<div className="form-group">*/}
-                                {/*<label htmlFor="newUserFirstName" id="userFirstNameLabel">Имя*</label>*/}
-                                {/*<input onChange={this.changeInput} type="text" className="form-control" placeholder={'Имя'} id="newUserFirstName"/>*/}
-                                {/*<span className="error-span" id="error-name-span"/>*/}
-                            {/*</div>*/}
-                            {/*<div className="form-group">*/}
-                                {/*<label htmlFor="newUserThirdName" id="userThirdNameLabel">Отчество</label>*/}
-                                {/*<input onChange={this.changeInput} type="text" className="form-control" placeholder={'Отчество'} id="newUserThirdName" />*/}
-                            {/*</div>*/}
                             <div className="form-group">
                                 <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
                                 <input onChange={this.changeInput} type="password" className="form-control"
