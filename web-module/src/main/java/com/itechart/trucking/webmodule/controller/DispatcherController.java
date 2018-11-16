@@ -283,6 +283,7 @@ public class DispatcherController {
         return orderDtoCalendars;
     }
 
+    // we should test if out driver and auto is free for new date
     @PutMapping(value = "/waybill/changedate")
     public Boolean changeDateOfWaybill(@ModelAttribute(value = "orderId") String orderIdS,@ModelAttribute(value = "daysOffset") String daysOffsetS) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -297,13 +298,33 @@ public class DispatcherController {
 
         LocalDate localDateDep = waybill.getDateDeparture().toLocalDate().plusDays(daysOffset);
         LocalDate localDateArr = waybill.getDateArrival().toLocalDate().plusDays(daysOffset);
-
+        if(!checkDatesForFreeAutosAndDrivers(userByEmail.getCompany(),waybill,java.sql.Date.valueOf(localDateDep),java.sql.Date.valueOf(localDateArr))) return false;
         waybill.setDateDeparture(java.sql.Date.valueOf(localDateDep));
         waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
 
         waybillRepository.save(waybill);
 
         return true;
+    }
+
+    private Boolean checkDatesForFreeAutosAndDrivers(Company company,Waybill waybill, java.sql.Date localDateDep, java.sql.Date localDateArr){
+        boolean driverIsFree = false,autoIsFree=false;
+        List<Driver> freeDrivers = waybillRepository.findFreeDriversToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
+        for (Driver driver:freeDrivers) {
+            if (driver.getId()==waybill.getDriver().getId()){
+                driverIsFree=true;
+                break;
+            }
+        }
+        List<Auto> freeAutos = waybillRepository.findFreeAutosToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
+        for (Auto auto:freeAutos) {
+            if (auto.getId()==waybill.getAuto().getId()){
+                autoIsFree=true;
+                break;
+            }
+        }
+
+        return (driverIsFree && autoIsFree);
     }
 
 
