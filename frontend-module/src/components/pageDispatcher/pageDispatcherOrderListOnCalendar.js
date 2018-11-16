@@ -48,9 +48,21 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
 
 
     eventDrop(event,days_offset, revertFunc) {
-        console.log(event);
+        console.log(event.id);
         console.log(days_offset._days);
-/*        revertFunc();*/
+        let formData = new FormData();
+        formData.append("orderId", event.id);
+        formData.append("daysOffset", days_offset._days);
+
+        fetch('http://localhost:8080/api/waybill/changedate', {method: "PUT",body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+            .then(response => {
+            response.json()})
+            .then(data => {
+
+            }).then(err=>{
+            revertFunc();
+            console.log(err);
+            })
     }
 
     resizeEvent = (resizeType, delta, revertFunc) => {
@@ -97,10 +109,12 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
                         defaultDate={new Date()}
                         navLinks= {false} // can click day/week names to navigate views
                         editable= {true}
+                        events = {this.viewRender}
+                        displayEventTime = {false} // disable 12a prefix in events
                         eventLimit= {true} // allow "more" link when too many events
                         eventResize = {this.resizeEvent}
                         eventDrop = {this.eventDrop}
-                        events = {this.viewRender}
+
                         showNonCurrentDates ={false}
                     />
                 </div>

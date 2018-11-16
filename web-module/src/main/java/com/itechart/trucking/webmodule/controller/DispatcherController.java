@@ -277,10 +277,33 @@ public class DispatcherController {
         LocalDate localDateTo = LocalDate.parse(to);
         Date localDateToDate = Date.from(localDateTo.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<Order> orders = orderRepository.findBydates(localDateFromDate,localDateToDate,user.getCompany());
+        List<Order> orders = orderRepository.findBydates(localDateFromDate,localDateToDate,user.getCompany().getId());
 
         List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders,item -> new OrderDtoCalendar(item));
         return orderDtoCalendars;
+    }
+
+    @PutMapping(value = "/waybill/changedate")
+    public Boolean changeDateOfWaybill(@ModelAttribute(value = "orderId") String orderIdS,@ModelAttribute(value = "daysOffset") String daysOffsetS) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Long orderId = Long.parseLong(orderIdS);
+        Long daysOffset = Long.parseLong(daysOffsetS);
+        if(orderId==null || daysOffset==null) return false;
+
+        Order order = orderRepository.findOrderById(orderId);
+        if(userByEmail.getCompany().getId()!=orderRepository.findOrderById(orderId).getCompany().getId()) return false;
+        Waybill waybill = order.getWaybill();
+
+        LocalDate localDateDep = waybill.getDateDeparture().toLocalDate().plusDays(daysOffset);
+        LocalDate localDateArr = waybill.getDateArrival().toLocalDate().plusDays(daysOffset);
+
+        waybill.setDateDeparture(java.sql.Date.valueOf(localDateDep));
+        waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
+
+        waybillRepository.save(waybill);
+
+        return true;
     }
 
 

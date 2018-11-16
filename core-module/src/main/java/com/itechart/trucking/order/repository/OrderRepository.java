@@ -3,6 +3,7 @@ package com.itechart.trucking.order.repository;
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.driver.entity.Driver;
+import com.itechart.trucking.order.dto.OrderDtoCalendar;
 import com.itechart.trucking.order.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,9 +54,19 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     List<Order> findOrdersByDateAcceptedBetweenAndCompany(Date startDateAccepted, Date endDateAccepted,Company company);
 
-    @Query("select o From Order o where ((o.dateAccepted between :startDate and :endDate) or (o.dateExecuted between :startDate and :endDate) or (o.dateAccepted > :startDate and  o.dateExecuted<:endDate) )and o.company=:company")
-    List<Order> findBydates(@Param("startDate") Date startDateAccepted,@Param("endDate") Date endDateAccepted,@Param("company") Company company);
+    @Query(value = "SELECT *\n" +
+            "FROM orders INNER JOIN waybill on orders.waybill_id = waybill.id\n" +
+            "where (\n" +
+            "       (date_departure between :startDate and :endDate)\n" +
+            "   or (date_arrival between :startDate and :endDate)\n" +
+            "   or (date_departure > :startDate and date_arrival<:endDate)\n" +
+            "       )\n" +
+            "  and company_id=:company", nativeQuery = true)
+    List<Order> findBydates(@Param("startDate") Date startDateAccepted, @Param("endDate") Date endDateAccepted, @Param("company") Long company);
 
+/*    @Query("select o From Order o where ((o.dateAccepted between :startDate and :endDate) or (o.dateExecuted between :startDate and :endDate) or (o.dateAccepted > :startDate and  o.dateExecuted<:endDate) )and o.company=:company")
+    List<Order> findBydates(@Param("startDate") Date startDateAccepted,@Param("endDate") Date endDateAccepted,@Param("company") Company company);
+   */
     /*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")
     List<Auto> findCustomQueryAutoByDate(@Param("companyId") Long companyId);*/
     List<Order> findAllByStatus(Integer status);
