@@ -22,7 +22,7 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 public class AnonController {
 
 //    @Autowired
@@ -47,7 +47,6 @@ public class AnonController {
     private CompanyRepository companyRepository;
 
     @PostMapping(value = "/auth")
-    @ResponseBody
     public String getToken(@ModelAttribute final User user) throws JSONException {
         JSONObject json = new JSONObject();
         String generate = jwtGen.generate(user);
@@ -64,7 +63,6 @@ public class AnonController {
     }
 
     @PostMapping(value = "/registration")
-    @ResponseBody
     public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         user.setUserRole(UserRole.ROLE_COMP_OWNER);
@@ -91,5 +89,28 @@ public class AnonController {
         return jsonObject.toString();
     }
 
+    @GetMapping(value = "/anon/tokenValidation")
+    public Object validate(@RequestParam String token) throws JSONException {
+        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
+        JSONObject json = new JSONObject();
+        if (tokenByTokenValue!=null){
+            json.put("message", "token exists");
+        }else{
+            json.put("error", "no such token");
+        }
+        return json.toString();
+    }
+
+    @GetMapping(value = "/checkCompanyName")
+    public Object checkNameForExisting(@RequestParam String name) throws JSONException {
+        Company companyByName = companyRepository.findCompanyByName(name);
+        JSONObject json = new JSONObject();
+        if (companyByName!=null){
+            json.put("error", "such company already exists");
+        }else{
+            json.put("message", "all fine");
+        }
+        return json.toString();
+    }
 
 }

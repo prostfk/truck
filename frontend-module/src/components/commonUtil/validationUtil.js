@@ -24,4 +24,10 @@ export default class ValidationUtil {
         return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
     }
 
+    static reformatDateFromInput(oldFormatDate){//yyyy-MM-dd
+        let split = oldFormatDate.split('-');
+        return `${split[2]}/${split[1]}/${split[0]}`
+    }
+
+
 }
