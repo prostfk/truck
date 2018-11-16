@@ -1,7 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
-// ... and fullcalendar-reactwrapper.
 import FullCalendar from 'fullcalendar-reactwrapper';
 import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
 
@@ -10,7 +7,9 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
     constructor(props) {
         super(props);
         this.getOrderList = this.getOrderList.bind(this);
-        this.moveEvent = this.moveEvent.bind(this);
+        this.eventDrop = this.eventDrop.bind(this);
+        this.resizeEvent = this.resizeEvent.bind(this);
+        this.viewRender = this.viewRender.bind(this);
         this.state = {
             orders:[],
             company:{},
@@ -18,50 +17,37 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
             currentPage:1,
             events:[
                 {
+                    id:133,
                     title: 'All Day Event',
                     start: '2018-11-11'
                 },
                 {
+                    id:134,
                     title: 'Long Event',
                     start: '2018-11-07',
-                    end: '2018-11-10'
+                    end: '2018-11-09'
                 },
                 {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: '2018-11-09T16:00:00'
-                },
-                {
-                    id: 999,
-                    title: 'Repeating Event',
-                    start: '2018-11-16T16:00:00'
-                },
-                {
-                    title: 'Conference',
-                    start: '2018-11-11',
-                    end: '2018-11-05-13'
-                },
-                {
-                    title: 'Meeting',
-                    start: '2018-11-12T10:30:00',
-                    end: '2018-11-12T12:30:00'
-                },
-                {
-                    title: 'Birthday Party',
-                    start: '2018-11-13T07:00:00'
-                },
-                {
-                    title: 'Click for Google',
-                    url: 'http://google.com/',
-                    start: '2018-11-28'
+                    id:34,
+                    title: 'order #34',
+                    url: 'http://localhost:3000/orders/'+34+'/edit',
+                    start: '2018-11-09',
+                    end: '2018-11-14'
                 }
             ]
         };
         document.title = "Заказы"
     }
+    viewRender(view,element){
+        alert("new date");
+        console.log(view);
+        console.log(element);
+    }
 
-    moveEvent({ event, start, end }) {
-        const { events } = this.state;
+    eventDrop(event,days_offset) {
+        console.log(event);
+        console.log(days_offset._days);
+   /*     const { events } = this.state;
 
         const idx = events.indexOf(event);
         const updatedEvent = { ...event, start, end };
@@ -71,21 +57,14 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
 
         this.setState({
             events: nextEvents
-        });
+        });*/
     }
 
-    resizeEvent = (resizeType, { event, start, end }) => {
-        const { events } = this.state;
+    resizeEvent = (resizeType) => {
+        console.log(resizeType);
+        alert(resizeType.title + " was dropped on " + resizeType.start.format());
+        alert(resizeType.title + " end is now " + resizeType.end.format());
 
-        const nextEvents = events.map(existingEvent => {
-            return existingEvent.id == event.id
-                ? { ...existingEvent, start, end }
-                : existingEvent;
-        });
-
-        this.setState({
-            events: nextEvents
-        });
     };
 
 
@@ -113,21 +92,24 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
     render(){
 
         return  <div className="row">
-            <div className="offset-md-2 col-md-8 superuserform_companylist">
+            <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <h1>Календарь заказов</h1>
-                <div id="example-component">
+                <div id="calendarComponent">
                     <FullCalendar
-                        id = "your-custom-ID"
+                        id = "trucksCalendar"
                         header = {{
                             left: 'prev,next today myCustomButton',
                             center: 'title',
-                            right: 'month,basicWeek,basicDay'
+                            /* right: 'month'*/
                         }}
-                        defaultDate={'2018-11-12'}
-                        navLinks= {true} // can click day/week names to navigate views
+                        defaultDate={new Date()}
+                        navLinks= {false} // can click day/week names to navigate views
                         editable= {true}
                         eventLimit= {true} // allow "more" link when too many events
                         events = {this.state.events}
+                        eventResize = {this.resizeEvent}
+                        eventDrop = {this.eventDrop}
+                        viewRender = {this.viewRender}
                     />
                 </div>
             </div>
