@@ -135,7 +135,6 @@ class registration extends Component {
         }).then(data=>{
             console.log(data);
             if (data.error === undefined){
-                document.getElementById('doc-form').style.display = 'none';
                 window.location.href = '/auth'
             }else{
                 document.getElementById('error-span').style.color = "red";
