@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
-import {GoogleApiWrapper, InfoWindow, Map, Marker} from 'google-maps-react';
+import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-react';
 import * as ReactDOM from "react-dom";
 import nonPassedMarker from './img/non-passed-marker.png';
 import passedMarker from './img/passed-marker.png';
-
 
 
 export class DriverRouterListNew extends Component {
@@ -22,14 +21,20 @@ export class DriverRouterListNew extends Component {
             activeMarker: {},
             selectedPlace: {},
             markers: {},
-            selectedPoint: ''
+            selectedPoint: '',
+            pathCoordinates: []
         };
         document.title = "Путевой лист";
     }
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            this.setState({routePoints: data});
+            this.setState({routePoints: data, pathCoordinates: []});
+            for (let i = 0; i < data.length; i++) {
+                this.setState({
+                    pathCoordinates: [...this.state.pathCoordinates, {lng: data[i].lng, lat: data[i].lat}]
+                })
+            }
         });
     }
 
@@ -88,17 +93,21 @@ export class DriverRouterListNew extends Component {
         let icon = point.marked ? passedMarker : nonPassedMarker;
         return (
             <Marker icon={{url: icon}}
-                title={point.point}
-                name={point.point}
-                pointId={point.id}
-                pointStatus={point.marked}
-                position={{lat: point.lat, lng: point.lng}}
-                onClick={this.onMarkerClick}/>)
+                    title={point.point}
+                    name={point.point}
+                    pointId={point.id}
+                    pointStatus={point.marked}
+                    position={{lat: point.lat, lng: point.lng}}
+                    onClick={this.onMarkerClick}/>)
     };
 
     onInfoWindowOpen(props, e) { //For mark button. Doesn't work without it
         console.log(props);
-        const button = this.state.selectedPointStatus ? (<div onClick={this.onButtonSubmitClick} className={'btn btn-danger'} id={'button-submit-mark-handler'}>Отменить</div>) : (<div onClick={this.onButtonSubmitClick} className={'btn btn-success'} id={'button-submit-mark-handler'}>Отметиться</div>);
+        const button = this.state.selectedPointStatus ? (
+            <div onClick={this.onButtonSubmitClick} className={'btn btn-danger'}
+                 id={'button-submit-mark-handler'}>Отменить</div>) : (
+            <div onClick={this.onButtonSubmitClick} className={'btn btn-success'}
+                 id={'button-submit-mark-handler'}>Отметиться</div>);
         ReactDOM.render(React.Children.only(button), document.getElementById("but-sub-mark"));
     }
 
@@ -107,6 +116,11 @@ export class DriverRouterListNew extends Component {
             width: '100%',
             height: '90%'
         };
+        let path = [
+            {lat: 53.9, lng: 27.56667},
+            {lat: 53.87378716, lng: 27.53485047},
+
+        ];
         return (
             <div className={'row'}>
                 <div className={'offset-md-1 col-md-1'}>
@@ -129,20 +143,26 @@ export class DriverRouterListNew extends Component {
                             <InfoWindow
                                 marker={this.state.activeMarker}
                                 visible={this.state.showingInfoWindow}
-                                onOpen={e=>{
-                                    this.onInfoWindowOpen(this.props,e);
+                                onOpen={e => {
+                                    this.onInfoWindowOpen(this.props, e);
                                 }}>
                                 <p>{this.state.selectedPlace.name}</p>
                                 <div id="but-sub-mark"/>
                             </InfoWindow>
+                            <Polyline
+                                path={this.state.pathCoordinates}
+                                strokeColor="#CF89F9"
+                                strokeOpacity={0.8}
+                                strokeWeight={2} />
 
-                        </Map>
-                    </div>
+                    </Map>
                 </div>
-
-
             </div>
-        );
+
+
+    </div>
+    )
+        ;
 
     }
 
