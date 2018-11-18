@@ -47,7 +47,7 @@ class registration extends Component {
     }
 
     validateCompany = (event) => {
-        fetch(`/checkCompanyName?name=${this.state.newCompanyName}`).then(response=>{
+        fetch(`http://localhost:8080/checkCompanyName?name=${this.state.newCompanyName}`).then(response=>{
             return response.json();
         }).then(data=>{
             if (data.error !== undefined){
@@ -61,14 +61,13 @@ class registration extends Component {
                 return true;
             }
         })
-
     };
 
     validateForm = () => {
-        let companyVal = this.validateCompany();
+        // let companyVal = this.validateCompany();
         let userNameVal = ValidationUtil.validateStringForLength(this.state.newUsername, 5, 20);
         let passwordVal = ValidationUtil.validateStringForLength(this.state.newPassword, 6, 20);
-        let dateVal = true;//ValidationUtil.validateDateToPattern(ValidationUtil.reformatDateFromInput(this.state.newBirthDate));
+        let dateVal = ValidationUtil.validateDateToPattern(this.state.newBirthDate);
         let nameVal = ValidationUtil.validateStringForLength(this.state.newFirstName, 2, 40);
         let surnameVal = ValidationUtil.validateStringForLength(this.state.newSecondName, 4, 40);
         if (!userNameVal){
@@ -106,41 +105,46 @@ class registration extends Component {
             document.getElementById('newSecondName').classList.remove("is-invalid");
             document.getElementById('error-surname-span').innerText = '';
         }
-        return userNameVal && passwordVal && dateVal && nameVal && surnameVal && companyVal;
+        console.log(userNameVal + "" + passwordVal + "" + dateVal + "" + nameVal + "" + surnameVal + "");
+        return userNameVal && passwordVal && dateVal && nameVal && surnameVal;
     };
 
     sendFetch() { //fixme: redo form sending and backend processing(16-11-18)
-        let formData = new FormData();
-        formData.append('username', this.state.newUsername);
-        formData.append('firstName', this.state.newFirstName);
-        formData.append('secondName', this.state.newSecondName);
-        formData.append('thirdName', this.state.newThirdName);
-        formData.append('birthDay', this.state.newBirthDate);
-        formData.append('country', this.state.newCountry);
-        formData.append('city', this.state.newCity);
-        formData.append('street', this.state.newStreet);
-        formData.append('houseNumber', this.state.newHouseNumber);
-        formData.append('newFlatNumber', this.state.newFlatNumber);
-        formData.append('companyName', this.state.newCompanyName);
-        formData.append('token', this.state.token);
-        formData.append('password', this.state.newPassword);
-        formData.forEach((v,k)=>{
-            console.log(k + " " + v)
-        });
-        fetch(`http://localhost:8080/registration`, {
-            method: "POST",
-            body: formData
-        }).then(response=>{
-            return response.json()
-        }).then(data=>{
-            console.log(data);
-            if (data.error === undefined){
-                window.location.href = '/auth'
-            }else{
-                document.getElementById('error-span').style.color = "red";
-                document.getElementById('error-span').innerText = "Ошибка";
-            }
-        })
+        if (this.validateForm()){
+            console.log(true);
+            let formData = new FormData();
+            formData.append('username', this.state.newUsername);
+            formData.append('firstName', this.state.newFirstName);
+            formData.append('secondName', this.state.newSecondName);
+            formData.append('thirdName', this.state.newThirdName);
+            formData.append('birthDay', this.state.newBirthDate);
+            formData.append('country', this.state.newCountry);
+            formData.append('city', this.state.newCity);
+            formData.append('street', this.state.newStreet);
+            formData.append('houseNumber', this.state.newHouseNumber);
+            formData.append('newFlatNumber', this.state.newFlatNumber);
+            formData.append('companyName', this.state.newCompanyName);
+            formData.append('token', this.state.token);
+            formData.append('password', this.state.newPassword);
+            formData.forEach((v,k)=>{
+                console.log(k + " " + v)
+            });
+            fetch(`http://localhost:8080/registration`, {
+                method: "POST",
+                body: formData,
+                headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            }).then(response=>{
+                return response.json()
+            }).then(data=>{
+                console.log(data);
+                if (data.error === undefined){
+                    window.location.href = '/auth'
+                }else{
+                    document.getElementById('error-span').style.color = "red";
+                    document.getElementById('error-span').innerText = "Ошибка";
+                }
+            })
+        }
     }
 
     render() {

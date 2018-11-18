@@ -33,6 +33,7 @@ export default class TestComponent extends Component {
             this.setState({successAddress: this.state.search})
         } else {
             document.getElementById('info').style.color = 'red';
+            document.getElementById('info').innerText = "Невалидный адрес";
             this.setState({successAddress: ''})
         }
         // this.setState({search: "", value: suggest.formatted_address, suggest: suggest})

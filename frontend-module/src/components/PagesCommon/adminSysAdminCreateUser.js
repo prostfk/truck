@@ -10,7 +10,7 @@ export default class CreateUser extends Component {
             newUserEmail: '',
             newUserUsername: '',
             newUserPassword: '',
-            newUserRole: '',
+            newUserRole: 'ROLE_ADMIN',
             newUserDate: CommonUtil.getCorrectDateFromLong(new Date().getTime()),
             newUserFirstName: '',
             newUserSecondName: '',

@@ -75,6 +75,7 @@ export default class ModalComponentEditCompany extends React.Component {
                         <ModalBody>
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
+                                    <span id="error-name-span" className="error-span"/>
                                     <label>Название компании:</label>
                                     <input type="text" value={this.state.companyName} onChange={this.handleChangeCompanyName} className="form-control" />
                                 </div>

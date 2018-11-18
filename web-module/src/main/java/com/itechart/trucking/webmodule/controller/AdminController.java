@@ -124,7 +124,7 @@ public class AdminController {
             json.put("error", "no id attribute on formData object");
         } else {
             User userByUsername = userRepository.findUserByUsername(userDto.getUsername());
-            if (userByUsername == null || !userByUsername.getId().equals(userDto.getId())) {
+            if (userByUsername != null && userByUsername.getId()!=(userDto.getId())) {
 
                 json.put("error", "user with such username already exists");
             } else {

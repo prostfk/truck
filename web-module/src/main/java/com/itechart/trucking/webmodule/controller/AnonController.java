@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,10 +81,12 @@ public class AnonController {
             if (userDto.getEmail().equals(tokenByTokenValue.getEmail())) {
                 Company savedCompany = companyRepository.save(new Company(companyName, 1));
                 userDto.setCompany(savedCompany);
+                LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
+                Timestamp timestamp = Timestamp.valueOf(localDateTime);
                 userRepository.saveUser(
                         userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(),
                         userDto.getCompany().getId(), userDto.getBirthDay(), userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(),
-                        userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getHouseNumber(), userDto.getFlatNumber()
+                        userDto.getCountry(), userDto.getCity(), userDto.getStreet(), userDto.getHouseNumber(), userDto.getFlatNumber(),timestamp
                 );
                 tokenRepository.delete(tokenByTokenValue);
                 jsonObject.put("status", "success");
