@@ -8,6 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface DriverRepository extends CrudRepository<Driver, Long> {
     Driver findDriverByUser(User user);
 
@@ -17,5 +19,4 @@ public interface DriverRepository extends CrudRepository<Driver, Long> {
     @Transactional
     @Query(value = "INSERT INTO driver(name, passport_number, company_of_driver, userid) VALUES (:driverName,:passportNumber,:companyId, :userId)", nativeQuery = true)
     void saveDriver(@Param("driverName")String driverName, @Param("passportNumber") String passportNumber, @Param("companyId")Long companyId, @Param("userId")Long userId);
-
 }
