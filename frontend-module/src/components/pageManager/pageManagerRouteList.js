@@ -6,7 +6,8 @@ class ManagerRouteList extends Component {
     constructor(props) {
         super(props);
         this.getRouteList = this.getRouteList.bind(this);
-        this.renderTable = this.renderTable.bind(this);
+        this.renderMarkers = this.renderMarkers.bind(this);
+        this.renderInfoWindows = this.renderInfoWindows.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
@@ -57,18 +58,22 @@ class ManagerRouteList extends Component {
             sequence: event.target.value
         });
     }
-    renderTable(routePoint) {
+    renderMarkers(routePoint) {
+        console.log("render");
         if (!routePoint) return;
-        return <div><Marker onClick={this.onMarkerClick}
-                       name={routePoint.point} />
-            <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
-                <div>
-                    <h1>routePoint.point</h1>
-                </div>
-            </InfoWindow></div>
+        return <Marker onClick={this.onMarkerClick}
+                       name={routePoint.point} position={{lat: 53.7169, lng: 27.9776}} />
 
     }
 
+    renderInfoWindows(routePoint) {
+        if (!routePoint) return;
+        return <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
+            <div>
+                <h1>routePoint.point</h1>
+            </div>
+        </InfoWindow>
+    }
     deletePoint(pointId) {
         console.log(pointId);
         const ref = this;
@@ -133,20 +138,30 @@ class ManagerRouteList extends Component {
             'marginRight': 'auto'
         }
         return (
-            <Map google={this.props.google} zoom={14} onClick={this.onMapClick} id="googleMap">
-                <Marker onClick={this.onMarkerClick}
-                        name={'Current location'} />
-                <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
-                    <div>
-                        <h1>Text</h1>
-                    </div>
-                    <button>Отметить</button>
-                </InfoWindow>
-                {/*/!*{*!/*/}
-                    {/*this.state.routePoints.map((element) => {*/}
-                        {/*return this.renderTable(element);*/}
-                    {/*})*/}
-                {/*}*/}
+            <Map google={this.props.google}
+                 initialCenter={{
+                     lat: 53.7169,
+                     lng: 27.9776
+                 }}
+                 zoom={14} onClick={this.onMapClick} id="googleMap">
+                {/*<Marker onClick={this.onMarkerClick}*/}
+                        {/*name={'Current location'} />*/}
+                {/*<InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>*/}
+                    {/*<div>*/}
+                        {/*<h1>Text</h1>*/}
+                    {/*</div>*/}
+                    {/*<button>Отметить</button>*/}
+                {/*</InfoWindow>*/}
+                {
+                    this.state.routePoints.map((element) => {
+                        return this.renderMarkers(element);
+                    })
+                }
+                {
+                    this.state.routePoints.map((element) => {
+                        return this.renderInfoWindows(element);
+                    })
+                }
             </Map>
         );
           //   {/*<div style={{ height: '100vh', width: '100%' }}>*/}
