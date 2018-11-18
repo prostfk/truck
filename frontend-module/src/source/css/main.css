@@ -127,3 +127,12 @@ body {
     padding: 20px;
     margin-bottom: 50px;
 }
+#map {
+    height: 100%;
+    margin-left: 200px;
+}
+
+#state {
+    width: 200px;
+    float: left;
+}

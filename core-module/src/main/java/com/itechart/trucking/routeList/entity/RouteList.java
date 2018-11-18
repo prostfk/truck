@@ -15,6 +15,8 @@ public class RouteList {
     private String point;
     private Integer pointLevel;
     private Boolean marked;
+    private Double lat;
+    private Double lng;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "waybill_id")
@@ -33,6 +35,15 @@ public class RouteList {
         this.point = point;
         this.pointLevel = pointLevel;
         this.marked = marked;
+        this.waybill = waybill;
+    }
+
+    public RouteList(String point, Integer pointLevel, Boolean marked, Double lat, Double lng, Waybill waybill) {
+        this.point = point;
+        this.pointLevel = pointLevel;
+        this.marked = marked;
+        this.lat = lat;
+        this.lng = lng;
         this.waybill = waybill;
     }
 }
