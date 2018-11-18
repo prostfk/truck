@@ -3,6 +3,7 @@ package com.itechart.trucking.webmodule.controller;
 import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.auto.repository.AutoRepository;
+import com.itechart.trucking.auto.service.AutoService;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
@@ -57,7 +58,7 @@ public class AdminController {
     private UserRepository userRepository;
 
     @Autowired
-    private AutoRepository autoRepository;
+    private AutoService autoRepository;
 
     @Autowired
     private CompanyRepository companyRepository;

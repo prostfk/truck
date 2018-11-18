@@ -79,9 +79,9 @@ export class DriverRouterListNew extends Component {
         });
     };
 
-    rendTest = (point) => {
+    rendPointsList = (point) => {
         return <div className={'row'}>
-            <p style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Непройдена')}</p>
+            <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success':'list-group-item list-group-item-action list-group-item-danger'} style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Непройдена')}</li>
         </div>
     };
 
@@ -112,24 +112,17 @@ export class DriverRouterListNew extends Component {
     }
 
     render() {
-        const style = {
-            width: '100%',
-            height: '90%'
-        };
-        let path = [
-            {lat: 53.9, lng: 27.56667},
-            {lat: 53.87378716, lng: 27.53485047},
-
-        ];
         return (
             <div className={'row'}>
-                <div className={'offset-md-1 col-md-1'}>
-                    <h1>Точки</h1>
-                    {this.state.routePoints.map(p => {
-                        return this.rendTest(p);
-                    })}
+                <div className={'col-md-3'}>
+                    <ul>
+                        <h1>Точки</h1>
+                        {this.state.routePoints.map(p => {
+                            return this.rendPointsList(p);
+                        })}
+                    </ul>
                 </div>
-                <div className={'offset-md-1 col-md-9'}>
+                <div className={'col-md-9'}>
                     <div style={{height: '100vh', width: '90%'}}>
                         <Map center={{lat: 53.9, lng: 27.56667}} google={window.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
@@ -161,8 +154,7 @@ export class DriverRouterListNew extends Component {
 
 
     </div>
-    )
-        ;
+    );
 
     }
 
