@@ -51,7 +51,11 @@ class pageManagerOrders extends Component {
     }
 
     handlePageChange(pageNumber) {
-        this.getOrderList(pageNumber);
+        this.getOrderList(pageNumber).then(data => {
+            this.setState({orders: data.content,
+                totalElements:data.totalElements,
+                currentPage:++data.number});
+        });
         this.setState({currentPage: pageNumber});
     }
 

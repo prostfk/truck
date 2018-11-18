@@ -25,6 +25,7 @@ import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
 import AutoList from "./pageAdmin/pageAutoList";
+import pageDispatcherOrderListOnCalendar from "./pageDispatcher/pageDispatcherOrderListOnCalendar";
 // import EditUser from "./pageSysAdmin/pageEditUser";
 import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
@@ -57,6 +58,7 @@ class MainController extends React.Component {
                     <Route exact path="/stocks" component={PageStockListNew}/> {/* stock list for admin */}
                     <Route exact path="/autos" component={AutoList}/> {/* auto list for admin */}
                     <Route exact path="/orders/" component={DispatcherOrderList}/>
+                    <Route exact path="/ordersCalendar/" component={pageDispatcherOrderListOnCalendar}/>
                     <Route exact path="/orders/:orderId/edit"
                            component={DispatcherEditOrder}/> {/*edit waybill(ttn) and order*/}
                     <Route exact path="/orders/createOrder" component={DispatcherCreateOrderPage}/>

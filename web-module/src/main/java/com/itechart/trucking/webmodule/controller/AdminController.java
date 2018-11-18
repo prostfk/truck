@@ -39,8 +39,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -149,9 +152,13 @@ public class AdminController {
         if (userByUsername == null) {
             if (password.length() > 5 && password.length() < 20) {
                 User admin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+                LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
+                Timestamp timestamp = Timestamp.valueOf(localDateTime);
+
                 userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay(),
                         userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
-                        userDto.getHouseNumber(), userDto.getFlatNumber());
+                        userDto.getHouseNumber(), userDto.getFlatNumber(),timestamp);
+
                 if (userDto.getUserRole().equals(UserRole.ROLE_DRIVER)){
                     User savedUser = userRepository.findUserByUsername(userDto.getUsername());
                     driverRepository.saveDriver(

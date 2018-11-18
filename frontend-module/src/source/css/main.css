@@ -92,6 +92,7 @@ body {
     background-color: #4e4e4e;
     margin-bottom: 10px;
     color: white;
+    width: 100%;
 }
 .grey_form{
     color: white;
@@ -131,8 +132,10 @@ body {
     height: 100%;
     margin-left: 200px;
 }
-
 #state {
     width: 200px;
     float: left;
+}
+.row{
+    width: 100%;
 }
