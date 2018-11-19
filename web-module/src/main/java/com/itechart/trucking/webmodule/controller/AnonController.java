@@ -8,6 +8,7 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.config.JwtGen;
+import com.itechart.trucking.webmodule.config.JwtVal;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class AnonController {
     private JwtGen jwtGen;
 
     @Autowired
+    private JwtVal jwtVal;
+
+    @Autowired
     private TokenRepository tokenRepository;
 
     @Autowired
@@ -42,40 +46,32 @@ public class AnonController {
     @Autowired
     private CompanyRepository companyRepository;
 
-    @GetMapping(value = "/regAdmin")//redo for rest
-    public String startRegistration(@RequestParam String token) {
-        Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
-        if (tokenByTokenValue != null) {
-            return "registrationUserAdminPage";
-        } else {
-            return "redirect:/error";
-        }
-    }
-
-    @PostMapping(value = "/auth")//auth rest
+    @PostMapping(value = "/auth")
     @ResponseBody
     public String getToken(@ModelAttribute final User user) throws JSONException {
         JSONObject json = new JSONObject();
         String generate = jwtGen.generate(user);
+        User validate = jwtVal.validate(generate);
         if (generate == null) {
             json.put("error", "Invalid data");
         } else {
             json.put("status", 200);
             json.put("token", generate);
+            json.put("role", validate.getUserRole().name());
         }
         return json.toString();
 
     }
 
-    @PostMapping(value = "/registration")//redo for rest
+    @PostMapping(value = "/registration")
     @ResponseBody
     public Object processAdminRegistration(@Valid User user, String companyName, String token, BindingResult bindingResult) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        user.setUserRole(UserRole.ROLE_ADMIN);
+        user.setUserRole(UserRole.ROLE_COMP_OWNER);
         Token tokenByTokenValue = tokenRepository.findTokenByTokenValue(token);
         if (tokenByTokenValue==null){
             jsonObject.put("error", "Invalid link!");
-            return jsonObject;
+            return jsonObject.toString();
         }
         user.setEmail(tokenByTokenValue.getEmail());
         if (!bindingResult.hasErrors() && userRepository.findUserByUsername(user.getUsername())==null && companyRepository.findCompanyByName(companyName)==null) {
@@ -92,7 +88,7 @@ public class AnonController {
             }
         }
         jsonObject.put("error", "Invalid data!");
-        return jsonObject;
+        return jsonObject.toString();
     }
 
 

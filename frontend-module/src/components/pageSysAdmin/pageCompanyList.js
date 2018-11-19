@@ -7,9 +7,9 @@ class SysAdminPage extends React.Component{
         super(props);
         this.getCompanyList = this.getCompanyList.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
-        this.sendref = this.sendref.bind(this);
+        this.sendRef = this.sendRef.bind(this);
         this.changeMail = this.changeMail.bind(this);
-        this.submitelock = this.submitelock.bind(this);
+        this.submitLock = this.submitLock.bind(this);
         this.state = {
             companies:[],
             inputMail:""
@@ -19,7 +19,7 @@ class SysAdminPage extends React.Component{
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId){
         const refThis = this;
-        fetch('http://localhost:8080/api/companies/'+companyId, {headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch('http://localhost:8080/api/companies/'+companyId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             refThis.state.companies.find((element, index, array)=>{
@@ -36,16 +36,20 @@ class SysAdminPage extends React.Component{
             inputMail: event.target.value
         })
     }
-    sendref(){
+    sendRef(){
         let formData = new FormData();
         let value = this.state.inputMail;
         formData.append("email", value);
-        fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST", headers: {'Auth-token': sessionStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             response.json().then(function (data) {
                 if (data.error===undefined){
-                    document.getElementById('emaillabel').innerText = 'Check your email';
+                    document.getElementById('result-span').innerText = 'Check your email';
+                    setTimeout(()=>{
+                        document.getElementById('user-new-form').style.display = 'none';
+                    },2000);
+                    document.getElementById('user-new-form').style.display = '';
                 }else{
-                    document.getElementById('emaillabel').innerText = 'check you data';
+                    document.getElementById('result-span').innerText = 'Check you data';
                 }
             })
         })
@@ -59,7 +63,7 @@ class SysAdminPage extends React.Component{
 
     /*get all company list*/
     getCompanyList() {
-        const myRes = fetch('http://localhost:8080/api/companies', {method: "get",headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
+        const myRes = fetch('http://localhost:8080/api/companies', {method: "get",headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
@@ -70,8 +74,8 @@ class SysAdminPage extends React.Component{
     /*render row of table ( calls from html ) */
     renderTable(company){
         if(!company) return;
-        const buttonactivate = <ModalComponent clickfunc={this.submitelock} className={"table_button bg-secondary text-white"} compId={company.id}/>;
-        const buttondeactivate = <a onClick={this.submiteUnlock.bind(this,company.id)} className={"table_button bg-secondary text-white"}>Вкл</a>;
+        const buttonactivate = <ModalComponent clickfunc={this.submitLock} className={"table_button bg-secondary text-white"} compId={company.id}/>;
+        const buttondeactivate = <a onClick={this.submitUnlock.bind(this,company.id)} className={"table_button bg-secondary text-white"}>Вкл</a>;
         const lockedDate = company.lockDate==null?"":" Дата: "+ (new Date(company.lockDate));
         const titleoflock = company.active?"Активна": (company.lockerId==null?"[admin]":company.lockerId.username) + " : " +(company.lockComment==""?"[without message]":company.lockComment) + lockedDate ;
         return <div className={"row table_row"}>
@@ -86,12 +90,12 @@ class SysAdminPage extends React.Component{
     }
 
     /*button changestatus handler*/
-    submiteUnlock(compId,event){
+    submitUnlock(compId, event){
         const ref = this;
         const myres = fetch('http://localhost:8080/api/companies/changeStatus', {
             method: "POST",
             body: compId,
-            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -104,13 +108,13 @@ class SysAdminPage extends React.Component{
         });
     }
 
-    submitelock(desc,compId){
+    submitLock(desc, compId){
         const ref = this;
         console.log(desc + compId);
         const myres = fetch('http://localhost:8080/api/companies/disable/'+compId, {
             method: "POST",
             body: desc,
-            headers: {'Auth-token': sessionStorage.getItem("Auth-token")}
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -151,13 +155,14 @@ class SysAdminPage extends React.Component{
             </div>
 
             <div className="offset-md-1 col-md-3">
-                <form className="superuserform_newaccountform grey_form">
+                <span id="result-span"/>
+                <form className="superuserform_newaccountform grey_form" id={'user-new-form'}>
                     <h5>Регистрация новой компании</h5>
                     <div className="form-group">
                         <label htmlFor="id" id="emaillabel">Email</label>
                         <input onChange={this.changeMail} type="email" className="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
                     </div>
-                    <a onClick={this.sendref} className="btn btn-success btn_fullsize">Отправить</a>
+                    <a onClick={this.sendRef} className="btn btn-success btn_fullsize">Отправить</a>
                 </form>
             </div>
         </div>

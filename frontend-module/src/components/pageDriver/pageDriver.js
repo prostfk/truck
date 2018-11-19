@@ -19,11 +19,13 @@ class DriverOrderList extends React.Component{
 
     /*get all company list*/
     getOrderList() {
-        return fetch('http://localhost:8080/api/orders/getMyOrders', {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
+        return fetch('http://localhost:8080/api/orders/getMyOrders', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
             return result;
+        }).catch((err) => {
+            console.log(err);
         });
     }
 
@@ -39,7 +41,7 @@ class DriverOrderList extends React.Component{
                 <Link to={`/myorders/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой лист</Link>
             </div>
             <div className="col-md-2">
-                <Link to={`/orders/${order.id}`} className="table_button bg-secondary text-white">Тов. партия</Link>
+                <Link to={`/driver/consignment/${order.id}`} className="table_button bg-secondary text-white">Тов. партия</Link>
             </div>
         </div>
     }

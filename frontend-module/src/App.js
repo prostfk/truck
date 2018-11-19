@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -13,14 +13,18 @@ import './source/js/bootstrap.min.js';*/
 
 
 import MainController from "./components/Main";
+import ErrorUiHandler from "./components/errorWindows/errorHandler";
 
 
 class App extends Component {
-  render() {
-    return (
-      <MainController />
-    );
-  }
+    render() {
+        return (
+            <ErrorUiHandler>
+                <MainController/>
+            </ErrorUiHandler>
+
+        );
+    }
 }
 
 export default App;

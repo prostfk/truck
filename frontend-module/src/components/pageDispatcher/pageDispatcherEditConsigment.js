@@ -74,17 +74,17 @@ class EditConsignment extends React.Component{
                 <di class="col-md-3">
                     <input value={this.state.newproduct_name} onChange={this.changeInput} id="newproduct_name" type="text" class="form-control" placeholder="Наименование товара"/>
                 </di>
-                <di class="col-md-3">
+                <div class="col-md-3">
                     <select value={this.state.newproduct_status} onChange={this.changeInput} id="newproduct_status" class="custom-select">
                         <option value="0" selected >Принят</option>
                         <option value="1">Проверен</option>
                         <option value="2">Доставлен</option>
                         <option value="3">Утерян</option>
                     </select>
-                </di>
-                <di class="col-md-3">
+                </div>
+                <div class="col-md-3">
                     <input value={this.state.newproduct_description} onChange={this.changeInput} id="newproduct_description"  type="text" class="form-control" placeholder="Описание, количество.."/>
-                </di>
+                </div>
                 <di class="col-md-3">
                     <button onClick={this.addProduct} type="button" class="btn btn-info btn_fullsize">Добавить</button>
                 </di>

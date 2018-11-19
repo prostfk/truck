@@ -90,3 +90,27 @@ body {
     color: red;
 }
 
+/*manager*/
+.table_footer {
+   margin: 10px auto 0 auto;
+    width:10%;
+
+}
+
+.manager_createcancelletionact {
+    margin-top: 70px;
+    padding: 40px;
+}
+.cancel_product, .manager_ref {
+    cursor: pointer;
+    color:	#C797AE;
+}
+
+.order_row {
+    color: black;
+}
+
+.manager_ref:hover {
+    color:	#C797AE;
+    text-decoration: none;
+}

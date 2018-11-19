@@ -19,7 +19,7 @@ class DriverRouteList extends React.Component {
         const ref = this;
         const myres = fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
             method: "PUT",
-            headers: {'Auth-token': sessionStorage.getItem('Auth-token')}
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -49,7 +49,7 @@ class DriverRouteList extends React.Component {
 
     /*get all company list*/
     getRouteList() {
-        return fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'Auth-token': sessionStorage.getItem('Auth-token')}}).then(function (response) {
+        return fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

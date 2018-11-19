@@ -14,14 +14,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @Enumerated(EnumType.STRING)
-    private ProductState status;
+    private Integer status;
     private String description;
-    @OneToOne
-    @JoinColumn(name = "product_consignment")
-    private Consignment consignment;
-    @OneToOne
+    private Double price;
+    private Integer count;
+
+    @ManyToOne
     @JoinColumn(name = "cancellation_act")
     private CancellationAct cancellationAct;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_consignment")
+    private Consignment consignment;
 }

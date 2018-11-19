@@ -23,6 +23,7 @@ public class BirthDayCongratulations {
     private String email;
     @Value("${server.password}")
     private String password;
+    private String message = "<h1>Уважаемый %s!</h1><br/><h2>Поздравляем вас с %d-летием. Желаем всего классного вот так да круто очень</h2><br/><br/><h5>С уважением, колектив %s!!</h5>";
 
     @Autowired
     private UserRepository userRepository;
@@ -39,8 +40,9 @@ public class BirthDayCongratulations {
                 List<User> usersByBirthDay = userRepository.customFindUsersByBirthDay(dateString);
                 usersByBirthDay.forEach(user -> {
                     try {
+                        int year = new Date().getYear() - user.getBirthDay().getYear();
                         EmailUtil.sendMail(email, password, user.getEmail(), "Happy birthday",
-                                String.format("<h1>Dear, %s</h1><br/><h5>On your Happy Birthday. We wish you all Happiness to make your day amazing. We wish you all smiles to make the heart healthy. We wish you all friendshipTo share and care all the best for your Birthday!!</h5><br/><img src=\"https://www.retailmenot.com/blog/wp-content/uploads/2016/01/hero-Birthday-Freebies-You-Should-Know-About-960x500.jpg-1522690042.jpg\" alt=\"Birthday!!!\"/>", user.getUsername())
+                                String.format(message,user.getUsername(),year,user.getCompany().getName())
                         );
                     } catch (Exception e) {
                         LOGGER.warn("Email sending problem: ", e);

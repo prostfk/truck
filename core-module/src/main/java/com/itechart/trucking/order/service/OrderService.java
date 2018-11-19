@@ -8,10 +8,12 @@ import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
+import com.itechart.trucking.formData.OrderFormData;
+import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
-import com.itechart.trucking.order.entity.OrderDto;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.entity.Waybill;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,22 +47,23 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
-    public Order getOrderFromDto(OrderDto dto) throws ParseException {
+    //check for selects
+    public Order getOrderFromDto(OrderFormData orderFormData, String currentUserName) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Auto autoById = autoRepository.findAutoById(dto.getAutoId());
-        Company company = userRepository.findUserByUsername("user6").getCompany();//заглушка
-        Driver driverById = driverRepository.findDriverById(dto.getDriverId());
-
+        User userByUsername = userRepository.findUserByUsername(currentUserName);
+        Company company = userByUsername.getCompany();
+        Auto autoById = autoRepository.findAutoById(orderFormData.getAutoId());
+        Driver driverById = driverRepository.findDriverById(orderFormData.getDriverId());
         Order order = new Order();
         order.setCompany(company);
-        order.setClient(clientRepository.findClientById(dto.getClientId()));
-        order.setName(dto.getName());
-        order.setStatus(dto.getStatus());
-        order.setSender(stockRepository.findStockById(dto.getDepartureStock()));
-        order.setReceiver(stockRepository.findStockById(dto.getDepartureStock()));
-        order.setDateAccepted(new Date(format.parse(dto.getDateDeparture()).getTime()));
-        order.setDateExecuted(new Date(format.parse(dto.getDateArrival()).getTime()));
-        order.setWaybill(new Waybill(dto.getWaybillStatus(), driverById,autoById,order.getDateAccepted(),order.getDateExecuted()));
+        order.setClient(clientRepository.findClientById(orderFormData.getClientId()));
+        order.setName(orderFormData.getName());
+        order.setStatus(Integer.valueOf(orderFormData.getStatus()));
+        order.setSender(stockRepository.findStockById(orderFormData.getDepartureStock()));
+        order.setReceiver(stockRepository.findStockById(orderFormData.getDepartureStock()));
+        order.setDateAccepted(new Date(format.parse(orderFormData.getDateDeparture()).getTime()));
+        order.setDateExecuted(new Date(format.parse(orderFormData.getDateArrival()).getTime()));
+        order.setWaybill(new Waybill(Integer.valueOf(orderFormData.getWaybillStatus()), driverById,autoById,order.getDateAccepted(),order.getDateExecuted()));
 //        order.setCompany(company);
         return order;
     }

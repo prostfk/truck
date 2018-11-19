@@ -1,7 +1,9 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.token.entity.Token;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -25,13 +28,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
-/*@Secured("ROLE_SYS_ADMIN")	*/
+@PreAuthorize("hasAuthority('ROLE_SYS_ADMIN')")
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/api")
@@ -54,7 +54,7 @@ public class SysAdminController {
             EmailUtil.sendMail(username, password, email, "Registration",
                     String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this link to finish </h4><br/><p>%s:%s/registration?token=%s</p>", request.getServerName(), "3000", token)
             );
-            tokenRepository.save(new Token(email,token));
+            tokenRepository.save(new Token(email, token));
             return HttpStatus.OK;
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,42 +63,45 @@ public class SysAdminController {
     }
 
     @GetMapping(value = "/companies")
-    public List<Company> findAllCompanies(){
-        return companyRepository.findAllByOrderById();
+    public List<CompanyDto> findAllCompanies() {
+        List<Company> companies = companyRepository.findAllByOrderById();
+        return Odt.CompanyListToDtoList(companies);
     }
 
-    @RequestMapping(value = "/companies/changeStatus",method = RequestMethod.POST)
-    public boolean changeActiveStatus(@RequestBody String companyId){
+    @PostMapping(value = "/companies/changeStatus")
+    public boolean changeActiveStatus(@RequestBody String companyId) {
         Long compId = Long.parseLong(companyId);
-        if(companyId==null) return false;
         Company company = companyRepository.findCompanyById(compId);
         int isActive = company.getActive();
-        if(isActive==1){
+        if (isActive == 1) {
             company.setActive(0);
-        } else company.setActive(1);
-        companyRepository.save(company);
-        return true;
+        } else {
+            company.setActive(1);
+            company.setLockerId(null);
+            company.setLockDate(null);
+            company.setLockComment(null);
+        }
+        return companyRepository.save(company) != null;
     }
 
-    /*добавить блокирующего юзера!*/
-    @RequestMapping(value = "/companies/disable/{companyId}",method = RequestMethod.POST)
-    public boolean disabeCompany(@RequestBody String description,@PathVariable String companyId){
-        System.out.println(companyId + " : " + description);
-        Long compId = Long.parseLong(companyId);
-        if(companyId==null) return false;
-        Company company = companyRepository.findCompanyById(compId);
+    @PostMapping(value = "/companies/disable/{companyId}")
+    public boolean disableCompany(@RequestBody String description, @PathVariable Long companyId) {
+        Company company = companyRepository.findCompanyById(companyId);
+        User sysAdmin = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        company.setLockerId(sysAdmin);
         company.setLockComment(description);
         company.setActive(0);
         company.setLockDate(new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
-        companyRepository.save(company);
-        return true;
+        return companyRepository.save(company) != null;
     }
 
-    @RequestMapping(value = "/companies/{companyId}",method = RequestMethod.GET)
-    public Company getCompanyById(@PathVariable String companyId) {
-        System.out.println(companyId);
-        Long compId = Long.parseLong(companyId);
-        if (companyId == null) return null;
-        return companyRepository.findCompanyById(compId);
+    @GetMapping(value = "/companies/{companyId}")
+    public CompanyDto getCompanyById(@PathVariable Long companyId) {
+        Company companyById = companyRepository.findCompanyById(companyId);
+        try {
+            return Odt.CompanyListToDtoList(Collections.singletonList(companyById)).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
     }
 }
