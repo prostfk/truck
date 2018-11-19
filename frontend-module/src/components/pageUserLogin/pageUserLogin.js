@@ -13,7 +13,6 @@ class pageUserLogin extends Component {
         this.processLogin = this.processLogin.bind(this);
         document.title = "Вход"
     }
-
     setUsername(event) {
         this.setState({
             email: event.target.value
@@ -30,6 +29,8 @@ class pageUserLogin extends Component {
         return (
 
             <form className="form-signin center" id="login-form">
+                <span style={{color: 'red'}} id="error-span"/>
+
                 <input type="text" id="inputUsername" value={this.state.email} onChange={this.setUsername}
                        className="form-control"
                        placeholder="Логин" required=""
@@ -37,7 +38,6 @@ class pageUserLogin extends Component {
                 <input type="password" value={this.state.password} id="inputPassword" onChange={this.setPassword}
                        className="form-control"
                        placeholder="Пароль" required=""/>
-                <span style={{color: 'red'}} id="error-span"/>
                 <button className="btn btn-lg btn-secondary"
                         onClick={this.processLogin} type="button">Вход
                 </button>
@@ -63,7 +63,7 @@ class pageUserLogin extends Component {
                     localStorage.setItem("role", data.role);
                     this.props.history.push('/');
                 }else{
-                    document.getElementById('error-span').innerText = "Check your data";
+                    document.getElementById('error-span').innerText = "Неправильные данные";
                 }
             })
         }, err => console.log(err))
