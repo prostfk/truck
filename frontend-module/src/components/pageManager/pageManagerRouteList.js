@@ -7,7 +7,6 @@ class ManagerRouteList extends Component {
         super(props);
         this.getRouteList = this.getRouteList.bind(this);
         this.renderMarkers = this.renderMarkers.bind(this);
-        this.renderInfoWindows = this.renderInfoWindows.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
@@ -59,21 +58,12 @@ class ManagerRouteList extends Component {
         });
     }
     renderMarkers(routePoint) {
-        console.log("render");
         if (!routePoint) return;
         return <Marker onClick={this.onMarkerClick}
-                       name={routePoint.point} position={{lat: 53.7169, lng: 27.9776}} />
+                       name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}}/>
 
     }
 
-    renderInfoWindows(routePoint) {
-        if (!routePoint) return;
-        return <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
-            <div>
-                <h1>routePoint.point</h1>
-            </div>
-        </InfoWindow>
-    }
     deletePoint(pointId) {
         console.log(pointId);
         const ref = this;
@@ -114,7 +104,7 @@ class ManagerRouteList extends Component {
     }
 
     onMarkerClick = (props, marker, e) => {
-        console.log('click');
+        console.log(marker);
         this.setState({
             selectedPlace: props,
             activeMarker: marker,
@@ -126,9 +116,25 @@ class ManagerRouteList extends Component {
             showingInfoWindow: false
         });
     }
-    onMapClick() {
+    onMapClick = (event, map, position) => {
+        console.log(position.latLng.lat());
+        console.log(map);
+        let {
+            google
+        } = this.props;
+
+        let pos = position;
+        position = new google.maps.LatLng(pos.lat, pos.lng);
+        const pref = {
+            map: map,
+            position: position
+        };
+        console.log(this.props);
+        const marker = new google.maps.Marker(pref);
+        console.log(marker);
         console.log("map clicked");
-        // document.getElementById("googleMap").appendChild(Marker);
+        console.log(event.latLng.lat());
+        console.log(event.target);
     }
     render() {
         const style = {
@@ -139,87 +145,24 @@ class ManagerRouteList extends Component {
         }
         return (
             <Map google={this.props.google}
-                 initialCenter={{
+                 center={{
                      lat: 53.7169,
                      lng: 27.9776
                  }}
                  zoom={14} onClick={this.onMapClick} id="googleMap">
-                {/*<Marker onClick={this.onMarkerClick}*/}
-                        {/*name={'Current location'} />*/}
-                {/*<InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>*/}
-                    {/*<div>*/}
-                        {/*<h1>Text</h1>*/}
-                    {/*</div>*/}
-                    {/*<button>Отметить</button>*/}
-                {/*</InfoWindow>*/}
                 {
                     this.state.routePoints.map((element) => {
                         return this.renderMarkers(element);
                     })
                 }
-                {
-                    this.state.routePoints.map((element) => {
-                        return this.renderInfoWindows(element);
-                    })
-                }
+                <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
+                    <div>
+                        <h1>{this.state.activeMarker.name}</h1>
+                    </div>
+                </InfoWindow>
             </Map>
         );
-          //   {/*<div style={{ height: '100vh', width: '100%' }}>*/}
-          //       {/*<GoogleMapReact*/}
-          //           {/*bootstrapURLKeys={{ key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI' }}*/}
-          //           {/*defaultCenter={this.props.center}*/}
-          //           {/*defaultZoom={this.props.zoom}*/}
-          //       {/*>*/}
-          //           {/*<InfoWindow*/}
-          //               {/*marker={this.state.activeMarker}*/}
-          //               {/*visible={this.state.showingInfoWindow}>*/}
-          //               {/*<div>*/}
-          //                   {/*<h1>{this.state.selectedPlace.name}</h1>*/}
-          //               {/*</div>*/}
-          //           {/*</InfoWindow>*/}
-          //       {/*</GoogleMapReact>*/}
-          //   {/*</div>*/}
-          // //   /*<Map google={this.props.google}
-          // //        onClick={this.onMapClicked}>
-          // //       <Marker onClick={this.onMarkerClick}
-          // //               name={'Current location'} />
-          // //
-          // //       <InfoWindow
-          // //           marker={this.state.activeMarker}
-          // //           visible={this.state.showingInfoWindow}>
-          // //           <div>
-          // //               <h1>{this.state.selectedPlace.name}</h1>
-          // //           </div>
-          // //       </InfoWindow>
-          // //   </Map>*/
-          // // /* <div className="row" id="managerroutelist">
-          // //       <div className="offset-md-2 col-md-8 form_clear">
-          // //           <div className="row">
-          // //               <div className="col-md-5">
-          // //                   <h3>Путевой лист</h3>
-          // //               </div>
-          // //           </div>
-          // //       </div>
-          // //       <div className="offset-md-2 col-md-8 form_clear">
-          // //           <h3>Контрольные точки</h3>
-          // //           <div className="row table_header">
-          // //               <div className="col-md-4">
-          // //                   <input value={this.state.point} onChange={this.setPoint.bind(this)} type="text" className="form-control" placeholder="Место" />
-          // //               </div>
-          // //               <div className="col-md-4">
-          // //                   <input value={this.state.sequence} onChange={this.setSequence.bind(this)} type="text" className="form-control" placeholder="Очерёдность" />
-          // //               </div>
-          // //               <div className="col-md-4">
-          // //                   <button type="button" className="btn btn-info btn_fullsize" onClick={this.addPoint.bind(this)}>Добавить</button>
-          // //               </div>
-          // //           </div>
-          // //           {
-          // //               this.state.routePoints.map((element) => {
-          // //                   return this.renderTable(element);
-          // //               })
-          // //           }
-          // //       </div>
-          // //   </div> */
+
     }
 }
 
