@@ -826,7 +826,7 @@ COPY public.users (id, username, email, password, user_role, company, birth_day,
 33	user6	user6@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_DRIVER	1	1987-01-10	\N	surname	\N	\N	\N	\N	\N	\N	2018-11-14 16:53:38.520958
 38	nickname	gdsg@mail.ru	$2a$10$4Rzg7hoelmEz5Ye4oQ0s..HtVOYG.E7NFXD6ALg/SWQ2rzHyxEGdK	ROLE_MANAGER	1	1997-02-11	name	sname	fname	Ufa	Belarus	улица	дом	12	2018-11-14 16:53:38.520958
 1	sysamin	sysamin	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_SYS_ADMIN	\N	1987-05-07	\N	surname	\N	\N	\N	\N	\N	\N	2018-11-14 16:53:38.520958
-36	user9	user9@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_ADMIN,	2	1987-01-22	\N	surname	\N	\N	\N	\N	\N	\N	2018-11-14 16:53:38.520958
+36	user9	user9@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_ADMIN	2	1987-01-22	\N	surname	\N	\N	\N	\N	\N	\N	2018-11-14 16:53:38.520958
 37	user10	user10@	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_COMP_OWNER	3	1983-07-16	\N	surname	\N	\N	\N	\N	\N	\N	2018-11-14 16:53:38.520958
 32	driverUser	driverUser@mail.ru	$2a$10$2cJzMqzRrp/Li0OajI.ELOUSkItyj68li1qzBpEaPfyHljxZs8oZu	ROLE_DRIVER	1	1985-03-02	\N	surname	\N	\N	\N	\N	\N	\N	2018-11-14 16:53:38.520958
 28	user1	user1@	$2a$10$N3mldylSkzcMR1gzF90oSe9u17lsc40BfERyK/cKXY748XTfHMArO	ROLE_COMP_OWNER	1	1983-12-05	null	surname		Minsk	Belarus	Kolasa	29	1	2018-11-14 16:53:38.520958
