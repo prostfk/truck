@@ -22,7 +22,8 @@ export class DriverRouterListNew extends Component {
             selectedPlace: {},
             markers: {},
             selectedPoint: '',
-            pathCoordinates: []
+            pathCoordinates: [],
+            mapCenter: {lat: 53.9, lng: 27.56667}
         };
         document.title = "Путевой лист";
     }
@@ -30,6 +31,7 @@ export class DriverRouterListNew extends Component {
     componentDidMount() {
         this.getRouteList().then(data => {
             this.setState({routePoints: data, pathCoordinates: []});
+            this.setState({mapCenter: {lng: data[0].lng, lat: data[0].lat}});
             for (let i = 0; i < data.length; i++) {
                 this.setState({
                     pathCoordinates: [...this.state.pathCoordinates, {lng: data[i].lng, lat: data[i].lat}]
@@ -124,7 +126,7 @@ export class DriverRouterListNew extends Component {
                 </div>
                 <div className={'col-md-9'}>
                     <div style={{height: '100vh', width: '90%'}}>
-                        <Map center={{lat: 53.9, lng: 27.56667}} google={window.google}
+                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}} google={window.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
                              className={'map'}
                              zoom={11}>
