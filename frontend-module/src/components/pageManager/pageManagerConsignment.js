@@ -12,31 +12,59 @@ class ManagerConsignment extends Component {
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleInputChangeTwo = this.handleInputChangeTwo.bind(this);
         this.setLostState = this.setLostState.bind(this);
+        this.restoreProduct = this.restoreProduct.bind(this);
+
+        /*this.toggleModalRestore = this.toggleModalRestore.bind(this);
+        this.toggleModalCancellation = this.toggleModalCancellation.bind(this);*/
+
         this.state = {
             products: [],
             isLost: false,
-            modal: false,
+
+            modalCancellation: false,
             countOfSelectedProduct: 0,
-            residueOfSelectedProduct: 0,
+            remainsOfSelectedProduct: 0,
             selectedProductIndex: 0,
+
+            modalRestore: false,
+            cancelledCount: 0,
+            remainsCancelled: 0,
         };
         document.title = "Товарная партия"
     }
 
-    toggle = (key) => {
-        let selProdIndex = 0;
+    toggleModalCancellation = (key) => {
 
-        if (key) {
-            selProdIndex = key;
+        if (key >= 0) {
+            this.setState((state, props) => ({
+                modalCancellation: !state.modalCancellation,
+                selectedProductIndex: key,
+                countOfSelectedProduct: state.products[key].count,
+                remainsOfSelectedProduct: state.products[key].count,
+            }));
+        } else {
+            this.setState({
+                modalCancellation: !this.state.modalCancellation,
+            })
         }
+    };
 
-        this.setState((state, props) => ({
-            modal: !state.modal,
-            selectedProductIndex: selProdIndex,
-            countOfSelectedProduct: state.products[selProdIndex].count,
-            residueOfSelectedProduct: state.products[selProdIndex].count,
-        }));
+    toggleModalRestore = (key) => {
+
+        if (key >= 0) {
+            this.setState((state, props) => ({
+                modalRestore: !state.modalRestore,
+                selectedProductIndex: key,
+                cancelledCount: state.products[key].cancelledCount,
+                remainsCancelled: state.products[key].cancelledCount,
+            }));
+        } else {
+            this.setState({
+                modalRestore: !this.state.modalRestore,
+            })
+        }
     };
 
     componentDidMount() {
@@ -52,7 +80,14 @@ class ManagerConsignment extends Component {
     handleInputChange(e) {
         let newValue = this.state.countOfSelectedProduct - e.target.value;
         this.setState({
-            residueOfSelectedProduct: newValue,
+            remainsOfSelectedProduct: newValue,
+        });
+    }
+
+    handleInputChangeTwo(e) {
+        let newValue = this.state.cancelledCount - e.target.value;
+        this.setState({
+            remainsCancelled: newValue,
         });
     }
 
@@ -113,7 +148,7 @@ class ManagerConsignment extends Component {
             isLost = true;
 
         return <div key={index} className="row table_row manager_orders">
-            <div className="col-md-3">{product.name}</div>
+            <div className="col-md-2">{product.name}</div>
             <div className="col-md-2" style={{display: isLost ? 'block' : 'none'}}>Утерян</div>
             <div className="col-md-2" style={{display: isLost ? 'none' : 'block'}}>
                 <select className="form-control" value={status}
@@ -123,30 +158,62 @@ class ManagerConsignment extends Component {
                     <option>Проверен</option>
                 </select>
             </div>
-            <div className="col-md-3">{product.description}</div>
+            <div className="col-md-2">{product.description}</div>
             <div className="col-md-2">{product.price}</div>
             <div className="col-md-2"><a className="table_button bg-secondary text-white"
-                                         onClick={this.setLostState.bind(this, product.id, isLost)}>{isLost ? "Восстановить" : "Списать"}</a>
+                                         onClick={this.toggleModalCancellation.bind(this, index)}>{"Списать"}</a>
+            </div>
+            <div className="col-md-2"><a className="table_button bg-secondary text-white"
+                                         onClick={this.toggleModalRestore.bind(this, index)}>{"Восстановить"}</a>
             </div>
         </div>
     }
 
     // {this.toggle.bind(this, index)}
 // {/*onClick={this.setLostState.bind(this, product.id, isLost)}*/}
-    setLostState(productId, status) {
-        /*let productId = this.state.products[this.state.selectedProductIndex].id;
-        let status = this.state.products[this.state.selectedProductIndex].status;*/
-        let isLost = !status;
-        console.log(isLost);
+    setLostState() {
+        this.toggleModalCancellation();
+
+        let productId = this.state.products[this.state.selectedProductIndex].id;
+        let cancel = this.state.countOfSelectedProduct - this.state.remainsOfSelectedProduct;
+
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
         console.log(orderId);
         const ref = this;
 
-        let formData = new FormData();
+        /*let formData = new FormData();
         formData.append("orderId", orderId);
-        formData.append("isLost", isLost);
-        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/${orderId}/?isLost=${isLost}`, {
+        formData.append("isLost", isLost);*/
+        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/${orderId}/?cancel=${cancel}`, {
+            method: "GET",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            console.log(result);
+            ref.forceUpdateHandler(result);
+            return result;
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+    restoreProduct() {
+        this.toggleModalRestore();
+
+        let productId = this.state.products[this.state.selectedProductIndex].id;
+        let restore = this.state.cancelledCount - this.state.remainsCancelled;
+
+        let split = document.location.href.split('/');
+        let orderId = split[split.length - 1];
+        console.log(orderId);
+        const ref = this;
+
+        /*let formData = new FormData();
+        formData.append("orderId", orderId);
+        formData.append("isLost", isLost);*/
+        fetch(`http://localhost:8080/api/manager/${productId}/restoreProduct/${orderId}/?restore=${restore}`, {
             method: "GET",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -188,13 +255,13 @@ class ManagerConsignment extends Component {
     render() {
         return (
             <div className="row">
-                <Modal isOpen={this.state.modal}>
+                <Modal isOpen={this.state.modalCancellation}>
                     <form>
                         <ModalHeader>Списать товар</ModalHeader>
                         <ModalBody className={"logoutForm"}>
                             <div className={"d-inline-block"}>
                                 <label htmlFor={"inputCurrentValue"} className={"mr-sm-2"}>Текущее количество</label>
-                                <input id={"inputCurrentValue"} value={this.state.residueOfSelectedProduct}
+                                <input id={"inputCurrentValue"} value={this.state.remainsOfSelectedProduct}
                                        type={"number"}
                                        disabled={true} className={"form-control"}/>
                             </div>
@@ -208,7 +275,32 @@ class ManagerConsignment extends Component {
 
                         <ModalFooter className={"logoutForm"}>
                             <Button color="danger" onClick={this.setLostState}>Списать</Button>
-                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {this.toggle()}}>Отмена</Button>
+                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {this.toggleModalCancellation()}}>Отмена</Button>
+                        </ModalFooter>
+                    </form>
+                </Modal>
+
+                <Modal isOpen={this.state.modalRestore}>
+                    <form>
+                        <ModalHeader>Восстановить товар</ModalHeader>
+                        <ModalBody className={"logoutForm"}>
+                            <div className={"d-inline-block"}>
+                                <label htmlFor={"remainsCanceled"} className={"mr-sm-2"}>Количество списаний</label>
+                                <input id={"remainsCanceled"} value={this.state.remainsCancelled}
+                                       type={"number"}
+                                       disabled={true} className={"form-control"}/>
+                            </div>
+                            <div className={"d-inline-block"} style={{marginLeft: '3%'}}>
+                                <label htmlFor={"cancelledCount"} className={"mr-sm-2"}>Количество восстановленного</label>
+                                <input id={"cancelledCount"} type={"number"} min={0}
+                                       max={this.state.cancelledCount}
+                                       className={"form-control"} onChange={this.handleInputChangeTwo}/>
+                            </div>
+                        </ModalBody>
+
+                        <ModalFooter className={"logoutForm"}>
+                            <Button color="danger" onClick={this.restoreProduct}>Восстановить</Button>
+                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {this.toggleModalRestore()}}>Отмена</Button>
                         </ModalFooter>
                     </form>
                 </Modal>
@@ -216,10 +308,11 @@ class ManagerConsignment extends Component {
                 <div className="offset-md-1 col-md-8 form_clear">
                     <h3>Товарная партия</h3>
                     <div className="row table_header">
-                        <div className="col-md-3">Наименование</div>
+                        <div className="col-md-2">Наименование</div>
                         <div className="col-md-2">Состоние</div>
-                        <div className="col-md-3">Описание</div>
+                        <div className="col-md-2">Описание</div>
                         <div className="col-md-2">Цена</div>
+                        <div className="col-md-2"></div>
                         <div className="col-md-2"></div>
                     </div>
                     {
