@@ -12,11 +12,12 @@ class ManagerRouteList extends Component {
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
         this.onMapClick = this.onMapClick.bind(this);
         this.addPoint = this.addPoint.bind(this);
+        this.deletePoint = this.deletePoint.bind(this);
         this.state = {
             routePoints: [],
             orderId: "",
             point:"",
-            sequence:"",
+            pointLevel:0,
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {}
@@ -27,20 +28,35 @@ class ManagerRouteList extends Component {
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            this.setState({routePoints:data});
+            let level = 0;
+            data.forEach(point => {
+                if(level < point.pointLevel) {
+                    level = point.pointLevel;
+                }
+            });
+            this.setState({routePoints:data, pointLevel:level+1});
         });
     }
 
     forceUpdateHandler() {
         this.getRouteList().then(data => {
-            this.setState({routePoints:data, point:"", sequence:""});
+            let level = 0;
+            data.forEach(point => {
+                if(level < point.pointLevel) {
+                    level = point.pointLevel;
+                }
+            });
+            this.setState({routePoints:data, point:"", pointLevel:level+1});
         });
     }
     getRouteList() {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/routeList/${id}`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/routeList/${id}`, {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -48,27 +64,18 @@ class ManagerRouteList extends Component {
         });
     }
 
-    setPoint(event) {
-        this.setState( {
-            point: event.target.value
-        });
-    }
-    setSequence(event) {
-        this.setState({
-            sequence: event.target.value
-        });
-    }
     renderMarkers(routePoint) {
         if (!routePoint) return;
         return <Marker onClick={this.onMarkerClick}
-                       name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}}/>
+                       name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}} id={routePoint.id}/>
 
     }
 
-    deletePoint(pointId) {
-        console.log(pointId);
+    deletePoint(props) {
+        console.log("delete");
+        console.log(props.pointId);
         const ref = this;
-        fetch(`http://localhost:8080/api/manager/deletePoint/${pointId}`, {method: "DELETE", headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+        fetch(`http://localhost:8080/api/manager/deletePoint/${props.pointId}`, {method: "DELETE", headers: {'Auth-token': localStorage.getItem("Auth-token")}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {
@@ -88,7 +95,7 @@ class ManagerRouteList extends Component {
        let routePoint = {};
        routePoint.id = null;
        routePoint.point = this.state.point;
-       routePoint.pointLevel = this.state.sequence;
+       routePoint.pointLevel = this.state.pointLevel;
        routePoint.waybill = null;
        routePoint.lat = lat;
        routePoint.lng = lng;
@@ -106,7 +113,7 @@ class ManagerRouteList extends Component {
            });
     }
 
-    onMarkerClick = (props, marker, e) => {
+    onMarkerClick = (props, marker, event) => {
         console.log(marker);
         this.setState({
             selectedPlace: props,
@@ -119,18 +126,9 @@ class ManagerRouteList extends Component {
             showingInfoWindow: false
         });
     }
-    onMapClick = (mapProps, clickEvent, event, map) => {
+    onMapClick = (mapProps, clickEvent, event) => {
         let position = event.latLng;
         this.addPoint(position.lat(), position.lng());
-        let {
-            google
-        } = this.props;
-        let pref = {
-            map: map,
-            position: event.latLng
-        }
-        const marker = new google.maps.Marker(pref);
-
     }
     render() {
         const style = {
@@ -153,7 +151,8 @@ class ManagerRouteList extends Component {
                 }
                 <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
                     <div>
-                        <h1>{this.state.activeMarker.name}</h1>
+                        <h3>{this.state.activeMarker.name}</h3>
+                        <div className="table_button bg-secondary text-white" onClick={this.deletePoint}>Удалить</div>
                     </div>
                 </InfoWindow>
             </Map>
