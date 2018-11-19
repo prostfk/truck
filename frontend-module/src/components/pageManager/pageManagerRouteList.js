@@ -11,6 +11,7 @@ class ManagerRouteList extends Component {
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
         this.onMapClick = this.onMapClick.bind(this);
+        this.addPoint = this.addPoint.bind(this);
         this.state = {
             routePoints: [],
             orderId: "",
@@ -80,7 +81,7 @@ class ManagerRouteList extends Component {
             })
     }
 
-    addPoint() {
+    addPoint(lat, lng) {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         let ref = this;
@@ -89,6 +90,8 @@ class ManagerRouteList extends Component {
        routePoint.point = this.state.point;
        routePoint.pointLevel = this.state.sequence;
        routePoint.waybill = null;
+       routePoint.lat = lat;
+       routePoint.lng = lng;
        console.log(routePoint);
 
        fetch(`http://localhost:8080/api/manager/${id}/createPoint`, {method:"POST", headers: {'Content-Type':'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
@@ -116,25 +119,18 @@ class ManagerRouteList extends Component {
             showingInfoWindow: false
         });
     }
-    onMapClick = (event, map, position) => {
-        console.log(position.latLng.lat());
-        console.log(map);
+    onMapClick = (mapProps, clickEvent, event, map) => {
+        let position = event.latLng;
+        this.addPoint(position.lat(), position.lng());
         let {
             google
         } = this.props;
-
-        let pos = position;
-        position = new google.maps.LatLng(pos.lat, pos.lng);
-        const pref = {
+        let pref = {
             map: map,
-            position: position
-        };
-        console.log(this.props);
+            position: event.latLng
+        }
         const marker = new google.maps.Marker(pref);
-        console.log(marker);
-        console.log("map clicked");
-        console.log(event.latLng.lat());
-        console.log(event.target);
+
     }
     render() {
         const style = {
