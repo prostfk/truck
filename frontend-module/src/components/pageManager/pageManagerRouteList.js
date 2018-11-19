@@ -1,21 +1,24 @@
 ﻿import React, {Component} from "react";
 import {GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
+import * as ReactDOM from "react-dom";
 
 class ManagerRouteList extends Component {
 
     constructor(props) {
         super(props);
         this.getRouteList = this.getRouteList.bind(this);
-        this.renderTable = this.renderTable.bind(this);
+        this.renderMarkers = this.renderMarkers.bind(this);
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
+        this.onInfoWindowOpen = this.onInfoWindowOpen.bind(this);
         this.onMapClick = this.onMapClick.bind(this);
+        this.addPoint = this.addPoint.bind(this);
         this.state = {
             routePoints: [],
             orderId: "",
             point:"",
-            sequence:"",
+            pointLevel:0,
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {}
@@ -26,20 +29,35 @@ class ManagerRouteList extends Component {
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            this.setState({routePoints:data});
+            let level = 0;
+            data.forEach(point => {
+                if(level < point.pointLevel) {
+                    level = point.pointLevel;
+                }
+            });
+            this.setState({routePoints:data, pointLevel:level+1});
         });
     }
 
     forceUpdateHandler() {
         this.getRouteList().then(data => {
-            this.setState({routePoints:data, point:"", sequence:""});
+            let level = 0;
+            data.forEach(point => {
+                if(level < point.pointLevel) {
+                    level = point.pointLevel;
+                }
+            });
+            this.setState({routePoints:data, point:"", pointLevel:level+1});
         });
     }
     getRouteList() {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`http://localhost:8080/api/manager/routeList/${id}`, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch(`http://localhost:8080/api/manager/routeList/${id}`, {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -47,29 +65,15 @@ class ManagerRouteList extends Component {
         });
     }
 
-    setPoint(event) {
-        this.setState( {
-            point: event.target.value
-        });
-    }
-    setSequence(event) {
-        this.setState({
-            sequence: event.target.value
-        });
-    }
-    renderTable(routePoint) {
+    renderMarkers(routePoint) {
         if (!routePoint) return;
-        return <div><Marker onClick={this.onMarkerClick}
-                       name={routePoint.point} />
-            <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
-                <div>
-                    <h1>routePoint.point</h1>
-                </div>
-            </InfoWindow></div>
+        return <Marker onClick={this.onMarkerClick}
+                       name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}} id={routePoint.id}/>
 
     }
 
     deletePoint(pointId) {
+        console.log("delete");
         console.log(pointId);
         const ref = this;
         fetch(`http://localhost:8080/api/manager/deletePoint/${pointId}`, {method: "DELETE", headers: {'Auth-token': localStorage.getItem("Auth-token")}})
@@ -77,6 +81,7 @@ class ManagerRouteList extends Component {
                 return response.json();
             }).then(function(result) {
                 if(result === true) {
+                    ref.onInfoWindowClose();
                     ref.forceUpdateHandler();
                 }
             })
@@ -85,15 +90,17 @@ class ManagerRouteList extends Component {
             })
     }
 
-    addPoint() {
+    addPoint(lat, lng) {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         let ref = this;
        let routePoint = {};
        routePoint.id = null;
        routePoint.point = this.state.point;
-       routePoint.pointLevel = this.state.sequence;
+       routePoint.pointLevel = this.state.pointLevel;
        routePoint.waybill = null;
+       routePoint.lat = lat;
+       routePoint.lng = lng;
        console.log(routePoint);
 
        fetch(`http://localhost:8080/api/manager/${id}/createPoint`, {method:"POST", headers: {'Content-Type':'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
@@ -108,8 +115,8 @@ class ManagerRouteList extends Component {
            });
     }
 
-    onMarkerClick = (props, marker, e) => {
-        console.log('click');
+    onMarkerClick = (props, marker, event) => {
+        console.log(marker);
         this.setState({
             selectedPlace: props,
             activeMarker: marker,
@@ -121,9 +128,15 @@ class ManagerRouteList extends Component {
             showingInfoWindow: false
         });
     }
-    onMapClick() {
-        console.log("map clicked");
-        // document.getElementById("googleMap").appendChild(Marker);
+    onInfoWindowOpen(props, e, markerId) { //For mark button. Doesn't work without it
+        console.log(props);
+        console.log(markerId);
+        const button = <div className="table_button bg-secondary text-white" onClick={this.deletePoint.bind(this, markerId)} pointId={markerId}>Удалить</div>
+        ReactDOM.render(React.Children.only(button), document.getElementById("info-window-container"));
+    }
+    onMapClick = (mapProps, clickEvent, event) => {
+        let position = event.latLng;
+        this.addPoint(position.lat(), position.lng());
     }
     render() {
         const style = {
@@ -133,78 +146,30 @@ class ManagerRouteList extends Component {
             'marginRight': 'auto'
         }
         return (
-            <Map google={this.props.google} zoom={14} onClick={this.onMapClick} id="googleMap">
-                <Marker onClick={this.onMarkerClick}
-                        name={'Current location'} />
-                <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
+            <Map google={this.props.google}
+                 center={{
+                     lat: 53.7169,
+                     lng: 27.9776
+                 }}
+                 zoom={14} onClick={this.onMapClick} id="googleMap">
+                {
+                    this.state.routePoints.map((element) => {
+                        return this.renderMarkers(element);
+                    })
+                }
+                <InfoWindow onClose={this.onInfoWindowClose}
+                            onOpen={e => {
+                                this.onInfoWindowOpen(this.props, e, this.state.activeMarker.id);
+                            }}
+                            marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
                     <div>
-                        <h1>Text</h1>
+                        <h3>{this.state.activeMarker.name}</h3>
+                        <div className="table_button bg-secondary text-white" id="info-window-container"></div>
                     </div>
-                    <button>Отметить</button>
                 </InfoWindow>
-                {/*/!*{*!/*/}
-                    {/*this.state.routePoints.map((element) => {*/}
-                        {/*return this.renderTable(element);*/}
-                    {/*})*/}
-                {/*}*/}
             </Map>
         );
-          //   {/*<div style={{ height: '100vh', width: '100%' }}>*/}
-          //       {/*<GoogleMapReact*/}
-          //           {/*bootstrapURLKeys={{ key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI' }}*/}
-          //           {/*defaultCenter={this.props.center}*/}
-          //           {/*defaultZoom={this.props.zoom}*/}
-          //       {/*>*/}
-          //           {/*<InfoWindow*/}
-          //               {/*marker={this.state.activeMarker}*/}
-          //               {/*visible={this.state.showingInfoWindow}>*/}
-          //               {/*<div>*/}
-          //                   {/*<h1>{this.state.selectedPlace.name}</h1>*/}
-          //               {/*</div>*/}
-          //           {/*</InfoWindow>*/}
-          //       {/*</GoogleMapReact>*/}
-          //   {/*</div>*/}
-          // //   /*<Map google={this.props.google}
-          // //        onClick={this.onMapClicked}>
-          // //       <Marker onClick={this.onMarkerClick}
-          // //               name={'Current location'} />
-          // //
-          // //       <InfoWindow
-          // //           marker={this.state.activeMarker}
-          // //           visible={this.state.showingInfoWindow}>
-          // //           <div>
-          // //               <h1>{this.state.selectedPlace.name}</h1>
-          // //           </div>
-          // //       </InfoWindow>
-          // //   </Map>*/
-          // // /* <div className="row" id="managerroutelist">
-          // //       <div className="offset-md-2 col-md-8 form_clear">
-          // //           <div className="row">
-          // //               <div className="col-md-5">
-          // //                   <h3>Путевой лист</h3>
-          // //               </div>
-          // //           </div>
-          // //       </div>
-          // //       <div className="offset-md-2 col-md-8 form_clear">
-          // //           <h3>Контрольные точки</h3>
-          // //           <div className="row table_header">
-          // //               <div className="col-md-4">
-          // //                   <input value={this.state.point} onChange={this.setPoint.bind(this)} type="text" className="form-control" placeholder="Место" />
-          // //               </div>
-          // //               <div className="col-md-4">
-          // //                   <input value={this.state.sequence} onChange={this.setSequence.bind(this)} type="text" className="form-control" placeholder="Очерёдность" />
-          // //               </div>
-          // //               <div className="col-md-4">
-          // //                   <button type="button" className="btn btn-info btn_fullsize" onClick={this.addPoint.bind(this)}>Добавить</button>
-          // //               </div>
-          // //           </div>
-          // //           {
-          // //               this.state.routePoints.map((element) => {
-          // //                   return this.renderTable(element);
-          // //               })
-          // //           }
-          // //       </div>
-          // //   </div> */
+
     }
 }
 
