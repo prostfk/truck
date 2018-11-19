@@ -62,13 +62,13 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE public.auto (
-  id integer NOT NULL,
-  type character varying(15) NOT NULL,
-  fuel_consumption integer NOT NULL,
-  name character varying(45) NOT NULL,
-  car_number character varying(45) NOT NULL,
-  company_owner integer NOT NULL,
-  active boolean DEFAULT true
+    id integer NOT NULL,
+    type character varying(15) NOT NULL,
+    fuel_consumption integer NOT NULL,
+    name character varying(45) NOT NULL,
+    car_number character varying(45) NOT NULL,
+    company_owner integer NOT NULL,
+    active boolean DEFAULT true
 );
 
 
@@ -79,12 +79,12 @@ ALTER TABLE public.auto OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.auto_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.auto_id_seq OWNER TO postgres;
@@ -101,11 +101,11 @@ ALTER SEQUENCE public.auto_id_seq OWNED BY public.auto.id;
 --
 
 CREATE TABLE public.cancellation_act (
-  id integer NOT NULL,
-  date date,
-  amount integer NOT NULL,
-  price integer NOT NULL,
-  consignment_id bigint NOT NULL
+    id integer NOT NULL,
+    date date,
+    amount integer NOT NULL,
+    price integer NOT NULL,
+    consignment_id bigint NOT NULL
 );
 
 
@@ -116,12 +116,12 @@ ALTER TABLE public.cancellation_act OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.cancellation_act_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.cancellation_act_id_seq OWNER TO postgres;
@@ -138,10 +138,10 @@ ALTER SEQUENCE public.cancellation_act_id_seq OWNED BY public.cancellation_act.i
 --
 
 CREATE TABLE public.client (
-  id integer NOT NULL,
-  name character varying(45) NOT NULL,
-  type character varying(45) NOT NULL,
-  client_owner integer NOT NULL
+    id integer NOT NULL,
+    name character varying(45) NOT NULL,
+    type character varying(45) NOT NULL,
+    client_owner integer NOT NULL
 );
 
 
@@ -152,12 +152,12 @@ ALTER TABLE public.client OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.client_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.client_id_seq OWNER TO postgres;
@@ -174,12 +174,12 @@ ALTER SEQUENCE public.client_id_seq OWNED BY public.client.id;
 --
 
 CREATE TABLE public.company (
-  id integer NOT NULL,
-  name character varying(100) NOT NULL,
-  active smallint DEFAULT '0'::smallint NOT NULL,
-  lock_comment character varying(255),
-  locker_id integer,
-  lock_date date
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    active smallint DEFAULT '0'::smallint NOT NULL,
+    lock_comment character varying(255),
+    locker_id integer,
+    lock_date date
 );
 
 
@@ -190,12 +190,12 @@ ALTER TABLE public.company OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.company_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.company_id_seq OWNER TO postgres;
@@ -212,9 +212,9 @@ ALTER SEQUENCE public.company_id_seq OWNED BY public.company.id;
 --
 
 CREATE TABLE public.consignment (
-  id integer NOT NULL,
-  name character varying(45) NOT NULL,
-  order_id integer NOT NULL
+    id integer NOT NULL,
+    name character varying(45) NOT NULL,
+    order_id integer NOT NULL
 );
 
 
@@ -225,12 +225,12 @@ ALTER TABLE public.consignment OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.consignment_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.consignment_id_seq OWNER TO postgres;
@@ -247,11 +247,11 @@ ALTER SEQUENCE public.consignment_id_seq OWNED BY public.consignment.id;
 --
 
 CREATE TABLE public.driver (
-  id integer NOT NULL,
-  name character varying(45) NOT NULL,
-  passport_number character varying(45) NOT NULL,
-  company_of_driver integer NOT NULL,
-  userid integer
+    id integer NOT NULL,
+    name character varying(45) NOT NULL,
+    passport_number character varying(45) NOT NULL,
+    company_of_driver integer NOT NULL,
+    userid integer
 );
 
 
@@ -262,12 +262,12 @@ ALTER TABLE public.driver OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.driver_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.driver_id_seq OWNER TO postgres;
@@ -284,16 +284,16 @@ ALTER SEQUENCE public.driver_id_seq OWNED BY public.driver.id;
 --
 
 CREATE TABLE public.orders (
-  id integer NOT NULL,
-  name character varying(45) NOT NULL,
-  client_id integer NOT NULL,
-  status integer DEFAULT 0,
-  sender integer NOT NULL,
-  receiver integer NOT NULL,
-  date_accepted date,
-  date_executed date,
-  waybill_id bigint,
-  company_id bigint NOT NULL
+    id integer NOT NULL,
+    name character varying(45) NOT NULL,
+    client_id integer NOT NULL,
+    status integer DEFAULT 0,
+    sender integer NOT NULL,
+    receiver integer NOT NULL,
+    date_accepted date,
+    date_executed date,
+    waybill_id bigint,
+    company_id bigint NOT NULL
 );
 
 
@@ -304,12 +304,12 @@ ALTER TABLE public.orders OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.orders_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.orders_id_seq OWNER TO postgres;
@@ -326,14 +326,14 @@ ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
 --
 
 CREATE TABLE public.product (
-  id integer NOT NULL,
-  name character varying(45) DEFAULT NULL::character varying,
-  status integer DEFAULT 0,
-  description character varying(100) NOT NULL,
-  product_consignment integer NOT NULL,
-  cancellation_act bigint,
-  price integer,
-  count integer DEFAULT 0 NOT NULL
+    id integer NOT NULL,
+    name character varying(45) DEFAULT NULL::character varying,
+    status integer DEFAULT 0,
+    description character varying(100) NOT NULL,
+    product_consignment integer NOT NULL,
+    cancellation_act bigint,
+    price integer,
+    count integer DEFAULT 0 NOT NULL
 );
 
 
@@ -344,12 +344,12 @@ ALTER TABLE public.product OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.product_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.product_id_seq OWNER TO postgres;
@@ -366,13 +366,13 @@ ALTER SEQUENCE public.product_id_seq OWNED BY public.product.id;
 --
 
 CREATE TABLE public.route_list (
-  id integer NOT NULL,
-  point character varying(200),
-  point_level integer,
-  waybill_id bigint,
-  marked boolean DEFAULT false,
-  lat numeric DEFAULT 0.0,
-  lng numeric DEFAULT 0.0
+    id integer NOT NULL,
+    point character varying(200),
+    point_level integer,
+    waybill_id bigint,
+    marked boolean DEFAULT false,
+    lat numeric DEFAULT 0.0,
+    lng numeric DEFAULT 0.0
 );
 
 
@@ -383,12 +383,12 @@ ALTER TABLE public.route_list OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.route_list_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.route_list_id_seq OWNER TO postgres;
@@ -405,13 +405,13 @@ ALTER SEQUENCE public.route_list_id_seq OWNED BY public.route_list.id;
 --
 
 CREATE TABLE public.stock (
-  id integer NOT NULL,
-  name character varying(45) NOT NULL,
-  company_id integer NOT NULL,
-  address character varying(50) NOT NULL,
-  active boolean DEFAULT true,
-  lat double precision,
-  lng double precision
+    id integer NOT NULL,
+    name character varying(45) NOT NULL,
+    company_id integer NOT NULL,
+    address character varying(50) NOT NULL,
+    active boolean DEFAULT true,
+    lat double precision,
+    lng double precision
 );
 
 
@@ -422,12 +422,12 @@ ALTER TABLE public.stock OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.stock_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.stock_id_seq OWNER TO postgres;
@@ -444,9 +444,9 @@ ALTER SEQUENCE public.stock_id_seq OWNED BY public.stock.id;
 --
 
 CREATE TABLE public.tokens (
-  id integer NOT NULL,
-  email character varying(50),
-  token_value character varying(100)
+    id integer NOT NULL,
+    email character varying(50),
+    token_value character varying(100)
 );
 
 
@@ -457,12 +457,12 @@ ALTER TABLE public.tokens OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.tokens_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.tokens_id_seq OWNER TO postgres;
@@ -479,22 +479,22 @@ ALTER SEQUENCE public.tokens_id_seq OWNED BY public.tokens.id;
 --
 
 CREATE TABLE public.users (
-  id integer NOT NULL,
-  username character varying(20),
-  email character varying(50),
-  password character varying(100),
-  user_role character varying(20),
-  company bigint,
-  birth_day date,
-  first_name character varying(50),
-  second_name character varying(50) NOT NULL,
-  third_name character varying(50),
-  city character varying(60),
-  country character varying(60),
-  street character varying(60),
-  house_number character varying(60),
-  flat_number character varying(60),
-  reg_date timestamp without time zone
+    id integer NOT NULL,
+    username character varying(20),
+    email character varying(50),
+    password character varying(100),
+    user_role character varying(20),
+    company bigint,
+    birth_day date,
+    first_name character varying(50),
+    second_name character varying(50) NOT NULL,
+    third_name character varying(50),
+    city character varying(60),
+    country character varying(60),
+    street character varying(60),
+    house_number character varying(60),
+    flat_number character varying(60),
+    reg_date timestamp without time zone
 );
 
 
@@ -505,12 +505,12 @@ ALTER TABLE public.users OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.users_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.users_id_seq OWNER TO postgres;
@@ -527,14 +527,14 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 --
 
 CREATE TABLE public.waybill (
-  id integer NOT NULL,
-  status integer DEFAULT 0,
-  driver integer NOT NULL,
-  auto integer NOT NULL,
-  date_departure date,
-  date_arrival date,
-  check_date date,
-  user_id integer
+    id integer NOT NULL,
+    status integer DEFAULT 0,
+    driver integer NOT NULL,
+    auto integer NOT NULL,
+    date_departure date,
+    date_arrival date,
+    check_date date,
+    user_id integer
 );
 
 
@@ -545,12 +545,12 @@ ALTER TABLE public.waybill OWNER TO postgres;
 --
 
 CREATE SEQUENCE public.waybill_id_seq
-AS integer
-START WITH 1
-INCREMENT BY 1
-NO MINVALUE
-NO MAXVALUE
-CACHE 1;
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
 
 ALTER TABLE public.waybill_id_seq OWNER TO postgres;
@@ -763,18 +763,18 @@ INSERT INTO public.route_list (id, point, point_level, waybill_id, marked, lat, 
 -- Data for Name: stock; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (1, 'Склад 1', 1, 'Брусничная 12', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (3, 'Склад 3', 1, 'Иванова 44', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (8, 'Склад CV4', 3, 'Портовая 17', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (7, 'Склад 12', 2, 'Демидова 10', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (4, 'Склад 17', 1, 'Држный берег 7', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (10, 'Склад 12', 1, 'Адрес', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (12, 'Склад 12', 1, 'Адрес', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (5, 'Склд 10', 1, 'Кольная 3', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (6, 'Склад 16', 1, 'Шаманова 17', true, NULL, NULL);
-INSERT INTO public.stock (id, name, company_id, address, active, lan, lng) VALUES (11, 'Складское помещение', 1, 'Белого В.А.', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (1, 'Склад 1', 1, 'Брусничная 12', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (3, 'Склад 3', 1, 'Иванова 44', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (8, 'Склад CV4', 3, 'Портовая 17', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (9, 'Склад CV11', 3, 'Красноармейская 91', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (7, 'Склад 12', 2, 'Демидова 10', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (4, 'Склад 17', 1, 'Држный берег 7', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (10, 'Склад 12', 1, 'Адрес', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (12, 'Склад 12', 1, 'Адрес', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (2, 'Склад 2', 1, 'Солнечный берег 19', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (5, 'Склд 10', 1, 'Кольная 3', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (6, 'Склад 16', 1, 'Шаманова 17', true, NULL, NULL);
+INSERT INTO public.stock (id, name, company_id, address, active, lat, lng) VALUES (11, 'Складское помещение', 1, 'Белого В.А.', true, NULL, NULL);
 
 
 --
@@ -904,7 +904,7 @@ SELECT pg_catalog.setval('public.waybill_id_seq', 8, true);
 --
 
 ALTER TABLE ONLY public.auto
-ADD CONSTRAINT auto_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT auto_pkey PRIMARY KEY (id);
 
 
 --
@@ -912,7 +912,7 @@ ADD CONSTRAINT auto_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.cancellation_act
-ADD CONSTRAINT cancellation_act_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT cancellation_act_pkey PRIMARY KEY (id);
 
 
 --
@@ -920,7 +920,7 @@ ADD CONSTRAINT cancellation_act_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.client
-ADD CONSTRAINT client_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT client_pkey PRIMARY KEY (id);
 
 
 --
@@ -928,7 +928,7 @@ ADD CONSTRAINT client_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.company
-ADD CONSTRAINT company_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT company_pkey PRIMARY KEY (id);
 
 
 --
@@ -936,7 +936,7 @@ ADD CONSTRAINT company_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.consignment
-ADD CONSTRAINT consignment_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT consignment_pkey PRIMARY KEY (id);
 
 
 --
@@ -944,7 +944,7 @@ ADD CONSTRAINT consignment_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.driver
-ADD CONSTRAINT driver_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT driver_pkey PRIMARY KEY (id);
 
 
 --
@@ -952,7 +952,7 @@ ADD CONSTRAINT driver_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.orders
-ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
 
 
 --
@@ -960,7 +960,7 @@ ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.product
-ADD CONSTRAINT product_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT product_pkey PRIMARY KEY (id);
 
 
 --
@@ -968,7 +968,7 @@ ADD CONSTRAINT product_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.route_list
-ADD CONSTRAINT route_list_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT route_list_pkey PRIMARY KEY (id);
 
 
 --
@@ -976,7 +976,7 @@ ADD CONSTRAINT route_list_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.stock
-ADD CONSTRAINT stock_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT stock_pkey PRIMARY KEY (id);
 
 
 --
@@ -984,7 +984,7 @@ ADD CONSTRAINT stock_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.tokens
-ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -992,7 +992,7 @@ ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.users
-ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --
@@ -1000,7 +1000,7 @@ ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.waybill
-ADD CONSTRAINT waybill_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT waybill_pkey PRIMARY KEY (id);
 
 
 --
@@ -1008,7 +1008,7 @@ ADD CONSTRAINT waybill_pkey PRIMARY KEY (id);
 --
 
 ALTER TABLE ONLY public.auto
-ADD CONSTRAINT auto_company_owner_fkey FOREIGN KEY (company_owner) REFERENCES public.company(id) ON DELETE CASCADE;
+    ADD CONSTRAINT auto_company_owner_fkey FOREIGN KEY (company_owner) REFERENCES public.company(id) ON DELETE CASCADE;
 
 
 --
@@ -1016,7 +1016,7 @@ ADD CONSTRAINT auto_company_owner_fkey FOREIGN KEY (company_owner) REFERENCES pu
 --
 
 ALTER TABLE ONLY public.cancellation_act
-ADD CONSTRAINT cancellation_act_consignment_id_fkey FOREIGN KEY (consignment_id) REFERENCES public.consignment(id);
+    ADD CONSTRAINT cancellation_act_consignment_id_fkey FOREIGN KEY (consignment_id) REFERENCES public.consignment(id);
 
 
 --
@@ -1024,7 +1024,7 @@ ADD CONSTRAINT cancellation_act_consignment_id_fkey FOREIGN KEY (consignment_id)
 --
 
 ALTER TABLE ONLY public.client
-ADD CONSTRAINT client_client_owner_fkey FOREIGN KEY (client_owner) REFERENCES public.company(id);
+    ADD CONSTRAINT client_client_owner_fkey FOREIGN KEY (client_owner) REFERENCES public.company(id);
 
 
 --
@@ -1032,7 +1032,7 @@ ADD CONSTRAINT client_client_owner_fkey FOREIGN KEY (client_owner) REFERENCES pu
 --
 
 ALTER TABLE ONLY public.consignment
-ADD CONSTRAINT consignment_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
+    ADD CONSTRAINT consignment_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
 
 
 --
@@ -1040,7 +1040,7 @@ ADD CONSTRAINT consignment_order_id_fkey FOREIGN KEY (order_id) REFERENCES publi
 --
 
 ALTER TABLE ONLY public.driver
-ADD CONSTRAINT driver_company_of_driver_fkey FOREIGN KEY (company_of_driver) REFERENCES public.company(id);
+    ADD CONSTRAINT driver_company_of_driver_fkey FOREIGN KEY (company_of_driver) REFERENCES public.company(id);
 
 
 --
@@ -1048,7 +1048,7 @@ ADD CONSTRAINT driver_company_of_driver_fkey FOREIGN KEY (company_of_driver) REF
 --
 
 ALTER TABLE ONLY public.orders
-ADD CONSTRAINT orders_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id);
+    ADD CONSTRAINT orders_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id);
 
 
 --
@@ -1056,7 +1056,7 @@ ADD CONSTRAINT orders_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.c
 --
 
 ALTER TABLE ONLY public.orders
-ADD CONSTRAINT orders_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
+    ADD CONSTRAINT orders_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
 
 
 --
@@ -1064,7 +1064,7 @@ ADD CONSTRAINT orders_company_id_fkey FOREIGN KEY (company_id) REFERENCES public
 --
 
 ALTER TABLE ONLY public.orders
-ADD CONSTRAINT orders_receiver_fkey FOREIGN KEY (receiver) REFERENCES public.stock(id);
+    ADD CONSTRAINT orders_receiver_fkey FOREIGN KEY (receiver) REFERENCES public.stock(id);
 
 
 --
@@ -1072,7 +1072,7 @@ ADD CONSTRAINT orders_receiver_fkey FOREIGN KEY (receiver) REFERENCES public.sto
 --
 
 ALTER TABLE ONLY public.orders
-ADD CONSTRAINT orders_sender_fkey FOREIGN KEY (sender) REFERENCES public.stock(id);
+    ADD CONSTRAINT orders_sender_fkey FOREIGN KEY (sender) REFERENCES public.stock(id);
 
 
 --
@@ -1080,7 +1080,7 @@ ADD CONSTRAINT orders_sender_fkey FOREIGN KEY (sender) REFERENCES public.stock(i
 --
 
 ALTER TABLE ONLY public.orders
-ADD CONSTRAINT orders_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
+    ADD CONSTRAINT orders_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
 
 
 --
@@ -1088,7 +1088,7 @@ ADD CONSTRAINT orders_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public
 --
 
 ALTER TABLE ONLY public.product
-ADD CONSTRAINT product_cancellation_act_fkey FOREIGN KEY (cancellation_act) REFERENCES public.cancellation_act(id);
+    ADD CONSTRAINT product_cancellation_act_fkey FOREIGN KEY (cancellation_act) REFERENCES public.cancellation_act(id);
 
 
 --
@@ -1096,7 +1096,7 @@ ADD CONSTRAINT product_cancellation_act_fkey FOREIGN KEY (cancellation_act) REFE
 --
 
 ALTER TABLE ONLY public.product
-ADD CONSTRAINT product_product_consignment_fkey FOREIGN KEY (product_consignment) REFERENCES public.consignment(id);
+    ADD CONSTRAINT product_product_consignment_fkey FOREIGN KEY (product_consignment) REFERENCES public.consignment(id);
 
 
 --
@@ -1104,7 +1104,7 @@ ADD CONSTRAINT product_product_consignment_fkey FOREIGN KEY (product_consignment
 --
 
 ALTER TABLE ONLY public.route_list
-ADD CONSTRAINT route_list_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
+    ADD CONSTRAINT route_list_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES public.waybill(id);
 
 
 --
@@ -1112,7 +1112,7 @@ ADD CONSTRAINT route_list_waybill_id_fkey FOREIGN KEY (waybill_id) REFERENCES pu
 --
 
 ALTER TABLE ONLY public.stock
-ADD CONSTRAINT stock_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
+    ADD CONSTRAINT stock_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.company(id);
 
 
 --
@@ -1120,7 +1120,7 @@ ADD CONSTRAINT stock_company_id_fkey FOREIGN KEY (company_id) REFERENCES public.
 --
 
 ALTER TABLE ONLY public.company
-ADD CONSTRAINT sysadmin_id_ref FOREIGN KEY (locker_id) REFERENCES public.users(id);
+    ADD CONSTRAINT sysadmin_id_ref FOREIGN KEY (locker_id) REFERENCES public.users(id);
 
 
 --
@@ -1128,7 +1128,7 @@ ADD CONSTRAINT sysadmin_id_ref FOREIGN KEY (locker_id) REFERENCES public.users(i
 --
 
 ALTER TABLE ONLY public.waybill
-ADD CONSTRAINT user_checker_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
+    ADD CONSTRAINT user_checker_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1136,7 +1136,7 @@ ADD CONSTRAINT user_checker_id_fk FOREIGN KEY (user_id) REFERENCES public.users(
 --
 
 ALTER TABLE ONLY public.users
-ADD CONSTRAINT users_company_fkey FOREIGN KEY (company) REFERENCES public.company(id);
+    ADD CONSTRAINT users_company_fkey FOREIGN KEY (company) REFERENCES public.company(id);
 
 
 --
@@ -1144,7 +1144,7 @@ ADD CONSTRAINT users_company_fkey FOREIGN KEY (company) REFERENCES public.compan
 --
 
 ALTER TABLE ONLY public.waybill
-ADD CONSTRAINT waybill_auto_fkey FOREIGN KEY (auto) REFERENCES public.auto(id);
+    ADD CONSTRAINT waybill_auto_fkey FOREIGN KEY (auto) REFERENCES public.auto(id);
 
 
 --
@@ -1152,9 +1152,10 @@ ADD CONSTRAINT waybill_auto_fkey FOREIGN KEY (auto) REFERENCES public.auto(id);
 --
 
 ALTER TABLE ONLY public.waybill
-ADD CONSTRAINT waybill_driver_fkey FOREIGN KEY (driver) REFERENCES public.driver(id);
+    ADD CONSTRAINT waybill_driver_fkey FOREIGN KEY (driver) REFERENCES public.driver(id);
 
 
 --
 -- PostgreSQL database dump complete
 --
+
