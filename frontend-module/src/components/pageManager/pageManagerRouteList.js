@@ -1,5 +1,6 @@
 ﻿import React, {Component} from "react";
 import {GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
+import * as ReactDOM from "react-dom";
 
 class ManagerRouteList extends Component {
 
@@ -10,9 +11,9 @@ class ManagerRouteList extends Component {
         this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onInfoWindowClose = this.onInfoWindowClose.bind(this);
+        this.onInfoWindowOpen = this.onInfoWindowOpen.bind(this);
         this.onMapClick = this.onMapClick.bind(this);
         this.addPoint = this.addPoint.bind(this);
-        this.deletePoint = this.deletePoint.bind(this);
         this.state = {
             routePoints: [],
             orderId: "",
@@ -71,15 +72,16 @@ class ManagerRouteList extends Component {
 
     }
 
-    deletePoint(props) {
+    deletePoint(pointId) {
         console.log("delete");
-        console.log(props.pointId);
+        console.log(pointId);
         const ref = this;
-        fetch(`http://localhost:8080/api/manager/deletePoint/${props.pointId}`, {method: "DELETE", headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+        fetch(`http://localhost:8080/api/manager/deletePoint/${pointId}`, {method: "DELETE", headers: {'Auth-token': localStorage.getItem("Auth-token")}})
             .then(function(response) {
                 return response.json();
             }).then(function(result) {
                 if(result === true) {
+                    ref.onInfoWindowClose();
                     ref.forceUpdateHandler();
                 }
             })
@@ -126,6 +128,12 @@ class ManagerRouteList extends Component {
             showingInfoWindow: false
         });
     }
+    onInfoWindowOpen(props, e, markerId) { //For mark button. Doesn't work without it
+        console.log(props);
+        console.log(markerId);
+        const button = <div className="table_button bg-secondary text-white" onClick={this.deletePoint.bind(this, markerId)} pointId={markerId}>Удалить</div>
+        ReactDOM.render(React.Children.only(button), document.getElementById("info-window-container"));
+    }
     onMapClick = (mapProps, clickEvent, event) => {
         let position = event.latLng;
         this.addPoint(position.lat(), position.lng());
@@ -149,10 +157,14 @@ class ManagerRouteList extends Component {
                         return this.renderMarkers(element);
                     })
                 }
-                <InfoWindow onClose={this.onInfoWindowClose} marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
+                <InfoWindow onClose={this.onInfoWindowClose}
+                            onOpen={e => {
+                                this.onInfoWindowOpen(this.props, e, this.state.activeMarker.id);
+                            }}
+                            marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
                     <div>
                         <h3>{this.state.activeMarker.name}</h3>
-                        <div className="table_button bg-secondary text-white" onClick={this.deletePoint}>Удалить</div>
+                        <div className="table_button bg-secondary text-white" id="info-window-container"></div>
                     </div>
                 </InfoWindow>
             </Map>
