@@ -9,10 +9,8 @@ body {
   width: 100%;
   max-width: 330px;
   padding: 25px;
-  padding-top: 0px;
   margin: auto;
-  -webkit-box-shadow: 0 10px 60px 0 rgba(0,0,0,0.3);
-  box-shadow: 0 10px 60px 0 rgba(0,0,0,0.3);
+  margin-top: 10%;
 }
 .form-signin .checkbox {
   font-weight: 400;
@@ -32,7 +30,8 @@ body {
   text-align: center;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-    margin-bottom: 10px;
+  margin-bottom: 20px;
+
 }
 
 #icon {
@@ -44,9 +43,7 @@ body {
 
 
 }
-.loginbutton{
-  box-shadow: 0 0 15px 2px #2196F3;
-}
+
 
 .text_left{
     text-align: left;
@@ -97,6 +94,9 @@ body {
 .grey_form{
     color: white;
     background-color: #4e4e4e;
+}
+.center{
+    text-align: center;
 }
 .table_button{
     padding-left: 10px;

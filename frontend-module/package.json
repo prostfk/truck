@@ -21,6 +21,7 @@
     "react-google-places-suggest": "^3.5.0",
     "react-icons-kit": "^1.2.0",
     "react-js-pagination": "^3.0.2",
+    "react-notifications": "^1.4.3",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
