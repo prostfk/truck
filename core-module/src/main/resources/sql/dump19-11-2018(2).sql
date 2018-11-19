@@ -410,7 +410,7 @@ CREATE TABLE public.stock (
   company_id integer NOT NULL,
   address character varying(50) NOT NULL,
   active boolean DEFAULT true,
-  lan double precision,
+  lat double precision,
   lng double precision
 );
 
