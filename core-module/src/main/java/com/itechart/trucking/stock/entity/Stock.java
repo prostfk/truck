@@ -17,6 +17,8 @@ public class Stock {
     private String address;
     private String name;
     private Boolean active;
+    private Double lng;
+    private Double lat;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
@@ -33,6 +35,14 @@ public class Stock {
     public Stock(String address, String name, Company company) {
         this.address = address;
         this.name = name;
+        this.company = company;
+    }
+
+    public Stock(String address, String name, Double lng, Double lat, Company company) {
+        this.address = address;
+        this.name = name;
+        this.lng = lng;
+        this.lat = lat;
         this.company = company;
     }
 

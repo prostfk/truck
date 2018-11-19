@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 
-
 class pageUserLogin extends Component {
 
     constructor(props) {
@@ -14,7 +13,6 @@ class pageUserLogin extends Component {
         this.processLogin = this.processLogin.bind(this);
         document.title = "Вход"
     }
-
     setUsername(event) {
         this.setState({
             email: event.target.value
@@ -29,19 +27,18 @@ class pageUserLogin extends Component {
 
     render() {
         return (
-            <form className="form-signin" id="login-form">
-                <div id="loginicon">
-                    <img id="icon" src="/static/img/login.png" alt=""></img>
-                </div>
-                <input type="username" id="inputUsername" value={this.state.email} onChange={this.setUsername}
+
+            <form className="form-signin center" id="login-form">
+                <span style={{color: 'red'}} id="error-span"/>
+
+                <input type="text" id="inputUsername" value={this.state.email} onChange={this.setUsername}
                        className="form-control"
                        placeholder="Логин" required=""
                        autoFocus=""/>
                 <input type="password" value={this.state.password} id="inputPassword" onChange={this.setPassword}
                        className="form-control"
                        placeholder="Пароль" required=""/>
-                <span style={{color: 'red'}} id="error-span"/>
-                <button id="loginbutton" className="loginbutton btn btn-lg btn-primary btn-block"
+                <button className="btn btn-lg btn-secondary"
                         onClick={this.processLogin} type="button">Вход
                 </button>
             </form>)
@@ -66,7 +63,7 @@ class pageUserLogin extends Component {
                     localStorage.setItem("role", data.role);
                     this.props.history.push('/');
                 }else{
-                    document.getElementById('error-span').innerText = "Check your data";
+                    document.getElementById('error-span').innerText = "Неправильные данные";
                 }
             })
         }, err => console.log(err))

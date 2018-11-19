@@ -9,7 +9,12 @@ import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +37,23 @@ public class CommonControllers {
 
 
     // dispatcher | manager
-    @RequestMapping(value = "/orders/",method = RequestMethod.GET)
-    public List<OrderDto> getOrders(@ModelAttribute Order order){
+    @RequestMapping(value = "/orders",method = RequestMethod.GET)
+    public Object getOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
-        List<Order> orders = user.getCompany().getCompanyOrders();
-        return Odt.OrderToDtoList(orders);
+
+        Page<Order> orderPage = orderRepository.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
+        return orderPage.map(order -> new OrderDto(order));
     }
 
     @GetMapping(value = "/stocks")
-    public List<StockDto> stocks() {
+    public Object stocks(@RequestParam(value = "page") int pageId) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
-        return Odt.StockListToDtoList(stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true));
+
+        Page<Stock> stockPage = stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(),true, PageRequest.of(pageId-1, 5));
+
+        return stockPage.map(stock -> new StockDto(stock));
     }
 
     @DeleteMapping(value = "/stocks")
@@ -77,6 +86,8 @@ public class CommonControllers {
         stock1.setName(stock.getName());
         stock1.setAddress(stock.getAddress());
         stock1.setCompany(userByEmail.getCompany());
+        stock1.setLat(stock.getLat());
+        stock1.setLng(stock.getLng())   ;
         stockRepository.save(stock1);
 
         return Odt.StockListToDtoList(userByEmail.getCompany().getCompanyStocks());

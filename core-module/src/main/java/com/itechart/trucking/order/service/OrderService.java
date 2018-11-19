@@ -17,11 +17,17 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.entity.Waybill;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -67,5 +73,71 @@ public class OrderService {
 //        order.setCompany(company);
         return order;
     }
+
+    public Order findOrderById(Long id){
+        return orderRepository.findOrderById(id);
+    }
+
+    public Page<Order> findByCompany(Company company, Pageable pageable){
+        return orderRepository.findByCompany(company,pageable);
+    }
+
+    public List<Order> findCustomQueryOrderByDriver(Long driverId){
+        return orderRepository.findCustomQueryOrderByDriver(driverId);
+    }
+
+    public Order saveOrder(String orderName, Long clientId, Long sender, Long receiver, String dateDeparture, String dateArrival, Long waybillId, Long companyId){
+        return orderRepository.saveOrder(orderName,clientId,sender,receiver,dateDeparture,dateArrival,waybillId,companyId);
+    }
+
+    public Order updateOrder(Long orderId, String orderName,Long clientId, Long sender,Long receiver, String dateDeparture, String dateArrival, Long waybillId,Long companyId){
+        return orderRepository.updateOrder(orderId,orderName,clientId,sender,receiver,dateDeparture,dateArrival,waybillId,companyId);
+    }
+
+    public List<Order> findAllByCompany(Company company){
+        return orderRepository.findAllByCompany(company);
+    }
+
+    public List<Order> findCustomQueryOrderByDateAcceptedLastSixMont(Long companyId){
+        return orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(companyId);
+    }
+
+    public List<Order> findCustomQueryOrderByDateExecutedLastSixMont(Long companyId){
+        return orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(companyId);
+    }
+
+    public List<Order> findAllByStatusAndCompanyId(Integer active, Long companyId){
+        return orderRepository.findAllByStatusAndCompanyId(active,companyId);
+    }
+
+    public Page<Order> findAllByStatusAndCompanyId(Integer active, Long companyId,Pageable pageable){
+        return orderRepository.findAllByStatusAndCompanyId(active, companyId, pageable);
+    }
+
+    public List<Order> findOrdersByDateAcceptedBetweenAndCompany(java.util.Date startDateAccepted, java.util.Date endDateAccepted, Company company){
+        return orderRepository.findOrdersByDateAcceptedBetweenAndCompany(startDateAccepted,endDateAccepted,company);
+    }
+
+    public List<Order> findByDates(java.util.Date startDateAccepted, java.util.Date endDateAccepted, Long company){
+        return orderRepository.findBydates(startDateAccepted,endDateAccepted,company);
+    }
+
+    public List<Order> findAllByStatus(Integer status){
+        return orderRepository.findAllByStatus(status);
+    }
+
+    public Order save(@Valid Order order){
+        return orderRepository.save(order);
+    }
+
+    public Order update(@Valid Order order){
+        return orderRepository.save(order);
+    }
+
+    public void remove(Order order){
+        orderRepository.delete(order);
+    }
+
+
 
 }

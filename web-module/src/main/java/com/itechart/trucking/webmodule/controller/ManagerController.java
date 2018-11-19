@@ -35,6 +35,8 @@ import com.itechart.trucking.waybill.repository.WaybillRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -68,12 +70,12 @@ public class ManagerController {
     private UserRepository userRepository;
 
     @GetMapping(value = "/manager/orders")//todo findByStatus change on number value(Murat, please)
-    public List<OrderDto> findActiveOrders() {
+    public Object findActiveOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        List<Order> active = orderRepository.findAllByStatusAndCompanyId(1, userByUsername.getCompany().getId());
 
-        return Odt.OrderToDtoList(active);
+        Page<Order> orderPage = orderRepository.findAllByStatusAndCompanyId(1,userByUsername.getCompany().getId(), PageRequest.of(pageId-1, 5));
+        return orderPage.map(order -> new OrderDto(order));
     }
 
     @GetMapping(value = "/manager/orders/{id}")
@@ -83,10 +85,16 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/manager/products/{id}")
-    public List<ProductDto> findProductsByOrderId(@PathVariable Long id) {
+    public Object findProductsByOrderId(@PathVariable Long id,@RequestParam(value = "page") int pageId) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+
         Optional<Order> order = orderRepository.findById(id);
-        List<Product> productList = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
-        return Odt.ProductToDtoList(productList);
+        if(!order.isPresent() || order.get().getCompany().getId()!=userByEmail.getCompany().getId()) return null;
+
+        Page<Product> productPage = productRepository.findAllByConsignment(consignmentRepository.findConsignmentByOrder(order.get()),PageRequest.of(pageId-1, 5));
+
+        return productPage.map(product -> new ProductDto(product));
     }
 
     @GetMapping(value = "/manager/routeList/{id}")

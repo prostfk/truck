@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +31,11 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO users(username, email, password, user_role, company, birth_day, first_name, second_name, third_name, country, city, street, house_number, flat_number) VALUES (:username, :email, :userPassword, :userRole, :companyId, :birthDay, :firstName, :secondName," +
-            ":thirdName, :country, :city, :street, :houseNumber, :flatNumber)",nativeQuery = true)
-    void saveUser(@Param("username")String username, @Param("email")String email, @Param("userPassword")String userPassword, @Param("userRole")String userRole, @Param("companyId")Long companyId,@Param("birthDay") Date birthDay,
-                  @Param("firstName")String firstName, @Param("secondName") String secondName, @Param("thirdName") String thirdName, @Param("country") String country,
-                  @Param("city") String city, @Param("street") String street, @Param("houseNumber") String houseNumber, @Param("flatNumber") String flatNumber);
+    @Query(value = "INSERT INTO users(username, email, password, user_role, company, birth_day, first_name, second_name, third_name, country, city, street, house_number, flat_number, reg_date) VALUES (:username, :email, :userPassword, :userRole, :companyId, :birthDay, :firstName, :secondName," +
+            ":thirdName, :country, :city, :street, :houseNumber, :flatNumber, :reg_date)",nativeQuery = true)
+    void saveUser(@Param("username") String username, @Param("email") String email, @Param("userPassword") String userPassword, @Param("userRole") String userRole, @Param("companyId") Long companyId, @Param("birthDay") Date birthDay,
+                  @Param("firstName") String firstName, @Param("secondName") String secondName, @Param("thirdName") String thirdName, @Param("country") String country,
+                  @Param("city") String city, @Param("street") String street, @Param("houseNumber") String houseNumber, @Param("flatNumber") String flatNumber,@Param("reg_date") Timestamp reg_date);
 
     @Modifying
     @Transactional

@@ -11,6 +11,8 @@ public class RouteListDto {
     private String point;
     private Integer pointLevel;
     private Boolean marked;
+    private Double lat;
+    private Double lng;
 
     private WaybillDto waybill;
 
@@ -19,6 +21,8 @@ public class RouteListDto {
         this.point = routeList.getPoint();
         this.pointLevel = routeList.getPointLevel();
         this.marked = routeList.getMarked();
+        this.lat = routeList.getLat();
+        this.lng = routeList.getLng();
     }
 
     public void setWaybill(Waybill waybill) {

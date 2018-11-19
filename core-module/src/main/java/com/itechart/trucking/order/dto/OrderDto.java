@@ -1,5 +1,6 @@
 package com.itechart.trucking.order.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.company.dto.CompanyDto;
@@ -16,6 +17,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Map;
 
 @Data
 public class OrderDto {
@@ -66,5 +68,11 @@ public class OrderDto {
 
     public void setConsignment(Consignment consignment) {
         this.consignment = new ConsignmentDto(consignment);
+    }
+
+    public static Map<String, Object> toMap(OrderDto orderDto){
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<java.lang.String, java.lang.Object> map = oMapper.convertValue(orderDto, Map.class);
+        return map;
     }
 }

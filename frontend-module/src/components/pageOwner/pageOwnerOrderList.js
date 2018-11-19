@@ -34,9 +34,9 @@ class OwnerOrderList extends React.Component {
     }
 
     /*render row of table ( calls from html ) */
-    renderTable(order) {
+    renderTable(order, index) {
         if (!order) return;
-        return <div className="row table_row order_row">
+        return <div key={index} className="row table_row order_row">
             <div className="col-md-1">{order.client.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
@@ -69,8 +69,8 @@ class OwnerOrderList extends React.Component {
                     <div className="col-md-1">Акт списания</div>
                 </div>
                 {
-                    this.state.orders.map((element) => {
-                        return this.renderTable(element);
+                    this.state.orders.map((element, index) => {
+                        return this.renderTable(element, index);
                     })
                 }
             </div>

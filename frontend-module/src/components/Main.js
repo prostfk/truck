@@ -6,12 +6,12 @@ import DispatcherCreateOrderPage from "./pageDispatcher/pageDispatcherCreateOrde
 import DispatcherOrderList from "./pageDispatcher/pageDispatcherOrderList"
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
-import PageStockList from "./pageAdmin/pageStockList";
 import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import DriverRouteList from "./pageDriver/pageRouteList";
+import {DriverRouterListNew} from "./pageDriver/pageRouterListNew";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
 import OwnerOrderList from "./pageOwner/pageOwnerOrderList.js";
 import OwnerRouteList from "./pageOwner/pageOwnerRouteList.js";
@@ -25,13 +25,14 @@ import IndexComponent from './indexComponent/indexComponent'
 import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
 import AutoList from "./pageAdmin/pageAutoList";
+import pageDispatcherOrderListOnCalendar from "./pageDispatcher/pageDispatcherOrderListOnCalendar";
 // import EditUser from "./pageSysAdmin/pageEditUser";
 import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
 import DriverConsignment from "./pageDriver/pageConsignment";
-
+import OwnerCompanyClients from "./pageOwner/pageOwnerCompanyClients";
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 import OwnerStockList from "./pageOwner/pageOwnerStockList";
 import TestComponent from "./testComponent/testComponent";
@@ -57,12 +58,13 @@ class MainController extends React.Component {
                     <Route exact path="/stocks" component={PageStockListNew}/> {/* stock list for admin */}
                     <Route exact path="/autos" component={AutoList}/> {/* auto list for admin */}
                     <Route exact path="/orders/" component={DispatcherOrderList}/>
+                    <Route exact path="/ordersCalendar/" component={pageDispatcherOrderListOnCalendar}/>
                     <Route exact path="/orders/:orderId/edit"
                            component={DispatcherEditOrder}/> {/*edit waybill(ttn) and order*/}
                     <Route exact path="/orders/createOrder" component={DispatcherCreateOrderPage}/>
                     <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment}/>
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
-                    <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouteList}/> {/*driver*/}
+                    <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouterListNew}/> {/*driver*/}
                     <Route exact path="/driver/consignment/:consignmentId" component={DriverConsignment}/> {/*driver*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
                     {/*<Route path="/manager/edit/*" component={ManagerHeader}/>*/}
@@ -76,6 +78,7 @@ class MainController extends React.Component {
                     <Route exact path="/owner/statistics" component={CompanyOwnerStatistics}/>
                     <Route exact path="/owner/usersList" component={OwnerUsersList}/>
                     <Route exact path="/owner/stocks" component={OwnerStockList}/>
+                    <Route exact path="/owner/clients" component={OwnerCompanyClients}/>
 
                 </div>
 

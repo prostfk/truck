@@ -17,6 +17,9 @@ export default class DispatcherHeader extends Component {
                             <Link to={`/orders`} className="nav-link">Заказы</Link>
                         </li>
                         <li className="nav-item active">
+                            <Link to={`/ordersCalendar`} className="nav-link">Календарь</Link>
+                        </li>
+                        <li className="nav-item active">
                             <Link to={`/stocks`} className="nav-link">Склады</Link>
                         </li>
                     </ul>

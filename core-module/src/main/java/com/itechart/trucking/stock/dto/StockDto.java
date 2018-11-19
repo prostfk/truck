@@ -1,5 +1,6 @@
 package com.itechart.trucking.stock.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.odt.Odt;
@@ -9,6 +10,7 @@ import com.itechart.trucking.stock.entity.Stock;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Data
@@ -17,6 +19,9 @@ public class StockDto {
     private String address;
     private String name;
     private Boolean active;
+    private Double lat;
+    private Double lng;
+
 
     private CompanyDto company;
     private List<OrderDto> stockSenderOrders;
@@ -27,6 +32,8 @@ public class StockDto {
         this.address = stock.getAddress();
         this.name = stock.getName();
         this.active = stock.getActive();
+        this.lat = stock.getLat();
+        this.lng = stock.getLng();
     }
 
     public StockDto(Long id, String name,String address) {
@@ -48,5 +55,11 @@ public class StockDto {
 
     public void setStockReceiverOrders(List<Order> stockReceiverOrders) {
         this.stockReceiverOrders = Odt.OrderToDtoList(stockReceiverOrders);
+    }
+
+    public static Map<String, Object> toMap(StockDto stockDto){
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<java.lang.String, java.lang.Object> map = oMapper.convertValue(stockDto, Map.class);
+        return map;
     }
 }

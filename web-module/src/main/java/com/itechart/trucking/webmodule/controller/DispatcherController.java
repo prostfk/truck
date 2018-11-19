@@ -18,6 +18,7 @@ import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.formData.OrderFormData;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
+import com.itechart.trucking.order.dto.OrderDtoCalendar;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
@@ -44,6 +45,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @PreAuthorize("hasAuthority('ROLE_DISPATCHER')")
@@ -262,6 +265,66 @@ public class DispatcherController {
             }
         }
         return product;
+    }
+
+    @RequestMapping(value = "/ordersByDate",method = RequestMethod.GET)
+    public List<OrderDtoCalendar> getOrders(@RequestParam(value = "from") String from, @RequestParam(value = "to") String to) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(name);
+
+        LocalDate localDateFrom = LocalDate.parse(from);
+        Date localDateFromDate = Date.from(localDateFrom.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate localDateTo = LocalDate.parse(to);
+        Date localDateToDate = Date.from(localDateTo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        List<Order> orders = orderRepository.findBydates(localDateFromDate,localDateToDate,user.getCompany().getId());
+
+        List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders,item -> new OrderDtoCalendar(item));
+        return orderDtoCalendars;
+    }
+
+    // we should test if out driver and auto is free for new date
+    @PutMapping(value = "/waybill/changedate")
+    public Boolean changeDateOfWaybill(@ModelAttribute(value = "orderId") String orderIdS,@ModelAttribute(value = "daysOffset") String daysOffsetS) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByEmail = userRepository.findUserByUsername(name);
+        Long orderId = Long.parseLong(orderIdS);
+        Long daysOffset = Long.parseLong(daysOffsetS);
+        if(orderId==null || daysOffset==null) return false;
+
+        Order order = orderRepository.findOrderById(orderId);
+        if(userByEmail.getCompany().getId()!=orderRepository.findOrderById(orderId).getCompany().getId()) return false;
+        Waybill waybill = order.getWaybill();
+
+        LocalDate localDateDep = waybill.getDateDeparture().toLocalDate().plusDays(daysOffset);
+        LocalDate localDateArr = waybill.getDateArrival().toLocalDate().plusDays(daysOffset);
+        if(!checkDatesForFreeAutosAndDrivers(userByEmail.getCompany(),waybill,java.sql.Date.valueOf(localDateDep),java.sql.Date.valueOf(localDateArr))) return false;
+        waybill.setDateDeparture(java.sql.Date.valueOf(localDateDep));
+        waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
+
+        waybillRepository.save(waybill);
+
+        return true;
+    }
+
+    private Boolean checkDatesForFreeAutosAndDrivers(Company company,Waybill waybill, java.sql.Date localDateDep, java.sql.Date localDateArr){
+        boolean driverIsFree = false,autoIsFree=false;
+        List<Driver> freeDrivers = waybillRepository.findFreeDriversToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
+        for (Driver driver:freeDrivers) {
+            if (driver.getId()==waybill.getDriver().getId()){
+                driverIsFree=true;
+                break;
+            }
+        }
+        List<Auto> freeAutos = waybillRepository.findFreeAutosToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
+        for (Auto auto:freeAutos) {
+            if (auto.getId()==waybill.getAuto().getId()){
+                autoIsFree=true;
+                break;
+            }
+        }
+
+        return (driverIsFree && autoIsFree);
     }
 
 

@@ -7,6 +7,7 @@ import {edit} from 'react-icons-kit/fa/edit'
 import ModalAcceptDelete from "./modalAcceptDelete";
 import ModalComponentEditAuto from "./modalComponentEditAuto";
 import ValidationUtil from "../commonUtil/validationUtil";
+import Pagination from "react-js-pagination";
 
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
@@ -25,6 +26,9 @@ export default class AutoList extends Component {
             newAutoNumber: '',
             newAutoType: '',
             newAutoFuelConsumption: '',
+            totalElements : 0,
+            totalPages : 0,
+            number:0
         };
         this.fetchToAutos();
     }
@@ -46,8 +50,8 @@ export default class AutoList extends Component {
         return nameVal && numberVal && typeVal && fuelVal;
     };
 
-    fetchToAutos = () => {
-        fetch('http://localhost:8080/api/autos', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+    fetchToAutos = (pageid=1) => {
+        fetch('http://localhost:8080/api/autos?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
@@ -55,7 +59,9 @@ export default class AutoList extends Component {
             }
         }).then(data => {
             this.setState({
-                autos: data
+                autos: data.content,
+                totalElements: data.totalElements,
+                number:++data.number
             })
         })
     };
@@ -93,15 +99,19 @@ export default class AutoList extends Component {
         }
     };
 
-    forceUpdateHandler() {
+    forceUpdateHandler(pageid=1) {
         const refthis = this;
-        fetch('http://localhost:8080/api/autos/', {
+        fetch('http://localhost:8080/api/autos?page='+pageid, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            refthis.setState({autos: result})
+            refthis.setState({
+                autos: result.content,
+                totalElements: result.totalElements,
+                number:++result.number
+            })
         })
     };
 
@@ -194,16 +204,20 @@ export default class AutoList extends Component {
                             return this.renderAuto(auto);
                         })
                     }
-                    <div className="row">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
+                    <div className="table_footer">
+                        <div>
+                            <Pagination
+                                activePage={this.state.number}
+                                totalItemsCount={this.state.totalElements}
+                                itemsCountPerPage={5}
+                                pageRangeDisplayed={5}
+                                hideDisabled={true}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
+                                activeClass={"activePage"}
+                                onChange={this.handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
 
