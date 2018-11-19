@@ -6,6 +6,7 @@ import com.itechart.trucking.consignment.entity.Consignment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -32,6 +33,18 @@ public class CancellationActService {
 
     public CancellationAct findCancellationActByConsignment(Consignment consignment) {
         return cancellationActRepository.findCancellationActByConsignment(consignment);
+    }
+
+    public CancellationAct save(@Valid CancellationAct cancellationAct){
+        return cancellationActRepository.save(cancellationAct);
+    }
+
+    public CancellationAct update(@Valid CancellationAct cancellationAct){
+        return cancellationActRepository.save(cancellationAct);
+    }
+
+    public void remove(CancellationAct cancellationAct){
+        cancellationActRepository.delete(cancellationAct);
     }
 
 

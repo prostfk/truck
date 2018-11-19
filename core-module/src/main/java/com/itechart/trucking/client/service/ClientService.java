@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -34,6 +35,18 @@ public class ClientService {
 
     public Page<Client> findAllByCompany(Company company, Pageable pageable){
         return clientRepository.findAllByCompany(company,pageable);
+    }
+
+    public Client save(@Valid Client client){
+        return clientRepository.save(client);
+    }
+
+    public Client update(@Valid Client client){
+        return clientRepository.save(client);
+    }
+
+    public void remove(Client client){
+        clientRepository.delete(client);
     }
 
 }

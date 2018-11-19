@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 @Service
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     private DriverRepository driverRepository;
     @Autowired
