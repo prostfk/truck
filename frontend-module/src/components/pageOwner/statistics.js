@@ -23,8 +23,8 @@ export default class CompanyOwnerStatistics extends Component {
         document.title = "Статистика";
     }
 
-    xlsSender = () => {
-        fetch("http://localhost:8080/api/company/getFullStat",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+    xlsCompanyInfo = () => {
+        fetch("http://localhost:8080/api/company/statistics",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
             return response.blob()
         }).then(blob=>{
             let url = window.URL.createObjectURL(blob);
@@ -36,6 +36,21 @@ export default class CompanyOwnerStatistics extends Component {
             a.remove();
         })
     };
+
+    xlsDriverInfo = () => {
+        fetch("http://localhost:8080/api/company/statistics/drivers",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+            return response.blob()
+        }).then(blob=>{
+            let url = window.URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `${localStorage.getItem('username')}-drivers.xls`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        })
+    };
+
     componentDidMount(){
         this.getFullStatistics().then(data => {
             this.setState({
@@ -221,13 +236,14 @@ export default class CompanyOwnerStatistics extends Component {
         </Container>
     }
 
-    //todo statistics ui
-
-
     render() {
 
         return (
             <div>
+                <div className="row" id="download">
+                    <button className="btn btn-primary" onClick={this.xlsCompanyInfo}>Загрузить отчет</button>
+                    <button className="btn btn-secondary" onClick={this.xlsDriverInfo}>Загрузить отчет</button>
+                </div>
                 <div className="row">
                     <div className="offset-md-1 col-xl-10 superuserform_companylist">
                         <h2> Заказы:</h2>

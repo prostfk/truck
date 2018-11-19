@@ -21,12 +21,32 @@ public interface WaybillRepository extends CrudRepository<Waybill, Long> {
 
     Waybill findWaybillById(Long id);
 
-    @Query("select d From Driver d where d.id not IN (select w.driver.id FROM Waybill w where (:dDep between w.dateDeparture and w.dateArrival) or (:dArr between w.dateDeparture and w.dateArrival) and w.driver.id = :companyId GROUP BY w.driver.id) AND d.company.id=:companyId")
+    @Query("select d From Driver d where d.id not IN " +
+            "(select w.driver.id FROM Waybill w where " +
+            "(:dDep between w.dateDeparture and w.dateArrival) " +
+            "or (:dArr between w.dateDeparture and w.dateArrival)  GROUP BY w.driver.id " +
+            ") " +
+            "AND d.company.id=:companyId")
     List<Driver> findFreeDrivers(@Param("dDep") java.util.Date dDep,@Param("dArr") java.util.Date dArr,@Param("companyId") Long companyId);
 
-    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where (:dDep between w.dateDeparture and w.dateArrival) or (:dArr between w.dateDeparture and w.dateArrival) and w.auto.id = :companyId GROUP BY w.auto.id) AND a.company.id=:companyId")
+    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where (:dDep between w.dateDeparture and w.dateArrival) or (:dArr between w.dateDeparture and w.dateArrival) GROUP BY w.auto.id) AND a.company.id=:companyId")
     List<Auto> findFreeAutos(@Param("dDep") java.util.Date dDep, @Param("dArr") java.util.Date dArr, @Param("companyId") Long companyId);
 
+    @Query("select d From Driver d where d.id not IN " +
+            "(select w.driver.id FROM Waybill w where " +
+            "((:dDep between w.dateDeparture and w.dateArrival) " +
+            "or (:dArr between w.dateDeparture and w.dateArrival)   " +
+            ") and w.id not in(:wayBillId) GROUP BY w.driver.id)" +
+            "AND d.company.id=:companyId")
+    List<Driver> findFreeDriversToChange(@Param("dDep") java.util.Date dDep,@Param("dArr") java.util.Date dArr,@Param("companyId") Long companyId,@Param("wayBillId") Long wayBillId);
+
+    @Query("select a From Auto a where a.id not IN " +
+            "(select w.auto.id FROM Waybill w where " +
+            "((:dDep between w.dateDeparture and w.dateArrival) " +
+            "or (:dArr between w.dateDeparture and w.dateArrival)" +
+            ") and w.id not in(:wayBillId) GROUP BY w.auto.id) " +
+            "AND a.company.id=:companyId")
+    List<Auto> findFreeAutosToChange(@Param("dDep") java.util.Date dDep, @Param("dArr") java.util.Date dArr, @Param("companyId") Long companyId,@Param("wayBillId") Long wayBillId);
 
 //    @Query(value = "SELECT * FROM driver WHERE id NOT IN (SELECT driver FROM waybill CROSS JOIN driver WHERE waybill.driver=driver.id AND :dDep BETWEEN date_departure and date_arrival OR :dArr BETWEEN date_arrival and date_departure AND driver.company_of_driver=:companyId) AND driver.company_of_driver=:companyId", nativeQuery = true)
 //    List<Driver> findFreeDrivers(@Param("dDep") java.util.Date dDep,@Param("dArr") java.util.Date dArr,@Param("companyId") Long companyId);

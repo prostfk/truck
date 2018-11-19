@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
+import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 
 export default class UsersList extends Component {
 
@@ -41,8 +42,8 @@ export default class UsersList extends Component {
 
     renderUser = (user) => {
         return <div className={'row table_row'}>
-            <div className={'col-md-1'}>{user.id}</div>
-            <div className={'col-md-5'}>{user.username}</div>
+            {/*<div className={'col-md-1'}>{user.id}</div>*/}
+            <div className={'col-md-3'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{user.email}</div>
         </div>
@@ -58,6 +59,8 @@ export default class UsersList extends Component {
                 return 'Менеджер';
             case 'ROLE_DRIVER':
                 return 'Водитель';
+            case 'ROLE_COMP_OWNER':
+                return 'Владелец компании';
             default:
                 return role;
         }
@@ -65,10 +68,10 @@ export default class UsersList extends Component {
 
     render() {
         return <div className={'row'}>
-            <div className="offset-md-3 col-md-6 superuserform_companylist">
+            <div className="offset-md-1 col-md-5 superuserform_companylist">
                 <div className="row table_header">
-                    <div className="col-md-1">Id</div>
-                    <div className="col-md-5">Никнейм</div>
+                    {/*<div className="col-md-1">Id</div>*/}
+                    <div className="col-md-3">Никнейм</div>
                     <div className="col-md-3">Роль</div>
                     <div className="col-md-3">Почта</div>
                 </div>
@@ -92,6 +95,9 @@ export default class UsersList extends Component {
                         />
                     </div>
                 </div>
+            </div>
+            <div className="offset-md-1 col-md-4" id={'add-user-form'}>
+                <CreateUser/>
             </div>
         </div>
     }

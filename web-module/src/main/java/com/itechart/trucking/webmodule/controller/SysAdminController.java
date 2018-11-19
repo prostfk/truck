@@ -12,6 +12,8 @@ import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.webmodule.model.util.EmailUtil;
 import com.itechart.trucking.webmodule.model.util.TokenUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -48,18 +50,19 @@ public class SysAdminController {
 
     @PostMapping(value = "/createAdmin")
     @ResponseBody
-    public Object processAdminAndSendRequestToEmail(@RequestParam String email, @Value("${server.email}") String username, @Value("${server.password}") String password, HttpServletRequest request) {
+    public Object processAdminAndSendRequestToEmail(@RequestParam String email, @Value("${server.email}") String username, @Value("${server.password}") String password, HttpServletRequest request) throws JSONException {
         String token = TokenUtil.generateToken(40);
+        JSONObject json = new JSONObject();
         try {
             EmailUtil.sendMail(username, password, email, "Registration",
                     String.format("<h1>Welcome to our system!</h1><br/><h4>To complete registration you need to add your account in our system. Please, visit this link to finish </h4><br/><p>%s:%s/registration?token=%s</p>", request.getServerName(), "3000", token)
             );
             tokenRepository.save(new Token(email, token));
-            return HttpStatus.OK;
+            json.put("status", "send");
         } catch (Exception e) {
-            e.printStackTrace();
-            return HttpStatus.BAD_REQUEST;
+            json.put("error", "incorrect email");
         }
+        return json.toString();
     }
 
     @GetMapping(value = "/companies")

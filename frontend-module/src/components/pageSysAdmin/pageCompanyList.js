@@ -42,14 +42,18 @@ class SysAdminPage extends React.Component{
         formData.append("email", value);
         fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {method: "POST", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             response.json().then(function (data) {
+                console.log(data)
                 if (data.error===undefined){
-                    document.getElementById('result-span').innerText = 'Check your email';
+                    document.getElementById('result-span').style.color = 'green';
+                    document.getElementById('result-span').innerText = 'Письмо отправлено';
+                    document.getElementById('user-new-form').style.display = 'none';
                     setTimeout(()=>{
-                        document.getElementById('user-new-form').style.display = 'none';
+                        document.getElementById('user-new-form').style.display = '';
                     },2000);
-                    document.getElementById('user-new-form').style.display = '';
+                    document.getElementById('result-span').innerText = '';
                 }else{
-                    document.getElementById('result-span').innerText = 'Check you data';
+                    document.getElementById('result-span').style.color = 'red';
+                    document.getElementById('result-span').innerText = 'Неверная почта';
                 }
             })
         })
@@ -155,15 +159,19 @@ class SysAdminPage extends React.Component{
             </div>
 
             <div className="offset-md-1 col-md-3">
-                <span id="result-span"/>
-                <form className="superuserform_newaccountform grey_form" id={'user-new-form'}>
-                    <h5>Регистрация новой компании</h5>
-                    <div className="form-group">
-                        <label htmlFor="id" id="emaillabel">Email</label>
-                        <input onChange={this.changeMail} type="email" className="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
-                    </div>
-                    <a onClick={this.sendRef} className="btn btn-success btn_fullsize">Отправить</a>
-                </form>
+                <div className="">
+                    <form className="superuserform_newaccountform grey_form">
+                        <h5>Регистрация новой компании</h5>
+                        <span id="result-span"/>
+                        <div id={'user-new-form'}>
+                            <div className="form-group">
+                                <label htmlFor="id" id="emaillabel">Email</label>
+                                <input onChange={this.changeMail} type="email" className="form-control"  id="email" placeholder="newUser@mail.com" required=""/>
+                            </div>
+                            <a onClick={this.sendRef} className="btn btn-success btn_fullsize">Отправить</a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     }

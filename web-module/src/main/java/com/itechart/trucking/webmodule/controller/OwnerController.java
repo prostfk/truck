@@ -7,6 +7,7 @@ import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
 import com.itechart.trucking.company.entity.Company;
+import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.consignment.repository.ConsignmentRepository;
 import com.itechart.trucking.odt.Odt;
@@ -38,9 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -70,6 +69,9 @@ public class OwnerController {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private CompanyRepository companyRepository;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
         LOGGER.debug("'get' request on index page");
@@ -95,23 +97,41 @@ public class OwnerController {
 
     @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
-    public void createXls(@Value("${excel.path}")String path, HttpServletResponse response){
+    public void createStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        List<Order> companyOrders = userByUsername.getCompany().getCompanyOrders();
         try {
-            String filename = new ExcelUtil().writeInExcel(path, userByUsername, new Date(), new Date(), companyOrders);
+            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(),orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
             ServletOutputStream outputStream = response.getOutputStream();
-            File file = new File(path + filename);
+            File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
             byte[] buffer= new byte[8192];
             int length;
-
             while ((length = fis.read(buffer)) > 0){
                 outputStream.write(buffer, 0, length);
             }
             fis.close();
             outputStream.close();
+        } catch (IOException e) {
+            LOGGER.warn("Something went wrong: ", e);
+        }
+    }
+
+    @GetMapping(value = "/company/statistics/drivers")
+    @ResponseBody
+    public void createDriversXls(@Value("${excel.path}")String path, HttpServletResponse response){
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(name);
+        try (OutputStream os = response.getOutputStream()){
+            String s = new ExcelUtil().calcDrivers(path, name, orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId()));
+            File file = new File(s);
+            InputStream fis = new FileInputStream(file);
+            byte[] bytes = new byte[8192];
+            int length;
+            while ((length=fis.read(bytes))>0){
+                os.write(bytes,0,length);
+            }
+            fis.close();
         } catch (IOException e) {
             LOGGER.warn("Something went wrong: ", e);
         }
@@ -137,7 +157,6 @@ public class OwnerController {
 
     @GetMapping(value = "/company/orders/{id}")
     @ResponseBody
-
     public OrderDto fetchOrderOfCompany(@PathVariable Long id) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         Company company = userRepository.findUserByUsername(name).getCompany();
@@ -156,7 +175,7 @@ public class OwnerController {
         }
     }
 
-   @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
+    @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
     public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
