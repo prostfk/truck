@@ -12,7 +12,10 @@ export default class CreateStockModal extends Component {
         search: "",
         value: "",
         suggest: "",
-        successAddress: ''
+        successAddress: '',
+        name: '',
+        lat: null,
+        lng: null
     };
 
     toggle = () => {
@@ -27,28 +30,38 @@ export default class CreateStockModal extends Component {
 
     handleSelectSuggest = (suggest) => {
         console.log(suggest);
+        console.log(`lat: ${suggest.geometry.location.lat()}, lng: ${suggest.geometry.location.lng()}`);
         if (suggest.types[0] === 'street_address') {
             document.getElementById('info').style.color = 'green';
             document.getElementById('info').innerText = "Валидный адрес";
-            this.setState({successAddress: this.state.search})
+            this.setState({
+                successAddress: this.state.search,
+                lat: suggest.geometry.location.lat(),
+                lng: suggest.geometry.location.lng()
+            })
         } else {
             document.getElementById('info').style.color = 'red';
             this.setState({successAddress: ''})
         }
-        // this.setState({search: "", value: suggest.formatted_address, suggest: suggest})
         this.setState({search: "", suggest: suggest})
-        // this.setState({suggest: suggest})
 
     };
 
     submitForm = () => {
-        if (this.state.successAddress !== '') {
+        if (this.state.successAddress !== '' && this.state.lng != null && this.state.lat != null) {
             console.log(this.state.successAddress);
             console.log(this.state.suggest.place_id);
             let formData = new FormData();
-            formData.append("name", this.state.successAddress);
-            formData.append("address", this.state.suggest.place_id);
-            fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+            formData.append("name", this.state.name);
+            formData.append("address", this.state.successAddress);
+            formData.append("lat", this.state.lat);
+            formData.append("lng", this.state.lng);
+
+            fetch('http://localhost:8080/api/stocks', {
+                method: "POST",
+                body: formData,
+                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            }).then(response => {
                 response.json().then(data => {
                     console.log(data);
                     // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
@@ -76,6 +89,10 @@ export default class CreateStockModal extends Component {
                     <ModalBody>
                         <div className="row">
                             <div className="form-group col-md-8 offset-md-2">
+                                <label>Название склада:</label>
+                                <input type="text" placeholder={'Название склада'} className={'form-control'}
+                                       value={this.state.name} id={'name'}
+                                       onChange={(e) => this.setState({name: e.target.value})}/>
                                 <label>Адрес склада:</label>
                                 <div id={'react-google-maps-searcher'}>
                                     <ReactGoogleMapLoader
@@ -95,7 +112,7 @@ export default class CreateStockModal extends Component {
                                                             value={value}
                                                             className={'form-control'}
                                                             style={{borderRadius: '5px', width: '100%'}}
-                                                            placeholder="Search a location"
+                                                            placeholder="Введите адрес склада"
                                                             onChange={this.handleInputChange}/>
                                                     </ReactGooglePlacesSuggest>
                                                 </div>
