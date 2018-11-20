@@ -124,9 +124,15 @@ public class DriverController {
         }
 
         Optional<Product> product = productRepository.findById(productId);
-        product.get().setStatus(4);
         product.get().setCount(product.get().getCount() - cancel);
         product.get().setCancelledCount(product.get().getCancelledCount() + cancel);
+
+        if (product.get().getCount() == 0) {
+            product.get().setStatus(4);
+        } else {
+            product.get().setStatus(5);
+        }
+
         cancellationAct.setPrice(product.get().getPrice() * cancel + cancellationAct.getPrice());
         Integer amount = cancellationAct.getAmount() + cancel;
         cancellationAct.setAmount(amount);

@@ -153,7 +153,13 @@ public class ManagerController {
         if (cancel > 0) {
             product.get().setCancelledCount(product.get().getCancelledCount() + cancel);
             product.get().setCount(product.get().getCount() - cancel);
-            product.get().setStatus(4);
+
+            if (product.get().getCount() == 0) {
+                product.get().setStatus(4);
+            } else {
+                product.get().setStatus(5);
+            }
+
             cancellationAct.setPrice(product.get().getPrice() * cancel + cancellationAct.getPrice());
             Integer amount = cancellationAct.getAmount() + cancel;
             cancellationAct.setAmount(amount);
@@ -165,6 +171,8 @@ public class ManagerController {
             cancellationAct.setAmount(amount);
             product.get().setCancellationAct(null);
         }*/
+
+
 
         productRepository.save(product.get());
         cancellationActRepository.save(cancellationAct);
@@ -188,7 +196,13 @@ public class ManagerController {
         if (restore > 0) {
             product.get().setCancelledCount(product.get().getCancelledCount() - restore);
             product.get().setCount(product.get().getCount() + restore);
-            product.get().setStatus(4);
+
+            if (product.get().getCancelledCount() == 0) {
+                product.get().setStatus(1);
+            } else {
+                product.get().setStatus(5);
+            }
+
             cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice() * restore);
             Integer amount = cancellationAct.getAmount() - restore;
             cancellationAct.setAmount(amount);
@@ -201,9 +215,7 @@ public class ManagerController {
             product.get().setCancellationAct(null);
         }*/
 
-        if (product.get().getCancelledCount() == 0) {
-            product.get().setStatus(1);
-        }
+
 
         productRepository.save(product.get());
         cancellationActRepository.save(cancellationAct);

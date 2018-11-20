@@ -23,7 +23,7 @@ class ManagerRouteList extends Component {
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {}
-        }
+        };
 
         document.title = "Путевой лист";
     }

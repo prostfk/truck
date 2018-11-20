@@ -138,19 +138,32 @@ class ManagerConsignment extends Component {
         if (!product) return;
 
         let status;
-        if (product.status === 1) status = "Принят";
-        else if (product.status === 2) status = "Проверен";
-        else if (product.status === 3) status = "Доставлен";
-        else if (product.status === 4) status = "Утерян";
+        if (product.status === 1) {
+            status = "Принят";
+        } else if (product.status === 2) {
+            status = "Проверен";
+        } else if (product.status === 3) {
+            status = "Доставлен";
+        } else if (product.status === 4) {
+            status = "Утерян";
+        } else if (product.status === 5) {
+            status = "Частично утерян";
+        }
 
         let isLost = false;
-        if (status === "Утерян")
+        let semiLost = false;
+        if (status === "Утерян") {
             isLost = true;
+        } else if (status === "Частично утерян") {
+            semiLost = true;
+        }
+
 
         return <div key={index} className="row table_row manager_orders">
             <div className="col-md-2">{product.name}</div>
+            <div className="col-md-2" style={{display: semiLost ? 'block' : 'none'}}>Частично утерян</div>
             <div className="col-md-2" style={{display: isLost ? 'block' : 'none'}}>Утерян</div>
-            <div className="col-md-2" style={{display: isLost ? 'none' : 'block'}}>
+            <div className="col-md-2" style={{display: isLost || semiLost ? 'none' : 'block'}}>
                 <select className="form-control" value={status}
                         onChange={this.changeProductStatus.bind(this, product.id)}>
                     <option>Принят</option>
