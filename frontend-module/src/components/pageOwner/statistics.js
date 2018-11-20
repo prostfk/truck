@@ -1,33 +1,33 @@
 import React, {Component} from 'react';
 
-import { Line } from 'react-chartjs-2';
-import { Chart } from 'react-chartjs-2';
-import { Container } from 'mdbreact';
+import {Line} from 'react-chartjs-2';
+import {Chart} from 'react-chartjs-2';
+import {Container} from 'mdbreact';
 import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
 
 export default class CompanyOwnerStatistics extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.getFullStatistics = this.getFullStatistics.bind(this);
         this.setCompanyWorkers = this.setCompanyWorkers.bind(this);
         this.generateAcceptedTable = this.generateAcceptedTable.bind(this);
         this.state = {
-            rolesAmmount:{},
-            acceptedAmmount:{},
-            executedAmmount:{},
-            mmonthNames:[],
-            acceptedAmmountMonthValues:[],
-            executedAmmountMonthValues:[],
+            rolesAmmount: {},
+            acceptedAmmount: {},
+            executedAmmount: {},
+            mmonthNames: [],
+            acceptedAmmountMonthValues: [],
+            executedAmmountMonthValues: [],
         };
         document.title = "Статистика";
     }
 
     xlsCompanyInfo = () => {
-        fetch("http://localhost:8080/api/company/statistics",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+        fetch("http://localhost:8080/api/company/statistics", {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.blob()
-        }).then(blob=>{
+        }).then(blob => {
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement('a');
             a.href = url;
@@ -39,9 +39,9 @@ export default class CompanyOwnerStatistics extends Component {
     };
 
     xlsDriverInfo = () => {
-        fetch("http://localhost:8080/api/company/statistics/drivers",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+        fetch("http://localhost:8080/api/company/statistics/drivers", {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.blob()
-        }).then(blob=>{
+        }).then(blob => {
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement('a');
             a.href = url;
@@ -52,16 +52,16 @@ export default class CompanyOwnerStatistics extends Component {
         })
     };
 
-    componentDidMount(){
+    componentDidMount() {
         this.getFullStatistics().then(data => {
             this.setState({
-                rolesAmmount:data.workersAmmount,
-                acceptedAmmount:data.acceptedAmmount,
-                executedAmmount:data.executedAmmount
+                rolesAmmount: data.workersAmmount,
+                acceptedAmmount: data.acceptedAmmount,
+                executedAmmount: data.executedAmmount
             })
-        }).then(()=>{
+        }).then(() => {
             this.setCompanyWorkers();
-            for (var k in this.state.acceptedAmmount){
+            for (let k in this.state.acceptedAmmount) {
 
                 let newarr = this.state.mmonthNames;
                 let newArrOfVals = this.state.acceptedAmmountMonthValues;
@@ -70,52 +70,66 @@ export default class CompanyOwnerStatistics extends Component {
                 newArrOfVals.push(this.state.acceptedAmmount[k]);
 
                 this.setState({
-                    mmonthNames:newarr,
-                    acceptedAmmountMonthValues:newArrOfVals
+                    mmonthNames: newarr,
+                    acceptedAmmountMonthValues: newArrOfVals
                 })
             }
-            for (var k in this.state.executedAmmount){
+            for (let k in this.state.executedAmmount) {
                 let newArrOfVals = this.state.executedAmmountMonthValues;
                 newArrOfVals.push(this.state.executedAmmount[k]);
                 this.setState({
-                    executedAmmountMonthValues:newArrOfVals
+                    executedAmmountMonthValues: newArrOfVals
                 })
             }
         });
     }
 
-    getMonthName(k){
+    getMonthName(k) {
         let b = "";
-        switch(k){
-            case "1": b = "Январь";
+        switch (k) {
+            case "1":
+                b = "Январь";
                 break;
-            case "2": b = "Февраль";
+            case "2":
+                b = "Февраль";
                 break;
-            case "3": b = "Март";
+            case "3":
+                b = "Март";
                 break;
-            case "4": b = "Апрель";
+            case "4":
+                b = "Апрель";
                 break;
-            case "5": b = "Май";
+            case "5":
+                b = "Май";
                 break;
-            case "6": b = "Июнь";
+            case "6":
+                b = "Июнь";
                 break;
-            case "7": b = "Июль";
+            case "7":
+                b = "Июль";
                 break;
-            case "8": b = "Август";
+            case "8":
+                b = "Август";
                 break;
-            case "9": b = "Сентябрь";
+            case "9":
+                b = "Сентябрь";
                 break;
-            case "10": b = "Октябрь";
+            case "10":
+                b = "Октябрь";
                 break;
-            case "11": b = "Ноябрь";
+            case "11":
+                b = "Ноябрь";
                 break;
-            case "12": b = "Декабрь";
+            case "12":
+                b = "Декабрь";
                 break;
+            default:
+                b = "";
         }
         return b;
     }
 
-    setCompanyWorkers(){
+    setCompanyWorkers() {
         var ctxB = document.getElementById("barChart").getContext('2d');
         new Chart(ctxB, {
             type: 'bar',
@@ -149,7 +163,7 @@ export default class CompanyOwnerStatistics extends Component {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero:true
+                            beginAtZero: true
                         }
                     }]
                 }
@@ -158,17 +172,20 @@ export default class CompanyOwnerStatistics extends Component {
     }
 
     getFullStatistics() {
-        return fetch('http://localhost:8080/api/company/getFullStat', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('http://localhost:8080/api/company/getFullStat', {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
-        }).catch(err=>{
+        }).catch(err => {
             throw new Error('Ошибка доступа')
         });
     }
 
-    generateAcceptedTable(data,mmonthNames){
-        if(data.length<6 || mmonthNames.length<6) return;
+    generateAcceptedTable(data, mmonthNames) {
+        if (data.length < 6 || mmonthNames.length < 6) return;
         let newarr = this.state.mmonthNames;
         console.log(newarr);
         let dataAccepted = {
@@ -198,12 +215,12 @@ export default class CompanyOwnerStatistics extends Component {
             ]
         };
         return <Container>
-            <Line data={dataAccepted} />
+            <Line data={dataAccepted}/>
         </Container>
     }
 
-    generateExecutedTable(data,mmonthNames){
-        if(data.length<6 || mmonthNames.length<6) return;
+    generateExecutedTable(data, mmonthNames) {
+        if (data.length < 6 || mmonthNames.length < 6) return;
         let newarr = this.state.mmonthNames;
         console.log(newarr);
         let dataAccepted = {
@@ -233,7 +250,7 @@ export default class CompanyOwnerStatistics extends Component {
             ]
         };
         return <Container>
-            <Line data={dataAccepted} />
+            <Line data={dataAccepted}/>
         </Container>
     }
 
@@ -242,8 +259,8 @@ export default class CompanyOwnerStatistics extends Component {
         return (
             <div>
                 <div className="offset-1 row" style={{cursor: 'pointer'}} id="download">
-                    <img onClick={this.xlsCompanyInfo} src={statsIcon}/>
-                    <img onClick={this.xlsDriverInfo} src={driverIcon}/>
+                    <img alt={""} onClick={this.xlsCompanyInfo} src={statsIcon}/>
+                    <img alt={""} onClick={this.xlsDriverInfo} src={driverIcon}/>
                 </div>
                 <div className="row">
                     <div className="offset-md-1 col-xl-10 superuserform_companylist">
@@ -251,12 +268,12 @@ export default class CompanyOwnerStatistics extends Component {
                         <div className="row">
                             <div className="col-xl-6">
                                 {
-                                    this.generateAcceptedTable(this.state.acceptedAmmountMonthValues,this.state.mmonthNames)
+                                    this.generateAcceptedTable(this.state.acceptedAmmountMonthValues, this.state.mmonthNames)
                                 }
                             </div>
                             <div className="col-xl-6">
                                 {
-                                    this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
+                                    this.generateExecutedTable(this.state.executedAmmountMonthValues, this.state.mmonthNames)
                                 }
                             </div>
 

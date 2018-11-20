@@ -29,11 +29,11 @@ class registration extends Component {
     }
 
     checkToken = () => {
-        fetch(`/anon/tokenValidation?token=${this.state.token}`).then(response=>{
+        fetch(`/anon/tokenValidation?token=${this.state.token}`).then(response => {
             return response.json();
-        }).then(data=>{
+        }).then(data => {
             console.log(data);
-            if (data.error !== undefined){
+            if (data.error !== undefined) {
                 window.location.href = '/';
             }
         })
@@ -47,15 +47,15 @@ class registration extends Component {
     }
 
     validateCompany = (event) => {
-        fetch(`http://localhost:8080/checkCompanyName?name=${this.state.newCompanyName}`).then(response=>{
+        fetch(`http://localhost:8080/checkCompanyName?name=${this.state.newCompanyName}`).then(response => {
             return response.json();
-        }).then(data=>{
-            if (data.error !== undefined){
+        }).then(data => {
+            if (data.error !== undefined) {
                 this.setState({validation: false});
                 document.getElementById('newCompanyName').classList.add("is-invalid");
                 document.getElementById('error-company-span').innerText = 'Такая компания уже существует';
                 return false;
-            }else{
+            } else {
                 document.getElementById('newCompanyName').classList.remove("is-invalid");
                 document.getElementById('error-company-span').innerText = '';
                 return true;
@@ -70,38 +70,38 @@ class registration extends Component {
         let dateVal = ValidationUtil.validateDateToPattern(this.state.newBirthDate);
         let nameVal = ValidationUtil.validateStringForLength(this.state.newFirstName, 2, 40);
         let surnameVal = ValidationUtil.validateStringForLength(this.state.newSecondName, 4, 40);
-        if (!userNameVal){
+        if (!userNameVal) {
             document.getElementById('newUsername').classList.add("is-invalid");
             document.getElementById('error-username-span').innerText = 'Имя пользователя должно содержать от 5 до 20 символов';
-        }else{
+        } else {
             document.getElementById('newUsername').classList.remove("is-invalid");
             document.getElementById('error-username-span').innerText = '';
         }
-        if (!passwordVal){
+        if (!passwordVal) {
             document.getElementById('newPassword').classList.add("is-invalid");
             document.getElementById('error-password-span').innerText = 'Пароль должен содержать от 6 до 20 символов';
-        }else{
+        } else {
             document.getElementById('newPassword').classList.remove("is-invalid");
             document.getElementById('error-password-span').innerText = '';
         }
-        if (!dateVal){
+        if (!dateVal) {
             document.getElementById('newBirthDate').classList.add("is-invalid");
             document.getElementById('error-date-span').innerText = 'Дата невалидна';
-        }else{
+        } else {
             document.getElementById('newBirthDate').classList.remove("is-invalid");
             document.getElementById('error-date-span').innerText = '';
         }
-        if (!nameVal){
+        if (!nameVal) {
             document.getElementById('newFirstName').classList.add("is-invalid");
             document.getElementById('error-name-span').innerText = 'Имя должно содержать от 2 до 40 символов';
-        }else{
+        } else {
             document.getElementById('newFirstName').classList.remove("is-invalid");
             document.getElementById('error-name-span').innerText = '';
         }
-        if (!surnameVal){
+        if (!surnameVal) {
             document.getElementById('newSecondName').classList.add("is-invalid");
             document.getElementById('error-surname-span').innerText = 'Пароль должен содержать от 4 до 40 символов';
-        }else{
+        } else {
             document.getElementById('newSecondName').classList.remove("is-invalid");
             document.getElementById('error-surname-span').innerText = '';
         }
@@ -110,7 +110,7 @@ class registration extends Component {
     };
 
     sendFetch() { //fixme: redo form sending and backend processing(16-11-18)
-        if (this.validateForm()){
+        if (this.validateForm()) {
             console.log(true);
             let formData = new FormData();
             formData.append('username', this.state.newUsername);
@@ -126,20 +126,20 @@ class registration extends Component {
             formData.append('companyName', this.state.newCompanyName);
             formData.append('token', this.state.token);
             formData.append('password', this.state.newPassword);
-            formData.forEach((v,k)=>{
+            formData.forEach((v, k) => {
                 console.log(k + " " + v)
             });
             fetch(`http://localhost:8080/registration`, {
                 method: "POST",
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem('Auth-token')}
-            }).then(response=>{
+            }).then(response => {
                 return response.json()
-            }).then(data=>{
+            }).then(data => {
                 console.log(data);
-                if (data.error === undefined){
+                if (data.error === undefined) {
                     window.location.href = '/auth'
-                }else{
+                } else {
                     document.getElementById('error-span').style.color = "red";
                     document.getElementById('error-span').innerText = "Ошибка";
                 }
@@ -158,14 +158,16 @@ class registration extends Component {
                     <div className="form-group row">
                         <label htmlFor="newCompanyName" className="col-2 col-form-label">Название компании *</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" onChange={this.changeInput} value={this.state.newCompanyName} id="newCompanyName"/>
+                            <input className="form-control" type="text" onChange={this.changeInput}
+                                   value={this.state.newCompanyName} id="newCompanyName"/>
                             <small className="text-danger" id="error-company-span"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newUsername" className="col-2 col-form-label">Логин *</label>
                         <div className="col-10">
-                            <input className="form-control" type="search" value={this.state.newUsername} onChange={this.changeInput}
+                            <input className="form-control" type="search" value={this.state.newUsername}
+                                   onChange={this.changeInput}
                                    id="newUsername"/>
                             <small className="text-danger" id="error-username-span"/>
                         </div>
@@ -173,14 +175,16 @@ class registration extends Component {
                     <div className="form-group row">
                         <label htmlFor="example-password-input" className="col-2 col-form-label">Пароль *</label>
                         <div className="col-10">
-                            <input className="form-control" type="password" placeholder="zxccxz" value={this.state.newPassword} onChange={this.changeInput} id="newPassword"/>
+                            <input className="form-control" type="password" placeholder="zxccxz"
+                                   value={this.state.newPassword} onChange={this.changeInput} id="newPassword"/>
                             <small className="text-danger" id="error-password-span"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="example-url-input" className="col-2 col-form-label">Дата рождения *</label>
                         <div className="col-10">
-                            <input className="form-control date-picker" type="text" value={this.state.newBirthDate} onChange={this.changeInput}
+                            <input className="form-control date-picker" type="text" value={this.state.newBirthDate}
+                                   onChange={this.changeInput}
                                    id="newBirthDate"/>
                             <small className="text-danger" id="error-date-span"/>
                         </div>
@@ -188,52 +192,60 @@ class registration extends Component {
                     <div className="form-group row">
                         <label htmlFor="newSecondName" className="col-2 col-form-label">Фамилия *</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newSecondName} onChange={this.changeInput} id="newSecondName"/>
+                            <input className="form-control" type="text" value={this.state.newSecondName}
+                                   onChange={this.changeInput} id="newSecondName"/>
                             <small className="text-danger" id="error-surname-span"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newFirstName" className="col-2 col-form-label">Имя *</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newFirstName} onChange={this.changeInput} id="newFirstName"/>
+                            <input className="form-control" type="text" value={this.state.newFirstName}
+                                   onChange={this.changeInput} id="newFirstName"/>
                             <small className="text-danger" id="error-name-span"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newThirdName" className="col-2 col-form-label">Отчество</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newThirdName} onChange={this.changeInput}
+                            <input className="form-control" type="text" value={this.state.newThirdName}
+                                   onChange={this.changeInput}
                                    id="newThirdName"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newCountry" className="col-2 col-form-label">Страна</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newCountry} onChange={this.changeInput} id="newCountry"/>
+                            <input className="form-control" type="text" value={this.state.newCountry}
+                                   onChange={this.changeInput} id="newCountry"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newCity" className="col-2 col-form-label">Город</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newCity} onChange={this.changeInput} id="newCity"/>
+                            <input className="form-control" type="text" value={this.state.newCity}
+                                   onChange={this.changeInput} id="newCity"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newStreet" className="col-2 col-form-label">Улица</label>
                         <div className="col-10">
-                            <input className="form-control" type="text" value={this.state.newStreet} onChange={this.changeInput} id="newStreet"/>
+                            <input className="form-control" type="text" value={this.state.newStreet}
+                                   onChange={this.changeInput} id="newStreet"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newHouseNumber" className="col-2 col-form-label">Дом</label>
                         <div className="col-10">
-                            <input className="form-control" type="number" value={this.state.newHouseNumber} onChange={this.changeInput} id="newHouseNumber"/>
+                            <input className="form-control" type="number" value={this.state.newHouseNumber}
+                                   onChange={this.changeInput} id="newHouseNumber"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newFlatNumber" className="col-2 col-form-label">Квартира</label>
                         <div className="col-10">
-                            <input className="form-control" type="number" value={this.state.newFlatNumber} onChange={this.changeInput} id="newFlatNumber"/>
+                            <input className="form-control" type="number" value={this.state.newFlatNumber}
+                                   onChange={this.changeInput} id="newFlatNumber"/>
                         </div>
                     </div>
                     <div className={'form-group row'}>

@@ -10,14 +10,15 @@ export default class UsersList extends Component {
         this.getUsersRequest = this.getUsersRequest.bind(this);
         this.state = {
             users: [],
-            totalElements:0,
-            currentPage:1
+            totalElements: 0,
+            currentPage: 1
         };
         this.getUsersRequest();
     }
 
-    getUsersRequest = (pageid=1) => {
-        fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
+    getUsersRequest = (pageid = 1) => {
+        fetch('http://localhost:8080/api/users?page=' + pageid, {
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
@@ -25,12 +26,12 @@ export default class UsersList extends Component {
                 return response.json();
             }
         }).then(data => {
-            let gettedusers =data.content;
+            let gettedusers = data.content;
             console.log(gettedusers);
             this.setState({
                 users: gettedusers,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             })
         })
     };

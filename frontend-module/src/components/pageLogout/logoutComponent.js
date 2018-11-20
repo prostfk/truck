@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody} from 'reactstrap';
 
 export default class LogoutComponent extends Component {
 
@@ -28,13 +28,15 @@ export default class LogoutComponent extends Component {
     render() {
         return (
             <div>
-                <a className={this.props.className} style={{color: '#E5E8E8'}} onClick={this.toggle}><span className={'btn'}><b>Выйти</b></span></a>
+                <a className={this.props.className} style={{color: '#E5E8E8'}} onClick={this.toggle}><span
+                    className={'btn'}><b>Выйти</b></span></a>
                 <Modal isOpen={this.state.modal}>
                     <form>
                         <ModalHeader>Выйти?</ModalHeader>
                         <ModalBody className={"logoutForm"}>
-                                    <Button color="danger"  onClick={this.submitLogout}>Выйти</Button>
-                                    <Button style={{marginLeft: '2%'}} backgroundColor={'#4e4e4e'} onClick={this.toggle}>Отмена</Button>
+                            <Button color="danger" onClick={this.submitLogout}>Выйти</Button>
+                            <Button style={{marginLeft: '2%'}} backgroundColor={'#4e4e4e'}
+                                    onClick={this.toggle}>Отмена</Button>
                         </ModalBody>
                     </form>
                 </Modal>

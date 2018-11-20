@@ -29,8 +29,8 @@ export default class CompanyClients extends Component {
             console.log(data);
             this.setState({
                 clients: data.clients,
-                totalElements:data.totalElements,
-                currentPage:++data.currentPage
+                totalElements: data.totalElements,
+                currentPage: ++data.currentPage
             })
         })
     };

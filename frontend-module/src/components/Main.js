@@ -10,18 +10,18 @@ import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
-import DriverRouteList from "./pageDriver/pageRouteList";
+//import DriverRouteList from "./pageDriver/pageRouteList";
 import {DriverRouterListNew} from "./pageDriver/pageRouterListNew";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
 import OwnerOrderList from "./pageOwner/pageOwnerOrderList.js";
 import OwnerRouteList from "./pageOwner/pageOwnerRouteList.js";
 import pageManagerOrders from "./pageManager/pageManagerOrders";
-import ManagerHeader from "./pageManager/managerHeader";
+//import ManagerHeader from "./pageManager/managerHeader";
 import ManagerConsignment from "./pageManager/pageManagerConsignment";
 import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
-import MainHeader from "./pageManager/mainHeader";
-import IndexComponent from './indexComponent/indexComponent'
+/*import MainHeader from "./pageManager/mainHeader";
+import IndexComponent from './indexComponent/indexComponent'*/
 import UsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
 import AutoList from "./pageAdmin/pageAutoList";
@@ -35,7 +35,7 @@ import DriverConsignment from "./pageDriver/pageConsignment";
 import OwnerCompanyClients from "./pageOwner/pageOwnerCompanyClients";
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 import OwnerStockList from "./pageOwner/pageOwnerStockList";
-import TestComponent from "./testComponent/testComponent";
+//import TestComponent from "./testComponent/testComponent";
 import PageStockListNew from "./pageAdmin/pageStocksListNew";
 import CreateStockModal from "./pageAdmin/modalComponentCreateStock";
 

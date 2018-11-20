@@ -51,7 +51,7 @@ export class DriverRouterListNew extends Component {
 
     markPoint = (pointId) => {
         const ref = this;
-        const myres = fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
+        fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
             method: "PUT",
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(function (response) {
@@ -83,7 +83,8 @@ export class DriverRouterListNew extends Component {
 
     rendPointsList = (point) => {
         return <div className={'row'}>
-            <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success':'list-group-item list-group-item-action list-group-item-danger'} style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Непройдена')}</li>
+            <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success' : 'list-group-item list-group-item-action list-group-item-danger'}
+                style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Непройдена')}</li>
         </div>
     };
 
@@ -126,7 +127,8 @@ export class DriverRouterListNew extends Component {
                 </div>
                 <div className={'col-md-9'}>
                     <div style={{height: '100vh', width: '90%'}}>
-                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}} google={window.google}
+                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}}
+                             google={window.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
                              className={'map'}
                              zoom={11}>
@@ -148,15 +150,15 @@ export class DriverRouterListNew extends Component {
                                 path={this.state.pathCoordinates}
                                 strokeColor="#CF89F9"
                                 strokeOpacity={0.8}
-                                strokeWeight={2} />
+                                strokeWeight={2}/>
 
-                    </Map>
+                        </Map>
+                    </div>
                 </div>
+
+
             </div>
-
-
-    </div>
-    );
+        );
 
     }
 

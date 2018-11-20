@@ -65,22 +65,22 @@ export default class DispatcherCreateOrderPage extends React.Component {
         }
         if (!nameValidation) {
             document.getElementById('name-error-span').innerText = `Неправильное название ${this.state.name}`;
-        }else{
+        } else {
             document.getElementById('name-error-span').innerText = "";
         }
         if (!dateArrivalValidation || !dateDepartureValidation) {
             document.getElementById('date-error-span').innerText = "Неправильная дата";
-        }else{
+        } else {
             document.getElementById('date-error-span').innerText = "";
         }
-        if (!validateAuto){
+        if (!validateAuto) {
             document.getElementById('auto-error-span').innerText = 'Неправильное значение';
-        }else{
+        } else {
             document.getElementById('auto-error-span').innerText = '';
         }
-        if (!validateDriver){
+        if (!validateDriver) {
             document.getElementById('driver-error-span').innerText = 'Неправильное значение';
-        }else{
+        } else {
             document.getElementById('driver-error-span').innerText = '';
         }
         return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation && validateAuto && validateDriver;
@@ -240,12 +240,12 @@ export default class DispatcherCreateOrderPage extends React.Component {
 
     //trbl
     removeProduct = (name) => {
-/*        let tmp = this.state.consignment;
-        let index = tmp.indexOf(name);
-        tmp.splice(index, 1);
-        this.setState({
-            consignment: tmp
-        })*/
+        /*        let tmp = this.state.consignment;
+                let index = tmp.indexOf(name);
+                tmp.splice(index, 1);
+                this.setState({
+                    consignment: tmp
+                })*/
     };
 
     showOrderHideConsignment = () => {
@@ -426,7 +426,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                             <div className="col-md-3">{item.description}</div>
                                             <div className="col-md-2">{item.count}</div>
                                             <div className="col-md-2">{item.price}</div>
-                                            <div className="col-md-2"><a onClick={this.removeProduct(item.name)} id={`item-${item.name}`} className="btn-sm btn-dark">Удалить</a></div>
+                                            <div className="col-md-2"><a onClick={this.removeProduct(item.name)}
+                                                                         id={`item-${item.name}`}
+                                                                         className="btn-sm btn-dark">Удалить</a></div>
                                         </div>
                                     }
                                 )

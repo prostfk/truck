@@ -8,48 +8,53 @@ export default class PageStockListNew extends React.Component {
         /*this.forceUpdateHandler = this.forceUpdateHandler.bind(this);*/
         this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
-            stocks:[],
-            stockName:"",
-            stockAddress:"",
-            totalElements:0,
-            currentPage:1
+            stocks: [],
+            stockName: "",
+            stockAddress: "",
+            totalElements: 0,
+            currentPage: 1
         };
         document.title = "Склады"
     }
 
-    forceUpdateHandler(){
+    forceUpdateHandler() {
         const refthis = this;
-        fetch('http://localhost:8080/api/stocks?='+this.state.currentPage, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch('http://localhost:8080/api/stocks?=' + this.state.currentPage, {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            refthis.setState({stocks:result})
+            refthis.setState({stocks: result})
         })
     };
 
 
-    getStockList(pageid=1){
-        const fetchResult = fetch('http://localhost:8080/api/stocks?page='+pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+    getStockList(pageid = 1) {
+        const fetchResult = fetch('http://localhost:8080/api/stocks?page=' + pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
         });
         return fetchResult;
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getStockList().then(data => {
             this.setState({
-                stocks:data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                stocks: data.content,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             });
         });
     }
+
     handlePageChange(pageNumber) {
         this.getStockList(pageNumber).then(data => {
             this.setState({
-                stocks:data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                stocks: data.content,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             });
         });
 
@@ -57,10 +62,10 @@ export default class PageStockListNew extends React.Component {
         console.log("im updating!");
     }
 
-    renderTable(stock){
-        console.log("stock name"+ stock.name);
+    renderTable(stock) {
+        console.log("stock name" + stock.name);
         console.log(stock);
-        if(!stock) return;
+        if (!stock) return;
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"offset-md-1 col-md-5"}>{stock.name}</div>
@@ -68,7 +73,7 @@ export default class PageStockListNew extends React.Component {
         </div>
     }
 
-    render(){
+    render() {
         return <div className="row">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <div className="row table_header">
@@ -77,7 +82,7 @@ export default class PageStockListNew extends React.Component {
                     <div className="offset-md-1 col-md-4">Адрес</div>
                 </div>
                 {
-                    this.state.stocks.map((element)=>{
+                    this.state.stocks.map((element) => {
                         return this.renderTable(element);
                     })
                 }

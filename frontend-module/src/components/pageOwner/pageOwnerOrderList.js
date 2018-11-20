@@ -49,7 +49,8 @@ class OwnerOrderList extends React.Component {
                 <Link to={`/owner/routList/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
             </div>
             <div className="col-md-1">
-                <Link to={`/owner/cancelAct/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
+                <Link to={`/owner/cancelAct/${order.id}`}
+                      className="table_button bg-secondary text-white">Перейти</Link>
             </div>
         </div>
     }

@@ -1,16 +1,16 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
-import { withBaseIcon } from 'react-icons-kit'
+import {withBaseIcon} from 'react-icons-kit'
 import {remove} from 'react-icons-kit/fa/remove'
 
-const RedIconContainer = withBaseIcon({ size: 24, style: {color: '#8d2a27'}});
+const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
 export const RemoveIcon = () => <RedIconContainer icon={remove}/>;
 
 export default class ModalAcceptDelete extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { modal: false};
+        this.state = {modal: false};
         this.toggle = this.toggle.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -29,12 +29,11 @@ export default class ModalAcceptDelete extends React.Component {
     }
 
 
-
     render() {
         return (
 
             <div>
-                <a onClick={this.toggle}><RemoveIcon ></RemoveIcon></a>
+                <a onClick={this.toggle}><RemoveIcon></RemoveIcon></a>
                 <Modal isOpen={this.state.modal}>
                     <form onSubmit={this.handleSubmit}>
                         <ModalHeader>{this.props.headerText}</ModalHeader>

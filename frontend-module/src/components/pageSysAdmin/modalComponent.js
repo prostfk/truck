@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 export default class ModalComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { modal: false,reason: ''};
+        this.state = {modal: false, reason: ''};
 
         this.toggle = this.toggle.bind(this);
         this.handleChangeReason = this.handleChangeReason.bind(this);
@@ -23,13 +23,12 @@ export default class ModalComponent extends React.Component {
 
 
     handleSubmit(event) {
-        this.props.clickfunc(this.state.reason,this.props.compId);
+        this.props.clickfunc(this.state.reason, this.props.compId);
         this.setState({
             modal: !this.state.modal,
-            reason:''
+            reason: ''
         });
     }
-
 
 
     render() {
@@ -44,7 +43,8 @@ export default class ModalComponent extends React.Component {
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
                                     <label>Причина блокировки:</label>
-                                    <input type="text" value={this.state.reason} onChange={this.handleChangeReason} className="form-control" />
+                                    <input type="text" value={this.state.reason} onChange={this.handleChangeReason}
+                                           className="form-control"/>
                                 </div>
                             </div>
                         </ModalBody>
