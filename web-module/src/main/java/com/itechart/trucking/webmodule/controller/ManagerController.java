@@ -138,7 +138,7 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/manager/{productId}/cancelProduct/{orderId}")
-    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam("isLost") Boolean isLost) {
+    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam("cancel") int cancel) {
         Consignment consignment = orderRepository.findOrderById(orderId).getConsignment();
         CancellationAct cancellationAct = consignment.getCancellationAct();
         if(cancellationAct == null) {
@@ -150,19 +150,56 @@ public class ManagerController {
         if (!product.isPresent())
             return null;
 
-        if (isLost) {
+        if (cancel > 0) {
+            product.get().setCancelledCount(product.get().getCancelledCount() + cancel);
+            product.get().setCount(product.get().getCount() - cancel);
             product.get().setStatus(4);
             cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
             Integer amount = cancellationAct.getAmount() + 1;
             cancellationAct.setAmount(amount);
             product.get().setCancellationAct(cancellationAct);
-        } else {
+        } /*else {
             product.get().setStatus(1);
             cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice());
             Integer amount = cancellationAct.getAmount() - 1;
             cancellationAct.setAmount(amount);
             product.get().setCancellationAct(null);
+        }*/
+
+        productRepository.save(product.get());
+        cancellationActRepository.save(cancellationAct);
+
+        return new ProductDto(product.get());
+    }
+
+    @GetMapping(value = "/manager/{productId}/restoreProduct/{orderId}")
+    public ProductDto restoreProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam("restore") int restore) {
+        Consignment consignment = orderRepository.findOrderById(orderId).getConsignment();
+        CancellationAct cancellationAct = consignment.getCancellationAct();
+        if(cancellationAct == null) {
+            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, new Double(0), consignment);
+            cancellationActRepository.save(cancellationAct);
         }
+
+        Optional<Product> product = productRepository.findById(productId);
+        if (!product.isPresent())
+            return null;
+
+        if (restore > 0) {
+            product.get().setCancelledCount(product.get().getCancelledCount() - restore);
+            product.get().setCount(product.get().getCount() + restore);
+            product.get().setStatus(4);
+            cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
+            Integer amount = cancellationAct.getAmount() + 1;
+            cancellationAct.setAmount(amount);
+            product.get().setCancellationAct(cancellationAct);
+        } /*else {
+            product.get().setStatus(1);
+            cancellationAct.setPrice(cancellationAct.getPrice() - product.get().getPrice());
+            Integer amount = cancellationAct.getAmount() - 1;
+            cancellationAct.setAmount(amount);
+            product.get().setCancellationAct(null);
+        }*/
 
         productRepository.save(product.get());
         cancellationActRepository.save(cancellationAct);
