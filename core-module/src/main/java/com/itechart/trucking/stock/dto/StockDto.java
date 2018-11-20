@@ -19,6 +19,9 @@ public class StockDto {
     private String address;
     private String name;
     private Boolean active;
+    private Double lat;
+    private Double lng;
+
 
     private CompanyDto company;
     private List<OrderDto> stockSenderOrders;
@@ -29,6 +32,8 @@ public class StockDto {
         this.address = stock.getAddress();
         this.name = stock.getName();
         this.active = stock.getActive();
+        this.lat = stock.getLat();
+        this.lng = stock.getLng();
     }
 
     public StockDto(Long id, String name,String address) {

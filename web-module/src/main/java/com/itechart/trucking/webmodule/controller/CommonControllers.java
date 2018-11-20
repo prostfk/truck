@@ -86,6 +86,8 @@ public class CommonControllers {
         stock1.setName(stock.getName());
         stock1.setAddress(stock.getAddress());
         stock1.setCompany(userByEmail.getCompany());
+        stock1.setLat(stock.getLat());
+        stock1.setLng(stock.getLng())   ;
         stockRepository.save(stock1);
 
         return Odt.StockListToDtoList(userByEmail.getCompany().getCompanyStocks());

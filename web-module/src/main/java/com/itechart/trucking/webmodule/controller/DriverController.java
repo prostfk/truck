@@ -114,7 +114,7 @@ public class DriverController {
     }
 
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/cancelProduct/{productId}", method = RequestMethod.GET)
-    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId) {
+    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam(name = "cancel") int cancel) {
         Consignment consignment = orderRepository.findOrderById(orderId).getConsignment();
         CancellationAct cancellationAct = consignment.getCancellationAct();
 
@@ -124,9 +124,17 @@ public class DriverController {
         }
 
         Optional<Product> product = productRepository.findById(productId);
-        product.get().setStatus(4);
-        cancellationAct.setPrice(product.get().getPrice() + cancellationAct.getPrice());
-        Integer amount = cancellationAct.getAmount() + 1;
+        product.get().setCount(product.get().getCount() - cancel);
+        product.get().setCancelledCount(product.get().getCancelledCount() + cancel);
+
+        if (product.get().getCount() == 0) {
+            product.get().setStatus(4);
+        } else {
+            product.get().setStatus(5);
+        }
+
+        cancellationAct.setPrice(product.get().getPrice() * cancel + cancellationAct.getPrice());
+        Integer amount = cancellationAct.getAmount() + cancel;
         cancellationAct.setAmount(amount);
 
         product.get().setCancellationAct(cancellationAct);

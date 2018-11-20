@@ -1,9 +1,16 @@
 import React from 'react';
+
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+
 import FullCalendar from 'fullcalendar-reactwrapper';
 import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
 
 var moment = require('moment');
 require("moment/min/locales.min");
+
+
+
+
 
 
 
@@ -42,17 +49,17 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
         }).then(function (result) {
             callback(result);
         }).catch(err=>{
-            throw new Error('Ошибка доступа')
+            NotificationManager.error('Отказано в доступе', 'Ошибка');
         });
     }
 
 
     eventDrop(event,days_offset, revertFunc, jsEvent, ui, view) {
 
-
         if((moment().isAfter(event._start)) || (moment().isAfter(event._start._i))){
             revertFunc();
-            alert("Операция недоступна");
+            if((moment().isAfter(event._start))) NotificationManager.error('Заказ уже начался/завершился', 'Ошибка');
+            else NotificationManager.error('Нельзя перемещать в прошлое', 'Ошибка');
             return;
         }
         let formData = new FormData();
@@ -63,13 +70,13 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
             .then(response => {
                 if(response.status==500){
                     revertFunc();
-                    alert("Ошибка!");
+                    NotificationManager.error('Ошибка получения данных', 'Ошибка');
                 }
             return response.json()})
             .then(data => {
                 if(data==false) {
                     revertFunc();
-                    alert("Вы не можете изменить дату на дааную!");
+                    NotificationManager.error('Вы не можете изменить дату на данную, водитель или авто заняты', 'Ошибка : Пересечение заказов');
                 }
             }).catch(err=>{
                 revertFunc();
@@ -77,20 +84,12 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
     }
 
     resizeEvent = (resizeType, delta, revertFunc) => {
+
         console.log(resizeType.title + " was dropped on " + resizeType.start.format());
         console.log(resizeType.title + " end is now " + resizeType.end.format());
 /*        revertFunc();*/
     };
 
-
-    componentDidMount(){
-/*        this.getOrderList().then(data => {
-            this.setState({orders: data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number});
-        });*/
-
-    }
 
     /*get all company list*/
     getOrderList(pageid=1) {
@@ -99,15 +98,15 @@ class pageDispatcherOrderListOnCalendar extends React.Component{
         }).then(function (result) {
             return result;
         }).catch(err=>{
-            throw new Error('Ошибка доступа')
+            NotificationManager.error('Ошибка доступа');
         });
     }
-
 
     render(){
 
         return  <div className="row">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
+                <NotificationContainer/>
                 <h1>Календарь заказов</h1>
                 <div id="calendarComponent">
                     <FullCalendar

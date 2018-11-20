@@ -3,7 +3,8 @@ import React, {Component} from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart } from 'react-chartjs-2';
 import { Container } from 'mdbreact';
-
+import driverIcon from './img/driver-icon.png'
+import statsIcon from './img/stats-icon.png'
 
 export default class CompanyOwnerStatistics extends Component {
 
@@ -240,9 +241,9 @@ export default class CompanyOwnerStatistics extends Component {
 
         return (
             <div>
-                <div className="row" id="download">
-                    <button className="btn btn-primary" onClick={this.xlsCompanyInfo}>Загрузить отчет</button>
-                    <button className="btn btn-secondary" onClick={this.xlsDriverInfo}>Загрузить отчет</button>
+                <div className="offset-1 row" style={{cursor: 'pointer'}} id="download">
+                    <img onClick={this.xlsCompanyInfo} src={statsIcon}/>
+                    <img onClick={this.xlsDriverInfo} src={driverIcon}/>
                 </div>
                 <div className="row">
                     <div className="offset-md-1 col-xl-10 superuserform_companylist">

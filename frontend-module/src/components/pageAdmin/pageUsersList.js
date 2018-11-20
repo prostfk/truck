@@ -95,11 +95,10 @@ export default class UsersList extends Component {
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{localTime}</div>
             <div className={'col-md-2'}>{user.email}</div>
-            {user.userRole !== 'ROLE_COMP_OWNER' ? <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a> : <div/>}
+            {user.userRole !== 'ROLE_COMP_OWNER' ? <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a></div> : <div/>}
             
             </div>
 
-        </div>
     };
 
     russianRole = (role) => {
