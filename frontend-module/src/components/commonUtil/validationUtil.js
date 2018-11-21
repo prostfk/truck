@@ -4,8 +4,14 @@ export default class ValidationUtil {
         return string!==undefined && string.toString().length >= min && string.toString().length <= max;
     }
 
-    static validateDate(date){
-        return date < new Date().getTime();
+    static validateDateForNotThisYear(date){
+        let b = this.validateDateToPattern(date);
+        if (b){
+            date = Array.isArray(date) ? date.join('') : date;
+            return Number(date.split('/')[2]) < new Date().getFullYear();
+        }else{
+            return false;
+        }
     }
 
     static validateForNumber(string){
@@ -13,7 +19,7 @@ export default class ValidationUtil {
     }
 
     static validateDateToPattern(date){ //pattern = dd/MM/yyyy
-        return /^([0-2][0-9]|(3)[0-1])(\/)(((0)[1-9])|((1)[0-2]))(\/)\d{4}$/.test(date.toString())
+        return /^([0-2][0-9]|(3)[0-1])(\/)(((0)[1-9])|((1)[0-2]))(\/)\d{4}$/.test(date.toString());
     }
 
     static validateNumberInTheRage(number, min, max){
@@ -27,6 +33,10 @@ export default class ValidationUtil {
     static reformatDateFromInput(oldFormatDate){//yyyy-MM-dd
         let split = oldFormatDate.split('-');
         return `${split[2]}/${split[1]}/${split[0]}`
+    }
+
+    static getStringFromUnnownObject(obj){
+        return Array.isArray(obj) ? obj.join('') : obj;
     }
 
 

@@ -80,7 +80,7 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user) => {
-        if(!user) return;
+        if(!user) return;console.log(user);
         user.reg_date[6]=user.reg_date[6]/1000000;
         let timezoneoffset = new Date().getTimezoneOffset();
 
