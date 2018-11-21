@@ -65,7 +65,7 @@ class DispatcherOrderList extends React.Component{
     /*render row of table ( calls from html ) */
     renderTable(order){
         if(!order) return;
-        return <div className = "row table_row order_row">
+        return <div className = "row table_row order_row animated fadeInUp">
             <div className="col-md-2">{order.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>

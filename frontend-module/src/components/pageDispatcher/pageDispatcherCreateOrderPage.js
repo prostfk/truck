@@ -476,7 +476,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                             </div>
                             {
                                 this.state.consignment.map((item, index) => {
-                                        return <div className={"row table_row"}>
+                                        return <div className={"row table_row animated fadeInUp"}>
                                             <div className="col-md-3">{item.name}</div>
                                             <div className="col-md-2">{item.status}</div>
                                             <div className="col-md-3">{item.description}</div>
