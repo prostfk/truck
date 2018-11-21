@@ -94,8 +94,8 @@ export default class DispatcherEditOrder extends Component {
             formData.append("status", this.state.status);
             formData.append("departureStock", this.state.departure_stock);
             formData.append("deliveryStock", this.state.delivery_stock);
-            formData.append("dateArrival", this.state.date_departure);
-            formData.append("dateDeparture", this.state.date_arrival);
+            formData.append("dateArrival", this.state.date_arrival);
+            formData.append("dateDeparture", this.date_departure);
             formData.append("waybillStatus", this.state.waybill_status);
             formData.append("autoId", this.state.auto);
             formData.append("driverId", this.state.driver);

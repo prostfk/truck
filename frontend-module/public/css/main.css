@@ -97,3 +97,20 @@ body {
     color:	#C797AE;
     text-decoration: none;
 }
+.download_button{
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    border-style: inset;
+    border-color: #4e4e4e;
+    text-align: center;
+    margin-right: 5px;
+}
+.download_button:hover{
+
+    border-color: #65f795;
+}
+.download_button:not(hover){
+    transition: 1s;
+    cursor: pointer;
+}

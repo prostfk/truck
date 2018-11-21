@@ -94,8 +94,8 @@ export default class DispatcherCreateOrderPage extends React.Component {
             formData.append("status", this.state.status);
             formData.append("departureStock", this.state.departure_stock);
             formData.append("deliveryStock", this.state.delivery_stock);
-            formData.append("dateArrival", this.state.date_departure);
-            formData.append("dateDeparture", this.state.date_arrival);
+            formData.append("dateArrival", this.state.date_arrival);
+            formData.append("dateDeparture", this.state.date_departure);
             formData.append("waybillStatus", this.state.waybill_status);
             formData.append("autoId", this.state.auto);
             formData.append("driverId", this.state.driver);
@@ -191,7 +191,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`http://localhost:8080/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`http://localhost:8080/api/company/findFreeDrivers?dateFrom=${da}&dateTo=${dd}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
