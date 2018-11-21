@@ -13,6 +13,7 @@ class pageUserLogin extends Component {
         this.processLogin = this.processLogin.bind(this);
         document.title = "Вход"
     }
+
     setUsername(event) {
         this.setState({
             email: event.target.value
@@ -62,7 +63,7 @@ class pageUserLogin extends Component {
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", data.role);
                     this.props.history.push('/');
-                }else{
+                } else {
                     document.getElementById('error-span').innerText = "Неправильные данные";
                 }
             })

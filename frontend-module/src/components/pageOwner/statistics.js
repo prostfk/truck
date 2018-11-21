@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 
-import { Line } from 'react-chartjs-2';
-import { Chart } from 'react-chartjs-2';
-import { Container } from 'mdbreact';
+import {Line} from 'react-chartjs-2';
+import {Chart} from 'react-chartjs-2';
+import {Container} from 'mdbreact';
 import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
 
@@ -99,7 +99,7 @@ export default class CompanyOwnerStatistics extends Component {
                     acceptedAmmountMonthValues:newArrOfVals
                 })
             }
-            for (var k in this.state.executedAmmount){
+            for (let k in this.state.executedAmmount) {
                 let newArrOfVals = this.state.executedAmmountMonthValues;
                 newArrOfVals.push(this.state.executedAmmount[k]);
                 this.setState({
@@ -393,7 +393,6 @@ export default class CompanyOwnerStatistics extends Component {
                         </div>
                     </div>
                 </div>
-
             </div>
         );
     }

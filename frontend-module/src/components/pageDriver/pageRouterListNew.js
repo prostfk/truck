@@ -83,7 +83,8 @@ export class DriverRouterListNew extends Component {
 
     rendPointsList = (point) => {
         return <div className={'row'}>
-            <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success':'list-group-item list-group-item-action list-group-item-danger'} style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
+            <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success' : 'list-group-item list-group-item-action list-group-item-danger'}
+                style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
         </div>
     };
 

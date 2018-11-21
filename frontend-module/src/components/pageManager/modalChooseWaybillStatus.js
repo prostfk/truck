@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 export default class ModalChooseWaybillStatus extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { modal: false, waybillStatus: '1'};
+        this.state = {modal: false, waybillStatus: '1'};
 
         this.toggle = this.toggle.bind(this);
         this.handleChangeWaybillStatus = this.handleChangeWaybillStatus.bind(this);
@@ -22,12 +22,11 @@ export default class ModalChooseWaybillStatus extends React.Component {
     }
 
     handleSubmit(event) {
-        this.props.clickfunc(this.props.orderId, this.state.waybillStatus );
+        this.props.clickfunc(this.props.orderId, this.state.waybillStatus);
         this.setState({
             modal: !this.state.modal,
         });
     }
-
 
 
     render() {
