@@ -1,5 +1,5 @@
 import React from 'react';
-
+import SockJsClient from 'react-stomp';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import FullCalendar from 'fullcalendar-reactwrapper';
@@ -8,24 +8,23 @@ import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
 var moment = require('moment');
 require("moment/min/locales.min");
 
-
 class pageDispatcherOrderListOnCalendar extends React.Component {
     constructor(props) {
         super(props);
-        this.getOrderList = this.getOrderList.bind(this);
         this.eventDrop = this.eventDrop.bind(this);
         this.resizeEvent = this.resizeEvent.bind(this);
-        this.viewRender = this.viewRender.bind(this);
+        this.getData = this.getData.bind(this);
         this.state = {
             orders: [],
             company: {},
             totalElements: 0,
             currentPage: 1,
+            calendarEvents:[]
         };
         document.title = "Заказы"
     }
 
-    viewRender(start, end, timezone, callback) {
+    getData(start, end, timezone, callback) {
         let from = moment(start._d).format('YYYY-MM-DD');
         let to = moment(end._d).format('YYYY-MM-DD');
         return fetch('http://localhost:8080/api/ordersByDate?from=' + from + '&to=' + to, {
@@ -38,9 +37,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
             myres.forEach(function (item, i, arr) {
                 let tmpDate = moment(item.end);
-
                 tmpDate.add(1, 'days');
-
                 item.end = tmpDate;
             });
             return myres;
@@ -53,7 +50,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
 
     eventDrop(event, days_offset, revertFunc, jsEvent, ui, view) {
-
+        console.log(this.state);
         if ((moment().isAfter(event._start)) || (moment().isAfter(event._start._i))) {
             revertFunc();
             if ((moment().isAfter(event._start))) NotificationManager.error('Заказ уже начался/завершился', 'Ошибка');
@@ -93,28 +90,17 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         /*        revertFunc();*/
     };
 
-
-    /*get all company list*/
-    getOrderList(pageid = 1) {
-        return fetch('http://localhost:8080/api/orders?page=' + pageid, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            return result;
-        }).catch(err => {
-            NotificationManager.error('Ошибка доступа');
-        });
-    }
+    calendarRef = React.createRef();
 
     render() {
-
+        const self = this;
         return <div className="row">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <NotificationContainer/>
                 <h1>Календарь заказов</h1>
                 <div id="calendarComponent">
+
+
                     <FullCalendar
                         id="trucksCalendar"
                         header={{
@@ -125,14 +111,18 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         defaultDate={new Date()}
                         navLinks={false} // can click day/week names to navigate views
                         editable={true}
-                        events={this.viewRender}
+                        events={this.getData}
                         displayEventTime={false} // disable 12a prefix in events
                         eventLimit={true} // allow "more" link when too many events
                         eventResize={this.resizeEvent}
                         eventDrop={this.eventDrop}
-
                         showNonCurrentDates={false}
+                        ref={this.calendarRef}
                     />
+                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/dispatcher']}
+                                  onMessage={(msg) => { console.log(msg);
+                                  }}
+                                  ref={ (client) => { this.clientRef = client }} />
                 </div>
             </div>
         </div>

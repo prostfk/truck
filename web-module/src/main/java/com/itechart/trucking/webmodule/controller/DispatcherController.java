@@ -30,8 +30,10 @@ import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.waybill.dto.WaybillDto;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
+import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +56,8 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/api")
 public class DispatcherController {
+    @Autowired
+    private StompService stompService;
 
     @Autowired
     private UserRepository userRepository;
@@ -303,6 +307,7 @@ public class DispatcherController {
         waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
 
         waybillRepository.save(waybill);
+        stompService.sendNotification("/topic/dispatcher", new WaybillDto(waybill));
 
         return true;
     }
