@@ -1,7 +1,10 @@
 package com.itechart.trucking.company.entity;
 
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.cancellationAct.dto.CancellationStatisticDto;
+import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.entity.Order;
@@ -132,6 +135,36 @@ public class Company {
                 if(month.containsKey(dateExecuted.getMonthValue()))
                     month.put(dateExecuted.getMonthValue(),(Integer)month.get(dateExecuted.getMonthValue()) +1);
                 else month.put(dateExecuted.getMonthValue(),1);
+            }
+        }
+
+        return month;
+    }
+
+    public Map getOrderFailedAmmount(List<Order> lastOrders){
+        Map month = new HashMap<String, CancellationStatisticDto>();
+        month.put(LocalDate.now().minus(Period.ofMonths(5)).getMonthValue(),new CancellationStatisticDto());
+        month.put(LocalDate.now().minus(Period.ofMonths(4)).getMonthValue(),new CancellationStatisticDto());
+        month.put(LocalDate.now().minus(Period.ofMonths(3)).getMonthValue(),new CancellationStatisticDto());
+        month.put(LocalDate.now().minus(Period.ofMonths(2)).getMonthValue(),new CancellationStatisticDto());
+        month.put(LocalDate.now().minus(Period.ofMonths(1)).getMonthValue(),new CancellationStatisticDto());
+        month.put(LocalDate.now().getMonthValue(),new CancellationStatisticDto());
+
+
+        LocalDate dateFrom = LocalDate.now().minus(Period.ofMonths(6));
+
+        for (Order order:lastOrders){
+            LocalDate dateExecuted = Odt.convertToLocalDateViaInstant(order.getDateExecuted());
+            if(dateExecuted.isAfter(dateFrom) && dateExecuted.isBefore(LocalDate.now())){
+                CancellationAct cancellationAct = order.getConsignment().getCancellationAct();
+                if(cancellationAct==null) continue;
+                LocalDate dateofAct = Odt.convertToLocalDateViaInstant(cancellationAct.getDate());
+
+                CancellationStatisticDto cancellationStatisticDto = (CancellationStatisticDto) month.get(dateExecuted.getMonthValue());
+                cancellationStatisticDto.addProductAmmount(cancellationAct.getAmount());
+                cancellationStatisticDto.addProductPrice(cancellationAct.getPrice());
+
+                month.put(dateExecuted.getMonthValue(),cancellationStatisticDto);
             }
         }
 
