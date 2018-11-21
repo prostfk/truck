@@ -20,6 +20,10 @@ export default class CompanyOwnerStatistics extends Component {
             mmonthNames:[],
             acceptedAmmountMonthValues:[],
             executedAmmountMonthValues:[],
+            totalItemsFailed :0,
+            totalPricaeFaile : 0,
+            productAmount : [],
+            productPrice : []
         };
         document.title = "Статистика";
     }
@@ -57,9 +61,30 @@ export default class CompanyOwnerStatistics extends Component {
             this.setState({
                 rolesAmmount:data.workersAmmount,
                 acceptedAmmount:data.acceptedAmmount,
-                executedAmmount:data.executedAmmount
-            })
+                executedAmmount:data.executedAmmount,
+                totalItemsFailed :data.totalItemsFailed,
+                totalPricaeFaile:data.totalPricaeFaile
+
+            });
+            console.log(data.cancellationActAmmount);
+
+            for (var k in data.cancellationActAmmount){
+                let newArrOfValsproductAmmount = this.state.productAmount;
+                newArrOfValsproductAmmount.push(data.cancellationActAmmount[k].productAmmount);
+
+                let newArrOfValsproductPrice = this.state.productPrice;
+                newArrOfValsproductPrice.push(data.cancellationActAmmount[k].productPrice);
+
+                this.setState({
+                    productAmount:newArrOfValsproductAmmount,
+                    productPrice:newArrOfValsproductPrice
+                })
+            }
+
         }).then(()=>{
+            console.log(this.state.productAmount);
+            console.log(this.state.productPrice);
+
             this.setCompanyWorkers();
             for (var k in this.state.acceptedAmmount){
 
@@ -81,6 +106,8 @@ export default class CompanyOwnerStatistics extends Component {
                     executedAmmountMonthValues:newArrOfVals
                 })
             }
+            console.log(this.state)
+
         });
     }
 
@@ -170,16 +197,50 @@ export default class CompanyOwnerStatistics extends Component {
     generateAcceptedTable(data,mmonthNames){
         if(data.length<6 || mmonthNames.length<6) return;
         let newarr = this.state.mmonthNames;
-        console.log(newarr);
         let dataAccepted = {
             labels: newarr,
             datasets: [
                 {
                     label: 'Принятые заказы',
                     fill: false,
-                    lineTension: 0.1,
-                    backgroundColor: '#848484',
-                    borderColor: '#848484',
+                    lineTension: 0.4,
+                    backgroundColor: '#4c5884',
+                    borderColor: '#5a6384',
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: '#56845c',
+                    pointBackgroundColor: '#adc6ff',
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#4e5784',
+                    pointHoverBorderColor: 'rgba(220,220,220,1)',
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: this.state.acceptedAmmountMonthValues
+                }
+            ]
+        };
+        return <Container>
+            <Line data={dataAccepted} />
+        </Container>
+    }
+
+    generateFailedTableProducts(data,mmonthNames){
+        debugger;
+        if(data.length<6 || mmonthNames.length<6) return;
+        let newarr = this.state.mmonthNames;
+        let dataAccepted = {
+            labels: newarr,
+            datasets: [
+                {
+                    label: 'Списано товаров',
+                    fill: false,
+                    lineTension: 0.4,
+                    backgroundColor: '#ffb7c6',
+                    borderColor: '#ffb7c6',
                     borderCapStyle: 'butt',
                     borderDash: [],
                     borderDashOffset: 0.0,
@@ -187,13 +248,46 @@ export default class CompanyOwnerStatistics extends Component {
                     pointBorderColor: '#848484',
                     pointBackgroundColor: '#fff',
                     pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: '#848484',
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor:  '#ff818f',
                     pointHoverBorderColor: 'rgba(220,220,220,1)',
                     pointHoverBorderWidth: 2,
-                    pointRadius: 1,
+                    pointRadius: 5,
                     pointHitRadius: 10,
-                    data: this.state.acceptedAmmountMonthValues
+                    data: this.state.productAmount
+                }
+            ]
+        };
+        return <Container>
+            <Line data={dataAccepted} />
+        </Container>
+    }
+    generateFailedTablePrices(data,mmonthNames){
+        if(data.length<6 || mmonthNames.length<6) return;
+        let newarr = this.state.mmonthNames;
+        let dataAccepted = {
+            labels: newarr,
+            datasets: [
+                {
+                    label: 'Сумма списания',
+                    fill: false,
+                    lineTension: 0.4,
+                    backgroundColor: '#ffb7c6',
+                    borderColor: '#ffb7c6',
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: '#848484',
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor:  '#ff818f',
+                    pointHoverBorderColor: 'rgba(220,220,220,1)',
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: this.state.productPrice
                 }
             ]
         };
@@ -205,28 +299,27 @@ export default class CompanyOwnerStatistics extends Component {
     generateExecutedTable(data,mmonthNames){
         if(data.length<6 || mmonthNames.length<6) return;
         let newarr = this.state.mmonthNames;
-        console.log(newarr);
         let dataAccepted = {
             labels: newarr,
             datasets: [
                 {
                     label: 'Выполненные заказы',
                     fill: false,
-                    lineTension: 0.1,
-                    backgroundColor: '#848484',
-                    borderColor: '#848484',
+                    lineTension: 0.4,
+                    backgroundColor: '#4e847b',
+                    borderColor: '#568481',
                     borderCapStyle: 'butt',
                     borderDash: [],
                     borderDashOffset: 0.0,
                     borderJoinStyle: 'miter',
                     pointBorderColor: '#848484',
-                    pointBackgroundColor: '#fff',
+                    pointBackgroundColor: '#b9ffa9',
                     pointBorderWidth: 1,
                     pointHoverRadius: 5,
-                    pointHoverBackgroundColor: '#848484',
+                    pointHoverBackgroundColor: '#498456',
                     pointHoverBorderColor: 'rgba(220,220,220,1)',
                     pointHoverBorderWidth: 2,
-                    pointRadius: 1,
+                    pointRadius: 5,
                     pointHitRadius: 10,
                     data: this.state.executedAmmountMonthValues
                 }
@@ -241,9 +334,20 @@ export default class CompanyOwnerStatistics extends Component {
 
         return (
             <div>
-                <div className="offset-1 row" style={{cursor: 'pointer'}} id="download">
-                    <img onClick={this.xlsCompanyInfo} src={statsIcon}/>
-                    <img onClick={this.xlsDriverInfo} src={driverIcon}/>
+                <div className="row">
+                    <div className="offset-md-1 col-xl-10 superuserform_companylist">
+                        <h2> Скачать статистику</h2>
+                        <div className="row">
+                            <div onClick={this.xlsCompanyInfo} className="col-xl-2 download_button" title={"Скачать"}>
+                                Статистика по заказам
+                                <img  src={statsIcon} />
+                            </div>
+                            <div onClick={this.xlsDriverInfo} className="col-xl-2 download_button" title={"Скачать"}>
+                                Статистика по водителям
+                                <img src={driverIcon} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="row">
                     <div className="offset-md-1 col-xl-10 superuserform_companylist">
@@ -259,22 +363,37 @@ export default class CompanyOwnerStatistics extends Component {
                                     this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
                                 }
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="offset-md-1 col-md-10 superuserform_companylist info-block">
-                        <h2> Сотрудники:</h2>
+                    <div className="offset-md-1 col-xl-10 superuserform_companylist">
+                        <h2> Товарные списания:</h2>
                         <div className="row">
                             <div className="col-xl-6">
-                                <Container>
-                                    <canvas id="barChart"></canvas>
-                                </Container>
+                                {
+                                    this.generateFailedTableProducts(this.state.productAmount,this.state.mmonthNames)
+                                }
+                            </div>
+                            <div className="col-xl-6">
+                                {
+                                    this.generateFailedTablePrices(this.state.productPrice,this.state.mmonthNames)
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="row">
+                    <div className="offset-md-1 col-xl-6 superuserform_companylist info-block">
+                        <h2> Сотрудники:</h2>
+                        <div className="row">
+                                <Container>
+                                    <canvas id="barChart"></canvas>
+                                </Container>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         );
     }
