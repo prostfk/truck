@@ -115,7 +115,7 @@ export default class TestComponent extends Component {
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
 const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";
-TestComponent.propTypes = {
-    googleMaps: PropTypes.object,
-};
+// TestComponent.propTypes = {
+//     googleMaps: PropTypes.object,
+// };
 

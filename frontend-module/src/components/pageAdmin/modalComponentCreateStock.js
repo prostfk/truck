@@ -97,7 +97,7 @@ export default class CreateStockModal extends Component {
                                 <div id={'react-google-maps-searcher'}>
                                     <ReactGoogleMapLoader
                                         params={{
-                                            key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI',
+                                            key: API_KEY,
                                             libraries: "places,geocode",
                                         }}
                                         render={googleMaps =>
@@ -112,7 +112,7 @@ export default class CreateStockModal extends Component {
                                                             value={value}
                                                             className={'form-control'}
                                                             style={{borderRadius: '5px', width: '100%'}}
-                                                            placeholder="Введите адрес склада"
+                                                            placeholder="Search a location"
                                                             onChange={this.handleInputChange}/>
                                                     </ReactGooglePlacesSuggest>
                                                 </div>
@@ -140,6 +140,3 @@ export default class CreateStockModal extends Component {
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
 const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";
-CreateStockModal.propTypes = {
-    googleMaps: PropTypes.object,
-};

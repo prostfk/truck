@@ -36,7 +36,7 @@ class OwnerOrderList extends React.Component {
     /*render row of table ( calls from html ) */
     renderTable(order, index) {
         if (!order) return;
-        return <div key={index} className="row table_row order_row">
+        return <div key={index} className="row table_row order_row animated fadeInUp">
             <div className="col-md-1">{order.client.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>

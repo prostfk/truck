@@ -39,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
@@ -209,6 +210,22 @@ public class OwnerController {
         }
 
         return new CancellationActDto(cancellationAct);
+    }
+
+    @PostMapping(value = "/createClient")
+    @ResponseBody
+    public Object createClient(String name) throws JSONException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(username);
+        Client clientByName = clientRepository.findClientByName(name);
+        if (clientByName==null){
+            @Valid Client save = clientRepository.save(new Client(name, "default",userByUsername.getCompany()));
+            return new ClientDto(save);
+        }else{
+            JSONObject json = new JSONObject();
+            json.put("error", "Such client is already exists");
+            return json.toString();
+        }
     }
 
     @GetMapping(value = "/company/clients")

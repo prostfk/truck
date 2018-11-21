@@ -1,9 +1,9 @@
 ﻿import React, {Component} from "react";
-import {GoogleApiWrapper, InfoWindow, Map, Marker } from 'google-maps-react';
+import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-react';
 import * as ReactDOM from "react-dom";
-import Geocode from "react-geocode"
+import redMarker from '../pageDriver/img/non-passed-marker.png';
 
-class ManagerRouteList extends Component {
+export class ManagerRouteList extends Component {
 
     constructor(props) {
         super(props);
@@ -22,7 +22,9 @@ class ManagerRouteList extends Component {
             pointLevel:0,
             showingInfoWindow: false,
             activeMarker: {},
-            selectedPlace: {}
+            selectedPlace: {},
+            mapCenter: {lat: 53.9, lng: 27.56667}
+
         };
 
         document.title = "Путевой лист";
@@ -37,6 +39,9 @@ class ManagerRouteList extends Component {
                 }
             });
             this.setState({routePoints:data, pointLevel:level+1});
+            if (data[0]!==null){
+                this.setState({mapCenter: {lat: data[0].lat, lng: data[0].lng}})
+            }
         });
     }
 
@@ -68,7 +73,7 @@ class ManagerRouteList extends Component {
 
     renderMarkers(routePoint) {
         if (!routePoint) return;
-        return <Marker onClick={this.onMarkerClick}
+        return <Marker onClick={this.onMarkerClick} icon={redMarker}
                        name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}} id={routePoint.id}/>
 
     }
@@ -123,7 +128,7 @@ class ManagerRouteList extends Component {
             activeMarker: marker,
             showingInfoWindow: true
         });
-    }
+    };
     onInfoWindowClose() {
         this.setState({
             showingInfoWindow: false
@@ -143,7 +148,7 @@ class ManagerRouteList extends Component {
     };
 
     rendSideList = (point) => {
-        return <div className={'row'}>
+        return <div className={'row animated fadeInUp'}>
             <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success' : 'list-group-item list-group-item-action list-group-item-danger'}
                 style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
         </div>
@@ -166,30 +171,45 @@ class ManagerRouteList extends Component {
             height: '75vh',
             'marginLeft': 'auto',
             'marginRight': 'auto'
-        }
+        };
         return (
-            <Map google={this.props.google}
-                 center={{
-                     lat: 53.7169,
-                     lng: 27.9776
-                 }}
-                 zoom={14} onClick={this.onMapClick} id="googleMap">
-                {
-                    this.state.routePoints.map((element) => {
-                        return this.renderMarkers(element);
-                    })
-                }
-                <InfoWindow onClose={this.onInfoWindowClose}
-                            onOpen={e => {
-                                this.onInfoWindowOpen(this.props, e, this.state.activeMarker.id);
-                            }}
-                            marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
-                    <div>
-                        <h3>{this.state.activeMarker.name}</h3>
-                        <div className="table_button bg-secondary text-white" id="info-window-container"></div>
-                    </div>
-                </InfoWindow>
-            </Map>
+            <div className={'row'}>
+                <div className={'col-md-3'}>
+                    <ul>
+                        <h1>Точки</h1>
+                        {this.state.routePoints.map(p => {
+                            return this.rendSideList(p);
+                        })}
+                    </ul>
+                </div>
+                <div className={'col-md-9'}>
+                    <div style={{height: '92.5vh', width: '90%'}}>
+                        <Map google={this.props.google}
+                             center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}}
+                             zoom={14} onClick={this.onMapClick} id="googleMap">
+                            {
+                                this.state.routePoints.map((element) => {
+                                    return this.renderMarkers(element);
+                                })
+                            }
+                            <InfoWindow onClose={this.onInfoWindowClose}
+                                        onOpen={e => {
+                                            this.onInfoWindowOpen(this.props, e, this.state.activeMarker.id);
+                                        }}
+                                        marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
+                                <div>
+                                    <h3>{this.state.activeMarker.name}</h3>
+                                    <div className="table_button bg-secondary text-white" id="info-window-container"/>
+                                </div>
+                            </InfoWindow>
+                            <Polyline
+                                path={this.state.routePoints}
+                                strokeColor="#CF89F9"
+                                strokeOpacity={0.8}
+                                strokeWeight={2} />
+                        </Map>
+                    </div></div>
+            </div>
         );
 
     }

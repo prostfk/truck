@@ -9,12 +9,14 @@ import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import lombok.Data;
 
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Map;
 
 @Data
 public class ClientDto {
     private Long id;
+    @Size(min = 3, max = 39)
     private String name;
     private String type;
     private CompanyDto company;

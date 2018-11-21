@@ -28,7 +28,7 @@ class pageUserLogin extends Component {
     render() {
         return (
 
-            <form className="form-signin center" id="login-form">
+            <form className="form-signin center animated fadeInUp" id="login-form">
                 <span style={{color: 'red'}} id="error-span"/>
 
                 <input type="text" id="inputUsername" value={this.state.email} onChange={this.setUsername}

@@ -41,7 +41,7 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user) => {
-        return <div className={'row table_row'}>
+        return <div className={'row table_row animated fadeInUp'}>
             {/*<div className={'col-md-1'}>{user.id}</div>*/}
             <div className={'col-md-3'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>

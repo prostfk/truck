@@ -82,7 +82,7 @@ export class DriverRouterListNew extends Component {
     };
 
     rendPointsList = (point) => {
-        return <div className={'row'}>
+        return <div className={'row animated fadeInUp'}>
             <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success':'list-group-item list-group-item-action list-group-item-danger'} style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
         </div>
     };
@@ -125,11 +125,11 @@ export class DriverRouterListNew extends Component {
                     </ul>
                 </div>
                 <div className={'col-md-9'}>
-                    <div style={{height: '100vh', width: '90%'}}>
-                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}} google={window.google}
+                    <div style={{height: '92.5vh', width: '90%'}}>
+                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}} google={this.props.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
                              className={'map'}
-                             zoom={11}>
+                             zoom={14}>
                             {
                                 this.state.routePoints.map(point => {
                                     return this.setMarksToMap(point);
