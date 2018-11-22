@@ -11,6 +11,7 @@ public class UserDetail implements UserDetails {
     private String username;
     private String token;
     private Long id;
+    private Long companyId;
     private Collection<? extends GrantedAuthority> authorities;
 
     public UserDetail(String username, String token, Long id, Collection<? extends GrantedAuthority> authorities) {

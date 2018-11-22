@@ -62,6 +62,8 @@ class pageUserLogin extends Component {
                     localStorage.setItem("Auth-token", data.token);
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", data.role);
+                    localStorage.setItem("userId", data.userId);
+                    localStorage.setItem("companyId", data.companyId);
                     this.props.history.push('/');
                 } else {
                     document.getElementById('error-span').innerText = "Неправильные данные";

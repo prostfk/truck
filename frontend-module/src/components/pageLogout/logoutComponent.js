@@ -15,6 +15,8 @@ export default class LogoutComponent extends Component {
         localStorage.removeItem('Auth-token');
         localStorage.removeItem('username');
         localStorage.removeItem('role');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('companyId');
         this.toggle();
         window.location.href = "/";
     };
