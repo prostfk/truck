@@ -121,7 +121,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         if(!rangeArrival && !rangeDeparture) return;
 
         if(myId==msg.updaterUser) {
-            NotificationManager.info('Заказ обновлён '+ msg.orderName, 'Информация');
+            NotificationManager.success('Заказ обновлён '+ msg.orderName, 'Информация');
         }
         else{
             NotificationManager.info('Изменены даты перевозки заказа - '+ msg.orderName, 'Пользователь: '+ msg.updaterUserName);
