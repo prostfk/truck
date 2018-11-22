@@ -117,10 +117,6 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         let dateDeparture = moment(msg.waybillDto.dateDeparture);
         let rangeDeparture =dateDeparture.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));
 
-        console.log(this.state.currentDateFrom)
-        console.log(dateArrival);
-        console.log(dateDeparture);
-
         if(!rangeArrival && !rangeDeparture) return;
 
         NotificationManager.info('Изменены даты перевозки заказа - '+ msg.orderName, 'Пользователь: '+ msg.updaterUserName);
