@@ -19,12 +19,19 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
             company: {},
             totalElements: 0,
             currentPage: 1,
-            calendarEvents:[]
+            calendarEvents:[],
+            start:"",
+            end:"",
+            callback:function () {
+            }
         };
-        document.title = "Заказы"
+        document.title = "Заказы";
+
     }
 
     getData(start, end, timezone, callback) {
+        let refthis = this;
+        console.log(this.state);
         let from = moment(start._d).format('YYYY-MM-DD');
         let to = moment(end._d).format('YYYY-MM-DD');
         return fetch('http://localhost:8080/api/ordersByDate?from=' + from + '&to=' + to, {
@@ -42,7 +49,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
             });
             return myres;
         }).then(function (result) {
-            callback(result);
+            return callback(result);
         }).catch(err => {
             NotificationManager.error('Отказано в доступе', 'Ошибка');
         });
@@ -120,7 +127,10 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         ref={this.calendarRef}
                     />
                     <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/dispatcher']}
-                                  onMessage={(msg) => { console.log(msg);
+                                  onMessage={(msg) => {
+                                      console.log(this.state.company)
+                                      NotificationManager.info('Данные обновлены', 'Обновление');
+                                    this.forceUpdate();
                                   }}
                                   ref={ (client) => { this.clientRef = client }} />
                 </div>
