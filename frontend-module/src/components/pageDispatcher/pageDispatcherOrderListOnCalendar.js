@@ -110,7 +110,8 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
        msg.waybillDto.dateArrival=msg.waybillDto.dateArrival.year+"-"+msg.waybillDto.dateArrival.monthValue+"-"+msg.waybillDto.dateArrival.dayOfMonth;
        msg.waybillDto.dateDeparture=msg.waybillDto.dateDeparture.year+"-"+msg.waybillDto.dateDeparture.monthValue+"-"+msg.waybillDto.dateDeparture.dayOfMonth;
 
-        if(myId==msg.updaterUser || myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
+        if(myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
+
         let dateArrival = moment(msg.waybillDto.dateArrival);
         let rangeArrival =dateArrival.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));
 
@@ -119,7 +120,12 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
         if(!rangeArrival && !rangeDeparture) return;
 
-        NotificationManager.info('Изменены даты перевозки заказа - '+ msg.orderName, 'Пользователь: '+ msg.updaterUserName);
+        if(myId==msg.updaterUser) {
+            NotificationManager.info('Заказ обновлён '+ msg.orderName, 'Информация');
+        }
+        else{
+            NotificationManager.info('Изменены даты перевозки заказа - '+ msg.orderName, 'Пользователь: '+ msg.updaterUserName);
+        }
         this.forceUpdate();
     }
 
