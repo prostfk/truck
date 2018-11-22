@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from "react-dom";
 import SockJsClient from 'react-stomp';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
@@ -13,7 +14,8 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         super(props);
         this.eventDrop = this.eventDrop.bind(this);
         this.resizeEvent = this.resizeEvent.bind(this);
-        this.getData = this.getData.bind(this);
+        this.getEvents = this.getEvents.bind(this);
+        this.handleMessage = this.handleMessage.bind(this);
         this.state = {
             orders: [],
             company: {},
@@ -22,18 +24,22 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
             calendarEvents:[],
             start:"",
             end:"",
-            callback:function () {
-            }
+            myref:"",
+            currentDateFrom:new Date().setDate(1),
+            currentDateTo:"-"
         };
         document.title = "Заказы";
 
     }
 
-    getData(start, end, timezone, callback) {
+    getEvents(start, end, timezone, callback) {
         let refthis = this;
-        console.log(this.state);
         let from = moment(start._d).format('YYYY-MM-DD');
         let to = moment(end._d).format('YYYY-MM-DD');
+
+        this.state.currentDateFrom=from;
+        this.state.currentDateTo=to;
+
         return fetch('http://localhost:8080/api/ordersByDate?from=' + from + '&to=' + to, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -57,7 +63,6 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
 
     eventDrop(event, days_offset, revertFunc, jsEvent, ui, view) {
-        console.log(this.state);
         if ((moment().isAfter(event._start)) || (moment().isAfter(event._start._i))) {
             revertFunc();
             if ((moment().isAfter(event._start))) NotificationManager.error('Заказ уже начался/завершился', 'Ошибка');
@@ -97,10 +102,33 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         /*        revertFunc();*/
     };
 
-    calendarRef = React.createRef();
+    handleMessage(msg){
+        console.log(msg);
+        let myId = localStorage.getItem("userId");
+        let myCompanyId = localStorage.getItem("companyId");
+
+       msg.waybillDto.dateArrival=msg.waybillDto.dateArrival.year+"-"+msg.waybillDto.dateArrival.monthValue+"-"+msg.waybillDto.dateArrival.dayOfMonth;
+       msg.waybillDto.dateDeparture=msg.waybillDto.dateDeparture.year+"-"+msg.waybillDto.dateDeparture.monthValue+"-"+msg.waybillDto.dateDeparture.dayOfMonth;
+
+        if(myId==msg.updaterUser || myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
+        let dateArrival = moment(msg.waybillDto.dateArrival);
+        let rangeArrival =dateArrival.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));
+
+        let dateDeparture = moment(msg.waybillDto.dateDeparture);
+        let rangeDeparture =dateDeparture.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));
+
+        console.log(this.state.currentDateFrom)
+        console.log(dateArrival);
+        console.log(dateDeparture);
+
+        if(!rangeArrival && !rangeDeparture) return;
+
+        NotificationManager.info('Изменены даты перевозки заказа - '+ msg.orderName, 'Пользователь: '+ msg.updaterUserName);
+        this.forceUpdate();
+    }
 
     render() {
-        const self = this;
+        let asd = this;
         return <div className="row">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <NotificationContainer/>
@@ -115,22 +143,20 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                             center: 'title',
                             right: 'month,basicWeek,basicDay,list'
                         }}
-                        defaultDate={new Date()}
+                        defaultDate={this.state.currentDateFrom}
                         navLinks={false} // can click day/week names to navigate views
                         editable={true}
-                        events={this.getData}
+                        events={this.getEvents}
                         displayEventTime={false} // disable 12a prefix in events
                         eventLimit={true} // allow "more" link when too many events
                         eventResize={this.resizeEvent}
                         eventDrop={this.eventDrop}
                         showNonCurrentDates={false}
-                        ref={this.calendarRef}
+                        ref={(input) => { this.state.myref = input; }}
                     />
                     <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/dispatcher']}
                                   onMessage={(msg) => {
-                                      console.log(this.state.company)
-                                      NotificationManager.info('Данные обновлены', 'Обновление');
-                                    this.forceUpdate();
+                                      this.handleMessage(msg);
                                   }}
                                   ref={ (client) => { this.clientRef = client }} />
                 </div>
