@@ -99,8 +99,11 @@ class DriverConsignment extends Component {
         } else if (product.status === 5) {
             status = "Частично утерян";
         }
+        let isLost = false;
+        if (status === "Утерян")
+            isLost = true;
 
-        return <div key={index} className="row table_row manager_orders">
+        return <div key={index} className="row table_row manager_orders animated fadeInUp">
             <div className="col-md-3">{product.name}</div>
             <div className="col-md-2">{status}</div>
             <div className="col-md-3">{product.description}</div>
@@ -172,7 +175,7 @@ class DriverConsignment extends Component {
                         <div className="col-md-2">Состоние</div>
                         <div className="col-md-3">Описание</div>
                         <div className="col-md-2">Цена</div>
-                        <div className="col-md-2"></div>
+                        <div className="col-md-2"/>
                     </div>
                     {
                         this.state.products.map((element, index) => {

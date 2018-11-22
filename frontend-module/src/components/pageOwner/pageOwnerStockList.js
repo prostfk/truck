@@ -66,7 +66,7 @@ export default class PageStockListNew extends React.Component {
         console.log("stock name" + stock.name);
         console.log(stock);
         if (!stock) return;
-        return <div className={"row table_row"}>
+        return <div className={"row table_row animated fadeInUp"}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"offset-md-1 col-md-5"}>{stock.name}</div>
             <div className={"offset-md-1 col-md-4"}>{stock.address}</div>

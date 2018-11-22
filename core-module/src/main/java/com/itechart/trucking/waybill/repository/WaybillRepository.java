@@ -21,6 +21,9 @@ public interface WaybillRepository extends CrudRepository<Waybill, Long> {
 
     Waybill findWaybillById(Long id);
 
+    @Query(value = "SELECT * FROM waybill JOIN driver d on waybill.driver = d.id WHERE user_id=:userId", nativeQuery = true)
+    List<Waybill> findTop10WaybillsByUserId(@Param("userId")Long userId);
+
     @Query("select d From Driver d where d.id not IN " +
             "(select w.driver.id FROM Waybill w where " +
             "(:dDep between w.dateDeparture and w.dateArrival) " +

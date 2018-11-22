@@ -115,7 +115,7 @@ export default class AutoList extends Component {
     };
 
     renderAuto = (auto) => {
-        return <div className={'row table_row'}>
+        return <div className={'row table_row animated fadeInUp'}>
             <div className={'col-md-1'}>{auto.id}</div>
             <div className={'col-md-3'}>{auto.name}</div>
             <div className={'col-md-2'}>{auto.carNumber}</div>

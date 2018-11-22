@@ -53,6 +53,10 @@ public class WaybillService {
         return waybillRepository.saveWaybill(waybillStatus, driverId, autoId, dateDeparture, dateArrival);
     }
 
+    public List<Waybill> findTop10WaybillsByUserId(Long userId){
+        return waybillRepository.findTop10WaybillsByUserId(userId);
+    }
+
     public Waybill save(@Valid Waybill waybill){
         return waybillRepository.save(waybill);
     }

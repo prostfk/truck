@@ -34,6 +34,7 @@ export default class CreateUser extends Component {
     validateUserForm = () => {
         let usernameVal = ValidationUtil.validateStringForLength(this.state.newUserUsername, 5, 20);
         let nameVal = ValidationUtil.validateStringForLength(this.state.newUserFirstName, 2, 50);
+        let dateVal = ValidationUtil.validateDateForNotThisYear(this.state.newUserDate);
         let surnameVal = ValidationUtil.validateStringForLength(this.state.newUserSecondName, 4, 50);
         let passwordVal = ValidationUtil.validateStringForLength(this.state.newUserPassword, 6, 20);
         let emailVal = ValidationUtil.validateEmailForPattern(this.state.newUserEmail);
@@ -47,14 +48,15 @@ export default class CreateUser extends Component {
         else document.getElementById('error-password-span').innerText = '';
         if (!emailVal) document.getElementById('error-email-span').innerText = "Неправильная почта";
         else document.getElementById('error-email-span').innerText = '';
+        if (!dateVal) document.getElementById('error-date-span').innerText = "Неправильная дата(дд/мм/гггг)";
+        else document.getElementById('error-date-span').innerText = '';
         if ((Array.isArray(this.state.newUserRole) ? this.state.newUserRole.join('') === 'ROLE_DRIVER' : false) && this.state.newUserPassport === '') {
             console.log(this.state.newUserPassport);
-
             document.getElementById('error-passport-span').innerText = "Неправильные данные";
             return false;
         }
         console.log(this.state);
-        return usernameVal && nameVal && surnameVal && passwordVal && emailVal;
+        return usernameVal && nameVal && surnameVal && passwordVal && emailVal && dateVal;
     };
 
     saveNewUser = () => {
@@ -84,8 +86,7 @@ export default class CreateUser extends Component {
                 if (response.status > 199 && response.status < 300) {
                     return response.json();
                 }
-            }).then(data => {
-                //todo add backend processing!
+            }).then(data=>{
                 console.log(data);
                 if (data.error === undefined) {
                     document.getElementById('message-span').innerText = 'Сохранено';
@@ -107,7 +108,6 @@ export default class CreateUser extends Component {
                         document.getElementById('newUserStreet').value = '';
                         document.getElementById('newUserHouseNumber').value = '';
                         document.getElementById('newUserFlatNumber').value = '';
-
                     }, 2000);
                 } else {
                     document.getElementById('error-form-span').innerText = data.error;
@@ -183,6 +183,8 @@ export default class CreateUser extends Component {
                             <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
                                    className="form-control" id="newUserDate"
                                    placeholder="01/01/2018" required=""/>
+                            <span className="error-span" id="error-date-span"/>
+
                         </div>
                         <div className="form-group">
                             <label htmlFor="newUserRole" id="roleLabel">Роль</label>

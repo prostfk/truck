@@ -82,23 +82,19 @@ export default class UsersList extends Component {
         if (!user) return;
         user.reg_date[6] = user.reg_date[6] / 1000000;
         let timezoneoffset = new Date().getTimezoneOffset();
-
         let dateofreg = user.reg_date == null ? "-" : moment.utc(user.reg_date);
         let localTime = moment(dateofreg).utcOffset(-timezoneoffset).format('YYYY-MM-DD HH:mm:ss');
 
 
-        return <div className={'row table_row'}>
+        return <div className={'row table_row animated fadeInUp'}>
 
             {/*<div className={'col-md-1'}>{user.id}</div>*/}
             <div className={'col-md-3'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{localTime}</div>
-            <div className={'col-md-2'}>{user.email}</div>
-            {user.userRole !== 'ROLE_COMP_OWNER' ?
-                <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a></div> : <div/>}
-
-        </div>
-
+            <div className={'col-md-2'} style={{'overflow': 'hidden'}}>{user.email}</div>
+            {user.userRole !== 'ROLE_COMP_OWNER' ? <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a></div> : <div/>}
+            </div>
     };
 
     russianRole = (role) => {

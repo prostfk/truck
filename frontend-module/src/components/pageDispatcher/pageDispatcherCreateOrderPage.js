@@ -46,6 +46,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     }
 
     changeInput(event) {
+        console.log(this.state);
         this.setState({
             [event.target.id]: [event.target.value]
         });
@@ -56,6 +57,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
         let nameValidation = ValidationUtil.validateStringForLength(Array.isArray(this.state.name) ? this.state.name.join('') : this.state.name, 3, 20);
         let dateArrivalValidation = ValidationUtil.validateDateToPattern(this.state.date_arrival);
         let dateDepartureValidation = ValidationUtil.validateDateToPattern(this.state.date_departure);
+        let stocksVal = this.state.departure_stock !== this.state.delivery_stock;
         let validateAuto = ValidationUtil.validateForNumber(this.state.auto);
         let validateDriver = ValidationUtil.validateForNumber(this.state.driver);
         if (!clientIdValidation) {
@@ -83,22 +85,27 @@ export default class DispatcherCreateOrderPage extends React.Component {
         } else {
             document.getElementById('driver-error-span').innerText = '';
         }
+        if (!stocksVal){
+            document.getElementById('stocks-error-span').innerText = 'Выберите разные склады';
+        }else{
+            document.getElementById('stocks-error-span').innerText = '';
+        }
         return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation && validateAuto && validateDriver;
     };
 
     saveBtnClick() {
         if (this.validateOrderForm()) {
             let formData = new FormData();
-            formData.append("clientId", this.state.client_id);
-            formData.append("name", this.state.name);
-            formData.append("status", this.state.status);
-            formData.append("departureStock", this.state.departure_stock);
-            formData.append("deliveryStock", this.state.delivery_stock);
-            formData.append("dateArrival", this.state.date_arrival);
-            formData.append("dateDeparture", this.state.date_departure);
-            formData.append("waybillStatus", this.state.waybill_status);
-            formData.append("autoId", this.state.auto);
-            formData.append("driverId", this.state.driver);
+            formData.append("clientId", ValidationUtil.getStringFromUnnownObject(this.state.client_id));
+            formData.append("name", ValidationUtil.getStringFromUnnownObject(this.state.name));
+            formData.append("status", ValidationUtil.getStringFromUnnownObject(this.state.status));
+            formData.append("departureStock", ValidationUtil.getStringFromUnnownObject(this.state.departure_stock));
+            formData.append("deliveryStock", ValidationUtil.getStringFromUnnownObject(this.state.delivery_stock));
+            formData.append("dateArrival", ValidationUtil.getStringFromUnnownObject(this.state.date_departure));
+            formData.append("dateDeparture", ValidationUtil.getStringFromUnnownObject(this.state.date_arrival));
+            formData.append("waybillStatus", ValidationUtil.getStringFromUnnownObject(this.state.waybill_status));
+            formData.append("autoId", ValidationUtil.getStringFromUnnownObject(this.state.auto));
+            formData.append("driverId", ValidationUtil.getStringFromUnnownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
             formData.forEach((v, k) => {
                 console.log(`${v} - ${k}`);
@@ -223,19 +230,21 @@ export default class DispatcherCreateOrderPage extends React.Component {
     //Consignment
 
     addProduct = (event) => {
-        event.preventDefault();
-        let product = {
-            name: this.state.newProductName.join(''),
-            status: this.state.newProductStatus.join(''),
-            description: this.state.newProductDescription.join(''),
-            count: this.state.newProductCount.join(''),
-            price: this.state.newProductPrice.join('')
-        };
-        this.setState({
-            consignment: [...this.state.consignment, product],
-            newConsignmentName: ''
-        });
-        document.getElementById('newProductName').focus();
+        if (this.validateProduct()){
+            event.preventDefault();
+            let product = {
+                name: ValidationUtil.getStringFromUnnownObject(this.state.newProductName),
+                status: ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus),
+                description: ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription),
+                count: ValidationUtil.getStringFromUnnownObject(this.state.newProductCount),
+                price: ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice)
+            };
+            this.setState({
+                consignment: [...this.state.consignment, product],
+                newConsignmentName: ''
+            });
+            document.getElementById('newProductName').focus();
+        }
     };
 
     //trbl
@@ -260,6 +269,46 @@ export default class DispatcherCreateOrderPage extends React.Component {
             document.getElementById('sendOrderRequestButton').style.display = '';
         }
         // this.setState({newProductStatus: 'ACCEPTED'})
+    };
+
+    validateProduct = () => {
+        try{
+            let nameVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductName)!== '';
+            let statusVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus)!== '';
+            let descVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription)!== '';
+            let priceVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice)!== '';
+            let countVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductCount)!== '';
+            if (!nameVal){
+                document.getElementById('prodName-error-span').innerText = 'Название не может быть пустым';
+            }else{
+                document.getElementById('prodName-error-span').innerText = '';
+            }
+            if (!statusVal){
+                document.getElementById('prodStatus-error-span').innerText = 'Статус не может быть пустым';
+            }else{
+                document.getElementById('prodStatus-error-span').innerText = '';
+            }
+            if (!descVal){
+                document.getElementById('prodDescription-error-span').innerText = 'Описание не может быть пустым';
+            }else{
+                document.getElementById('prodDescription-error-span').innerText = '';
+            }
+            if (!priceVal){
+                document.getElementById('prodPrice-error-span').innerText = 'Цена должна быть указана';
+            }else{
+                document.getElementById('prodPrice-error-span').innerText = '';
+            }
+            if (!countVal){
+                document.getElementById('prodCount-error-span').innerText = 'Количество не может быть пустым';
+            }else{
+                document.getElementById('prodCount-error-span').innerText = '';
+            }
+            document.getElementById('prodForm-error-span').innerText = '';
+            return nameVal && statusVal && descVal && priceVal && countVal;
+        }catch (e) {
+            document.getElementById('prodForm-error-span').innerText = 'Проверьте правильность ваших данных';
+            return false;
+        }
     };
 
     render() {
@@ -304,6 +353,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                         className="form-control"
                                         id="delivery_stock" placeholder="Куда">
                                 </select>
+                                <span id="stocks-error-span" className={'error-span'}/>
 
                                 <div className="form-group">
                                     <small className="form-text text-muted">Сатус заказа</small>
@@ -378,11 +428,13 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                 заказу
                             </button>
                             <h3>Товарная партия</h3>
+                            <span className="error-span" id="prodForm-error-span"/>
                             <div className="row">
                                 <div className="col-md-3">
                                     <input type="text" id="newProductName" value={this.state.newProductName}
                                            onChange={this.changeInput} className="form-control"
                                            placeholder={"Название"}/>
+                                    <span className="error-span" id="prodName-error-span"/>
                                 </div>
                                 <div className="col-md-2">
                                     <select className="custom-select" onChange={this.changeInput}
@@ -392,23 +444,27 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                         <option value={'3'}>Доставлен</option>
                                         <option value={'4'}>Утерян</option>
                                     </select>
+                                    <span className="error-span" id="prodStatus-error-span"/>
+
                                 </div>
                                 <div className="col-md-3">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}
                                            onChange={this.changeInput} className="form-control"
                                            placeholder={"Описание"}/>
-
+                                    <span className="error-span" id="prodDescription-error-span"/>
                                 </div>
                                 <div className="col-md-2">
                                     <input type="number" id="newProductCount" value={this.state.newProductCount}
                                            onChange={this.changeInput} className="form-control"
                                            placeholder={"Количество"}/>
+                                    <span className="error-span" id="prodCount-error-span"/>
 
                                 </div>
                                 <div className="col-md-2">
                                     <input type="number" id="newProductPrice" value={this.state.newProductPrice}
                                            onChange={this.changeInput} className="form-control" placeholder={"Цена"}/>
+                                    <span className="error-span" id="prodPrice-error-span"/>
 
                                 </div>
                                 <div className="col-md-2">
@@ -420,7 +476,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                             </div>
                             {
                                 this.state.consignment.map((item, index) => {
-                                        return <div className={"row table_row"}>
+                                        return <div className={"row table_row animated fadeInUp"}>
                                             <div className="col-md-3">{item.name}</div>
                                             <div className="col-md-2">{item.status}</div>
                                             <div className="col-md-3">{item.description}</div>

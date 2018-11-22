@@ -73,7 +73,7 @@ class pageManagerOrders extends Component {
         let isDone = false;
         if (order.waybill.status === 2)
             isDone = true;
-        return <div className="row table_row">
+        return <div className="row table_row animated fadeInUp">
             <div className="col-md-1">{order.client.name}</div>
             <div className="col-md-2">{order.sender.name}</div>
             <div className="col-md-1">{order.receiver.address}</div>
@@ -150,9 +150,9 @@ class pageManagerOrders extends Component {
                             <div className="col-md-1"><b>Название склада (получатель)</b></div>
                             <div className="col-md-2"><b>Дата отправления</b></div>
                             <div className="col-md-1"><b>Дата получения</b></div>
-                            <div className="col-md-2"><b></b></div>
-                            <div className="col-md-2"><b></b></div>
-                            <div className="col-md-1"><b></b></div>
+                            <div className="col-md-2"><b/></div>
+                            <div className="col-md-2"><b/></div>
+                            <div className="col-md-1"><b/></div>
                         </div>
                         {
                             this.state.orders.map((element) => {

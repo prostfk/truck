@@ -10,8 +10,9 @@ import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
+
+import DriverRouterListNew from "./pageDriver/pageRouterListNew";
 //import DriverRouteList from "./pageDriver/pageRouteList";
-import {DriverRouterListNew} from "./pageDriver/pageRouterListNew";
 import DispatcherEditOrder from "./pageDispatcher/pageDispatcherEditOrder";
 import OwnerOrderList from "./pageOwner/pageOwnerOrderList.js";
 import OwnerRouteList from "./pageOwner/pageOwnerRouteList.js";

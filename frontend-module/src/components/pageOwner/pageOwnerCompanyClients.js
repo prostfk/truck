@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
+import ModalCreateClient from "./modalCreateClient";
 
 export default class CompanyClients extends Component {
 
@@ -36,7 +37,7 @@ export default class CompanyClients extends Component {
     };
 
     renderUser = (client, index) => {
-        return <div className={'row table_row'} key={index}>
+        return <div className={'row table_row animated fadeInUp'} key={index}>
             <div className={'col-md-1'}>{client.id}</div>
             <div className={'col-md-5'}>{client.name}</div>
             <div className={'col-md-3'}>{client.type}</div>
@@ -49,7 +50,7 @@ export default class CompanyClients extends Component {
     render() {
         return (
             <div className={'row'}>
-                <div className="offset-md-3 col-md-6 superuserform_companylist">
+                <div className="offset-md-2 col-md-5 superuserform_companylist">
                     <div className="row table_header">
                         <div className="col-md-1">Id</div>
                         <div className="col-md-5">Название</div>
@@ -76,6 +77,9 @@ export default class CompanyClients extends Component {
                             />
                         </div>
                     </div>
+                </div>
+                <div className="offset-md-1 col-md-2" id={'add-user-form'}>
+                    <ModalCreateClient/>
                 </div>
             </div>
         );
