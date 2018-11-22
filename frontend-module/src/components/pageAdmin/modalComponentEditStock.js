@@ -5,14 +5,9 @@ import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 import {EditIcon} from "./pageAutoList";
-import {edit} from 'react-icons-kit/fa/edit'
 
 
 export default class EditStockModal extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     state = {
         modal: false,
@@ -57,7 +52,11 @@ export default class EditStockModal extends Component {
             formData.append("id", this.props.stockId);
             formData.append("name", this.state.successAddress);
             formData.append("address", this.state.suggest.place_id);
-            fetch('http://localhost:8080/api/editStock', {method: "PUT", body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+            fetch('http://localhost:8080/api/editStock', {
+                method: "PUT",
+                body: formData,
+                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            }).then(response => {
                 response.json().then(data => {
                     console.log(data);
                     this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
@@ -130,7 +129,7 @@ export default class EditStockModal extends Component {
 
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
-const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";
+/*const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";*/
 EditStockModal.propTypes = {
     googleMaps: PropTypes.object,
 };

@@ -8,6 +8,7 @@ import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.user.service.UserService;
 import com.itechart.trucking.webmodule.config.JwtGen;
 import com.itechart.trucking.webmodule.config.JwtVal;
 import org.json.JSONException;
@@ -59,9 +60,16 @@ public class AnonController {
         if (generate == null) {
             json.put("error", "Invalid data");
         } else {
+            User logginUser = userRepository.findUserByUsername(user.getUsername());
+            if(logginUser==null) {
+                json.put("error", "Invalid data");
+                return json.toString();
+            }
             json.put("status", 200);
             json.put("token", generate);
             json.put("role", validate.getUserRole().name());
+            json.put("userId", logginUser.getId());
+            json.put("companyId", logginUser.getCompany()==null?"-1":logginUser.getCompany().getId());
         }
         return json.toString();
 

@@ -3,7 +3,7 @@ import CommonUtil from "../commonUtil/commontUtil";
 import {Link} from "react-router-dom";
 
 
-class OwnerWaybill extends React.Component{
+class OwnerWaybill extends React.Component {
     constructor(props) {
         super(props);
 
@@ -71,7 +71,7 @@ class OwnerWaybill extends React.Component{
             console.log(this.state);
             // this.setValuesFromJson()
             console.log(this.state.consignment);
-        }).catch(err=>{
+        }).catch(err => {
             throw new Error(err);
         });
 
@@ -86,17 +86,19 @@ class OwnerWaybill extends React.Component{
                             <h3>Основное</h3>
                             <small className="form-text text-muted">Наименование товара</small>
                             <input value={this.state.name} type="text"
-                                   className="form-control" id="name" placeholder="Наименование товара" disabled={true}/>
+                                   className="form-control" id="name" placeholder="Наименование товара"
+                                   disabled={true}/>
 
                             <small className="form-text text-muted">Компания- заказчик перевозки</small>
                             <input value={this.state.companyNameForSearch}
                                    type="text"
-                                   className="form-control" id="companyNameForSearch" placeholder="Заказчик" disabled={true}/>
+                                   className="form-control" id="companyNameForSearch" placeholder="Заказчик"
+                                   disabled={true}/>
 
 
                             <select className={'form-control'} value={this.state.client_id}
                                     onClick={this.setCustomerCompany}
-                                    /*style={}*/ name="client_id" id="client_id" disabled={true}>
+                                /*style={}*/ name="client_id" id="client_id" disabled={true}>
                             </select>
 
                             <small className="form-text text-muted">Адрес Отправления</small>
@@ -139,7 +141,8 @@ class OwnerWaybill extends React.Component{
 
                             <small className="form-text text-muted">Дата отправления</small>
                             <input value={this.state.date_departure} type="text"
-                                   className="form-control" id="date_departure" placeholder="14.10.2015" disabled={true}/>
+                                   className="form-control" id="date_departure" placeholder="14.10.2015"
+                                   disabled={true}/>
 
                             <small className="form-text text-muted">Дата прибытия</small>
                             <input value={this.state.date_arrival} type="text"
@@ -193,7 +196,8 @@ class OwnerWaybill extends React.Component{
                     </ul>
                 </div>
             </div>
-            <div className="offset-md-2 col-md-8 form_clear" id={'sendOrderRequestButton'} /*style={customerCompanyStyle}*/>
+            <div className="offset-md-2 col-md-8 form_clear"
+                 id={'sendOrderRequestButton'} /*style={customerCompanyStyle}*/>
                 <Link to={`/owner/orders`} className="btn btn-success btn_fullsize">Вернуться</Link>
             </div>
         </div>);

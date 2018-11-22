@@ -30,8 +30,12 @@ import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.waybill.dto.WaybillDto;
+import com.itechart.trucking.waybill.dto.WaybillSocketUpdateDto;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
+import com.itechart.trucking.webmodule.service.CommonService;
+import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +58,11 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/api")
 public class DispatcherController {
+    @Autowired
+    private StompService stompService;
+
+    @Autowired
+    private CommonService commonService;
 
     @Autowired
     private UserRepository userRepository;
@@ -286,8 +295,9 @@ public class DispatcherController {
     // we should test if out driver and auto is free for new date
     @PutMapping(value = "/waybill/changedate")
     public Boolean changeDateOfWaybill(@ModelAttribute(value = "orderId") String orderIdS,@ModelAttribute(value = "daysOffset") String daysOffsetS) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByUsername(name);
+        User userByEmail = commonService.getCurrentUser();
+        if(userByEmail==null) return false;
+
         Long orderId = Long.parseLong(orderIdS);
         Long daysOffset = Long.parseLong(daysOffsetS);
         if(orderId==null || daysOffset==null) return false;
@@ -303,6 +313,15 @@ public class DispatcherController {
         waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
 
         waybillRepository.save(waybill);
+
+        WaybillSocketUpdateDto waybillSocketUpdateDto = new WaybillSocketUpdateDto();
+        waybillSocketUpdateDto.setUpdaterUser(userByEmail.getId());
+        waybillSocketUpdateDto.setUpdaterUserName(userByEmail.getUsername());
+        waybillSocketUpdateDto.setOrderName(order.getName());
+        waybillSocketUpdateDto.setCompanyId(userByEmail.getCompany().getId());
+        waybillSocketUpdateDto.setWaybillDto(new WaybillDto(waybill));
+
+        stompService.sendNotification("/topic/dispatcher", waybillSocketUpdateDto);
 
         return true;
     }

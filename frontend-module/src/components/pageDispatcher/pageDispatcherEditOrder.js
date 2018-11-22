@@ -65,22 +65,22 @@ export default class DispatcherEditOrder extends Component {
         }
         if (!nameValidation) {
             document.getElementById('name-error-span').innerText = `Неправильное название ${this.state.name}`;
-        }else{
+        } else {
             document.getElementById('name-error-span').innerText = "";
         }
         if (!dateArrivalValidation || !dateDepartureValidation) {
             document.getElementById('date-error-span').innerText = "Неправильная дата";
-        }else{
+        } else {
             document.getElementById('date-error-span').innerText = "";
         }
-        if (!validateAuto){
+        if (!validateAuto) {
             document.getElementById('auto-error-span').innerText = 'Неправильное значение';
-        }else{
+        } else {
             document.getElementById('auto-error-span').innerText = '';
         }
-        if (!validateDriver){
+        if (!validateDriver) {
             document.getElementById('driver-error-span').innerText = 'Неправильное значение';
-        }else{
+        } else {
             document.getElementById('driver-error-span').innerText = '';
         }
         if (!stocksVal){
@@ -132,7 +132,7 @@ export default class DispatcherEditOrder extends Component {
     };
 
     sendInfoToServer() {
-        if (this.validateOrderForm()){
+        if (this.validateOrderForm()) {
             let formData = new FormData();
             formData.append("orderId", this.state.order.id);
             formData.append("consignmentId", this.state.consignmentId);
@@ -266,7 +266,7 @@ export default class DispatcherEditOrder extends Component {
             });
             document.getElementById('auto').innerHTML = autoHtml;
             // this.setDefault();
-        })).catch(err=>{
+        })).catch(err => {
             throw new Error('Нет доступа к свободным авто');
         })
     }
@@ -282,7 +282,7 @@ export default class DispatcherEditOrder extends Component {
             });
             document.getElementById('driver').innerHTML = driverHtml;
             // this.setDefault();
-        }).catch(err=>{
+        }).catch(err => {
             throw new Error('Нет доступа к свободным водителям');
         })
     }
@@ -294,7 +294,10 @@ export default class DispatcherEditOrder extends Component {
             html += `<option value=${client.id}>${client.name}</option>`
         });
         document.getElementById('client_id').innerHTML = html;
-        this.state.client_id = this.state.order.client.id;
+        /*this.state.client_id = this.state.order.client.id;*/
+        this.setState({
+            client_id: this.state.order.client.id,
+        })
     }
 
     showOrderHideConsignment = () => {
@@ -307,8 +310,8 @@ export default class DispatcherEditOrder extends Component {
             document.getElementById('order-form').style.display = 'none';
             document.getElementById('consignment-form').style.display = '';
             document.getElementById('sendOrderRequestButton').style.display = '';
-            if (this.state.consignment.length === 0){
-                fetch(`http://localhost:8080/api/orders/${this.state.orderId}/consignment`,{headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+            if (this.state.consignment.length === 0) {
+                fetch(`http://localhost:8080/api/orders/${this.state.orderId}/consignment`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
                     return response.json();
                 }).then(data => {
                     console.log(this.state);

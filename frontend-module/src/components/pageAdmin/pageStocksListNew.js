@@ -2,7 +2,7 @@ import React from "react";
 import ModalAcceptDelete from "./modalAcceptDelete";
 import CreateStockModal from "./modalComponentCreateStock";
 import EditStockModal from "./modalComponentEditStock";
-import PropTypes from "prop-types";
+/*import PropTypes from "prop-types";*/
 import Pagination from "react-js-pagination";
 
 export default class PageStockListNew extends React.Component {

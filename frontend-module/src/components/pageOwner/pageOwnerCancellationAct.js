@@ -3,7 +3,7 @@ import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import {Link} from "react-router-dom";
 
-class OwnerCancelAct extends Component{
+class OwnerCancelAct extends Component {
     constructor(props) {
         super(props);
         this.renderTable = this.renderTable.bind(this);
@@ -14,7 +14,7 @@ class OwnerCancelAct extends Component{
 
     componentDidMount(props) {
         this.getCancelAct().then(data => {
-            this.setState({cancelAct:data});
+            this.setState({cancelAct: data});
         });
     }
 
@@ -31,8 +31,8 @@ class OwnerCancelAct extends Component{
         });
     }
 
-    renderTable(cancelAct){
-        if(!cancelAct) return;
+    renderTable(cancelAct) {
+        if (!cancelAct) return;
         return <div className={"row table_row"}>
             <div className={"col-md-1"}>{cancelAct.id}</div>
             <div className={"offset-md-1 col-md-1"}>{cancelAct.amount}</div>

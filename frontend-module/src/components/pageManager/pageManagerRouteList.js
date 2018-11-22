@@ -1,7 +1,9 @@
 ﻿import React, {Component} from "react";
+
 import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-react';
 import * as ReactDOM from "react-dom";
 import redMarker from '../pageDriver/img/non-passed-marker.png';
+
 
 export class ManagerRouteList extends Component {
 
@@ -18,8 +20,8 @@ export class ManagerRouteList extends Component {
         this.state = {
             routePoints: [],
             orderId: "",
-            point:"",
-            pointLevel:0,
+            point: "",
+            pointLevel: 0,
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {},
@@ -34,11 +36,11 @@ export class ManagerRouteList extends Component {
         this.getRouteList().then(data => {
             let level = 0;
             data.forEach(point => {
-                if(level < point.pointLevel) {
+                if (level < point.pointLevel) {
                     level = point.pointLevel;
                 }
             });
-            this.setState({routePoints:data, pointLevel:level+1});
+            this.setState({routePoints: data, pointLevel: level + 1});
             if (data[0]!==null){
                 this.setState({mapCenter: {lat: data[0].lat, lng: data[0].lng}})
             }
@@ -49,13 +51,14 @@ export class ManagerRouteList extends Component {
         this.getRouteList().then(data => {
             let level = 0;
             data.forEach(point => {
-                if(level < point.pointLevel) {
+                if (level < point.pointLevel) {
                     level = point.pointLevel;
                 }
             });
-            this.setState({routePoints:data, point:"", pointLevel:level+1});
+            this.setState({routePoints: data, point: "", pointLevel: level + 1});
         });
     }
+
     getRouteList() {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
@@ -74,7 +77,8 @@ export class ManagerRouteList extends Component {
     renderMarkers(routePoint) {
         if (!routePoint) return;
         return <Marker onClick={this.onMarkerClick} icon={redMarker}
-                       name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}} id={routePoint.id}/>
+                       name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}}
+                       id={routePoint.id}/>
 
     }
 
@@ -82,15 +86,18 @@ export class ManagerRouteList extends Component {
         console.log("delete");
         console.log(pointId);
         const ref = this;
-        fetch(`http://localhost:8080/api/manager/deletePoint/${pointId}`, {method: "DELETE", headers: {'Auth-token': localStorage.getItem("Auth-token")}})
-            .then(function(response) {
+        fetch(`http://localhost:8080/api/manager/deletePoint/${pointId}`, {
+            method: "DELETE",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        })
+            .then(function (response) {
                 return response.json();
-            }).then(function(result) {
-                if(result === true) {
-                    ref.onInfoWindowClose();
-                    ref.forceUpdateHandler();
-                }
-            })
+            }).then(function (result) {
+            if (result === true) {
+                ref.onInfoWindowClose();
+                ref.forceUpdateHandler();
+            }
+        })
             .catch((err) => {
                 console.log(err);
             })
@@ -100,25 +107,28 @@ export class ManagerRouteList extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         let ref = this;
-       let routePoint = {};
-       routePoint.id = null;
-       routePoint.point = city;
-       routePoint.pointLevel = this.state.pointLevel;
-       routePoint.waybill = null;
-       routePoint.lat = lat;
-       routePoint.lng = lng;
-       console.log(routePoint);
+        let routePoint = {};
+        routePoint.id = null;
+        routePoint.point = city;
+        routePoint.pointLevel = this.state.pointLevel;
+        routePoint.waybill = null;
+        routePoint.lat = lat;
+        routePoint.lng = lng;
+        console.log(routePoint);
 
-       fetch(`http://localhost:8080/api/manager/${id}/createPoint`, {method:"POST", headers: {'Content-Type':'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
-           body: JSON.stringify(routePoint)})
-           .then(function(response) {
-               return response.json();
-           }).then(function(result) {
-               if(result === true) {
-                   console.log(result);
-                   ref.forceUpdateHandler();
-               }
-           });
+        fetch(`http://localhost:8080/api/manager/${id}/createPoint`, {
+            method: "POST",
+            headers: {'Content-Type': 'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
+            body: JSON.stringify(routePoint)
+        })
+            .then(function (response) {
+                return response.json();
+            }).then(function (result) {
+            if (result === true) {
+                console.log(result);
+                ref.forceUpdateHandler();
+            }
+        });
     }
 
     onMarkerClick = (props, marker, event) => {
@@ -129,17 +139,21 @@ export class ManagerRouteList extends Component {
             showingInfoWindow: true
         });
     };
+
     onInfoWindowClose() {
         this.setState({
             showingInfoWindow: false
         });
     }
+
     onInfoWindowOpen(props, e, markerId) { //For mark button. Doesn't work without it
         console.log(props);
         console.log(markerId);
-        const button = <div className="table_button bg-secondary text-white" onClick={this.deletePoint.bind(this, markerId)} pointId={markerId}>Удалить</div>
+        const button = <div className="table_button bg-secondary text-white"
+                            onClick={this.deletePoint.bind(this, markerId)} pointId={markerId}>Удалить</div>
         ReactDOM.render(React.Children.only(button), document.getElementById("info-window-container"));
     }
+
     onMapClick = (mapProps, clickEvent, event) => {
         let position = event.latLng;
         this.getAddressFromLatAndLng(position.lat(), position.lng()).then(cityName => {
@@ -166,12 +180,6 @@ export class ManagerRouteList extends Component {
     };
 
     render() {
-        const style = {
-            width: '50vw',
-            height: '75vh',
-            'marginLeft': 'auto',
-            'marginRight': 'auto'
-        };
         return (
             <div className={'row'}>
                 <div className={'col-md-3'}>

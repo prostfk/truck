@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
-import ErrorUiHandler from "../errorWindows/errorHandler";
+/*import ErrorUiHandler from "../errorWindows/errorHandler";*/
 import Pagination from "react-js-pagination";
 
-class DispatcherOrderList extends React.Component{
+class DispatcherOrderList extends React.Component {
     constructor(props) {
         super(props);
         this.getOrderList = this.getOrderList.bind(this);
@@ -12,60 +12,70 @@ class DispatcherOrderList extends React.Component{
         this.getCompany = this.getCompany.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
-            orders:[],
-            company:{},
-            totalElements:0,
-            currentPage:1
+            orders: [],
+            company: {},
+            totalElements: 0,
+            currentPage: 1
         };
         document.title = "Заказы"
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getOrderList().then(data => {
-            this.setState({orders: data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number});
+            this.setState({
+                orders: data.content,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
+            });
         });
         this.getCompany().then(data => {
-            this.setState({company:data});
+            this.setState({company: data});
         });
 
     }
 
     /*get all company list*/
-    getOrderList(pageid=1) {
-        return fetch('http://localhost:8080/api/orders?page='+pageid, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+    getOrderList(pageid = 1) {
+        return fetch('http://localhost:8080/api/orders?page=' + pageid, {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
-        }).catch(err=>{
+        }).catch(err => {
             throw new Error('Ошибка доступа')
         });
     }
 
     handlePageChange(pageNumber) {
         this.getOrderList(pageNumber).then(data => {
-            this.setState({orders: data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number});
+            this.setState({
+                orders: data.content,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
+            });
         });
         this.setState({currentPage: pageNumber});
     }
 
     getCompany() {
-        return fetch('http://localhost:8080/api/getCompany/', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('http://localhost:8080/api/getCompany/', {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
             return result;
-        }).catch(err=>{
+        }).catch(err => {
             throw new Error('Ошибка доступа')
         });
     }
 
-    /*render row of table ( calls from html ) */
-    renderTable(order){
-        if(!order) return;
-        return <div className = "row table_row order_row animated fadeInUp">
+    renderTable(order) {
+        if (!order) return;
+        return <div className="row table_row order_row animated fadeInUp">
             <div className="col-md-2">{order.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
@@ -78,15 +88,15 @@ class DispatcherOrderList extends React.Component{
     }
 
 
-    render(){
+    render() {
         let element;// = <div></div>;
-        if(this.state.company.active===1){
-            element=<span>
+        if (this.state.company.active === 1) {
+            element = <span>
                 <h5>Добавление заказа</h5>
                 <Link to={`/orders/createorder`} className="btn btn-success btn_fullsize">Создать</Link>
             </span>;
-        }else  if(this.state.company.active===0){
-            element=<div className={"error-span"}>
+        } else if (this.state.company.active === 0) {
+            element = <div className={"error-span"}>
                 Комания Заблокирована!
                 <div>Администратор: {this.state.company.lockerId.username}</div>
                 <div>Дата: {CommonUtil.getCorrectDateFromLong(this.state.company.lockDate)}</div>
@@ -94,9 +104,9 @@ class DispatcherOrderList extends React.Component{
             </div>
 
         }
-        return  <div class="row">
+        return <div class="row">
             <div class="offset-md-1 col-md-7 superuserform_companylist">
-                <div className = "row table_header">
+                <div className="row table_header">
                     <div className="col-md-2">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>
@@ -105,7 +115,7 @@ class DispatcherOrderList extends React.Component{
                     <div className="col-md-2">Заказ</div>
                 </div>
                 {
-                    this.state.orders.map((element)=>{
+                    this.state.orders.map((element) => {
                         return this.renderTable(element);
                     })
                 }

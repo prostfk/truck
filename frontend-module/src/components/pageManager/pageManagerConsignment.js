@@ -1,5 +1,4 @@
 ﻿import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
@@ -15,9 +14,6 @@ class ManagerConsignment extends Component {
         this.handleInputChangeTwo = this.handleInputChangeTwo.bind(this);
         this.setLostState = this.setLostState.bind(this);
         this.restoreProduct = this.restoreProduct.bind(this);
-
-        /*this.toggleModalRestore = this.toggleModalRestore.bind(this);
-        this.toggleModalCancellation = this.toggleModalCancellation.bind(this);*/
 
         this.state = {
             products: [],
@@ -288,7 +284,9 @@ class ManagerConsignment extends Component {
 
                         <ModalFooter className={"logoutForm"}>
                             <Button color="danger" onClick={this.setLostState}>Списать</Button>
-                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {this.toggleModalCancellation()}}>Отмена</Button>
+                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {
+                                this.toggleModalCancellation()
+                            }}>Отмена</Button>
                         </ModalFooter>
                     </form>
                 </Modal>
@@ -304,7 +302,8 @@ class ManagerConsignment extends Component {
                                        disabled={true} className={"form-control"}/>
                             </div>
                             <div className={"d-inline-block"} style={{marginLeft: '3%'}}>
-                                <label htmlFor={"cancelledCount"} className={"mr-sm-2"}>Количество восстановленного</label>
+                                <label htmlFor={"cancelledCount"} className={"mr-sm-2"}>Количество
+                                    восстановленного</label>
                                 <input id={"cancelledCount"} type={"number"} min={0}
                                        max={this.state.cancelledCount}
                                        className={"form-control"} onChange={this.handleInputChangeTwo}/>
@@ -313,7 +312,9 @@ class ManagerConsignment extends Component {
 
                         <ModalFooter className={"logoutForm"}>
                             <Button color="danger" onClick={this.restoreProduct}>Восстановить</Button>
-                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {this.toggleModalRestore()}}>Отмена</Button>
+                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {
+                                this.toggleModalRestore()
+                            }}>Отмена</Button>
                         </ModalFooter>
                     </form>
                 </Modal>

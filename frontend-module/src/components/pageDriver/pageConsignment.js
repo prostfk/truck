@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 class DriverConsignment extends Component {
@@ -100,7 +99,6 @@ class DriverConsignment extends Component {
         } else if (product.status === 5) {
             status = "Частично утерян";
         }
-
         let isLost = false;
         if (status === "Утерян")
             isLost = true;
@@ -111,7 +109,6 @@ class DriverConsignment extends Component {
             <div className="col-md-3">{product.description}</div>
             <div className="col-md-2">{product.price}</div>
             <div className="col-md-2"><a className="table_button bg-secondary text-white"
-                                         /*style={{display: isLost ? "none" : "block"}}*/
                                          onClick={this.toggleModalCancellation.bind(this, index)}>Списать</a></div>
         </div>
     }

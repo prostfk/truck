@@ -140,3 +140,6 @@ export default class CreateStockModal extends Component {
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
 const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";
+CreateStockModal.propTypes = {
+    googleMaps: PropTypes.object,
+};

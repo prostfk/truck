@@ -5,21 +5,21 @@ ALL METHODS ARE STATIC
 */
 class CommonUtil {
 
-    static getCorrectDateFromLong(longValue){
+    static getCorrectDateFromLong(longValue) {
         let d = new Date(longValue);
         let dd = d.getDate();
-        if (dd > 0 && dd < 10){
+        if (dd > 0 && dd < 10) {
             dd = `0${dd}`;
         }
         let mm = d.getMonth() + 1;
-        if (mm > 0 && mm < 10){
+        if (mm > 0 && mm < 10) {
             mm = `0${mm}`;
         }
         let yyyy = d.getFullYear();
         return `${dd}/${mm}/${yyyy}`;
     }
 
-    static isDateCorrect(date){
+    static isDateCorrect(date) {
         date = date.toString();
         let regex = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
         console.log(date.match(regex));

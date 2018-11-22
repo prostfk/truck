@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import CommonUtil from "../commonUtil/commontUtil";
 
 import {withBaseIcon} from 'react-icons-kit'
 import {remove} from 'react-icons-kit/fa/remove'
@@ -26,9 +25,9 @@ export default class AutoList extends Component {
             newAutoNumber: '',
             newAutoType: '',
             newAutoFuelConsumption: '',
-            totalElements : 0,
-            totalPages : 0,
-            number:0
+            totalElements: 0,
+            totalPages: 0,
+            number: 0
         };
         this.fetchToAutos();
     }
@@ -50,8 +49,8 @@ export default class AutoList extends Component {
         return nameVal && numberVal && typeVal && fuelVal;
     };
 
-    fetchToAutos = (pageid=1) => {
-        fetch('http://localhost:8080/api/autos?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+    fetchToAutos = (pageid = 1) => {
+        fetch('http://localhost:8080/api/autos?page=' + pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
@@ -61,7 +60,7 @@ export default class AutoList extends Component {
             this.setState({
                 autos: data.content,
                 totalElements: data.totalElements,
-                number:++data.number
+                number: ++data.number
             })
         })
     };
@@ -99,9 +98,9 @@ export default class AutoList extends Component {
         }
     };
 
-    forceUpdateHandler(pageid=1) {
+    forceUpdateHandler(pageid = 1) {
         const refthis = this;
-        fetch('http://localhost:8080/api/autos?page='+pageid, {
+        fetch('http://localhost:8080/api/autos?page=' + pageid, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -110,7 +109,7 @@ export default class AutoList extends Component {
             refthis.setState({
                 autos: result.content,
                 totalElements: result.totalElements,
-                number:++result.number
+                number: ++result.number
             })
         })
     };

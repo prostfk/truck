@@ -1,19 +1,20 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 
-class DriverOrderList extends React.Component{
+class DriverOrderList extends React.Component {
     constructor(props) {
         super(props);
         this.getOrderList = this.getOrderList.bind(this);
         this.renderTable = this.renderTable.bind(this);
         this.state = {
-            orders:[]
+            orders: []
         };
         document.title = "Заказы"
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getOrderList().then(data => {
-            this.setState({orders:data});
+            this.setState({orders: data});
         });
     }
 
@@ -30,27 +31,32 @@ class DriverOrderList extends React.Component{
     }
 
     /*render row of table ( calls from html ) */
+
     renderTable(order){
         if(!order) return;
         return <div className = "row table_row order_row animated fadeInUp">
             <div className="col-md-2">{order.name}</div>
             <div className="col-md-2" title={order.sender.name}>{order.sender.address}</div>
             <div className="col-md-2" title={order.receiver.name}>{order.receiver.address}</div>
-            <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}<br></br>{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
-            <div className="col-md-2">
-                <Link to={`/myorders/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой лист</Link>
+            <div
+                className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}<br></br>{new Date(order.waybill.dateArrival).toLocaleDateString()}
             </div>
             <div className="col-md-2">
-                <Link to={`/driver/consignment/${order.id}`} className="table_button bg-secondary text-white">Тов. партия</Link>
+                <Link to={`/myorders/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой
+                    лист</Link>
+            </div>
+            <div className="col-md-2">
+                <Link to={`/driver/consignment/${order.id}`} className="table_button bg-secondary text-white">Тов.
+                    партия</Link>
             </div>
         </div>
     }
 
 
-    render(){
-        return  <div class="row">
+    render() {
+        return <div class="row">
             <div class="offset-lg-2 col-lg-8 superuserform_companylist">
-                <div className = "row table_header">
+                <div className="row table_header">
                     <div className="col-md-2">Название</div>
                     <div className="col-md-2">Откуда</div>
                     <div className="col-md-2">Куда</div>
@@ -59,7 +65,7 @@ class DriverOrderList extends React.Component{
                     <div className="col-md-2">Открыть</div>
                 </div>
                 {
-                    this.state.orders.map((element)=>{
+                    this.state.orders.map((element) => {
                         return this.renderTable(element);
                     })
                 }

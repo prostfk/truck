@@ -93,6 +93,9 @@ public class OwnerController {
         List<Order> ordersExecuted = orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
         ownerPageStatisticsDto.setExecutedAmmount(userByUsername.getCompany().getOrderExcutedAmmount(ordersExecuted));
 
+        ownerPageStatisticsDto.setCancellationActAmmount(userByUsername.getCompany().getOrderFailedAmmount(ordersExecuted));
+        ownerPageStatisticsDto.setTotalFailed();
+
         return ownerPageStatisticsDto;
     }
 
