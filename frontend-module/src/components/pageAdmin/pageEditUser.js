@@ -85,6 +85,9 @@ export default class EditUser extends Component {
             if (data.error === undefined) {
                 this.props.history.push('/usersList')
             } else {
+                if (data.error === 'user with such username already exists') {
+                    document.getElementById('error-form-span').innerText = 'Такой никнейм уже существует';
+                }
                 document.getElementById('error-form-span').innerText = data.error;
             }
         })

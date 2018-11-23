@@ -43,27 +43,28 @@ class SysAdminPage extends React.Component {
     sendRef() {
         let formData = new FormData();
         let value = this.state.inputMail;
+        this.setState({inputMail: ''});
         formData.append("email", value);
+        setTimeout(() => {
+            document.getElementById('user-new-form').style.display = '';
+        }, 2000);
         fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {
             method: "POST",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             response.json().then(function (data) {
-                console.log(data)
+                console.log(data);
                 if (data.error === undefined) {
                     document.getElementById('result-span').style.color = 'green';
                     document.getElementById('result-span').innerText = 'Письмо отправлено';
                     document.getElementById('user-new-form').style.display = 'none';
-                    setTimeout(() => {
-                        document.getElementById('user-new-form').style.display = '';
-                    }, 2000);
                     document.getElementById('result-span').innerText = '';
                 } else {
                     document.getElementById('result-span').style.color = 'red';
                     document.getElementById('result-span').innerText = 'Неверная почта';
                 }
             })
-        })
+        });
     }
 
     /*auto run when page init*/

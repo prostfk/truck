@@ -48,9 +48,9 @@ class MainController extends React.Component {
             <Router>
                 <div>
                     <Route path="/*" component={HeaderElement}/>
-                    <Route path="/registration" component={registration}/>
-                    <Route path="/usersList" component={UsersList}/>
-                    <Route path="/user/:userId/edit" component={EditUser}/>
+                    <Route exact path="/registration" component={registration}/>
+                    <Route exact path="/usersList" component={UsersList}/>
+                    <Route exact path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={CreateStockModal}/>{/*ADD STOCKS IN THIS PATH*/}

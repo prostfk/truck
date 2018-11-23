@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -139,5 +140,7 @@ public class OrderService {
     }
 
 
-
+    public Optional<Order> findById(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
 }

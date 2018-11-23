@@ -3,18 +3,25 @@ package com.itechart.trucking.client.entity;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.order.entity.Order;
 import lombok.Data;
+import org.apache.solr.client.solrj.beans.Field;
+import org.springframework.data.solr.core.mapping.Indexed;
+import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
+@SolrDocument(solrCoreName = "client")
 public class Client {
 
     @Id
+    @Field
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Field
     private String name;
+    @Field
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)

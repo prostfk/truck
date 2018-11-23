@@ -108,9 +108,14 @@ export default class CreateUser extends Component {
                         document.getElementById('newUserStreet').value = '';
                         document.getElementById('newUserHouseNumber').value = '';
                         document.getElementById('newUserFlatNumber').value = '';
+                        document.getElementById('error-form-span').innerText = '';
                     }, 2000);
                 } else {
-                    document.getElementById('error-form-span').innerText = data.error;
+                    if (data.error === 'user with such username already exists'){
+                        document.getElementById('error-form-span').innerText = 'Пользователь с таким никнеймом уже существует';
+                    }else{
+                        document.getElementById('error-form-span').innerText = data.error;
+                    }
                 }
             })
         }

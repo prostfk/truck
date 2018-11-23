@@ -2,7 +2,6 @@ package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
-import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
@@ -23,7 +22,6 @@ import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.product.entity.Product;
-import com.itechart.trucking.product.entity.ProductState;
 import com.itechart.trucking.product.repository.ProductRepository;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
@@ -40,7 +38,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -204,7 +201,8 @@ public class DispatcherController {
 
     @GetMapping(value = "/clients/findClientsByNameLike")//todo correct search
     public List<ClientDto> findClientsByNameLike(@RequestParam String name) {
-        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
+//        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
+        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientSolrByName(name);
         return Odt.ClientListToDtoList(clientsByNameLikeIgnoreCase);
     }
 
