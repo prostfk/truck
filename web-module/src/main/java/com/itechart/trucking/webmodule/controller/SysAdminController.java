@@ -3,6 +3,7 @@ package com.itechart.trucking.webmodule.controller;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.company.service.CompanyService;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
@@ -16,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +49,8 @@ public class SysAdminController {
 
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private CompanyService companyService;
 
     @PostMapping(value = "/createAdmin")
     @ResponseBody
@@ -66,9 +70,9 @@ public class SysAdminController {
     }
 
     @GetMapping(value = "/companies")
-    public List<CompanyDto> findAllCompanies() {
-        List<Company> companies = companyRepository.findAllByOrderById();
-        return Odt.CompanyListToDtoList(companies);
+    public  Object findAllCompanies(@RequestParam(name = "page") String page) {
+        Page<Company> companies = companyService.findCompaniesByPage(page);
+        return companies.map(company -> new CompanyDto(company));
     }
 
     @PostMapping(value = "/companies/changeStatus")
