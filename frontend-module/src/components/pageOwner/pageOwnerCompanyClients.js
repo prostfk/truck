@@ -50,7 +50,7 @@ export default class CompanyClients extends Component {
     render() {
         return (
             <div className={'row'}>
-                <div className="offset-md-2 col-md-5 superuserform_companylist">
+                <div className="offset-md-2 col-md-6 superuserform_companylist">
                     <div className="row table_header">
                         <div className="col-md-1">Id</div>
                         <div className="col-md-5">Название</div>
