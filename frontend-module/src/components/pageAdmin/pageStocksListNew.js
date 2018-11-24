@@ -2,7 +2,7 @@ import React from "react";
 import ModalAcceptDelete from "./modalAcceptDelete";
 import CreateStockModal from "./modalComponentCreateStock";
 import EditStockModal from "./modalComponentEditStock";
-import PropTypes from "prop-types";
+/*import PropTypes from "prop-types";*/
 import Pagination from "react-js-pagination";
 
 export default class PageStockListNew extends React.Component {
@@ -13,7 +13,7 @@ export default class PageStockListNew extends React.Component {
         this.setCompanyName = this.setCompanyName.bind(this);
         this.setCompanyAddress = this.setCompanyAddress.bind(this);
         this.addNewStock = this.addNewStock.bind(this);
-        this.submiteDelete = this.submiteDelete.bind(this);
+        this.submitDelete = this.submitDelete.bind(this);
         this.submitEdit = this.submitEdit.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
@@ -125,21 +125,21 @@ export default class PageStockListNew extends React.Component {
         console.log("stock name"+ stock.name);
         console.log(stock);
         if(!stock) return;
-        return <div className={"row table_row"}>
+        return <div className={"row table_row animated fadeInUp"}>
             <div className={"col-md-1"}>{stock.id}</div>
-            <div className={"col-md-4"}>{stock.name}</div>
+            <div className={"col-md-5"}>{stock.name}</div>
             <div className={"col-md-4"}>{stock.address}</div>
-            <div className={"col-md-2"}>
+            <div className={"col-md-1"}>
                 <EditStockModal stockName={stock.name} stockId={stock.id}/>
                 {/*<ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>*/}
             </div>
             <div className={"col-md-1"}>
-                <ModalAcceptDelete clickfunc={this.submiteDelete} componentId={stock.id} headerText={"Вы действительно хотите удалить склад?"} bodyText={"Восстановить склад будет невозможно"} />
+                <ModalAcceptDelete clickfunc={this.submitDelete} componentId={stock.id} headerText={"Вы действительно хотите удалить склад?"} bodyText={"Восстановить склад будет невозможно"} />
             </div>
         </div>
     }
 
-    submiteDelete(stockId){
+    submitDelete(stockId){
         const ref = this;
         fetch('http://localhost:8080/api/stocks', {
             method: 'DELETE',
@@ -189,7 +189,7 @@ export default class PageStockListNew extends React.Component {
                 </div>
             </div>
 
-            <div className="offset-md-1 col-md-3">
+            <div className="offset-md-1 col-md-2">
                 <form className="superuserform_newaccountform grey_form">
                     <CreateStockModal/>
                     {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}

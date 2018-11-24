@@ -1,5 +1,4 @@
 import React from "react";
-import {Link} from 'react-router-dom'
 
 class DriverRouteList extends React.Component {
     constructor(props) {
@@ -17,7 +16,7 @@ class DriverRouteList extends React.Component {
 
     markPoint(pointId, event) {
         const ref = this;
-        const myres = fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
+        fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
             method: "PUT",
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(function (response) {

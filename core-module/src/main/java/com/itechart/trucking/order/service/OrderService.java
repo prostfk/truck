@@ -66,7 +66,7 @@ public class OrderService {
         order.setName(orderFormData.getName());
         order.setStatus(Integer.valueOf(orderFormData.getStatus()));
         order.setSender(stockRepository.findStockById(orderFormData.getDepartureStock()));
-        order.setReceiver(stockRepository.findStockById(orderFormData.getDepartureStock()));
+        order.setReceiver(stockRepository.findStockById(orderFormData.getDeliveryStock()));
         order.setDateAccepted(new Date(format.parse(orderFormData.getDateDeparture()).getTime()));
         order.setDateExecuted(new Date(format.parse(orderFormData.getDateArrival()).getTime()));
         order.setWaybill(new Waybill(Integer.valueOf(orderFormData.getWaybillStatus()), driverById,autoById,order.getDateAccepted(),order.getDateExecuted()));
@@ -81,6 +81,8 @@ public class OrderService {
     public Page<Order> findByCompany(Company company, Pageable pageable){
         return orderRepository.findByCompany(company,pageable);
     }
+
+
 
     public List<Order> findCustomQueryOrderByDriver(Long driverId){
         return orderRepository.findCustomQueryOrderByDriver(driverId);

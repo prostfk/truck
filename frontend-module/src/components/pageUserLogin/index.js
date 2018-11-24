@@ -1,1 +1,1 @@
-export { default } from "./pageUserLogin";
+export {default} from "./pageUserLogin";

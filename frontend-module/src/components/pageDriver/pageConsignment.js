@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 class DriverConsignment extends Component {
@@ -100,18 +99,16 @@ class DriverConsignment extends Component {
         } else if (product.status === 5) {
             status = "Частично утерян";
         }
-
         let isLost = false;
         if (status === "Утерян")
             isLost = true;
 
-        return <div key={index} className="row table_row manager_orders">
+        return <div key={index} className="row table_row manager_orders animated fadeInUp">
             <div className="col-md-3">{product.name}</div>
             <div className="col-md-2">{status}</div>
             <div className="col-md-3">{product.description}</div>
             <div className="col-md-2">{product.price}</div>
             <div className="col-md-2"><a className="table_button bg-secondary text-white"
-                                         /*style={{display: isLost ? "none" : "block"}}*/
                                          onClick={this.toggleModalCancellation.bind(this, index)}>Списать</a></div>
         </div>
     }
@@ -121,7 +118,6 @@ class DriverConsignment extends Component {
 
         let productId = this.state.products[this.state.selectedProductIndex].id;
         let cancel = this.state.countOfSelectedProduct - this.state.remainsOfSelectedProduct;
-
 
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
@@ -178,24 +174,13 @@ class DriverConsignment extends Component {
                         <div className="col-md-2">Состоние</div>
                         <div className="col-md-3">Описание</div>
                         <div className="col-md-2">Цена</div>
-                        <div className="col-md-2"></div>
+                        <div className="col-md-2"/>
                     </div>
                     {
                         this.state.products.map((element, index) => {
                             return this.renderTable(element, index);
                         })
                     }
-                    <div className="table_footer">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         );

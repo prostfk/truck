@@ -1,16 +1,17 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {EditIcon} from "./pageAutoList";
 
 export default class ModalComponentEditAuto extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { modal: false,
-            autoId:props.autoId,
+        this.state = {
+            modal: false,
+            autoId: props.autoId,
             autoName: props.autoName,
-            autoCarNumber:props.autoCarNumber,
-            autoType:props.autoType,
-            autoFuelConsumption:props.autoFuelConsumption
+            autoCarNumber: props.autoCarNumber,
+            autoType: props.autoType,
+            autoFuelConsumption: props.autoFuelConsumption
         };
 
         this.toggle = this.toggle.bind(this);
@@ -30,36 +31,39 @@ export default class ModalComponentEditAuto extends React.Component {
     handleChangeAutoName(event) {
         this.setState({autoName: event.target.value});
     }
+
     handleChangeAutoCarNumber(event) {
         this.setState({autoCarNumber: event.target.value});
     }
+
     handleChangeAutoType(event) {
         this.setState({autoType: event.target.value});
     }
+
     handleChangeAutoFuelConsumption(event) {
         this.setState({autoFuelConsumption: event.target.value});
     }
 
     handleSubmit(event) {
-        this.props.clickfunc(this.state.autoId,this.state.autoName,this.state.autoCarNumber,this.state.autoType,this.state.autoFuelConsumption);
+        this.props.clickfunc(this.state.autoId, this.state.autoName, this.state.autoCarNumber, this.state.autoType, this.state.autoFuelConsumption);
         this.setState({
             modal: !this.state.modal,
         });
     }
 
-    getCompanyName(){
+    getCompanyName() {
         const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         });
         return fetchResult;
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getCompanyName().then(data => {
-            let oldComName= data.companyName;
-            this.setState({companyName:oldComName});
+            let oldComName = data.companyName;
+            this.setState({companyName: oldComName});
         });
     }
-
 
 
     render() {
@@ -74,25 +78,29 @@ export default class ModalComponentEditAuto extends React.Component {
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
                                     <label>Название авто:</label>
-                                    <input type="text" value={this.state.autoName} onChange={this.handleChangeAutoName} className="form-control" />
+                                    <input type="text" value={this.state.autoName} onChange={this.handleChangeAutoName}
+                                           className="form-control"/>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
                                     <label>номер авто:</label>
-                                    <input type="text" value={this.state.autoCarNumber} onChange={this.handleChangeAutoCarNumber} className="form-control" />
+                                    <input type="text" value={this.state.autoCarNumber}
+                                           onChange={this.handleChangeAutoCarNumber} className="form-control"/>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
                                     <label>тип авто авто:</label>
-                                    <input type="text" value={this.state.autoType} onChange={this.handleChangeAutoType} className="form-control" />
+                                    <input type="text" value={this.state.autoType} onChange={this.handleChangeAutoType}
+                                           className="form-control"/>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
                                     <label>Расход на 100км:</label>
-                                    <input type="text" value={this.state.autoFuelConsumption} onChange={this.handleChangeAutoFuelConsumption} className="form-control" />
+                                    <input type="text" value={this.state.autoFuelConsumption}
+                                           onChange={this.handleChangeAutoFuelConsumption} className="form-control"/>
                                 </div>
                             </div>
                         </ModalBody>

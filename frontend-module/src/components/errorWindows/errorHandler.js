@@ -12,7 +12,7 @@ export default class ErrorUiHandler extends Component {
         };
     }
 
-    componentDidCatch(err,errInfo){
+    componentDidCatch(err, errInfo) {
         this.setState({
             err: err,
             errInfo: errInfo
@@ -20,13 +20,13 @@ export default class ErrorUiHandler extends Component {
     }
 
     render() {
-        if (this.state.errInfo){
+        if (this.state.errInfo) {
             return (
                 <div>
                     <AccessErrorWindow message={this.state.err.toString()}/>
                 </div>
             );
-        }else {
+        } else {
             return this.props.children;
         }
 

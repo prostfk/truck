@@ -10,7 +10,9 @@ import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.waybill.entity.Waybill;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Data
@@ -27,8 +29,13 @@ public class WaybillDto {
     public WaybillDto(Waybill waybill) {
         this.id = waybill.getId();
         this.status = waybill.getStatus();
-        this.dateDeparture = Odt.convertToLocalDateViaInstant(waybill.getDateDeparture());
-        this.dateArrival = Odt.convertToLocalDateViaInstant(waybill.getDateArrival());
+        this.dateDeparture = Instant.ofEpochMilli(waybill.getDateDeparture().getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+        this.dateArrival =  Instant.ofEpochMilli(waybill.getDateArrival().getTime())
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
     }
 
     public void setDriver(Driver driver) {

@@ -10,14 +10,15 @@ export default class UsersList extends Component {
         this.getUsersRequest = this.getUsersRequest.bind(this);
         this.state = {
             users: [],
-            totalElements:0,
-            currentPage:1
+            totalElements: 0,
+            currentPage: 1
         };
         this.getUsersRequest();
     }
 
-    getUsersRequest = (pageid=1) => {
-        fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
+    getUsersRequest = (pageid = 1) => {
+        fetch('http://localhost:8080/api/users?page=' + pageid, {
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
@@ -25,12 +26,12 @@ export default class UsersList extends Component {
                 return response.json();
             }
         }).then(data => {
-            let gettedusers =data.content;
+            let gettedusers = data.content;
             console.log(gettedusers);
             this.setState({
                 users: gettedusers,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             })
         })
     };
@@ -41,11 +42,10 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user) => {
-        return <div className={'row table_row'}>
-            {/*<div className={'col-md-1'}>{user.id}</div>*/}
-            <div className={'col-md-3'}>{user.username}</div>
-            <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
-            <div className={'col-md-3'}>{user.email}</div>
+        return <div className={'row table_row animated fadeInUp'}>
+            <div className={'col-md-4'}>{user.username}</div>
+            <div className={'col-md-4'}>{this.russianRole(user.userRole)}</div>
+            <div className={'col-md-4'}>{user.email}</div>
         </div>
     };
 
@@ -71,9 +71,9 @@ export default class UsersList extends Component {
             <div className="offset-md-1 col-md-5 superuserform_companylist">
                 <div className="row table_header">
                     {/*<div className="col-md-1">Id</div>*/}
-                    <div className="col-md-3">Никнейм</div>
-                    <div className="col-md-3">Роль</div>
-                    <div className="col-md-3">Почта</div>
+                    <div className="col-md-4">Никнейм</div>
+                    <div className="col-md-4">Роль</div>
+                    <div className="col-md-4">Почта</div>
                 </div>
                 {
                     this.state.users.map((user) => {

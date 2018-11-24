@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import HeaderElement from '../src/components/PagesCommon/header'
+/*import HeaderElement from '../src/components/PagesCommon/header'*/
 import * as serviceWorker from './serviceWorker';
-import ErrorUiHandler from "./components/errorWindows/errorHandler";
+/*import ErrorUiHandler from "./components/errorWindows/errorHandler";*/
 
 ReactDOM.render(<App/>, document.getElementById('root'));
 
