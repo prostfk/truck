@@ -28,4 +28,5 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_consignment")
     private Consignment consignment;
+
 }
