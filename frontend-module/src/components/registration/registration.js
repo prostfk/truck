@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ValidationUtil from "../commonUtil/validationUtil";
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 class registration extends Component {
 
@@ -36,7 +37,9 @@ class registration extends Component {
             if (data.error !== undefined) {
                 window.location.href = '/';
             }
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     };
 
     changeInput(event) {

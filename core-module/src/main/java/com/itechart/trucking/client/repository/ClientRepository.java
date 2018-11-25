@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ClientRepository extends SolrCrudRepository<Client, Long> {
+public interface ClientRepository extends CrudRepository<Client, Long> {
 
     Client findClientByName(String name);
     List<Client> findClientByType(String client);
@@ -23,6 +23,4 @@ public interface ClientRepository extends SolrCrudRepository<Client, Long> {
 
     Page<Client> findAllByCompany(Company company, Pageable pageable);
 
-//    @Query("name:*?0*")
-    List<Client> findClientSolrByName(String name);
 }

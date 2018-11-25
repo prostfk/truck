@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class CreateUser extends Component {
 
@@ -117,7 +118,9 @@ export default class CreateUser extends Component {
                         document.getElementById('error-form-span').innerText = data.error;
                     }
                 }
-            })
+            }).catch(()=>{
+                NotificationManager.error('Ошибка');
+            });
         }
     };
 

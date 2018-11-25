@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
+import {NotificationManager} from "react-notifications";
 
 export default class UsersList extends Component {
 
@@ -33,7 +34,9 @@ export default class UsersList extends Component {
                 totalElements: data.totalElements,
                 currentPage: ++data.number
             })
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     handlePageChange(pageNumber) {

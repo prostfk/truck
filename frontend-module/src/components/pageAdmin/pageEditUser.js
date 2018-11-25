@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class EditUser extends Component {
 
@@ -52,9 +53,9 @@ export default class EditUser extends Component {
                 houseNumber: data.houseNumber,
                 flatNumber: data.flatNumber
             });
-        }).catch(err => {
-            throw new Error('Ошибка доступа')
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     submitChanges = () => {
@@ -90,7 +91,9 @@ export default class EditUser extends Component {
                 }
                 document.getElementById('error-form-span').innerText = data.error;
             }
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
 
     };
 

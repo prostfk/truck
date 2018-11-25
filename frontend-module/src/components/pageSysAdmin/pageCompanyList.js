@@ -1,5 +1,6 @@
 import React from "react";
 import ModalComponent from './modalComponent'
+import {NotificationManager} from "react-notifications";
 
 /*import ReactDOM from "react";*/
 
@@ -31,7 +32,9 @@ class SysAdminPage extends React.Component {
                     refThis.setState({companies: newCompanies});
                 }
             });
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     };
 
     changeMail(event) {
@@ -64,6 +67,8 @@ class SysAdminPage extends React.Component {
                     document.getElementById('result-span').innerText = 'Неверная почта';
                 }
             })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
 

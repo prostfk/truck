@@ -6,6 +6,8 @@ import com.itechart.trucking.cancellationAct.repository.CancellationActRepositor
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.solrEntity.SolrClient;
+import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
@@ -26,6 +28,7 @@ import com.itechart.trucking.product.repository.ProductRepository;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.dto.WaybillDto;
@@ -91,6 +94,14 @@ public class DispatcherController {
     @Autowired
     private CancellationActRepository cancellationActRepository;
 
+    @Autowired
+    private SolrStockRepository solrStockRepository;
+
+    @Autowired
+    private ClientSolrRepository clientSolrRepository;
+
+//    @Autowired
+//    private ClientSolrRepository clientSolrRepository;
 
     @GetMapping(value = "/company/findFreeDrivers")
     public List<DriverDto> findFreeDrivers(@RequestParam String dateFrom, @RequestParam String dateTo) {
@@ -201,9 +212,13 @@ public class DispatcherController {
 
     @GetMapping(value = "/clients/findClientsByNameLike")//todo correct search
     public List<ClientDto> findClientsByNameLike(@RequestParam String name) {
-//        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
-        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientSolrByName(name);
-        return Odt.ClientListToDtoList(clientsByNameLikeIgnoreCase);
+//        clientSolrRepository.deleteAll();
+//        Iterable<Client> all = clientRepository.findAll();
+//        clientSolrRepository.saveAll(Odt.ClientsToSolrClientsList(all));
+
+        List<SolrClient> byName = clientSolrRepository.findByName(name);
+
+        return Odt.SolrClientsListToDtoList(byName);
     }
 
     @GetMapping(value = "/companies/findCompaniesByNameLike")//todo correct search
@@ -238,17 +253,6 @@ public class DispatcherController {
             json.put("error", "No stocks");
             return json.toString();
         }
-    }
-
-    @GetMapping(value = "/testUser")
-    public Object getUserDetails() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("name", SecurityContextHolder.getContext().getAuthentication().getName());
-        json.put("details", SecurityContextHolder.getContext().getAuthentication().getDetails());
-        json.put("principal", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        json.put("credentials", SecurityContextHolder.getContext().getAuthentication().getCredentials());
-        json.put("authorities", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        return json.toString();
     }
 
     @PostMapping(value = "/orders/createConsignment")
@@ -342,6 +346,12 @@ public class DispatcherController {
         }
 
         return (driverIsFree && autoIsFree);
+    }
+
+    @GetMapping(value = "/findStock")
+    public List findStocks(@RequestParam Boolean active, @RequestParam String name){
+        User userByUsername = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        return solrStockRepository.findAllByCompanyIdAndActiveAndName(userByUsername.getCompany().getId(),active,name);
     }
 
 

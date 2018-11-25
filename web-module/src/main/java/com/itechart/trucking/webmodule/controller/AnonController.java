@@ -1,7 +1,16 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.solrEntity.SolrClient;
+import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.service.CompanyService;
+import com.itechart.trucking.odt.Odt;
+import com.itechart.trucking.stock.entity.Stock;
+import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.token.entity.Token;
 import com.itechart.trucking.token.service.TokenService;
 import com.itechart.trucking.user.dto.UserDto;
@@ -21,12 +30,39 @@ import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 public class AnonController {
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder; refresh token
+    //DEVELOPMENT ONLY(init solr)
+    @Autowired
+    private ClientSolrRepository clientSolrRepository;
+    @Autowired
+    private SolrStockRepository solrStockRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private StockRepository stockRepository;
+    @GetMapping(value = "/initSolr")
+    public Object initSolr() throws JSONException {
+        JSONObject json = new JSONObject();
+        try {
+            Iterable<Stock> allStocks = stockRepository.findAll();
+            Iterable<Client> allClients = clientRepository.findAll();
+            solrStockRepository.deleteAll();
+            clientSolrRepository.deleteAll();
+            List<SolrStock> solrStocks = Odt.StockToSolrStocksList(allStocks);
+            List<SolrClient> solrClients = Odt.ClientsToSolrClientsList(allClients);
+            solrStockRepository.saveAll(solrStocks);
+            clientSolrRepository.saveAll(solrClients);
+            json.put("status", "ok");
+        }catch (Exception e){
+            json.put("status", "failed: " + e.getMessage());
+        }
+        return json.toString();
+    }
+    //DEVELOPMENT ONLY(init solr)
 
     @Autowired
     private JwtGen jwtGen;

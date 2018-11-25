@@ -5,6 +5,7 @@ import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 
 import {EditIcon} from "./pageAutoList";
+import {NotificationManager} from "react-notifications";
 
 
 export default class EditStockModal extends Component {
@@ -61,7 +62,9 @@ export default class EditStockModal extends Component {
                     console.log(data);
                     this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
                 })
-            }, err => console.log(err));
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
+            });
             this.toggle();
         } else {
             document.getElementById('info').style.color = 'red';

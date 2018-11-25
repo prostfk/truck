@@ -12,16 +12,12 @@ import java.util.List;
 
 @Entity
 @Data
-@SolrDocument(solrCoreName = "client")
 public class Client {
 
     @Id
-    @Field
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Field
     private String name;
-    @Field
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +33,46 @@ public class Client {
         this.name = name;
         this.type = type;
         this.company = company;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public List<Order> getClientOrders() {
+        return clientOrders;
+    }
+
+    public void setClientOrders(List<Order> clientOrders) {
+        this.clientOrders = clientOrders;
     }
 
     @Override
