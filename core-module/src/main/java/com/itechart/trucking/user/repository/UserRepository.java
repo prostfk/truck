@@ -3,7 +3,7 @@ package com.itechart.trucking.user.repository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
-import com.itechart.trucking.user.statistics.UserStatisticsDto;
+//import com.itechart.trucking.user.statistics.UserStatisticsDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -58,8 +58,8 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     User findUserById(Long id);
 
-    @Query(value = "SELECT new com.itechart.trucking.user.statistics.UserStatisticsDto(u.userRole,count(u)) from User u group by u.userRole")
-    List<UserStatisticsDto> getTotalUserStistics();
+   // @Query(value = "SELECT new com.itechart.trucking.user.statistics.UserStatisticsDto(u.userRole,count(u)) from User u group by u.userRole")
+   // List<UserStatisticsDto> getTotalUserStistics();
 
 
 }

@@ -247,16 +247,6 @@ export default class DispatcherCreateOrderPage extends React.Component {
         }
     };
 
-    //trbl
-    removeProduct = (name) => {
-        /*        let tmp = this.state.consignment;
-                let index = tmp.indexOf(name);
-                tmp.splice(index, 1);
-                this.setState({
-                    consignment: tmp
-                })*/
-    };
-
     showOrderHideConsignment = () => {
         document.getElementById('order-form').style.display = '';
         document.getElementById('consignment-form').style.display = 'none';
@@ -311,6 +301,14 @@ export default class DispatcherCreateOrderPage extends React.Component {
         }
     };
 
+    deleteProduct(index) {
+        console.log(index);
+        const newConsignment = [...this.state.consignment];
+        if (index !== -1) {
+            newConsignment.splice(index, 1);
+            this.setState({consignment: newConsignment});
+        }
+    }
     render() {
 
         let customerCompanyStyle = {
@@ -430,7 +428,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                             <h3>Товарная партия</h3>
                             <span className="error-span" id="prodForm-error-span"/>
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <input type="text" id="newProductName" value={this.state.newProductName}
                                            onChange={this.changeInput} className="form-control"
                                            placeholder={"Название"}/>
@@ -447,7 +445,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                     <span className="error-span" id="prodStatus-error-span"/>
 
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}
                                            onChange={this.changeInput} className="form-control"
@@ -477,14 +475,14 @@ export default class DispatcherCreateOrderPage extends React.Component {
                             {
                                 this.state.consignment.map((item, index) => {
                                         return <div className={"row table_row animated fadeInUp"}>
-                                            <div className="col-md-3">{item.name}</div>
+                                            <div className="col-md-2">{item.name}</div>
                                             <div className="col-md-2">{item.status}</div>
-                                            <div className="col-md-3">{item.description}</div>
+                                            <div className="col-md-2">{item.description}</div>
                                             <div className="col-md-2">{item.count}</div>
                                             <div className="col-md-2">{item.price}</div>
-                                            <div className="col-md-2"><a onClick={this.removeProduct(item.name)}
-                                                                         id={`item-${item.name}`}
-                                                                         className="btn-sm btn-dark">Удалить</a></div>
+                                            <div className="col-md-2">
+                                                <div className="table_button bg-secondary text-white" onClick={this.deleteProduct.bind(this, index)}>удалить</div>
+                                            </div>
                                         </div>
                                     }
                                 )

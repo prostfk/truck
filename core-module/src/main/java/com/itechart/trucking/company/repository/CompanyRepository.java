@@ -1,7 +1,7 @@
 package com.itechart.trucking.company.repository;
 
 import com.itechart.trucking.company.entity.Company;
-import com.itechart.trucking.company.statistics.CompanyStatisticsDto;
+//import com.itechart.trucking.company.statistics.CompanyStatisticsDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -27,7 +27,7 @@ public interface CompanyRepository extends CrudRepository<Company, Long> {
    List<Object[]> findStatsForXlsReport(@Param("companyId")Long companyId);
    List<Company> findTop10CompaniesByNameLikeIgnoreCase(String nameLike);
 
-   @Query(value = "SELECT new com.itechart.trucking.company.statistics.CompanyStatisticsDto(c.active,count(c)) from Company c group by c.active")
-   List<CompanyStatisticsDto> getCompanyStatistics();
+   //@Query(value = "SELECT new com.itechart.trucking.company.statistics.CompanyStatisticsDto(c.active,count(c)) from Company c group by c.active")
+   //List<CompanyStatisticsDto> getCompanyStatistics();
 
 }
