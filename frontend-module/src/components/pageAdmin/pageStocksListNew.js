@@ -159,7 +159,7 @@ export default class PageStockListNew extends React.Component {
     render(){
         return <div className="row">
             <div className="offset-md-1 col-md-6 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="col-md-5">Название склада</div>
                     <div className="col-md-4">Адрес</div>
@@ -190,7 +190,7 @@ export default class PageStockListNew extends React.Component {
             </div>
 
             <div className="offset-md-1 col-md-2">
-                <form className="superuserform_newaccountform grey_form">
+                <form className="superuserform_newaccountform grey_form animated fadeIn">
                     <CreateStockModal/>
                     {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
                 </form>

@@ -181,7 +181,7 @@ export class ManagerRouteList extends Component {
 
     render() {
         return (
-            <div className={'row'}>
+            <div className={'row animated fadeIn'}>
                 <div className={'col-md-3'}>
                     <ul>
                         <h1>Точки</h1>

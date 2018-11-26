@@ -95,7 +95,7 @@ class SysAdminPage extends React.Component {
                                     className={"table_button bg-secondary text-white"}>Вкл</a>;
         const lockedDate = company.lockDate == null ? "" : " Дата: " + (new Date(company.lockDate));
         const titleoflock = company.active ? "Активна" : (company.lockerId === null ? "[admin]" : company.lockerId.username) + " : " + (company.lockComment === "" ? "[without message]" : company.lockComment) + lockedDate;
-        return <div className={"row table_row"}>
+        return <div className={"row table_row animated fadeInUp"}>
             <div className={"col-md-1"}>{company.id}</div>
             <div className={"col-md-5"}>{company.name}</div>
             <div className={"col-md-3"} title={titleoflock}
@@ -148,7 +148,7 @@ class SysAdminPage extends React.Component {
     render() {
         return <div className="row">
             <div className="offset-md-1 col-md-6 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="col-md-5">Название компании</div>
                     <div className="col-md-3">Статус</div>

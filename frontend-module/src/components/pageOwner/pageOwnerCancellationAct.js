@@ -33,7 +33,7 @@ class OwnerCancelAct extends Component {
 
     renderTable(cancelAct) {
         if (!cancelAct) return;
-        return <div className={"row table_row"}>
+        return <div className={"row table_row animated fadeInUp"}>
             <div className={"col-md-1"}>{cancelAct.id}</div>
             <div className={"offset-md-1 col-md-1"}>{cancelAct.amount}</div>
             <div className={"offset-md-1 col-md-3"}>{cancelAct.price}</div>
@@ -44,7 +44,7 @@ class OwnerCancelAct extends Component {
     render() {
         return <div className="row">
             <div className="offset-md-2 col-md-8 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="offset-md-1 col-md-1">Количество</div>
                     <div className="offset-md-1 col-md-3">Цена</div>

@@ -106,7 +106,7 @@ class DispatcherOrderList extends React.Component {
         }
         return <div class="row">
             <div class="offset-md-1 col-md-7 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-2">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>
@@ -135,7 +135,7 @@ class DispatcherOrderList extends React.Component {
                     </div>
                 </div>
             </div>
-            <div class="offset-md-1 col-md-2">
+            <div class="offset-md-1 col-md-2 animated fadeIn">
                 <form class="superuserform_newaccountform grey_form">
                     {element}
                 </form>

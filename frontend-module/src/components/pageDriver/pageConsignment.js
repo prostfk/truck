@@ -168,7 +168,7 @@ class DriverConsignment extends Component {
                     </form>
                 </Modal>
 
-                <div className="offset-md-1 col-md-8 form_clear">
+                <div className="offset-md-1 col-md-8 form_clear  animated fadeIn">
                     <h3>Товарная партия</h3>
                     <div className="row table_header">
                         <div className="col-md-3">Наименование</div>

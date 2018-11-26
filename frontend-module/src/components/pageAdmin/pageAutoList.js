@@ -190,7 +190,7 @@ export default class AutoList extends Component {
         return (
             <div className={'row'}>
                 <div className="offset-md-1 col-md-6 superuserform_companylist">
-                    <div className="row table_header">
+                    <div className="row table_header animated fadeIn">
                         <div className="col-md-2">Id</div>
                         <div className="col-md-2">Название</div>
                         <div className="col-md-2">Номер</div>
@@ -221,7 +221,7 @@ export default class AutoList extends Component {
                 </div>
 
                 <div className="offset-md-1 col-md-3" id={'add-auto-form'}>
-                    <form className="superuserform_newaccountform grey_form">
+                    <form className="superuserform_newaccountform grey_form  animated fadeIn">
                         <span id="message-span"/>
                         <div id={'from-content'}>
                             <h5>Регистрация нового авто</h5>

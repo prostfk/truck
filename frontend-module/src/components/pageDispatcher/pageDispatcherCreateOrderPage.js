@@ -322,7 +322,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
         return (
             <div>
                 <div className="row" id={'order-form'}>
-                    <div className="offset-md-2 col-md-8 superuserform_companylist">
+                    <div className="offset-md-2 col-md-8 superuserform_companylist animated fadeIn">
                         <div className="row">
                             <div className="col-md-6">
                                 <h3>Основное</h3>

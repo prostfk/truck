@@ -51,7 +51,7 @@ export default class CompanyClients extends Component {
         return (
             <div className={'row'}>
                 <div className="offset-md-2 col-md-5 superuserform_companylist">
-                    <div className="row table_header">
+                    <div className="row table_header animated fadeIn">
                         <div className="col-md-1">Id</div>
                         <div className="col-md-5">Название</div>
                         <div className="col-md-3">Тип</div>

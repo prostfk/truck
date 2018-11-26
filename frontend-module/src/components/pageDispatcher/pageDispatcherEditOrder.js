@@ -359,7 +359,7 @@ export default class DispatcherEditOrder extends Component {
             color: 'green'
         };
         return (
-            <div>
+            <div className={'animated fadeIn'}>
                 <span className="text-center" style={green} id={'success-order-span'}/>
                 <div className="row" id={'order-form'}>
                     <div className="offset-md-2 col-md-8 superuserform_companylist">

@@ -55,7 +55,7 @@ class DriverOrderList extends React.Component {
 
     render() {
         return <div class="row">
-            <div class="offset-lg-2 col-lg-8 superuserform_companylist">
+            <div class="offset-lg-2 col-lg-8 superuserform_companylist animated fadeIn">
                 <div className="row table_header">
                     <div className="col-md-2">Название</div>
                     <div className="col-md-2">Откуда</div>

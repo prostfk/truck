@@ -84,7 +84,7 @@ class pageManagerOrders extends Component {
                     <div className="col-md-9">
                         <ModalChooseWaybillStatus className={"table_button bg-secondary text-white"}
                                                   clickfunc={this.changeWaybillStatus} orderId={order.id}
-                                                  waybillStatus={order.waybill.status}></ModalChooseWaybillStatus>
+                                                  waybillStatus={order.waybill.status}/>
                     </div>
                     <div className="col-md-3"><b>Проверка завершена</b></div>
                 </div>
@@ -144,7 +144,7 @@ class pageManagerOrders extends Component {
             <div className="row">
                 <div className="offset-md-1 col-md-10 superuserform_companylist">
                     <div className="container-fluid">
-                        <div className="row table_header">
+                        <div className="row table_header animated fadeIn">
                             <div className="col-md-1"><b>Клиент</b></div>
                             <div className="col-md-2"><b>Название склада (отправитель)</b></div>
                             <div className="col-md-1"><b>Название склада (получатель)</b></div>

@@ -334,7 +334,7 @@ export default class CompanyOwnerStatistics extends Component {
 
         return (
             <div>
-                <div className="row">
+                <div className="row animated fadeIn">
                     <div className="offset-md-1 col-xl-10 superuserform_companylist">
                         <h2> Скачать статистику</h2>
                         <div className="row">

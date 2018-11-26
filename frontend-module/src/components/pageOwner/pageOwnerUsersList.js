@@ -70,7 +70,7 @@ export default class UsersList extends Component {
     render() {
         return <div className={'row'}>
             <div className="offset-md-1 col-md-5 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     {/*<div className="col-md-1">Id</div>*/}
                     <div className="col-md-3">Никнейм</div>
                     <div className="col-md-3">Роль</div>
