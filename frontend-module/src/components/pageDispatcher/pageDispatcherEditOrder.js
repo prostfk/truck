@@ -2,6 +2,7 @@ import {Component} from 'react'
 import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 
 export default class DispatcherEditOrder extends Component {
@@ -158,7 +159,9 @@ export default class DispatcherEditOrder extends Component {
                 if (data.error === undefined) {
                     this.props.history.push('/orders');
                 }
-            })
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
+            });
         }
     }
 
@@ -194,6 +197,8 @@ export default class DispatcherEditOrder extends Component {
             this.fetchToUserStocks();
             console.log(this.state);
             console.log(this.state.consignment);
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
         });
 
     }
@@ -230,6 +235,8 @@ export default class DispatcherEditOrder extends Component {
                     return response.json()
                 }).then(data => {
                 this.addCompaniesInSelect(data);
+            }).catch(() => {
+                NotificationManager.error('Ошибка');
             });
             document.getElementById('client_id').style.display = '';
         } else {
@@ -252,7 +259,9 @@ export default class DispatcherEditOrder extends Component {
                 departure_stock: this.state.order.sender.id,
                 delivery_stock: this.state.order.receiver.id
             })
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
+        });
     };
 
     findAutos() {
@@ -266,9 +275,9 @@ export default class DispatcherEditOrder extends Component {
             });
             document.getElementById('auto').innerHTML = autoHtml;
             // this.setDefault();
-        })).catch(err => {
-            throw new Error('Нет доступа к свободным авто');
-        })
+        })).catch(() => {
+            NotificationManager.error('Ошибка');
+        });
     }
 
     findDrivers() {
@@ -282,9 +291,9 @@ export default class DispatcherEditOrder extends Component {
             });
             document.getElementById('driver').innerHTML = driverHtml;
             // this.setDefault();
-        }).catch(err => {
-            throw new Error('Нет доступа к свободным водителям');
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
+        });
     }
 
     addCompaniesInSelect(companies) {
@@ -327,7 +336,9 @@ export default class DispatcherEditOrder extends Component {
                         console.log(array);
                         console.log(this.state);
                     }
-                })
+                }).catch(()=>{
+                    NotificationManager.error('Ошибка');
+                });
             }
         }
     };
@@ -351,10 +362,6 @@ export default class DispatcherEditOrder extends Component {
     };
 
     render() {
-
-        let none = {
-            display: 'none'
-        };
         let green = {
             color: 'green'
         };

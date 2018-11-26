@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import ReactGoogleMapLoader from "react-google-maps-loader"
 import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {NotificationManager} from "react-notifications";
 
 
 export default class CreateStockModal extends Component {
@@ -67,7 +68,9 @@ export default class CreateStockModal extends Component {
                     // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
                     this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
                 })
-            }, err => console.log(err));
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
+            });
             this.toggle();
         } else {
             document.getElementById('info').style.color = 'red';

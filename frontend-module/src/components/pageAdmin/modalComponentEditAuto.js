@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {EditIcon} from "./pageAutoList";
+import {NotificationManager} from "react-notifications";
 
 export default class ModalComponentEditAuto extends React.Component {
     constructor(props) {
@@ -54,6 +55,8 @@ export default class ModalComponentEditAuto extends React.Component {
     getCompanyName() {
         const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
         });
         return fetchResult;
     }

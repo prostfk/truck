@@ -56,7 +56,7 @@ export default class ModalCreateClient extends Component {
     render() {
         return (
             <div className={'superuserform_newaccountform grey_form'}>
-                <button className={'btn btn-success'} onClick={this.toggle}>Создать</button>
+                <button className={'btn btn-success btn_fullsize'} onClick={this.toggle}>Создать</button>
                 <Modal isOpen={this.state.modal}>
                     <div>
                         <ModalHeader>Новый клиент</ModalHeader>

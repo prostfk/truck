@@ -1,6 +1,7 @@
 import React from "react";
 import CommonUtil from "../commonUtil/commontUtil";
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class DispatcherCreateOrderPage extends React.Component {
     constructor(props) {
@@ -139,7 +140,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                 .then(response => {
                     return response.json()
                 }).then(data => {
-                this.addCompaniesInSelect(data);
+                    this.addCompaniesInSelect(data);
             });
             document.getElementById('client_id').style.display = '';
         } else {
@@ -159,7 +160,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
             document.getElementById('departure_stock').innerHTML = html;
             document.getElementById('delivery_stock').innerHTML = html;
             this.setDefault();
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     }
 
     addCompaniesInSelect(companies) {
@@ -190,9 +193,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
             });
             document.getElementById('auto').innerHTML = autoHtml;
             this.setDefault();
-        })).catch(err => {
-            throw new Error('Нет доступа к свободным авто');
-        })
+        })).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     }
 
     findDrivers() {
@@ -205,9 +208,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
             });
             document.getElementById('driver').innerHTML = driverHtml;
             this.setDefault();
-        }).catch(err => {
-            throw new Error('Нет доступа к свободным водителям');
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     }
 
     setDefault() {

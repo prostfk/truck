@@ -1,5 +1,7 @@
 import React from "react";
 import ModalComponent from './modalComponent'
+import {NotificationManager} from "react-notifications";
+import Pagination from "react-js-pagination";
 
 /*import ReactDOM from "react";*/
 
@@ -11,9 +13,12 @@ class SysAdminPage extends React.Component {
         this.sendRef = this.sendRef.bind(this);
         this.changeMail = this.changeMail.bind(this);
         this.submitLock = this.submitLock.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
             companies: [],
-            inputMail: ""
+            inputMail: "",
+            totalElements: 0,
+            currentPage: 1
         };
         document.title = "Список компаний"
     }
@@ -31,7 +36,9 @@ class SysAdminPage extends React.Component {
                     refThis.setState({companies: newCompanies});
                 }
             });
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     };
 
     changeMail(event) {
@@ -43,39 +50,52 @@ class SysAdminPage extends React.Component {
     sendRef() {
         let formData = new FormData();
         let value = this.state.inputMail;
+        this.setState({inputMail: ''});
         formData.append("email", value);
+        setTimeout(() => {
+            document.getElementById('user-new-form').style.display = '';
+        }, 2000);
         fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {
             method: "POST",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             response.json().then(function (data) {
-                console.log(data)
+                console.log(data);
                 if (data.error === undefined) {
                     document.getElementById('result-span').style.color = 'green';
                     document.getElementById('result-span').innerText = 'Письмо отправлено';
                     document.getElementById('user-new-form').style.display = 'none';
-                    setTimeout(() => {
-                        document.getElementById('user-new-form').style.display = '';
-                    }, 2000);
                     document.getElementById('result-span').innerText = '';
                 } else {
                     document.getElementById('result-span').style.color = 'red';
                     document.getElementById('result-span').innerText = 'Неверная почта';
                 }
             })
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     }
 
     /*auto run when page init*/
     componentDidMount() {
         this.getCompanyList().then(data => {
-            this.setState({companies: data});
+            let gettedCompanies = data.content;
+            this.setState({
+                companies: gettedCompanies,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
+            });
         });
     }
 
+    handlePageChange(pageNumber) {
+        this.getCompanyList(pageNumber);
+        this.setState({currentPage: pageNumber});
+    }
+
     /*get all company list*/
-    getCompanyList() {
-        const myRes = fetch('http://localhost:8080/api/companies', {
+    getCompanyList(pageid = 1) {
+        const myRes = fetch('http://localhost:8080/api/companies?page=' + pageid, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(function (response) {
@@ -159,16 +179,20 @@ class SysAdminPage extends React.Component {
                         return this.renderTable(element);
                     })
                 }
-                <div className="row">
-                    <nav aria-label="...">
-                        <ul className="pagination pagination-sm">
-                            <li className="page-item disabled">
-                                <a className="page-link" href="#" tabIndex="-1">1</a>
-                            </li>
-                            <li className="page-item"><a className="page-link" href="#">2</a></li>
-                            <li className="page-item"><a className="page-link" href="#">3</a></li>
-                        </ul>
-                    </nav>
+                <div className="table_footer">
+                    <div>
+                        <Pagination
+                            activePage={this.state.currentPage}
+                            totalItemsCount={this.state.totalElements}
+                            itemsCountPerPage={5}
+                            pageRangeDisplayed={5}
+                            hideDisabled={true}
+                            itemClass={"page-item"}
+                            linkClass={"page-link"}
+                            activeClass={"activePage"}
+                            onChange={this.handlePageChange}
+                        />
+                    </div>
                 </div>
             </div>
 

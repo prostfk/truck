@@ -3,6 +3,12 @@ import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
 /*import ErrorUiHandler from "../errorWindows/errorHandler";*/
 import Pagination from "react-js-pagination";
+import {NotificationManager} from "react-notifications";
+import {withBaseIcon} from "react-icons-kit";
+import {edit} from 'react-icons-kit/fa/edit'
+const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
+const EditIcon = () => <SideIconContainer icon={edit}/>
+
 
 class DispatcherOrderList extends React.Component {
     constructor(props) {
@@ -43,8 +49,8 @@ class DispatcherOrderList extends React.Component {
             return response.json();
         }).then(function (result) {
             return result;
-        }).catch(err => {
-            throw new Error('Ошибка доступа')
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -68,21 +74,21 @@ class DispatcherOrderList extends React.Component {
         }).then(function (result) {
             console.log(result);
             return result;
-        }).catch(err => {
-            throw new Error('Ошибка доступа')
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
         });
     }
 
     renderTable(order) {
         if (!order) return;
         return <div className="row table_row order_row animated fadeInUp">
-            <div className="col-md-2">{order.name}</div>
+            <div className="col-md-3">{order.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateDeparture)}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateArrival)}</div>
-            <div className="col-md-2">
-                <Link to={`/orders/${order.id}/edit`}>Редактировать</Link>
+            <div className="col-md-1">
+                <Link to={`/orders/${order.id}/edit`}><EditIcon></EditIcon></Link>
             </div>
         </div>
     }
@@ -105,14 +111,14 @@ class DispatcherOrderList extends React.Component {
 
         }
         return <div class="row">
-            <div class="offset-md-1 col-md-7 superuserform_companylist">
-                <div className="row table_header animated fadeIn">
-                    <div className="col-md-2">Заказ</div>
+            <div class="offset-md-1 col-md-7 superuserform_companylist animated fadeIn">
+                <div className="row table_header">
+                    <div className="col-md-3">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>
                     <div className="col-md-2">Дата отправления</div>
                     <div className="col-md-2">Дата получения</div>
-                    <div className="col-md-2">Заказ</div>
+                    <div className="col-md-1"></div>
                 </div>
                 {
                     this.state.orders.map((element) => {

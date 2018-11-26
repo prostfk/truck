@@ -5,6 +5,8 @@ import com.itechart.trucking.company.entity.Company;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.solr.repository.Query;
+import org.springframework.data.solr.repository.SolrCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,4 +22,5 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
     List<Client> findClientsByNameLikeIgnoreCase(String format);
 
     Page<Client> findAllByCompany(Company company, Pageable pageable);
+
 }

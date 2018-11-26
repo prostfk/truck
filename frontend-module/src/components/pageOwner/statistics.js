@@ -5,6 +5,7 @@ import {Chart} from 'react-chartjs-2';
 import {Container} from 'mdbreact';
 import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
+import {NotificationManager} from "react-notifications";
 
 export default class CompanyOwnerStatistics extends Component {
 
@@ -108,6 +109,8 @@ export default class CompanyOwnerStatistics extends Component {
             }
             console.log(this.state)
 
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -190,7 +193,7 @@ export default class CompanyOwnerStatistics extends Component {
         }).then(function (result) {
             return result;
         }).catch(err=>{
-            throw new Error('Ошибка доступа')
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -202,9 +205,9 @@ export default class CompanyOwnerStatistics extends Component {
             datasets: [
                 {
                     label: 'Принятые заказы',
-                    fill: false,
+                    fill: true,
                     lineTension: 0.4,
-                    backgroundColor: '#4c5884',
+                    backgroundColor: '#426bff4a',
                     borderColor: '#5a6384',
                     borderCapStyle: 'butt',
                     borderDash: [],
@@ -220,6 +223,40 @@ export default class CompanyOwnerStatistics extends Component {
                     pointRadius: 5,
                     pointHitRadius: 10,
                     data: this.state.acceptedAmmountMonthValues
+                },
+            ]
+        };
+        return <Container>
+            <Line data={dataAccepted} />
+        </Container>
+    }
+
+    generateExecutedTable(data,mmonthNames){
+        if(data.length<6 || mmonthNames.length<6) return;
+        let newarr = this.state.mmonthNames;
+        let dataAccepted = {
+            labels: newarr,
+            datasets: [
+                {
+                    label: 'Выполненные заказы',
+                    fill: true,
+                    lineTension: 0.4,
+                    backgroundColor: '#23b39b42',
+                    borderColor: '#568481',
+                    borderCapStyle: 'butt',
+                    borderDash: [],
+                    borderDashOffset: 0.0,
+                    borderJoinStyle: 'miter',
+                    pointBorderColor: '#848484',
+                    pointBackgroundColor: '#b9ffa9',
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: '#498456',
+                    pointHoverBorderColor: 'rgba(220,220,220,1)',
+                    pointHoverBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHitRadius: 10,
+                    data: this.state.executedAmmountMonthValues
                 }
             ]
         };
@@ -229,7 +266,6 @@ export default class CompanyOwnerStatistics extends Component {
     }
 
     generateFailedTableProducts(data,mmonthNames){
-        debugger;
         if(data.length<6 || mmonthNames.length<6) return;
         let newarr = this.state.mmonthNames;
         let dataAccepted = {
@@ -296,39 +332,7 @@ export default class CompanyOwnerStatistics extends Component {
         </Container>
     }
 
-    generateExecutedTable(data,mmonthNames){
-        if(data.length<6 || mmonthNames.length<6) return;
-        let newarr = this.state.mmonthNames;
-        let dataAccepted = {
-            labels: newarr,
-            datasets: [
-                {
-                    label: 'Выполненные заказы',
-                    fill: false,
-                    lineTension: 0.4,
-                    backgroundColor: '#4e847b',
-                    borderColor: '#568481',
-                    borderCapStyle: 'butt',
-                    borderDash: [],
-                    borderDashOffset: 0.0,
-                    borderJoinStyle: 'miter',
-                    pointBorderColor: '#848484',
-                    pointBackgroundColor: '#b9ffa9',
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 5,
-                    pointHoverBackgroundColor: '#498456',
-                    pointHoverBorderColor: 'rgba(220,220,220,1)',
-                    pointHoverBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHitRadius: 10,
-                    data: this.state.executedAmmountMonthValues
-                }
-            ]
-        };
-        return <Container>
-            <Line data={dataAccepted} />
-        </Container>
-    }
+
 
     render() {
 

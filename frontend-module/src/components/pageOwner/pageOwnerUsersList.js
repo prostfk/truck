@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
+import {NotificationManager} from "react-notifications";
 
 export default class UsersList extends Component {
 
@@ -33,7 +34,9 @@ export default class UsersList extends Component {
                 totalElements: data.totalElements,
                 currentPage: ++data.number
             })
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     handlePageChange(pageNumber) {
@@ -43,10 +46,9 @@ export default class UsersList extends Component {
 
     renderUser = (user) => {
         return <div className={'row table_row animated fadeInUp'}>
-            {/*<div className={'col-md-1'}>{user.id}</div>*/}
-            <div className={'col-md-3'}>{user.username}</div>
-            <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
-            <div className={'col-md-3'}>{user.email}</div>
+            <div className={'col-md-4'}>{user.username}</div>
+            <div className={'col-md-4'}>{this.russianRole(user.userRole)}</div>
+            <div className={'col-md-4'}>{user.email}</div>
         </div>
     };
 
@@ -72,9 +74,9 @@ export default class UsersList extends Component {
             <div className="offset-md-1 col-md-5 superuserform_companylist">
                 <div className="row table_header animated fadeIn">
                     {/*<div className="col-md-1">Id</div>*/}
-                    <div className="col-md-3">Никнейм</div>
-                    <div className="col-md-3">Роль</div>
-                    <div className="col-md-3">Почта</div>
+                    <div className="col-md-4">Никнейм</div>
+                    <div className="col-md-4">Роль</div>
+                    <div className="col-md-4">Почта</div>
                 </div>
                 {
                     this.state.users.map((user) => {

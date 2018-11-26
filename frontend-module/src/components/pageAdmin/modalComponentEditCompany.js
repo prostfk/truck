@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class ModalComponentEditCompany extends React.Component {
     constructor(props) {
@@ -39,8 +40,8 @@ export default class ModalComponentEditCompany extends React.Component {
                 return response.json();
             }).then(function (result) {
                 console.log(result);
-            }).catch((err) => {
-                console.log(err);
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
             });
 
             this.setState({
@@ -52,6 +53,8 @@ export default class ModalComponentEditCompany extends React.Component {
     getCompanyName() {
         const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
         });
         return fetchResult;
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 class OwnerOrderList extends React.Component {
     constructor(props) {
@@ -30,6 +31,8 @@ class OwnerOrderList extends React.Component {
         }).then(function (result) {
             console.log(result);
             return result;
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
 
