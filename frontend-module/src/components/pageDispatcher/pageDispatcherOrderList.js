@@ -3,11 +3,12 @@ import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
 /*import ErrorUiHandler from "../errorWindows/errorHandler";*/
 import Pagination from "react-js-pagination";
+import {NotificationManager} from "react-notifications";
 import {withBaseIcon} from "react-icons-kit";
-
 import {edit} from 'react-icons-kit/fa/edit'
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const EditIcon = () => <SideIconContainer icon={edit}/>
+
 
 class DispatcherOrderList extends React.Component {
     constructor(props) {
@@ -48,8 +49,8 @@ class DispatcherOrderList extends React.Component {
             return response.json();
         }).then(function (result) {
             return result;
-        }).catch(err => {
-            throw new Error('Ошибка доступа')
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -73,8 +74,8 @@ class DispatcherOrderList extends React.Component {
         }).then(function (result) {
             console.log(result);
             return result;
-        }).catch(err => {
-            throw new Error('Ошибка доступа')
+        }).catch(() => {
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -110,7 +111,7 @@ class DispatcherOrderList extends React.Component {
 
         }
         return <div class="row">
-            <div class="offset-md-1 col-md-7 superuserform_companylist">
+            <div class="offset-md-1 col-md-7 superuserform_companylist animated fadeIn">
                 <div className="row table_header">
                     <div className="col-md-3">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
@@ -140,7 +141,7 @@ class DispatcherOrderList extends React.Component {
                     </div>
                 </div>
             </div>
-            <div class="offset-md-1 col-md-2">
+            <div class="offset-md-1 col-md-2 animated fadeIn">
                 <form class="superuserform_newaccountform grey_form">
                     {element}
                 </form>

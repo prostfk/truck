@@ -2,6 +2,7 @@ package com.itechart.trucking.client.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.client.solrEntity.SolrClient;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.odt.Odt;
@@ -26,6 +27,12 @@ public class ClientDto {
         this.id = client.getId();
         this.name = client.getName();
         this.type = client.getType();
+    }
+
+    public ClientDto(SolrClient solrClient) {
+        this.id = solrClient.getId();
+        this.name = solrClient.getName();
+        this.type = solrClient.getType();
     }
 
     public void setCompany(Company company) {

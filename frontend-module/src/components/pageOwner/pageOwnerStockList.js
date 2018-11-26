@@ -76,7 +76,7 @@ export default class PageStockListNew extends React.Component {
     render() {
         return <div className="row">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="offset-md-1 col-md-5">Название склада</div>
                     <div className="offset-md-1 col-md-4">Адрес</div>

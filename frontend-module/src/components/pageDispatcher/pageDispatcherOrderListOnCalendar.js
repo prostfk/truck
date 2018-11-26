@@ -131,7 +131,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
     render() {
         let asd = this;
-        return <div className="row">
+        return <div className="row animated fadeIn">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <NotificationContainer/>
                 <h1>Календарь заказов</h1>

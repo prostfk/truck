@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import ModalCreateClient from "./modalCreateClient";
+import {NotificationContainer, NotificationManager} from "react-notifications";
 
 export default class CompanyClients extends Component {
 
@@ -22,7 +23,7 @@ export default class CompanyClients extends Component {
             headers: {'Auth-token': localStorage.getItem('Auth-token'), 'Accept': 'application/json;charset=UTF-8'}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
-                throw new Error('Ошибка доступа');
+                NotificationManager.error('Ошибка доступа');
             } else {
                 return response.json();
             }
@@ -33,7 +34,9 @@ export default class CompanyClients extends Component {
                 totalElements: data.totalElements,
                 currentPage: ++data.currentPage
             })
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     renderUser = (client, index) => {
@@ -51,7 +54,7 @@ export default class CompanyClients extends Component {
         return (
             <div className={'row'}>
                 <div className="offset-md-2 col-md-6 superuserform_companylist">
-                    <div className="row table_header">
+                    <div className="row table_header animated fadeIn">
                         <div className="col-md-1">Id</div>
                         <div className="col-md-5">Название</div>
                         <div className="col-md-3">Тип</div>

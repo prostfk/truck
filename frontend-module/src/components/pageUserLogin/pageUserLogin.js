@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {NotificationManager} from "react-notifications";
 
 class pageUserLogin extends Component {
 
@@ -69,7 +70,9 @@ class pageUserLogin extends Component {
                     document.getElementById('error-span').innerText = "Неправильные данные";
                 }
             })
-        }, err => console.log(err))
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     }
 
 }

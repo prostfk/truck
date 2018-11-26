@@ -7,6 +7,7 @@ import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
+import com.itechart.trucking.client.solrEntity.SolrClient;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.driver.dto.DriverDto;
@@ -19,6 +20,7 @@ import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
 import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.waybill.dto.WaybillDto;
@@ -107,6 +109,28 @@ public class Odt {
             newDtoList.add(newTypedElemnt);
         }
         return newDtoList;
+    }
+
+    public static List<ClientDto> SolrClientsListToDtoList(List<SolrClient> solrClients){
+        if (solrClients==null) return null;
+        List<ClientDto> clientDtos = new LinkedList<>();
+        solrClients.forEach(solrClient -> clientDtos.add(new ClientDto(solrClient)));
+        return clientDtos;
+    }
+
+    public static List<SolrClient> ClientsToSolrClientsList(Iterable<Client> clients){
+        List<SolrClient> solrClients = new LinkedList<>();
+        clients.forEach(client -> solrClients.add(new SolrClient(client.getId(),client.getName(),client.getType())));
+        return solrClients;
+    }
+
+    public static List<SolrStock> StockToSolrStocksList(Iterable<Stock> stocks){
+        List<SolrStock> solrStocks = new LinkedList<>();
+        solrStocks.forEach(stock -> solrStocks.add(new SolrStock(
+                stock.getId(),stock.getAddress(),stock.getName(),stock.getActive(),
+                stock.getLng(),stock.getLat(),stock.getCompanyId()
+        )));
+        return solrStocks;
     }
 
     public static List<StockDto> StockListToDtoList(List<Stock> noneDtoList){

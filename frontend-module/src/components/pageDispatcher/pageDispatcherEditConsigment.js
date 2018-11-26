@@ -60,7 +60,7 @@ class EditConsignment extends React.Component {
         else if (product.status === "2") status = "Доставлен";
         else if (product.status === "3") status = "Утерян";
 
-        return <div class="row table_row">
+        return <div class="row table_row animated fadeInUp">
             <div class="col-md-3">{product.name}</div>
             <div class="col-md-3">{status}</div>
             <div class="col-md-3">{product.description}</div>
@@ -72,7 +72,7 @@ class EditConsignment extends React.Component {
     }
 
     render() {
-        return <div class="offset-md-2 col-md-8 form_clear">
+        return <div class="offset-md-2 col-md-8 form_clear animated fadeIn">
             <h3>Товарная патрия {this.state.consigmentId}</h3>
             <div class="row">
                 <di class="col-md-3">

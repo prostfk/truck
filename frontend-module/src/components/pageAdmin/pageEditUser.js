@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class EditUser extends Component {
 
@@ -52,9 +53,9 @@ export default class EditUser extends Component {
                 houseNumber: data.houseNumber,
                 flatNumber: data.flatNumber
             });
-        }).catch(err => {
-            throw new Error('Ошибка доступа')
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     submitChanges = () => {
@@ -85,16 +86,21 @@ export default class EditUser extends Component {
             if (data.error === undefined) {
                 this.props.history.push('/usersList')
             } else {
+                if (data.error === 'user with such username already exists') {
+                    document.getElementById('error-form-span').innerText = 'Такой никнейм уже существует';
+                }
                 document.getElementById('error-form-span').innerText = data.error;
             }
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
 
     };
 
 
     render() {
         return (
-            <div className={"col-md-8 offset-md-2 superuserform_companylist"}>
+            <div className={"col-md-8 offset-md-2 superuserform_companylist animated fadeIn"}>
                 <div className="form-group row">
                     <h3>Изменение пользователя</h3>
                 </div>

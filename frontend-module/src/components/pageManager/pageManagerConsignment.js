@@ -155,7 +155,7 @@ class ManagerConsignment extends Component {
         }
 
 
-        return <div key={index} className="row table_row manager_orders">
+        return <div key={index} className="row table_row manager_orders animated fadeInUp">
             <div className="col-md-2">{product.name}</div>
             <div className="col-md-2" style={{display: semiLost ? 'block' : 'none'}}>Частично утерян</div>
             <div className="col-md-2" style={{display: isLost ? 'block' : 'none'}}>Утерян</div>
@@ -321,13 +321,13 @@ class ManagerConsignment extends Component {
 
                 <div className="offset-md-1 col-md-8 form_clear">
                     <h3>Товарная партия</h3>
-                    <div className="row table_header">
+                    <div className="row table_header animated fadeIn">
                         <div className="col-md-2">Наименование</div>
                         <div className="col-md-2">Состоние</div>
                         <div className="col-md-2">Описание</div>
                         <div className="col-md-2">Цена</div>
-                        <div className="col-md-2"></div>
-                        <div className="col-md-2"></div>
+                        <div className="col-md-2"/>
+                        <div className="col-md-2"/>
                     </div>
                     {
                         this.state.products.map((element, index) => {
