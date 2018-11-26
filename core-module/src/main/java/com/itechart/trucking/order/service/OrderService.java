@@ -83,6 +83,8 @@ public class OrderService {
         return orderRepository.findByCompany(company,pageable);
     }
 
+
+
     public List<Order> findCustomQueryOrderByDriver(Long driverId){
         return orderRepository.findCustomQueryOrderByDriver(driverId);
     }

@@ -127,96 +127,124 @@ export default class CreateUser extends Component {
     render() {
         return (
             <div>
-                <form className="superuserform_newaccountform grey_form">
+                <form className="superuserform_newaccountform grey_form" >
                     <span id="message-span"/>
                     <div id={'from-content'}>
-                        <h6>Регистрация нового пользователя</h6>
                         <span className={'error-span'} id={'error-form-span'}/>
-                        <div className="form-group">
-                            <label htmlFor="newUserUsername" id="usernameLabel">Никнейм*</label>
-                            <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
-                                   placeholder="bestWorker2018" required=""/>
-                            <span className="error-span" id="error-username-span"/>
+                        <div className="row">
+                            <div className="col-md-6 ">
+                                    <label htmlFor="newUserUsername" id="usernameLabel">Никнейм*</label>
+                                    <input onChange={this.changeInput} type="text" className="form-control" id="newUserUsername"
+                                           placeholder="bestWorker2018" required=""/>
+                                    <span className="error-span" id="error-username-span"/>
+                            </div>
+                            <div className="col-md-6 ">
+                                    <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
+                                    <input onChange={this.changeInput} type="password" className="form-control"
+                                           id="newUserPassword" placeholder="qwerty" required=""/>
+                                    <span className="error-span" id="error-password-span"/>
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserSecondName" id="newUserSecondNameLabel">ФИО*</label>
-                            <div className="col-md-12 row">
-                                <input onChange={this.changeInput} type="text" className="form-control col-md-4"
+
+                        <div className="row">
+                            <div className="col-md-12">
+                                <label htmlFor="newUserSecondName" id="newUserSecondNameLabel">ФИО*</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-4">
+                                <input onChange={this.changeInput} type="text" className="form-control"
                                        placeholder="Фамилия" id="newUserSecondName"/>
+                            </div>
+                            <div className="col-md-4">
                                 <input onChange={this.changeInput} type="text"
-                                       className="form-control col-md-3 offset-md-1" placeholder="Имя"
+                                       className="form-control" placeholder="Имя"
                                        id="newUserFirstName"/>
+                            </div>
+                            <div className="col-md-4">
                                 <input onChange={this.changeInput} type="text"
-                                       className="form-control col-md-3 offset-md-1" placeholder="Отчество"
+                                       className="form-control" placeholder="Отчество"
                                        id="newUserThirdName"/>
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserPassword" id="passwordLabel">Пароль*</label>
-                            <input onChange={this.changeInput} type="password" className="form-control"
-                                   id="newUserPassword" placeholder="qwerty" required=""/>
-                            <span className="error-span" id="error-password-span"/>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <label htmlFor="newUserAddress" id="userAddressLabel">Адрес</label>
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserEmail" id="emailLabel">Email</label>
-                            <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
-                                   placeholder="newUser@gmail.com" required=""/>
-                            <span className="error-span" id="error-email-span"/>
-
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserAddress" id="userAddressLabel">Адрес</label>
-                            <div className="col-md-12 row" id="newUserAddress">
-                                <input onChange={this.changeInput} type="text" className="form-control col-md-6"
+                        <div className="row">
+                            <div className="col-md-6">
+                                <input onChange={this.changeInput} type="text" className="form-control"
                                        placeholder="Страна" id="newUserCountry"/>
+                            </div>
+                            <div className="col-md-6">
                                 <input onChange={this.changeInput} type="text"
-                                       className="form-control col-md-5 offset-md-1" placeholder="Город"
+                                       className="form-control" placeholder="Город"
                                        id="newUserCity"/>
                             </div>
                         </div>
-                        <div className="form-group">
-                            <div className="col-md-12 row">
-                                <input onChange={this.changeInput} type="text" className="form-control col-md-4"
+                        <div className="row">
+                            <div className="col-md-4">
+                                <input onChange={this.changeInput} type="text" className="form-control"
                                        placeholder="Улица" id="newUserStreet"/>
+                            </div>
+                            <div className="col-md-4">
                                 <input onChange={this.changeInput} type="text"
-                                       className="form-control col-md-3 offset-md-1" placeholder="Дом"
+                                       className="form-control" placeholder="Дом"
                                        id="newUserHouseNumber"/>
+                            </div>
+                            <div className="col-md-4">
                                 <input onChange={this.changeInput} type="text"
-                                       className="form-control col-md-3 offset-md-1" placeholder="Квартира"
+                                       className="form-control" placeholder="Квартира"
                                        id="newUserFlatNumber"/>
                             </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserDate" id="dateLabel">Дата рождения</label>
-                            <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
-                                   className="form-control" id="newUserDate"
-                                   placeholder="01/01/2018" required=""/>
-                            <span className="error-span" id="error-date-span"/>
+                        <div className="row">
 
+                            <div className="col-md-4">
+                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
+                                <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
+                                       placeholder="newUser@gmail.com" required=""/>
+                                <span className="error-span" id="error-email-span"/>
+                            </div>
+                            <div className="col-md-4">
+                                <label htmlFor="newUserRole" id="roleLabel">Роль</label>
+                                <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole}
+                                        onChange={this.changeInput}>
+                                    <option value={'ROLE_ADMIN'}>Администратор</option>
+                                    <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
+                                    <option value={'ROLE_MANAGER'}>Менеджер</option>
+                                    <option value={'ROLE_DRIVER'}>Водитель</option>
+                                </select>
+                            </div>
+                            <div className="col-md-4">
+                                    <label htmlFor="newUserDate" id="dateLabel">Д.р.</label>
+                                    <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
+                                           className="form-control" id="newUserDate"
+                                           placeholder="01/01/2018" required=""/>
+                                    <span className="error-span" id="error-date-span"/>
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="newUserRole" id="roleLabel">Роль</label>
-                            <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole}
-                                    onChange={this.changeInput}>
-                                <option value={'ROLE_ADMIN'}>Администратор</option>
-                                <option value={'ROLE_DISPATCHER'}>Диспетчер</option>
-                                <option value={'ROLE_MANAGER'}>Менеджер</option>
-                                <option value={'ROLE_DRIVER'}>Водитель</option>
-                            </select>
+                        <div className="row">
+                            {
+                                this.state.newUserRole === 'ROLE_DRIVER' || (Array.isArray(this.state.newUserRole) ? this.state.newUserRole.includes('ROLE_DRIVER') : false) ? (
+                                    <div className="form-group">
+                                        <label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта *</label>
+                                        <input onChange={this.changeInput} value={this.state.newUserPassport} type="text"
+                                               className="form-control" id="newUserPassport" required=""/>
+                                        <span className="error-span" id="error-passport-span"/>
+                                    </div>
+                                ) : <div/>
+                            }
                         </div>
-                        {
-                            this.state.newUserRole === 'ROLE_DRIVER' || (Array.isArray(this.state.newUserRole) ? this.state.newUserRole.includes('ROLE_DRIVER') : false) ? (
-                                <div className="form-group">
-                                    <label htmlFor="newUserPassport" id="newUserPassport">Номер паспорта *</label>
-                                    <input onChange={this.changeInput} value={this.state.newUserPassport} type="text"
-                                           className="form-control" id="newUserPassport" required=""/>
-                                    <span className="error-span" id="error-passport-span"/>
-                                </div>
-                            ) : <div/>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
+                            </div>
+                        </div>
 
 
-                        }
-                        <a onClick={this.saveNewUser} className="btn btn-success btn_fullsize">Сохранить</a>
+
                     </div>
                 </form>
             </div>

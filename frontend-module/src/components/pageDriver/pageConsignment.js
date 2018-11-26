@@ -137,10 +137,9 @@ class DriverConsignment extends Component {
                 ref.forceUpdateHandler(result);
                 return result;
             }).catch((err) => {
-                console.log(err);
+                NotificationManager.error('Количество товаров не может быть меньше 0');
             });
         }
-
     }
 
     valButton = () => {
@@ -182,7 +181,7 @@ class DriverConsignment extends Component {
                     </form>
                 </Modal>
 
-                <div className="offset-md-1 col-md-8 form_clear">
+                <div className="offset-md-1 col-md-8 form_clear animated fadeIn">
                     <h3>Товарная партия</h3>
                     <div className="row table_header">
                         <div className="col-md-3">Наименование</div>
@@ -196,17 +195,6 @@ class DriverConsignment extends Component {
                             return this.renderTable(element, index);
                         })
                     }
-                    <div className="table_footer">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         );
