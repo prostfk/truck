@@ -8,6 +8,8 @@ import com.itechart.trucking.product.entity.Product;
 import com.itechart.trucking.product.entity.ProductState;
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+
 @Data
 public class ProductDto {
     private Long id;
@@ -15,7 +17,9 @@ public class ProductDto {
     private Integer status;
     private String description;
     private Double price;
+    @Min(0)
     private Integer count;
+    @Min(0)
     private Integer cancelledCount;
 
     private CancellationActDto cancellationAct;

@@ -14,6 +14,7 @@ export default class CompanyOwnerStatistics extends Component {
         this.getFullStatistics = this.getFullStatistics.bind(this);
         this.setCompanyWorkers = this.setCompanyWorkers.bind(this);
         this.generateAcceptedTable = this.generateAcceptedTable.bind(this);
+        this.xlsFullStat = this.xlsFullStat.bind(this);
         this.state = {
             rolesAmmount:{},
             acceptedAmmount:{},
@@ -42,15 +43,14 @@ export default class CompanyOwnerStatistics extends Component {
             a.remove();
         })
     };
-
-    xlsDriverInfo = () => {
-        fetch("http://localhost:8080/api/company/statistics/drivers",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+    xlsFullStat = () => {
+        fetch("http://localhost:8080/api/company/fullStatistics",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
             return response.blob()
         }).then(blob=>{
             let url = window.URL.createObjectURL(blob);
             let a = document.createElement('a');
             a.href = url;
-            a.download = `${localStorage.getItem('username')}-drivers.xls`;
+            a.download = `${localStorage.getItem('username')}.xls`;
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -343,12 +343,10 @@ export default class CompanyOwnerStatistics extends Component {
                         <h2> Скачать статистику</h2>
                         <div className="row">
                             <div onClick={this.xlsCompanyInfo} className="col-xl-2 download_button" title={"Скачать"}>
-                                Статистика по заказам
-                                <img  src={statsIcon} />
+                                Отчет по заказам
                             </div>
-                            <div onClick={this.xlsDriverInfo} className="col-xl-2 download_button" title={"Скачать"}>
-                                Статистика по водителям
-                                <img src={driverIcon} />
+                            <div onClick={this.xlsFullStat} className="col-xl-2 download_button" title={"Скачать"}>
+                                Полная статистика
                             </div>
                         </div>
                     </div>

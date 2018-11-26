@@ -126,25 +126,29 @@ public class OwnerController {
         }
     }
 
-    @GetMapping(value = "/company/statistics/drivers")
+
+    @GetMapping(value = "/company/fullStatistics")//check xls method
     @ResponseBody
-    public void createDriversXls(@Value("${excel.path}")String path, HttpServletResponse response){
+    public void createFullStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        try (OutputStream os = response.getOutputStream()){
-            String s = new ExcelUtil().calcDrivers(path, name, orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId()));
-            File file = new File(s);
-            InputStream fis = new FileInputStream(file);
-            byte[] bytes = new byte[8192];
+        try {
+            String filename = new ExcelUtil().calcFullStatistics(path, userByUsername.getUsername(),getFullStat());
+            ServletOutputStream outputStream = response.getOutputStream();
+            File file = new File(filename);
+            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer= new byte[8192];
             int length;
-            while ((length=fis.read(bytes))>0){
-                os.write(bytes,0,length);
+            while ((length = fis.read(buffer)) > 0){
+                outputStream.write(buffer, 0, length);
             }
             fis.close();
+            outputStream.close();
         } catch (IOException e) {
             LOGGER.warn("Something went wrong: ", e);
         }
     }
+
 
     @GetMapping(value = "/company/user/{id}")
     @ResponseBody

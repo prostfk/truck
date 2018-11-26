@@ -83,7 +83,7 @@ export default class CreateStockModal extends Component {
         const {search, value} = this.state;
         return (
             <div>
-                <a className={'btn btn-success'} onClick={this.toggle}>Добавить адрес</a>
+                <a className={'btn btn-success btn_fullsize'} onClick={this.toggle}>Добавить адрес</a>
                 <Modal isOpen={this.state.modal}>
                     <ModalHeader>
                         <h4>Добавление склада</h4>
