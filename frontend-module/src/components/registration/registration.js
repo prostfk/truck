@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ValidationUtil from "../commonUtil/validationUtil";
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 class registration extends Component {
 
@@ -36,7 +37,9 @@ class registration extends Component {
             if (data.error !== undefined) {
                 window.location.href = '/';
             }
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     };
 
     changeInput(event) {
@@ -47,7 +50,12 @@ class registration extends Component {
     }
 
     validateCompany = (event) => {
-        fetch(`http://localhost:8080/checkCompanyName?name=${this.state.newCompanyName}`).then(response => {
+        let companyName = ValidationUtil.validateStringForLength(this.state.newCompanyName,3, 99);
+        if (!companyName){
+
+            return false;
+        }
+        return fetch(`http://localhost:8080/checkCompanyName?name=${this.state.newCompanyName}`).then(response => {
             return response.json();
         }).then(data => {
             if (data.error !== undefined) {
@@ -64,12 +72,19 @@ class registration extends Component {
     };
 
     validateForm = () => {
-        // let companyVal = this.validateCompany();
+        let companyVal = ValidationUtil.validateStringForLength(this.state.newCompanyName,3,99);
         let userNameVal = ValidationUtil.validateStringForLength(this.state.newUsername, 5, 20);
         let passwordVal = ValidationUtil.validateStringForLength(this.state.newPassword, 6, 20);
-        let dateVal = ValidationUtil.validateDateToPattern(this.state.newBirthDate);
+        let dateVal = ValidationUtil.validateDateForNotThisYear(this.state.newBirthDate);
         let nameVal = ValidationUtil.validateStringForLength(this.state.newFirstName, 2, 40);
         let surnameVal = ValidationUtil.validateStringForLength(this.state.newSecondName, 4, 40);
+        if (!companyVal){
+            document.getElementById('newCompanyName').classList.add("is-invalid");
+            document.getElementById('error-company-span').innerText = 'Имя должно быть от 3 до 99 символов';
+        }else{
+            document.getElementById('newCompanyName').classList.remove("is-invalid");
+            document.getElementById('error-company-span').innerText = '';
+        }
         if (!userNameVal) {
             document.getElementById('newUsername').classList.add("is-invalid");
             document.getElementById('error-username-span').innerText = 'Имя пользователя должно содержать от 5 до 20 символов';
@@ -84,10 +99,10 @@ class registration extends Component {
             document.getElementById('newPassword').classList.remove("is-invalid");
             document.getElementById('error-password-span').innerText = '';
         }
-        if (!dateVal) {
+        if (!dateVal){
             document.getElementById('newBirthDate').classList.add("is-invalid");
-            document.getElementById('error-date-span').innerText = 'Дата невалидна';
-        } else {
+            document.getElementById('error-date-span').innerText = 'Проверьте дату рождения(дд/мм/гггг)';
+        }else{
             document.getElementById('newBirthDate').classList.remove("is-invalid");
             document.getElementById('error-date-span').innerText = '';
         }
@@ -100,7 +115,7 @@ class registration extends Component {
         }
         if (!surnameVal) {
             document.getElementById('newSecondName').classList.add("is-invalid");
-            document.getElementById('error-surname-span').innerText = 'Пароль должен содержать от 4 до 40 символов';
+            document.getElementById('error-surname-span').innerText = 'Фамилия должна содержать от 4 до 40 символов';
         } else {
             document.getElementById('newSecondName').classList.remove("is-invalid");
             document.getElementById('error-surname-span').innerText = '';

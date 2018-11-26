@@ -5,6 +5,7 @@ import {Chart} from 'react-chartjs-2';
 import {Container} from 'mdbreact';
 import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
+import {NotificationManager} from "react-notifications";
 
 export default class CompanyOwnerStatistics extends Component {
 
@@ -108,6 +109,8 @@ export default class CompanyOwnerStatistics extends Component {
             }
             console.log(this.state)
 
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -190,7 +193,7 @@ export default class CompanyOwnerStatistics extends Component {
         }).then(function (result) {
             return result;
         }).catch(err=>{
-            throw new Error('Ошибка доступа')
+            NotificationManager.error('Ошибка');
         });
     }
 
