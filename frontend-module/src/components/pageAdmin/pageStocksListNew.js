@@ -238,7 +238,7 @@ export default class PageStockListNew extends React.Component {
                     <h4>Поиск склада</h4>
                     <small>Введите название склада:</small>
                     <input type="text" onChange={this.changeInput} id={'searchStockName'} className="form-control"/>
-                    <button className="btn btn-primary" onClick={this.searchStocks}>Поиск</button>
+                    <button className="btn btn-primary btn_fullsize" onClick={this.searchStocks}>Поиск</button>
                     <small className="error-span" id={'error-stocks-list'}/>
                 </div>
                 <ul id={'stocks-ul'} className={'list-group'}/>
