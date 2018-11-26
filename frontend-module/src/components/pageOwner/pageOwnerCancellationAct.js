@@ -14,7 +14,10 @@ class OwnerCancelAct extends Component {
 
     componentDidMount(props) {
         this.getCancelAct().then(data => {
-            this.setState({cancelAct: data});
+            this.setState({
+                cancelAct: data,
+                showAct: data.amount > 0,
+            });
         });
     }
 
@@ -42,8 +45,10 @@ class OwnerCancelAct extends Component {
     }
 
     render() {
-        return <div className="row">
-            <div className="offset-md-2 col-md-8 superuserform_companylist">
+        let table = "";
+
+        if (this.state.showAct) {
+            table = <div className="offset-md-2 col-md-8 superuserform_companylist">
                 <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="offset-md-1 col-md-1">Количество</div>
@@ -64,7 +69,13 @@ class OwnerCancelAct extends Component {
                     </ul>
                 </nav>
             </div>
-
+        } else {
+            table = <div className="offset-md-3 superuserform_companylist">
+                <h1>There is no any cancellations</h1>
+            </div>
+        }
+        return <div className="row">
+            {table}
             <div className="offset-md-2 col-md-8 form_clear"
                  id={'sendOrderRequestButton'} /*style={customerCompanyStyle}*/>
                 <Link to={`/owner/orders`} className="btn btn-success btn_fullsize">Вернуться</Link>
