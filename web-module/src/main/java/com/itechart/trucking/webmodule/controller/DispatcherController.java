@@ -25,6 +25,8 @@ import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.product.entity.Product;
 import com.itechart.trucking.product.repository.ProductRepository;
+import com.itechart.trucking.routeList.entity.RouteList;
+import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
@@ -90,6 +92,9 @@ public class DispatcherController {
     private ProductRepository productRepository;
 
     @Autowired
+    private RouteListService routeListService;
+
+    @Autowired
     private CancellationActRepository cancellationActRepository;
 
     @Autowired
@@ -153,6 +158,8 @@ public class DispatcherController {
         Order orderToSave = orderService.getOrderFromDto(orderFormData, name);
         Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
         Order savedOrder = orderService.save(orderToSave);
+        routeListService.save(new RouteList("Отправление", 1,false, savedOrder.getSender().getLat(),savedOrder.getSender().getLng(),savedWaybill));
+        routeListService.save(new RouteList("Отправление", null,false, savedOrder.getReceiver().getLat(),savedOrder.getReceiver().getLng(),savedWaybill));
         Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
