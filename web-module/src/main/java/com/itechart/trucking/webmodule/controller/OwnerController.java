@@ -6,6 +6,8 @@ import com.itechart.trucking.cancellationAct.repository.CancellationActRepositor
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.solrEntity.SolrClient;
+import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
@@ -72,6 +74,9 @@ public class OwnerController {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private ClientSolrRepository clientSolrRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
@@ -166,7 +171,6 @@ public class OwnerController {
         Company company = userRepository.findUserByUsername(name).getCompany();
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            System.out.println("CALLED");
             Order order1 = order.get();
             OrderDto orderDto = new OrderDto(order1);
             orderDto.getWaybill().setAuto(order.get().getWaybill().getAuto());
@@ -223,6 +227,7 @@ public class OwnerController {
         Client clientByName = clientRepository.findClientByName(name);
         if (clientByName==null){
             @Valid Client save = clientRepository.save(new Client(name, "default",userByUsername.getCompany()));
+            clientSolrRepository.save(SolrClient.solrClientFromClient(save));
             return new ClientDto(save);
         }else{
             JSONObject json = new JSONObject();

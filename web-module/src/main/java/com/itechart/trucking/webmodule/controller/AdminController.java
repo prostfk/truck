@@ -13,6 +13,8 @@ import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
 import com.itechart.trucking.stock.service.StockService;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
@@ -65,6 +67,10 @@ public class AdminController {
 
     @Autowired
     private DriverRepository driverRepository;
+
+    @Autowired
+    private SolrStockRepository solrStockRepository;
+
 
     @GetMapping(value = "/users")
     public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
@@ -172,7 +178,8 @@ public class AdminController {
         if(stock.getCompany().getId()==userByUsername.getCompany().getId()){
             if(!stockDto.getName().equals("")) stock.setName(stockDto.getName());
             if(!stockDto.getAddress().equals("")) stock.setAddress(stockDto.getAddress());
-            stockService.save(stock);
+            Stock save = stockService.save(stock);
+            solrStockRepository.save(SolrStock.solrStockFromStock(save));
         }
         return new StockDto(stock);
     }
