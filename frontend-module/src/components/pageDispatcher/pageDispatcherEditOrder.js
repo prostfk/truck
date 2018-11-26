@@ -361,6 +361,13 @@ export default class DispatcherEditOrder extends Component {
         }
     };
 
+    deleteProduct(index) {
+        const newConsignment = [...this.state.consignment];
+        if (index !== -1) {
+            newConsignment.splice(index, 1);
+            this.setState({consignment: newConsignment});
+        }
+    };
     render() {
         let green = {
             color: 'green'
@@ -477,7 +484,7 @@ export default class DispatcherEditOrder extends Component {
                             <h3>Товарная партия</h3>
                             <span className="error-span" id="prodForm-error-span"/>
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <input type="text" id="newProductName" value={this.state.newProductName}
                                            onChange={this.changeInput} className="form-control"
                                            placeholder={"Название"}/>
@@ -494,7 +501,7 @@ export default class DispatcherEditOrder extends Component {
                                     <span className="error-span" id="prodStatus-error-span"/>
 
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}
                                            onChange={this.changeInput} className="form-control"
@@ -524,11 +531,14 @@ export default class DispatcherEditOrder extends Component {
                             {
                                 this.state.consignment.map((item, index) => {
                                         return <div className={"row table_row animated fadeInUp"}>
-                                            <div className="col-md-3">{item.name}</div>
+                                            <div className="col-md-2">{item.name}</div>
                                             <div className="col-md-2">{item.status}</div>
-                                            <div className="col-md-3">{item.description}</div>
+                                            <div className="col-md-2">{item.description}</div>
                                             <div className="col-md-2">{item.count}</div>
                                             <div className="col-md-2">{item.price}</div>
+                                            <div className="col-md-2">
+                                                <div className="table_button bg-secondary text-white" onClick={this.deleteProduct.bind(this, index)}>удалить</div>
+                                            </div>
                                             {/*<div className="col-md-2"><a onClick={this.removeProduct(item.name)} id={`item-${item.name}`} className="btn-sm btn-dark">Удалить</a></div>*/}
                                         </div>
                                     }

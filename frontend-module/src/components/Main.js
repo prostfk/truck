@@ -10,7 +10,7 @@ import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
-import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
+//import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
 
 import DriverRouterListNew from "./pageDriver/pageRouterListNew";
 //import DriverRouteList from "./pageDriver/pageRouteList";
@@ -57,7 +57,7 @@ class MainController extends React.Component {
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={CreateStockModal}/>{/*ADD STOCKS IN THIS PATH*/}
-                    <Route exact path="/statistics" component={PageSysAdminStatistics}/>
+                    {/*<Route exact path="/statistics" component={PageSysAdminStatistics}/>*/}
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
                     {/*<Route exact path="/stocks" component={PageStockList}/> /!* stock list for admin *!/*/}
                     <Route exact path="/stocks" component={PageStockListNew}/> {/* stock list for admin */}
