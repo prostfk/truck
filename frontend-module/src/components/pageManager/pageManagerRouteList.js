@@ -41,7 +41,7 @@ export class ManagerRouteList extends Component {
                 }
             });
             this.setState({routePoints: data, pointLevel: level + 1});
-            if (data[0]!==null){
+            if (data[0]){
                 this.setState({mapCenter: {lat: data[0].lat, lng: data[0].lng}})
             }
         });
@@ -68,9 +68,6 @@ export class ManagerRouteList extends Component {
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
-        }).then(function (result) {
-            console.log(result);
-            return result;
         });
     }
 

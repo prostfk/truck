@@ -11,6 +11,7 @@ import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
+import PageOwnerClientStats from "./pageOwner/pageOwnerClientStat";
 
 import DriverRouterListNew from "./pageDriver/pageRouterListNew";
 //import DriverRouteList from "./pageDriver/pageRouteList";
@@ -85,6 +86,7 @@ class MainController extends React.Component {
                     <Route exact path="/owner/usersList" component={OwnerUsersList}/>
                     <Route exact path="/owner/stocks" component={OwnerStockList}/>
                     <Route exact path="/owner/clients" component={OwnerCompanyClients}/>
+                    <Route exact path="/owner/client/:clientId" component={PageOwnerClientStats}/>
 
                 </div>
 

@@ -121,6 +121,13 @@ public class OrderService {
         return orderRepository.findOrdersByDateAcceptedBetweenAndCompany(startDateAccepted,endDateAccepted,company);
     }
 
+    public List<Order> findOrdersByLastSixMonthAndClient(Company company,Client client){
+        Long companyId = company.getId();
+        Long clientId = client.getId();
+        if(companyId==null || clientId==null) return null;
+        return orderRepository.findCustomQueryOrderByDateExecutedLastSixMontAndClientAndCompany(companyId,clientId);
+    }
+
     public List<Order> findByDates(java.util.Date startDateAccepted, java.util.Date endDateAccepted, Long company){
         return orderRepository.findBydates(startDateAccepted,endDateAccepted,company);
     }

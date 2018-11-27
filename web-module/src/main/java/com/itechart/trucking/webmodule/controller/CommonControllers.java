@@ -34,13 +34,10 @@ public class CommonControllers {
     private UserService userService;
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private StockService stockService;
-
     @Autowired
     private WaybillService waybillService;
-
     @Autowired
     private SolrStockRepository solrStockRepository;
 

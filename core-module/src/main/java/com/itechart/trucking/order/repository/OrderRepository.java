@@ -1,6 +1,7 @@
 package com.itechart.trucking.order.repository;
 
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.dto.OrderDtoCalendar;
@@ -53,6 +54,10 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     Page<Order> findAllByStatusAndCompanyId(Integer active, Long companyId,Pageable pageable);
 
     List<Order> findOrdersByDateAcceptedBetweenAndCompany(Date startDateAccepted, Date endDateAccepted,Company company);
+
+    @Query(value = "select * from orders where company_id=:companyId and client_id=:clientId and date_trunc('month',date_executed) >= date_trunc('month', now()) - interval '6 month' and\n" +
+            "                           date_trunc('month',date_executed) <= date_trunc('month', now())", nativeQuery = true)
+    List<Order> findCustomQueryOrderByDateExecutedLastSixMontAndClientAndCompany(@Param("companyId") Long companyId,@Param("clientId") Long clientId);
 
     @Query(value = "SELECT *\n" +
             "FROM orders INNER JOIN waybill on orders.waybill_id = waybill.id\n" +
