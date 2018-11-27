@@ -23,7 +23,7 @@ public class JwtVal {
             if (body != null) {
                 String username = body.get("username", String.class);
                 UserRole role = UserRole.valueOf(body.get("role", String.class));
-                jwtUser = new User(username, "dto-dto", "dto", role, null, null);
+                jwtUser = new User(username, null, null, role, null, null);
             }
         }catch (MalformedJwtException e){
             LOGGER.info("Empty or invalid token: " + e.getMessage());

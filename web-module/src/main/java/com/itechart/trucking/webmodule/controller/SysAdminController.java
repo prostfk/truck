@@ -1,8 +1,12 @@
 package com.itechart.trucking.webmodule.controller;
 
+import com.itechart.trucking.auto.repository.AutoRepository;
+//import com.itechart.trucking.auto.statistics.AutoStatisticsDto;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.company.service.CompanyService;
+//import com.itechart.trucking.company.statistics.CompanyStatisticsDto;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
@@ -10,12 +14,15 @@ import com.itechart.trucking.token.entity.Token;
 import com.itechart.trucking.token.repository.TokenRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+//import com.itechart.trucking.user.statistics.UserStatisticsDto;
+//import com.itechart.trucking.webmodule.model.dto.SysAdminStatistics;
 import com.itechart.trucking.webmodule.model.util.EmailUtil;
 import com.itechart.trucking.webmodule.model.util.TokenUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,9 +51,13 @@ public class SysAdminController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private AutoRepository autoRepository;
 
     @Autowired
     private CompanyRepository companyRepository;
+    @Autowired
+    private CompanyService companyService;
 
     @PostMapping(value = "/createAdmin")
     @ResponseBody
@@ -66,9 +77,9 @@ public class SysAdminController {
     }
 
     @GetMapping(value = "/companies")
-    public List<CompanyDto> findAllCompanies() {
-        List<Company> companies = companyRepository.findAllByOrderById();
-        return Odt.CompanyListToDtoList(companies);
+    public  Object findAllCompanies(@RequestParam(name = "page") String page) {
+        Page<Company> companies = companyService.findCompaniesByPage(page);
+        return companies.map(company -> new CompanyDto(company));
     }
 
     @PostMapping(value = "/companies/changeStatus")
@@ -107,4 +118,14 @@ public class SysAdminController {
             return null;
         }
     }
+
+//    @GetMapping(value = "/statistics/getFull")
+//    public Object getUsersStat() {
+//        List<UserStatisticsDto> userStatisticsDtos = userRepository.getTotalUserStistics();
+//        List<CompanyStatisticsDto> companyStatisticsDtos = companyRepository.getCompanyStatistics();
+//        List<AutoStatisticsDto> autoStatisticsDtos = autoRepository.getAutoStatistics();
+//        return new SysAdminStatistics(userStatisticsDtos,companyStatisticsDtos,autoStatisticsDtos);
+//    }
+
+
 }

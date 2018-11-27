@@ -1,9 +1,9 @@
 html,
 body {
   height: 100%;
+    background-color: #f3f3f3;
+
 }
-
-
 
 .form-signin {
   width: 100%;
@@ -80,7 +80,8 @@ body {
 .table_row{
     text-align: center;
     margin-top: 10px;
-    background-color: #f3f3f3;
+    background-color: white;
+
     padding: 10px;
 }
 .table_header{
@@ -90,6 +91,9 @@ body {
     margin-bottom: 10px;
     color: white;
     width: 100%;
+}
+.error-span{
+    color: red;
 }
 .grey_form{
     color: white;
@@ -128,6 +132,52 @@ body {
     padding: 20px;
     margin-bottom: 50px;
 }
+/*manager*/
+.table_footer {
+    margin: 10px auto 0 auto;
+    width:10%;
+
+}
+
+.manager_createcancelletionact {
+    margin-top: 70px;
+    padding: 40px;
+}
+.cancel_product, .manager_ref {
+    cursor: pointer;
+    color:	#C797AE;
+}
+
+.order_row {
+    color: black;
+}
+
+.manager_ref:hover {
+    color:	#C797AE;
+    text-decoration: none;
+}
+.download_button{
+    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    border-color: #4e4e4e;
+    background-color: #bde2dc;
+    text-align: center;
+    margin-right: 5px;
+}
+.download_button:hover{
+    background-color: #bfcbf6;
+}
+.download_button:not(hover){
+    transition: 1s;
+    cursor: pointer;
+}
+.nopaading{
+    padding: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
 #map {
     height: 100%;
     margin-left: 200px;
@@ -137,5 +187,41 @@ body {
     float: left;
 }
 .row{
+    margin-right: 0px;
+    margin-left: 0px;
     width: 100%;
+}
+
+.stat_container{
+ /*   background-color: rgb(250, 253, 255);*/
+    padding-bottom: 20px;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-radius: 20px;
+}
+.stat_container_header{
+    background-color: #343a40;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.statblock{
+    background-color: #343a40;
+    color: rgb(94, 143, 224);
+    margin-bottom: 20px;
+    padding: 20px;
+    font-size: 20px;
+}
+.color_red{
+    color: #f7464a;
+}
+.color_orange{
+    color: #fdb45c;
+}
+svg{
+    width: 16px;
+    height: 16px;
+    margin-bottom: 4px;
+    margin-right: 10px;
 }

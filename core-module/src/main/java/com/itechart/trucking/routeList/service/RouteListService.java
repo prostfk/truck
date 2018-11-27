@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RouteListService {
@@ -32,4 +33,11 @@ public class RouteListService {
     }
 
 
+    public Optional<RouteList> findById(Long pointId) {
+        return routeListRepository.findById(pointId);
+    }
+
+    public void deleteById(Long id) {
+        routeListRepository.deleteById(id);
+    }
 }

@@ -3,6 +3,8 @@ package com.itechart.trucking.company.service;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -13,6 +15,12 @@ public class CompanyService {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    public Page<Company> findCompaniesByPage(String page){
+        Integer pageId = Integer.parseInt(page);
+        if(pageId==null) return null;
+        return companyRepository.findAll(PageRequest.of(pageId-1, 5));
+    }
 
     public Company findCompanyByName(String name) {
         return companyRepository.findCompanyByName(name);

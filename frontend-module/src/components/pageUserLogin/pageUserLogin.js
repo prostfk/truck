@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {NotificationManager} from "react-notifications";
 
 class pageUserLogin extends Component {
 
@@ -13,6 +14,7 @@ class pageUserLogin extends Component {
         this.processLogin = this.processLogin.bind(this);
         document.title = "Вход"
     }
+
     setUsername(event) {
         this.setState({
             email: event.target.value
@@ -28,7 +30,7 @@ class pageUserLogin extends Component {
     render() {
         return (
 
-            <form className="form-signin center" id="login-form">
+            <form className="form-signin center animated fadeInUp" id="login-form">
                 <span style={{color: 'red'}} id="error-span"/>
 
                 <input type="text" id="inputUsername" value={this.state.email} onChange={this.setUsername}
@@ -61,12 +63,16 @@ class pageUserLogin extends Component {
                     localStorage.setItem("Auth-token", data.token);
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", data.role);
+                    localStorage.setItem("userId", data.userId);
+                    localStorage.setItem("companyId", data.companyId);
                     this.props.history.push('/');
-                }else{
+                } else {
                     document.getElementById('error-span').innerText = "Неправильные данные";
                 }
             })
-        }, err => console.log(err))
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     }
 
 }

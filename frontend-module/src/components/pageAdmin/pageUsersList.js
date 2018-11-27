@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 import Pagination from "react-js-pagination";
-import ValidationUtil from "../commonUtil/validationUtil";
+/*import ValidationUtil from "../commonUtil/validationUtil";*/
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 
 import {EditIcon} from "./pageAutoList";
-import {edit} from 'react-icons-kit/fa/edit'
+import {NotificationManager} from "react-notifications";
+/*import {edit} from 'react-icons-kit/fa/edit'*/
 
 /*const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 import Moment from 'react-moment';
@@ -17,7 +18,6 @@ var moment = require('moment');
 require("moment/min/locales.min");
 
 
-
 export default class UsersList extends Component {
 
     constructor(props) {
@@ -26,8 +26,8 @@ export default class UsersList extends Component {
         this.getUsersRequest = this.getUsersRequest.bind(this);
         this.state = {
             users: [],
-            totalElements:0,
-            currentPage:1,
+            totalElements: 0,
+            currentPage: 1,
             newUserEmail: '',
             newUserUsername: '',
             newUserPassword: '',
@@ -47,23 +47,25 @@ export default class UsersList extends Component {
     }
 
 
-
-    getUsersRequest = (pageid=1) => {
-        fetch('http://localhost:8080/api/users?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}
+    getUsersRequest = (pageid = 1) => {
+        fetch('http://localhost:8080/api/users?page=' + pageid, {
+            headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
-                throw new Error('Ошибка доступа');
+                NotificationManager.error('Ошибка доступа');
             } else {
                 return response.json();
             }
         }).then(data => {
-            let gettedusers =data.content;
+            let gettedusers = data.content;
             console.log(gettedusers);
             this.setState({
                 users: gettedusers,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка доступа');
         })
     };
 
@@ -80,25 +82,22 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user) => {
-        if(!user) return;
-        user.reg_date[6]=user.reg_date[6]/1000000;
+        if (!user) return;
+        user.reg_date[6] = user.reg_date[6] / 1000000;
         let timezoneoffset = new Date().getTimezoneOffset();
-
-        let dateofreg = user.reg_date==null?"-":moment.utc(user.reg_date);
+        let dateofreg = user.reg_date == null ? "-" : moment.utc(user.reg_date);
         let localTime = moment(dateofreg).utcOffset(-timezoneoffset).format('YYYY-MM-DD HH:mm:ss');
 
 
-        return <div className={'row table_row'}>
+        return <div className={'row table_row animated fadeInUp'}>
 
             {/*<div className={'col-md-1'}>{user.id}</div>*/}
             <div className={'col-md-3'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{localTime}</div>
-            <div className={'col-md-2'}>{user.email}</div>
+            <div className={'col-md-2'} style={{'overflow': 'hidden'}}>{user.email}</div>
             {user.userRole !== 'ROLE_COMP_OWNER' ? <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a></div> : <div/>}
-            
             </div>
-
     };
 
     russianRole = (role) => {
@@ -122,7 +121,7 @@ export default class UsersList extends Component {
     render() {
         return <div className={'row'}>
             <div className="offset-md-1 col-md-5 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     {/*<div className="col-md-1">Id</div>*/}
                     <div className="col-md-3">Никнейм</div>
                     <div className="col-md-3">Роль</div>
@@ -152,8 +151,8 @@ export default class UsersList extends Component {
                 </div>
             </div>
 
-            <div className="offset-md-1 col-md-4" id={'add-user-form'}>
-                    <CreateUser/>
+            <div className="offset-md-1 col-md-4 animated fadeIn" id={'add-user-form'}>
+                <CreateUser/>
             </div>
         </div>
     }

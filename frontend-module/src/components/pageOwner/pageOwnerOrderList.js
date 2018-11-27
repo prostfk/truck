@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 class OwnerOrderList extends React.Component {
     constructor(props) {
@@ -30,13 +31,15 @@ class OwnerOrderList extends React.Component {
         }).then(function (result) {
             console.log(result);
             return result;
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
 
     /*render row of table ( calls from html ) */
     renderTable(order, index) {
         if (!order) return;
-        return <div key={index} className="row table_row order_row">
+        return <div key={index} className="row table_row order_row animated fadeInUp">
             <div className="col-md-1">{order.client.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
@@ -49,7 +52,8 @@ class OwnerOrderList extends React.Component {
                 <Link to={`/owner/routList/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
             </div>
             <div className="col-md-1">
-                <Link to={`/owner/cancelAct/${order.id}`} className="table_button bg-secondary text-white">Перейти</Link>
+                <Link to={`/owner/cancelAct/${order.id}`}
+                      className="table_button bg-secondary text-white">Перейти</Link>
             </div>
         </div>
     }
@@ -58,7 +62,7 @@ class OwnerOrderList extends React.Component {
     render() {
         return <div className="row">
             <div className="offset-md-1 col-md-10 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">Клиент</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>

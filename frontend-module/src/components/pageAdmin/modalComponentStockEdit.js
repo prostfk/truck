@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 //deprecated
 export default class ModalComponentStockEdit extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { modal: false,stockName: props.stockName,stockAddress:props.stockAddress};
+        this.state = {modal: false, stockName: props.stockName, stockAddress: props.stockAddress};
 
         this.toggle = this.toggle.bind(this);
         this.handleChangeStockName = this.handleChangeStockName.bind(this);
@@ -21,18 +21,18 @@ export default class ModalComponentStockEdit extends React.Component {
     handleChangeStockName(event) {
         this.setState({stockName: event.target.value});
     }
+
     handleChangeStockAddress(event) {
         this.setState({stockAddress: event.target.value});
     }
 
 
     handleSubmit(event) {
-        this.props.clickfunc(this.state.stockName,this.state.stockAddress,this.props.stockId);
+        this.props.clickfunc(this.state.stockName, this.state.stockAddress, this.props.stockId);
         this.setState({
             modal: !this.state.modal,
         });
     }
-
 
 
     render() {
@@ -47,9 +47,11 @@ export default class ModalComponentStockEdit extends React.Component {
                             <div className="row">
                                 <div className="form-group col-md-8 offset-md-2">
                                     <label>Название:</label>
-                                    <input type="text" value={this.state.stockName} onChange={this.handleChangeStockName} className="form-control" />
+                                    <input type="text" value={this.state.stockName}
+                                           onChange={this.handleChangeStockName} className="form-control"/>
                                     <label>Адрес:</label>
-                                    <input type="text" value={this.state.stockAddress} onChange={this.handleChangeStockAddress} className="form-control" />
+                                    <input type="text" value={this.state.stockAddress}
+                                           onChange={this.handleChangeStockAddress} className="form-control"/>
                                 </div>
                             </div>
                         </ModalBody>

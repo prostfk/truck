@@ -51,7 +51,7 @@ class OwnerRouteList extends React.Component {
     render() {
         return <div class="row">{this.state.orderId}
             <div class="offset-md-2 col-md-8 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-2">Очередность</div>
                     <div className="col-md-7">Адрес</div>
                     <div className="col-md-3">Отметка</div>

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import CommonUtil from "../commonUtil/commontUtil";
 
 import {withBaseIcon} from 'react-icons-kit'
 import {remove} from 'react-icons-kit/fa/remove'
@@ -8,6 +7,7 @@ import ModalAcceptDelete from "./modalAcceptDelete";
 import ModalComponentEditAuto from "./modalComponentEditAuto";
 import ValidationUtil from "../commonUtil/validationUtil";
 import Pagination from "react-js-pagination";
+import {NotificationManager} from "react-notifications";
 
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
@@ -26,9 +26,9 @@ export default class AutoList extends Component {
             newAutoNumber: '',
             newAutoType: '',
             newAutoFuelConsumption: '',
-            totalElements : 0,
-            totalPages : 0,
-            number:0
+            totalElements: 0,
+            totalPages: 0,
+            number: 0
         };
         this.fetchToAutos();
     }
@@ -50,8 +50,8 @@ export default class AutoList extends Component {
         return nameVal && numberVal && typeVal && fuelVal;
     };
 
-    fetchToAutos = (pageid=1) => {
-        fetch('http://localhost:8080/api/autos?page='+pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+    fetchToAutos = (pageid = 1) => {
+        fetch('http://localhost:8080/api/autos?page=' + pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             if (response.status === 403 || response.status === 500) {
                 throw new Error('Ошибка доступа');
             } else {
@@ -61,9 +61,11 @@ export default class AutoList extends Component {
             this.setState({
                 autos: data.content,
                 totalElements: data.totalElements,
-                number:++data.number
+                number: ++data.number
             })
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     changeInput = (event) => {
@@ -95,13 +97,15 @@ export default class AutoList extends Component {
                     newAutoNumber: ""
                 });
                 this.forceUpdateHandler();
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
             });
         }
     };
 
-    forceUpdateHandler(pageid=1) {
+    forceUpdateHandler(pageid = 1) {
         const refthis = this;
-        fetch('http://localhost:8080/api/autos?page='+pageid, {
+        fetch('http://localhost:8080/api/autos?page=' + pageid, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -110,13 +114,15 @@ export default class AutoList extends Component {
             refthis.setState({
                 autos: result.content,
                 totalElements: result.totalElements,
-                number:++result.number
+                number: ++result.number
             })
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     renderAuto = (auto) => {
-        return <div className={'row table_row'}>
+        return <div className={'row table_row animated fadeInUp'}>
             <div className={'col-md-1'}>{auto.id}</div>
             <div className={'col-md-3'}>{auto.name}</div>
             <div className={'col-md-2'}>{auto.carNumber}</div>
@@ -151,8 +157,8 @@ export default class AutoList extends Component {
             if (result) {
                 ref.setState({autos: result})
             }
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
         });
     }
 
@@ -184,14 +190,16 @@ export default class AutoList extends Component {
             } else {
                 /* document.getElementById('error-form-span').innerText = data.error;*/
             }
-        })
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
+        });
     }
 
     render() {
         return (
             <div className={'row'}>
                 <div className="offset-md-1 col-md-6 superuserform_companylist">
-                    <div className="row table_header">
+                    <div className="row table_header animated fadeIn">
                         <div className="col-md-2">Id</div>
                         <div className="col-md-2">Название</div>
                         <div className="col-md-2">Номер</div>
@@ -222,7 +230,7 @@ export default class AutoList extends Component {
                 </div>
 
                 <div className="offset-md-1 col-md-3" id={'add-auto-form'}>
-                    <form className="superuserform_newaccountform grey_form">
+                    <form className="superuserform_newaccountform grey_form  animated fadeIn">
                         <span id="message-span"/>
                         <div id={'from-content'}>
                             <h5>Регистрация нового авто</h5>

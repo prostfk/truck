@@ -7,19 +7,26 @@ import AnonHeader from "./anonHeader";
 import DispatcherHeader from "./dispatcherHeader";
 import SysAdminHeader from "./sysAdminHeader";
 
-class HeaderElement extends React.Component{
+class HeaderElement extends React.Component {
 
     // ROLE_USER,
 
-    render(){
+    render() {
         switch (localStorage.getItem('role')) {
-            case "ROLE_COMP_OWNER": return <CompanyOwnerHeader/>;
-            case "ROLE_ADMIN": return <AdminHeader/>;
-            case "ROLE_MANAGER": return <ManagerHeader/>;
-            case "ROLE_DRIVER": return <DriverHeader/>;
-            case "ROLE_DISPATCHER": return <DispatcherHeader/>;
-            case "ROLE_SYS_ADMIN": return<SysAdminHeader/>;
-            default: return <AnonHeader/>
+            case "ROLE_COMP_OWNER":
+                return <CompanyOwnerHeader/>;
+            case "ROLE_ADMIN":
+                return <AdminHeader/>;
+            case "ROLE_MANAGER":
+                return <ManagerHeader/>;
+            case "ROLE_DRIVER":
+                return <DriverHeader/>;
+            case "ROLE_DISPATCHER":
+                return <DispatcherHeader/>;
+            case "ROLE_SYS_ADMIN":
+                return <SysAdminHeader/>;
+            default:
+                return <AnonHeader/>
         }
     }
 }

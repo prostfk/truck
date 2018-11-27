@@ -6,6 +6,8 @@ import com.itechart.trucking.cancellationAct.repository.CancellationActRepositor
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.solrEntity.SolrClient;
+import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
@@ -39,6 +41,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
@@ -72,6 +75,9 @@ public class OwnerController {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private ClientSolrRepository clientSolrRepository;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage() {
         LOGGER.debug("'get' request on index page");
@@ -91,6 +97,9 @@ public class OwnerController {
 
         List<Order> ordersExecuted = orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
         ownerPageStatisticsDto.setExecutedAmmount(userByUsername.getCompany().getOrderExcutedAmmount(ordersExecuted));
+
+        ownerPageStatisticsDto.setCancellationActAmmount(userByUsername.getCompany().getOrderFailedAmmount(ordersExecuted));
+        ownerPageStatisticsDto.setTotalFailed();
 
         return ownerPageStatisticsDto;
     }
@@ -117,25 +126,29 @@ public class OwnerController {
         }
     }
 
-    @GetMapping(value = "/company/statistics/drivers")
+
+    @GetMapping(value = "/company/fullStatistics")//check xls method
     @ResponseBody
-    public void createDriversXls(@Value("${excel.path}")String path, HttpServletResponse response){
+    public void createFullStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userRepository.findUserByUsername(name);
-        try (OutputStream os = response.getOutputStream()){
-            String s = new ExcelUtil().calcDrivers(path, name, orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId()));
-            File file = new File(s);
-            InputStream fis = new FileInputStream(file);
-            byte[] bytes = new byte[8192];
+        try {
+            String filename = new ExcelUtil().calcFullStatistics(path, userByUsername.getUsername(),getFullStat());
+            ServletOutputStream outputStream = response.getOutputStream();
+            File file = new File(filename);
+            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer= new byte[8192];
             int length;
-            while ((length=fis.read(bytes))>0){
-                os.write(bytes,0,length);
+            while ((length = fis.read(buffer)) > 0){
+                outputStream.write(buffer, 0, length);
             }
             fis.close();
+            outputStream.close();
         } catch (IOException e) {
             LOGGER.warn("Something went wrong: ", e);
         }
     }
+
 
     @GetMapping(value = "/company/user/{id}")
     @ResponseBody
@@ -162,7 +175,6 @@ public class OwnerController {
         Company company = userRepository.findUserByUsername(name).getCompany();
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            System.out.println("CALLED");
             Order order1 = order.get();
             OrderDto orderDto = new OrderDto(order1);
             orderDto.getWaybill().setAuto(order.get().getWaybill().getAuto());
@@ -209,6 +221,23 @@ public class OwnerController {
         }
 
         return new CancellationActDto(cancellationAct);
+    }
+
+    @PostMapping(value = "/createClient")
+    @ResponseBody
+    public Object createClient(String name) throws JSONException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userRepository.findUserByUsername(username);
+        Client clientByName = clientRepository.findClientByName(name);
+        if (clientByName==null){
+            @Valid Client save = clientRepository.save(new Client(name, "default",userByUsername.getCompany()));
+            clientSolrRepository.save(SolrClient.solrClientFromClient(save));
+            return new ClientDto(save);
+        }else{
+            JSONObject json = new JSONObject();
+            json.put("error", "Such client is already exists");
+            return json.toString();
+        }
     }
 
     @GetMapping(value = "/company/clients")

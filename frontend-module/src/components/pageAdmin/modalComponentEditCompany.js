@@ -1,18 +1,19 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class ModalComponentEditCompany extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { modal: false,companyName: ""};
+        this.state = {modal: false, companyName: ""};
         this.toggle = this.toggle.bind(this);
         this.handleChangeCompanyName = this.handleChangeCompanyName.bind(this);
         this.getCompanyName = this.getCompanyName.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    validateCompanyName= () => {
+    validateCompanyName = () => {
         let nameVal = ValidationUtil.validateStringForLength(this.state.companyName, 3, 30);
         if (!nameVal) document.getElementById('error-name-span').innerText = 'Имя должно быть от 3 до 30 символов';
         else document.getElementById('error-name-span').innerText = '';
@@ -30,9 +31,8 @@ export default class ModalComponentEditCompany extends React.Component {
     }
 
     handleSubmit(event) {
-        if (this.validateCompanyName()){
-            const ref = this;
-            const myres = fetch('http://localhost:8080/api/changeCompanyName', {
+        if (this.validateCompanyName()) {
+            fetch('http://localhost:8080/api/changeCompanyName', {
                 method: "PUT",
                 body: this.state.companyName,
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -40,8 +40,8 @@ export default class ModalComponentEditCompany extends React.Component {
                 return response.json();
             }).then(function (result) {
                 console.log(result);
-            }).catch((err) => {
-                console.log(err);
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
             });
 
             this.setState({
@@ -49,19 +49,22 @@ export default class ModalComponentEditCompany extends React.Component {
             });
         }
     }
-    getCompanyName(){
+
+    getCompanyName() {
         const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
         });
         return fetchResult;
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getCompanyName().then(data => {
-            let oldComName= data.companyName;
-            this.setState({companyName:oldComName});
+            let oldComName = data.companyName;
+            this.setState({companyName: oldComName});
         });
     }
-
 
 
     render() {
@@ -77,7 +80,8 @@ export default class ModalComponentEditCompany extends React.Component {
                                 <div className="form-group col-md-8 offset-md-2">
                                     <span id="error-name-span" className="error-span"/>
                                     <label>Название компании:</label>
-                                    <input type="text" value={this.state.companyName} onChange={this.handleChangeCompanyName} className="form-control" />
+                                    <input type="text" value={this.state.companyName}
+                                           onChange={this.handleChangeCompanyName} className="form-control"/>
                                 </div>
                             </div>
                         </ModalBody>

@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import ReactGoogleMapLoader from "react-google-maps-loader"
 import ReactGooglePlacesSuggest from "react-google-places-suggest"
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {NotificationManager} from "react-notifications";
 
 
 export default class CreateStockModal extends Component {
@@ -67,7 +68,9 @@ export default class CreateStockModal extends Component {
                     // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
                     this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
                 })
-            }, err => console.log(err));
+            }).catch(() => {
+                NotificationManager.error('Ошибка доступа');
+            });
             this.toggle();
         } else {
             document.getElementById('info').style.color = 'red';
@@ -80,7 +83,7 @@ export default class CreateStockModal extends Component {
         const {search, value} = this.state;
         return (
             <div>
-                <a className={'btn btn-success'} onClick={this.toggle}>Добавить адрес</a>
+                <a className={'btn btn-success btn_fullsize'} onClick={this.toggle}>Добавить адрес</a>
                 <Modal isOpen={this.state.modal}>
                     <ModalHeader>
                         <h4>Добавление склада</h4>
@@ -97,7 +100,7 @@ export default class CreateStockModal extends Component {
                                 <div id={'react-google-maps-searcher'}>
                                     <ReactGoogleMapLoader
                                         params={{
-                                            key: 'AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI',
+                                            key: API_KEY,
                                             libraries: "places,geocode",
                                         }}
                                         render={googleMaps =>
@@ -112,7 +115,7 @@ export default class CreateStockModal extends Component {
                                                             value={value}
                                                             className={'form-control'}
                                                             style={{borderRadius: '5px', width: '100%'}}
-                                                            placeholder="Введите адрес склада"
+                                                            placeholder="Search a location"
                                                             onChange={this.handleInputChange}/>
                                                     </ReactGooglePlacesSuggest>
                                                 </div>

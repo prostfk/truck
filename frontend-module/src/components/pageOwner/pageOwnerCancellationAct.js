@@ -3,7 +3,7 @@ import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import {Link} from "react-router-dom";
 
-class OwnerCancelAct extends Component{
+class OwnerCancelAct extends Component {
     constructor(props) {
         super(props);
         this.renderTable = this.renderTable.bind(this);
@@ -14,7 +14,10 @@ class OwnerCancelAct extends Component{
 
     componentDidMount(props) {
         this.getCancelAct().then(data => {
-            this.setState({cancelAct:data});
+            this.setState({
+                cancelAct: data,
+                showAct: data.amount > 0,
+            });
         });
     }
 
@@ -31,9 +34,9 @@ class OwnerCancelAct extends Component{
         });
     }
 
-    renderTable(cancelAct){
-        if(!cancelAct) return;
-        return <div className={"row table_row"}>
+    renderTable(cancelAct) {
+        if (!cancelAct) return;
+        return <div className={"row table_row animated fadeInUp"}>
             <div className={"col-md-1"}>{cancelAct.id}</div>
             <div className={"offset-md-1 col-md-1"}>{cancelAct.amount}</div>
             <div className={"offset-md-1 col-md-3"}>{cancelAct.price}</div>
@@ -42,9 +45,11 @@ class OwnerCancelAct extends Component{
     }
 
     render() {
-        return <div className="row">
-            <div className="offset-md-2 col-md-8 superuserform_companylist">
-                <div className="row table_header">
+        let table = "";
+
+        if (this.state.showAct) {
+            table = <div className="offset-md-2 col-md-8 superuserform_companylist">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="offset-md-1 col-md-1">Количество</div>
                     <div className="offset-md-1 col-md-3">Цена</div>
@@ -64,7 +69,13 @@ class OwnerCancelAct extends Component{
                     </ul>
                 </nav>
             </div>
-
+        } else {
+            table = <div className="offset-md-3 superuserform_companylist">
+                <h1>There is no any cancellations</h1>
+            </div>
+        }
+        return <div className="row">
+            {table}
             <div className="offset-md-2 col-md-8 form_clear"
                  id={'sendOrderRequestButton'} /*style={customerCompanyStyle}*/>
                 <Link to={`/owner/orders`} className="btn btn-success btn_fullsize">Вернуться</Link>

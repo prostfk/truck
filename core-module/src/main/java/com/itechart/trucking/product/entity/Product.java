@@ -5,6 +5,8 @@ import com.itechart.trucking.consignment.entity.Consignment;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Data
@@ -18,6 +20,9 @@ public class Product {
     private String description;
     private Double price;
     private Integer count;
+    @Min(0)
+    @Max(100)
+    private Integer cancelledCount;
 
     @ManyToOne
     @JoinColumn(name = "cancellation_act")
@@ -27,4 +32,5 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_consignment")
     private Consignment consignment;
+
 }
