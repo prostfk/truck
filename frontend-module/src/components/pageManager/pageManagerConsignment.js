@@ -74,14 +74,32 @@ class ManagerConsignment extends Component {
     }
 
     handleInputChange(e) {
-        let newValue = this.state.countOfSelectedProduct - e.target.value;
+        let currentValue = e.target.value;
+        let maxValue = this.state.countOfSelectedProduct;
+        let newValue;
+        if (currentValue > maxValue || currentValue < 0) {
+            e.target.value = "";
+            newValue = maxValue;
+        } else {
+            newValue = maxValue - currentValue;
+        }
+
         this.setState({
             remainsOfSelectedProduct: newValue,
         });
     }
 
     handleInputChangeTwo(e) {
-        let newValue = this.state.cancelledCount - e.target.value;
+        let currentValue = e.target.value;
+        let maxValue = this.state.cancelledCount;
+        let newValue;
+        if (currentValue > maxValue || currentValue < 0) {
+            e.target.value = "";
+            newValue = maxValue;
+        } else {
+            newValue = maxValue - currentValue;
+        }
+
         this.setState({
             remainsCancelled: newValue,
         });
