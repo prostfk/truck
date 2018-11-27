@@ -81,8 +81,8 @@ export class DriverRouterListNew extends Component {
         });
     };
 
-    rendPointsList = (point) => {
-        return <div className={'row animated fadeInUp'}>
+    rendPointsList = (point, index) => {
+        return <div key={index} className={'row animated fadeInUp'}>
             <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success' : 'list-group-item list-group-item-action list-group-item-danger'}
                 style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
         </div>
@@ -92,10 +92,11 @@ export class DriverRouterListNew extends Component {
         this.markPoint(this.state.selectedPoint);
     };
 
-    setMarksToMap = (point) => {
+    setMarksToMap = (point, index) => {
         let icon = point.marked ? passedMarker : nonPassedMarker;
         return (
-            <Marker icon={{url: icon}}
+            <Marker key={index}
+                icon={{url: icon}}
                     title={point.point}
                     name={point.point}
                     pointId={point.id}
@@ -120,8 +121,8 @@ export class DriverRouterListNew extends Component {
                 <div className={'col-md-3'}>
                     <ul>
                         <h1>Точки</h1>
-                        {this.state.routePoints.map(p => {
-                            return this.rendPointsList(p);
+                        {this.state.routePoints.map((p, index) => {
+                            return this.rendPointsList(p, index);
                         })}
                     </ul>
                 </div>
@@ -132,8 +133,8 @@ export class DriverRouterListNew extends Component {
                              className={'map'}
                              zoom={14}>
                             {
-                                this.state.routePoints.map(point => {
-                                    return this.setMarksToMap(point);
+                                this.state.routePoints.map((point, index) => {
+                                    return this.setMarksToMap(point, index);
                                 })
                             }
                             <InfoWindow

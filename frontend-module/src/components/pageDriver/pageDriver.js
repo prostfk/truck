@@ -32,9 +32,9 @@ class DriverOrderList extends React.Component {
 
     /*render row of table ( calls from html ) */
 
-    renderTable(order) {
+    renderTable(order, index) {
         if (!order) return;
-        return <div className="row table_row order_row animated fadeInUp">
+        return <div key={index} className="row table_row order_row animated fadeInUp">
             <div className="col-md-2">{order.name}</div>
             <div className="col-md-2" title={order.sender.name}>{order.sender.address}</div>
             <div className="col-md-2" title={order.receiver.name}>{order.receiver.address}</div>
@@ -54,8 +54,8 @@ class DriverOrderList extends React.Component {
 
 
     render() {
-        return <div class="row">
-            <div class="offset-lg-2 col-lg-8 superuserform_companylist animated fadeIn">
+        return <div className="row">
+            <div className="offset-lg-2 col-lg-8 superuserform_companylist animated fadeIn">
                 <div className="row table_header">
                     <div className="col-md-2">Название</div>
                     <div className="col-md-2">Откуда</div>
@@ -65,8 +65,8 @@ class DriverOrderList extends React.Component {
                     <div className="col-md-2">Открыть</div>
                 </div>
                 {
-                    this.state.orders.map((element) => {
-                        return this.renderTable(element);
+                    this.state.orders.map((element, index) => {
+                        return this.renderTable(element, index);
                     })
                 }
             </div>
