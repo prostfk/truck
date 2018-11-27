@@ -96,7 +96,7 @@ export class DriverRouterListNew extends Component {
         let icon = point.marked ? passedMarker : nonPassedMarker;
         return (
             <Marker key={index}
-                icon={{url: icon}}
+                    icon={{url: icon}}
                     title={point.point}
                     name={point.point}
                     pointId={point.id}
@@ -128,7 +128,8 @@ export class DriverRouterListNew extends Component {
                 </div>
                 <div className={'col-md-9'}>
                     <div style={{height: '92.5vh', width: '90%'}}>
-                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}} google={this.props.google}
+                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}}
+                             google={this.props.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
                              className={'map'}
                              zoom={14}>
@@ -143,22 +144,24 @@ export class DriverRouterListNew extends Component {
                                 onOpen={e => {
                                     this.onInfoWindowOpen(this.props, e);
                                 }}>
-                                <p>{this.state.selectedPlace.name}</p>
-                                <div id="but-sub-mark"/>
+                                <div>
+                                    <p>{this.state.selectedPlace.name}</p>
+                                    <div id="but-sub-mark"/>
+                                </div>
                             </InfoWindow>
                             <Polyline
                                 path={this.state.pathCoordinates}
                                 strokeColor="#CF89F9"
                                 strokeOpacity={0.8}
-                                strokeWeight={2} />
+                                strokeWeight={2}/>
 
-                    </Map>
+                        </Map>
+                    </div>
                 </div>
+
+
             </div>
-
-
-    </div>
-    );
+        );
 
     }
 
