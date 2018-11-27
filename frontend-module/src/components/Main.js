@@ -10,7 +10,7 @@ import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
 import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
-//import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
+import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
 
 import DriverRouterListNew from "./pageDriver/pageRouterListNew";
 //import DriverRouteList from "./pageDriver/pageRouteList";
@@ -41,7 +41,7 @@ import OwnerStockList from "./pageOwner/pageOwnerStockList";
 import PageStockListNew from "./pageAdmin/pageStocksListNew";
 import CreateStockModal from "./pageAdmin/modalComponentCreateStock";
 import NotificationsErrorHandler from "./errorWindows/notificationErrorHandler";
-
+import WelcomePage from "./PagesCommon/welcomePages/welcomePage";
 
 class MainController extends React.Component {
 
@@ -51,13 +51,14 @@ class MainController extends React.Component {
                 <div>
                     <Route path="/*" component={HeaderElement}/>
                     <Route path="/*" component={NotificationsErrorHandler}/>
+                    <Route exact path="/" component={WelcomePage}/>
                     <Route exact path="/registration" component={registration}/>
                     <Route exact path="/usersList" component={UsersList}/>
                     <Route exact path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={CreateStockModal}/>{/*ADD STOCKS IN THIS PATH*/}
-                    {/*<Route exact path="/statistics" component={PageSysAdminStatistics}/>*/}
+                    <Route exact path="/statistics" component={PageSysAdminStatistics}/>
                     <Route exact path="/companyList" component={CompanyListPage}/> {/*list of companies for sysadmin*/}
                     {/*<Route exact path="/stocks" component={PageStockList}/> /!* stock list for admin *!/*/}
                     <Route exact path="/stocks" component={PageStockListNew}/> {/* stock list for admin */}

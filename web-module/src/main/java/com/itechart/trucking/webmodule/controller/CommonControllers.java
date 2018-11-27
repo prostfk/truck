@@ -7,6 +7,8 @@ import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.service.StockService;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.service.UserService;
@@ -38,6 +40,9 @@ public class CommonControllers {
 
     @Autowired
     private WaybillService waybillService;
+
+    @Autowired
+    private SolrStockRepository solrStockRepository;
 
 
     // dispatcher | manager
@@ -84,16 +89,15 @@ public class CommonControllers {
     public List<StockDto> createStock(@ModelAttribute Stock stock) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userService.findUserByUsername(name);
-
         Stock stock1 = new Stock();
         stock1.setActive(true);
         stock1.setName(stock.getName());
         stock1.setAddress(stock.getAddress());
         stock1.setCompany(userByEmail.getCompany());
         stock1.setLat(stock.getLat());
-        stock1.setLng(stock.getLng())   ;
-        stockService.save(stock1);
-
+        stock1.setLng(stock.getLng());
+        Stock save = stockService.save(stock1);
+        solrStockRepository.save(SolrStock.solrStockFromStock(save));
         return Odt.StockListToDtoList(userByEmail.getCompany().getCompanyStocks());
 
     }

@@ -25,9 +25,12 @@ import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.product.entity.Product;
 import com.itechart.trucking.product.repository.ProductRepository;
+import com.itechart.trucking.routeList.entity.RouteList;
+import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
 import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
@@ -68,9 +71,6 @@ public class DispatcherController {
     private UserRepository userRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
     private CompanyRepository companyRepository;
 
     @Autowired
@@ -90,6 +90,9 @@ public class DispatcherController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private RouteListService routeListService;
 
     @Autowired
     private CancellationActRepository cancellationActRepository;
@@ -154,7 +157,9 @@ public class DispatcherController {
         if(user.getCompany().getActive()==0) return HttpStatus.NOT_ACCEPTABLE;
         Order orderToSave = orderService.getOrderFromDto(orderFormData, name);
         Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
-        Order savedOrder = orderRepository.save(orderToSave);
+        Order savedOrder = orderService.save(orderToSave);
+        routeListService.save(new RouteList("Отправление", 1,false, savedOrder.getSender().getLat(),savedOrder.getSender().getLng(),savedWaybill));
+        routeListService.save(new RouteList("Отправление", null,false, savedOrder.getReceiver().getLat(),savedOrder.getReceiver().getLng(),savedWaybill));
         Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -174,7 +179,7 @@ public class DispatcherController {
         orderFromDto.setId(orderId);
         orderFromDto.getWaybill().setId(waybillId);
         Waybill savedWaybill = waybillRepository.save(orderFromDto.getWaybill());
-        Order savedOrder = orderRepository.save(orderFromDto);
+        Order savedOrder = orderService.save(orderFromDto);
         Consignment consignment1 = new Consignment(new Date().toString(), savedOrder);
         consignment1.setId(consignmentId);
         Consignment savedConsignment = consignmentRepository.save(consignment1);
@@ -191,7 +196,7 @@ public class DispatcherController {
 
     @GetMapping(value = "/orders/{id}/consignment")
     public Object getConsignments(@PathVariable Long id) {
-        Order orderById = orderRepository.findOrderById(id);
+        Order orderById = orderService.findOrderById(id);
         Consignment consignment = orderById.getConsignment();
         ConsignmentDto consignmentDto = new ConsignmentDto(consignment);
         consignmentDto.setProductList(consignment.getProductList());
@@ -200,7 +205,7 @@ public class DispatcherController {
 
     @GetMapping(value = "/orders/{id}")
     public OrderDto findOrderById(@PathVariable Long id) {
-        Order orderById = orderRepository.findOrderById(id);
+        Order orderById = orderService.findOrderById(id);
         OrderDto orderDto = new OrderDto(orderById);
         orderDto.setClient(orderById.getClient());
         orderDto.setCompany(orderById.getCompany());
@@ -288,7 +293,7 @@ public class DispatcherController {
         LocalDate localDateTo = LocalDate.parse(to);
         Date localDateToDate = Date.from(localDateTo.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<Order> orders = orderRepository.findBydates(localDateFromDate,localDateToDate,user.getCompany().getId());
+        List<Order> orders = orderService.findByDates(localDateFromDate,localDateToDate,user.getCompany().getId());
 
         List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders,item -> new OrderDtoCalendar(item));
         return orderDtoCalendars;
@@ -304,8 +309,8 @@ public class DispatcherController {
         Long daysOffset = Long.parseLong(daysOffsetS);
         if(orderId==null || daysOffset==null) return false;
 
-        Order order = orderRepository.findOrderById(orderId);
-        if(userByEmail.getCompany().getId()!=orderRepository.findOrderById(orderId).getCompany().getId()) return false;
+        Order order = orderService.findOrderById(orderId);
+        if(userByEmail.getCompany().getId()!=orderService.findOrderById(orderId).getCompany().getId()) return false;
         Waybill waybill = order.getWaybill();
 
         LocalDate localDateDep = waybill.getDateDeparture().toLocalDate().plusDays(daysOffset);
