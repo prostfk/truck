@@ -236,13 +236,10 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/manager/cancelChecking/{orderId}")
-    public OrderDto cancelWaybillCheck(@PathVariable Long orderId, @RequestParam("status") String status) {
-        System.out.println(orderId);
-        System.out.println(status);
+    public OrderDto cancelWaybillCheck(@PathVariable Long orderId) {
         Optional<Order> order = orderService.findById(orderId);
-        System.out.println(order.isPresent());
         Waybill waybill = order.get().getWaybill();
-        waybill.setStatus(Integer.valueOf(status));
+        waybill.setStatus(1);
         waybill.setCheckDate(null);
         waybill.setUser(null);
 
@@ -253,6 +250,15 @@ public class ManagerController {
         }
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
+
+        return new OrderDto(order.get());
+    }
+
+    @GetMapping(value = "/manager/finishOrder/{orderId}")
+    public OrderDto finishOrder(@PathVariable Long orderId) {
+        Optional<Order> order = orderService.findById(orderId);
+        order.get().setStatus(3);
+        orderService.save(order.get());
 
         return new OrderDto(order.get());
     }
