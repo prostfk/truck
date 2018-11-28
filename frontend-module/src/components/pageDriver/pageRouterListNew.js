@@ -3,7 +3,7 @@ import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-r
 import * as ReactDOM from "react-dom";
 import nonPassedMarker from './img/non-passed-marker.png';
 import passedMarker from './img/passed-marker.png';
-
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 export class DriverRouterListNew extends Component {
 
@@ -23,22 +23,64 @@ export class DriverRouterListNew extends Component {
             markers: {},
             selectedPoint: '',
             pathCoordinates: [],
-            mapCenter: {lat: 53.9, lng: 27.56667}
+            mapCenter: {lat: 53.9, lng: 27.56667},
+
+            passedPoints: [],
+            enablePoints: [],
+            passedPathCoordinates: [],
         };
         document.title = "Путевой лист";
     }
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            if(data.length==0) return;
-            this.setState({routePoints: data, pathCoordinates: []});
-            this.setState({mapCenter: {lng: data[0].lng, lat: data[0].lat}});
-            for (let i = 0; i < data.length; i++) {
-                this.setState({
-                    pathCoordinates: [...this.state.pathCoordinates, {lng: data[i].lng, lat: data[i].lat}]
-                })
-            }
+            if (data.length === 0) return;
+            this.setState({
+                routePoints: data,
+                pathCoordinates: [],
+                mapCenter: {lng: data[0].lng, lat: data[0].lat},
+            });
+            this.updatePoints(data);
         });
+    }
+
+    updatePoints(data) {
+        let passedPoints = [];
+        let enablePoints = [];
+        let pathCoordinates = [];
+        let passedPathCoordinates = [];
+
+        // Temp sort
+        data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
+
+        /*for (let i = 0; i < data.length; i++) {
+            console.log(data[i].id);
+        }*/
+
+        for (let i = 0; i < data.length; i++) {
+            pathCoordinates.push({lng: data[i].lng, lat: data[i].lat});
+
+            if (data[i].marked) {
+                passedPoints.push(data[i]);
+                passedPathCoordinates.push({lng: data[i].lng, lat: data[i].lat});
+            }
+        }
+
+        if (passedPoints.length > 0) {
+            enablePoints.push(data[passedPoints.length - 1]);
+            if (passedPoints.length < data.length) {
+                enablePoints.push(data[passedPoints.length])
+            }
+        } else {
+            enablePoints.push(data[0])
+        }
+
+        this.setState({
+            passedPoints: passedPoints,
+            enablePoints: enablePoints,
+            pathCoordinates: pathCoordinates,
+            passedPathCoordinates: passedPathCoordinates,
+        })
     }
 
     getRouteList() {
@@ -67,19 +109,39 @@ export class DriverRouterListNew extends Component {
 
     forceUpdateHandler() {
         this.getRouteList().then(data => {
-            this.setState({routePoints: data, point: "", sequence: ""});
+            this.updatePoints(data);
+            this.setState({
+                routePoints: data,
+                point: "",
+                sequence: ""});
         });
     }
 
     onMarkerClick = (props, marker, e) => {
         console.log(props);
-        this.setState({
-            selectedPlace: props,
-            activeMarker: marker,
-            showingInfoWindow: true,
-            selectedPoint: props.pointId,
-            selectedPointStatus: props.pointStatus
-        });
+
+        let enablePoints = this.state.enablePoints;
+        let permission = false;
+
+        for (let i = 0; i < enablePoints.length; i++) {
+            console.log("Enable point: " + enablePoints[i].id);
+            if (props.pointId === enablePoints[i].id) {
+                permission = true;
+            }
+        }
+
+        if (permission) {
+            this.setState({
+                selectedPlace: props,
+                activeMarker: marker,
+                showingInfoWindow: true,
+                selectedPoint: props.pointId,
+                selectedPointStatus: props.pointStatus
+            });
+        } else {
+            NotificationManager.error("Cann't mark point out of order", "Out of order")
+        }
+
     };
 
     rendPointsList = (point, index) => {
@@ -91,6 +153,9 @@ export class DriverRouterListNew extends Component {
 
     onButtonSubmitClick = () => {
         this.markPoint(this.state.selectedPoint);
+        this.setState({
+            showingInfoWindow: !this.state.showingInfoWindow,
+        });
     };
 
     setMarksToMap = (point, index) => {
@@ -155,12 +220,14 @@ export class DriverRouterListNew extends Component {
                                 strokeColor="#CF89F9"
                                 strokeOpacity={0.8}
                                 strokeWeight={2}/>
-
+                            <Polyline
+                                path={this.state.passedPathCoordinates}
+                                strokeColor="green"
+                                strokeOpacity={0.8}
+                                strokeWeight={2}/>
                         </Map>
                     </div>
                 </div>
-
-
             </div>
         );
 
