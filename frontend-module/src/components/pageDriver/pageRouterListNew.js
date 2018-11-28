@@ -30,6 +30,7 @@ export class DriverRouterListNew extends Component {
 
     componentDidMount() {
         this.getRouteList().then(data => {
+            if(data.length==0) return;
             this.setState({routePoints: data, pathCoordinates: []});
             this.setState({mapCenter: {lng: data[0].lng, lat: data[0].lat}});
             for (let i = 0; i < data.length; i++) {

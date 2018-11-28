@@ -14,7 +14,6 @@ export default class ModalComponentEditAuto extends React.Component {
             autoType: props.autoType,
             autoFuelConsumption: props.autoFuelConsumption
         };
-
         this.toggle = this.toggle.bind(this);
         this.handleChangeAutoName = this.handleChangeAutoName.bind(this);
         this.handleChangeAutoCarNumber = this.handleChangeAutoCarNumber.bind(this);

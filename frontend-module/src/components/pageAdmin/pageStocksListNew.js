@@ -138,7 +138,7 @@ export default class PageStockListNew extends React.Component {
 
     renderTable(stock){
         if(!stock) return;
-        return <div className={"row table_row animated fadeInUp"}>
+        return <div className={"row table_row animated fadeInUp"} key={stock.id}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"col-md-5"}>{stock.name}</div>
             <div className={"col-md-4"}>{stock.address}</div>

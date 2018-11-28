@@ -115,7 +115,7 @@ class SysAdminPage extends React.Component {
                                     className={"table_button bg-secondary text-white"}>Вкл</a>;
         const lockedDate = company.lockDate == null ? "" : " Дата: " + (new Date(company.lockDate));
         const titleoflock = company.active ? "Активна" : (company.lockerId === null ? "[admin]" : company.lockerId.username) + " : " + (company.lockComment === "" ? "[without message]" : company.lockComment) + lockedDate;
-        return <div className={"row table_row animated fadeInUp"}>
+        return <div className={"row table_row animated fadeInUp"} key={company.id}>
             <div className={"col-md-1"}>{company.id}</div>
             <div className={"col-md-5"}>{company.name}</div>
             <div className={"col-md-3"} title={titleoflock}
