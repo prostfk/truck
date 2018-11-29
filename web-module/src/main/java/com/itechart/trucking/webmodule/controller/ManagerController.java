@@ -162,8 +162,6 @@ public class ManagerController {
             product.get().setCancellationAct(null);
         }*/
 
-
-
         productService.save(product.get());
         cancellationActService.save(cancellationAct);
 
@@ -224,11 +222,6 @@ public class ManagerController {
         waybill.setCheckDate(new Date((new java.util.Date()).getTime()));
         waybill.setUser(userByUsername);
 
-        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
-        if(cancellationAct != null) {
-            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
-            cancellationActService.save(cancellationAct);
-        }
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
 
@@ -236,23 +229,34 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/manager/cancelChecking/{orderId}")
-    public OrderDto cancelWaybillCheck(@PathVariable Long orderId, @RequestParam("status") String status) {
-        System.out.println(orderId);
-        System.out.println(status);
+    public OrderDto cancelWaybillCheck(@PathVariable Long orderId) {
         Optional<Order> order = orderService.findById(orderId);
-        System.out.println(order.isPresent());
         Waybill waybill = order.get().getWaybill();
-        waybill.setStatus(Integer.valueOf(status));
+        waybill.setStatus(1);
         waybill.setCheckDate(null);
         waybill.setUser(null);
 
-        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
-        if(cancellationAct != null) {
-            cancellationAct.setDate(null);
-            cancellationActService.save(cancellationAct);
-        }
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
+
+        return new OrderDto(order.get());
+    }
+
+    @GetMapping(value = "/manager/finishOrder/{orderId}")
+    public OrderDto finishOrder(@PathVariable Long orderId) {
+        Optional<Order> order = orderService.findById(orderId);
+        order.get().setStatus(3);
+        Waybill waybill = order.get().getWaybill();
+        waybill.setStatus(4);
+
+        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
+        if(cancellationAct != null) {
+            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
+            cancellationActService.save(cancellationAct);
+        }
+
+        waybillService.save(waybill);
+        orderService.save(order.get());
 
         return new OrderDto(order.get());
     }
