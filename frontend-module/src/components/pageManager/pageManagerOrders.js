@@ -77,36 +77,36 @@ class pageManagerOrders extends Component {
             isDelivered = true;
 
         return <div className="row table_row animated fadeInUp">
-            <div className="col-md-1">{order.name}</div>
-            <div className="col-md-1">{order.client.name}</div>
-            <div className="col-md-2">{order.sender.name}</div>
-            <div className="col-md-1">{order.receiver.address}</div>
-            <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
-            <div className="col-md-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
-            <div className="col-md-4">
+            <div className="col-lg-1">{order.name}</div>
+            <div className="col-lg-1">{order.client.name}</div>
+            <div className="col-lg-2">{order.sender.name}</div>
+            <div className="col-lg-1">{order.receiver.address}</div>
+            <div className="col-lg-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
+            <div className="col-lg-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
+            <div className="col-lg-4">
                 <div className="row">
-                    <div className="col-md-5" style={{display: isDone ? 'none' : 'block'}}>
+                    <div className="col-lg-5" style={{display: isDone ? 'none' : 'block'}}>
                         <Link to={`/manager/edit/consignment/${order.id}`}
                               className="table_button bg-secondary text-white">Тов.
                             партия</Link>
                     </div>
-                    <div className="col-md-4" style={{display: isDone || isDelivered ? 'none' : 'block'}}>
+                    <div className="col-lg-4" style={{display: isDone || isDelivered ? 'none' : 'block'}}>
                         <Link to={`/manager/edit/routelist/${order.id}`}
                               className="table_button bg-secondary text-white">Пут.
                             лист</Link>
                     </div>
-                    <div className="col-md-3" style={{display: isDone || isDelivered ? 'none' : 'block'}}><a
+                    <div className="col-lg-3" style={{display: isDone || isDelivered ? 'none' : 'block'}}><a
                         onClick={this.finishCheck.bind(this, order.id)}
                         className="table_button bg-secondary text-white">Проверен</a></div>
-                    <div className="col-md-7" style={{display: isDone ? 'block' : 'none'}}>
+                    <div className="col-lg-7" style={{display: isDone ? 'block' : 'none'}}>
                         <div className="table_button bg-secondary text-white"
                              onClick={this.cancelCheckingWaybill.bind(this, order.id)}>Отменить проверку
                         </div>
                     </div>
-                    <div className="col-md-5" style={{display: isDone ? 'block' : 'none'}}>
+                    <div className="col-lg-5" style={{display: isDone ? 'block' : 'none'}}>
                         <b>Проверка завершена</b>
                     </div>
-                    <div className="col-md-7" style={{display: isDelivered ? 'block' : 'none'}}>
+                    <div className="col-lg-7" style={{display: isDelivered ? 'block' : 'none'}}>
                         <a className="table_button bg-secondary text-white"
                              onClick={this.finishOrder.bind(this, order.id)}>Завершить заказ
                         </a>
@@ -183,18 +183,18 @@ class pageManagerOrders extends Component {
     render() {
         return (
             <div className="row">
-                <div className="offset-md-1 col-md-10 superuserform_companylist">
+                <div className="col-lg-12 superuserform_companylist">
                     <div className="container-fluid">
                         <div className="row table_header animated fadeIn">
-                            <div className="col-md-1"><b>Заказ</b></div>
-                            <div className="col-md-1"><b>Клиент</b></div>
-                            <div className="col-md-2"><b>Название склада (отправитель)</b></div>
-                            <div className="col-md-1"><b>Название склада (получатель)</b></div>
-                            <div className="col-md-2"><b>Дата отправления</b></div>
-                            <div className="col-md-1"><b>Дата получения</b></div>
-                            <div className="col-md-1"><b/></div>
-                            <div className="col-md-2"><b/></div>
-                            <div className="col-md-1"><b/></div>
+                            <div className="col-lg-1"><b>Заказ</b></div>
+                            <div className="col-lg-1"><b>Клиент</b></div>
+                            <div className="col-lg-2"><b>Название склада (отправитель)</b></div>
+                            <div className="col-lg-1"><b>Название склада (получатель)</b></div>
+                            <div className="col-lg-2"><b>Дата отправления</b></div>
+                            <div className="col-lg-1"><b>Дата получения</b></div>
+                            <div className="col-lg-1"><b/></div>
+                            <div className="col-lg-2"><b/></div>
+                            <div className="col-lg-1"><b/></div>
                         </div>
                         {
                             this.state.orders.map((element) => {

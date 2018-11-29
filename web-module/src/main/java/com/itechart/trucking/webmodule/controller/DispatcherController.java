@@ -38,6 +38,7 @@ import com.itechart.trucking.waybill.dto.WaybillDto;
 import com.itechart.trucking.waybill.dto.WaybillSocketUpdateDto;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.repository.WaybillRepository;
+import com.itechart.trucking.webmodule.model.dto.SocketNotification;
 import com.itechart.trucking.webmodule.service.CommonService;
 import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONArray;
@@ -168,6 +169,8 @@ public class DispatcherController {
             //changed product.getStatus().name() on product.getStatus()
             productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/createOrder/", new SocketNotification("Диспетчер","Создан заказ - " + savedOrder.getName()));
+
         return HttpStatus.OK;
     }
 
@@ -175,6 +178,7 @@ public class DispatcherController {
     @PostMapping(value = "/companies/orders/edit")//todo REDO!!!!!!!!!!!!!!!!!!!!!!!
     public Object editOrder(OrderFormData orderDto, Long orderId, Long waybillId, String consignment, Long consignmentId, HttpServletRequest request) throws ParseException, JSONException {
         JSONObject json = new JSONObject();
+        User user = commonService.getCurrentUser();
         Order orderFromDto = orderService.getOrderFromDto(orderDto, SecurityContextHolder.getContext().getAuthentication().getName());
         orderFromDto.setId(orderId);
         orderFromDto.getWaybill().setId(waybillId);
@@ -190,6 +194,8 @@ public class DispatcherController {
             Product product = getProductFromJsonFile(jsonObject);
             productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
+
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/editOrder/", new SocketNotification("Диспетчер","Изменен заказ - " + orderDto.getName()));
         return HttpStatus.OK;
 
     }
@@ -328,7 +334,7 @@ public class DispatcherController {
         waybillSocketUpdateDto.setCompanyId(userByEmail.getCompany().getId());
         waybillSocketUpdateDto.setWaybillDto(new WaybillDto(waybill));
 
-        stompService.sendNotification("/topic/dispatcher", waybillSocketUpdateDto);
+        stompService.sendNotification("/topic/"+userByEmail.getCompany().getId()+"/calendarUpdate", waybillSocketUpdateDto);
 
         return true;
     }
