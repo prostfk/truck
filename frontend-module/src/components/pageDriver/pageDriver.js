@@ -6,10 +6,27 @@ class DriverOrderList extends React.Component {
         super(props);
         this.getOrderList = this.getOrderList.bind(this);
         this.renderTable = this.renderTable.bind(this);
+        this.updateOrderStatus = this.updateOrderStatus.bind(this);
+        this.updateWayBill = this.updateWayBill.bind(this);
         this.state = {
             orders: []
         };
         document.title = "Заказы"
+    }
+
+
+    updateWayBill(newWayBill){
+        if(!newWayBill) return;
+        let oldWayBills = this.state.orders;
+
+        var newArray = oldWayBills.map(function(element) {
+            if(element.waybill.id==newWayBill.id) {
+                element.waybill = newWayBill;
+                return element;
+            }
+            else return element;
+        });
+        this.setState({orders:newArray});
     }
 
     componentDidMount() {
@@ -23,17 +40,40 @@ class DriverOrderList extends React.Component {
         return fetch('http://localhost:8080/api/orders/getMyOrders', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
-            console.log(result);
             return result;
         }).catch((err) => {
             console.log(err);
         });
     }
 
+    updateOrderStatus(orderId,status){
+        if(status!=2 && status!=3) return;
+        let refThis = this;
+        /*/orders/getMyOrders/{orderId}/setNewStatus*/
+        fetch('http://localhost:8080/api/orders/getMyOrders/'+orderId+'/setNewStatus', {
+            method: "PUT",
+            headers: {'Auth-token': localStorage.getItem('Auth-token')},
+            body:status
+        }
+           ).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            refThis.updateWayBill(result);
+            return result;
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+
     /*render row of table ( calls from html ) */
 
     renderTable(order, index) {
         if (!order) return;
+        console.log(order.waybill);
+        let buttonAction = order.waybill.status==2?
+            <a onClick={()=>{this.updateOrderStatus(order.id,3)}} className="table_button bg-secondary text-white">Завершить заказ</a>:"Заказ завершен"
+
         return <div key={index} className="row table_row order_row animated fadeInUp">
             <div className="col-md-2">{order.name}</div>
             <div className="col-md-2" title={order.sender.name}>{order.sender.address}</div>
@@ -46,8 +86,7 @@ class DriverOrderList extends React.Component {
                     лист</Link>
             </div>
             <div className="col-md-2">
-                <Link to={`/driver/consignment/${order.id}`} className="table_button bg-secondary text-white">Тов.
-                    партия</Link>
+                {buttonAction}
             </div>
         </div>
     }
@@ -62,7 +101,7 @@ class DriverOrderList extends React.Component {
                     <div className="col-md-2">Куда</div>
                     <div className="col-md-2">Дата Отпр/Прибытия</div>
                     <div className="col-md-2">Открыть</div>
-                    <div className="col-md-2">Открыть</div>
+                    <div className="col-md-2">Путь</div>
                 </div>
                 {
                     this.state.orders.map((element, index) => {

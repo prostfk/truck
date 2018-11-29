@@ -34,7 +34,7 @@ import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
-import DriverConsignment from "./pageDriver/pageConsignment";
+/*import DriverConsignment from "./pageDriver/pageConsignment";*/
 import OwnerCompanyClients from "./pageOwner/pageOwnerCompanyClients";
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 import OwnerStockList from "./pageOwner/pageOwnerStockList";
@@ -72,7 +72,7 @@ class MainController extends React.Component {
                     <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment}/>
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
                     <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouterListNew}/> {/*driver*/}
-                    <Route exact path="/driver/consignment/:consignmentId" component={DriverConsignment}/> {/*driver*/}
+                    {/*<Route exact path="/driver/consignment/:consignmentId" component={DriverConsignment}/>*/} {/*driver*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
                     {/*<Route path="/manager/edit/*" component={ManagerHeader}/>*/}
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>

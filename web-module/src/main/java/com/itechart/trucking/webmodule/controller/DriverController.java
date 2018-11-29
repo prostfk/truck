@@ -16,7 +16,12 @@ import com.itechart.trucking.product.service.ProductService;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.service.RouteListService;
+import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.service.UserService;
+import com.itechart.trucking.waybill.dto.WaybillDto;
+import com.itechart.trucking.waybill.entity.Waybill;
+import com.itechart.trucking.waybill.service.WaybillService;
+import com.itechart.trucking.webmodule.service.CommonService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,32 +51,19 @@ public class DriverController {
     private RouteListService routeListService;
 
     @Autowired
+    private CommonService commonService;
+
+    @Autowired
+    private WaybillService waybillService;
+
+/*    @Autowired
     private ProductService productService;
 
     @Autowired
     private CancellationActService cancellationActService;
 
     @Autowired
-    private ConsignmentService consignmentService;
-
-    @PutMapping(value = "/order/{id}/CancellationAct/addProduct")
-    public Object addProductToCancellationAct(@PathVariable Long id, Long productId) throws JSONException {
-        Order orderById = orderService.findOrderById(id);
-        Product productById = productService.findProductById(productId);
-        CancellationAct cancellationAct = orderById.getConsignment().getCancellationAct();
-        List<Product> product = cancellationAct.getProduct();
-        JSONObject json = new JSONObject();
-        if (!product.contains(productById)) {
-            product.add(productById);
-            orderById.getConsignment().getCancellationAct().setProduct(product);
-            orderService.save(orderById);
-            json.put("status", "success");
-        } else {
-            json.put("error", "product is already cancelled");
-        }
-        return json.toString();
-
-    }
+    private ConsignmentService consignmentService;*/
 
     @RequestMapping(value = "/orders/getMyOrders", method = RequestMethod.GET)
     public List<OrderDto> getMyOrders() {
@@ -89,6 +81,22 @@ public class DriverController {
         if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name))
             return null;
         return Odt.RouteListToDtoList(order.get().getWaybill().getRouteListList());
+    }
+
+    @RequestMapping(value = "/orders/getMyOrders/{orderId}/setNewStatus", method = RequestMethod.PUT)
+    public WaybillDto setNewStatus(@PathVariable Long orderId, @RequestBody String newStatusValue) {
+        if(newStatusValue.equals("2") && newStatusValue.equals("3")) return null;
+
+        User user = commonService.getCurrentUser();
+        Order order = orderService.findOrderById(orderId);
+        Waybill waybill = order.getWaybill();
+
+        if (waybill.getDriver()==null || (waybill.getStatus()!=2 && waybill.getStatus()!=3) || waybill.getDriver().getUser().getId()!=user.getId()  ) return null;
+
+        Integer newStatus = Integer.valueOf(newStatusValue);
+        waybill.setStatus(newStatus);
+        waybillService.save(waybill);
+        return new WaybillDto(waybill);
     }
 
 
@@ -111,13 +119,34 @@ public class DriverController {
         return new RouteListDto(point.get());
     }
 
+    /*    @Deprecated
+    @PutMapping(value = "/order/{id}/CancellationAct/addProduct")
+    public Object addProductToCancellationAct(@PathVariable Long id, Long productId) throws JSONException {
+        Order orderById = orderService.findOrderById(id);
+        Product productById = productService.findProductById(productId);
+        CancellationAct cancellationAct = orderById.getConsignment().getCancellationAct();
+        List<Product> product = cancellationAct.getProduct();
+        JSONObject json = new JSONObject();
+        if (!product.contains(productById)) {
+            product.add(productById);
+            orderById.getConsignment().getCancellationAct().setProduct(product);
+            orderService.save(orderById);
+            json.put("status", "success");
+        } else {
+            json.put("error", "product is already cancelled");
+        }
+        return json.toString();
+    }*/
+
+/*    @Deprecated
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/consignment", method = RequestMethod.GET)
     public List<ProductDto> getDriverConsignment(@PathVariable Long orderId) {
         Optional<Order> order = orderService.findById(orderId);
         List<Product> products = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
         return Odt.ProductToDtoList(products);
-    }
+    }*/
 
+   /* @Deprecated
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/cancelProduct/{productId}", method = RequestMethod.GET)
     public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam(name = "cancel") int cancel) {
         Consignment consignment = orderService.findOrderById(orderId).getConsignment();
@@ -148,5 +177,5 @@ public class DriverController {
         cancellationActService.save(cancellationAct);
 
         return new ProductDto(product.get());
-    }
+    }*/
 }

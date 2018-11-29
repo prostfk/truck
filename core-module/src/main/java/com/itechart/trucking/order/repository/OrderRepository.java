@@ -27,7 +27,7 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     Page<Order> findByCompany(Company company, Pageable pageable);
 
-    @Query("select o From Order o where o.waybill IN (select w.id FROM Waybill w where w.driver.id = :driverId) and o.status = 1 ")
+    @Query("select o From Order o where o.waybill IN (select w.id FROM Waybill w where w.driver.id = :driverId and w.status=2) and o.status = 1 ")
     List<Order> findCustomQueryOrderByDriver(@Param("driverId") Long driverId);
 
     @Query(value = "INSERT INTO orders(name, client_id, sender, receiver, date_accepted, date_executed, waybill_id, company_id) VALUES (:orderName,:clientId,:sender, :receiver, :dateDeparture, :dateArrival, :waybillId, :companyId)", nativeQuery = true)
