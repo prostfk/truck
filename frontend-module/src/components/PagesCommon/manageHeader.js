@@ -8,10 +8,17 @@ export default class ManagerHeader extends Component {
     constructor(props) {
         super(props);
         this.handleMessage = this.handleMessage.bind(this);
+        this.handleMessageEditOrder = this.handleMessageEditOrder.bind(this);
+        this.handleMessageCreateOrder = this.handleMessageCreateOrder.bind(this);
     }
 
     handleMessage(msg) {
-
+        NotificationManager.info(msg.message,'Информация ( '+ msg.userName+' )');
+    }
+    handleMessageEditOrder(msg) {
+        NotificationManager.info(msg.message,'Информация ( '+ msg.userName+' )');
+    }
+    handleMessageCreateOrder(msg) {
         NotificationManager.info(msg.message,'Информация ( '+ msg.userName+' )');
     }
 
@@ -40,6 +47,16 @@ export default class ManagerHeader extends Component {
                 <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/markPoint/']}
                               onMessage={(msg) => {
                                   this.handleMessage(msg);
+                              }}
+                              ref={ (client) => { this.clientRef = client }} />
+                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/editOrder/']}
+                              onMessage={(msg) => {
+                                  this.handleMessageEditOrder(msg);
+                              }}
+                              ref={ (client) => { this.clientRef = client }} />
+                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/createOrder/']}
+                              onMessage={(msg) => {
+                                  this.handleMessageCreateOrder(msg);
                               }}
                               ref={ (client) => { this.clientRef = client }} />
             </nav>
