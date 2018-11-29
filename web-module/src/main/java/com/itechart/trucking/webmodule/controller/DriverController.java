@@ -93,6 +93,13 @@ public class DriverController {
 
         if (waybill.getDriver()==null || (waybill.getStatus()!=2 && waybill.getStatus()!=3) || waybill.getDriver().getUser().getId()!=user.getId()  ) return null;
 
+        int ammountNotMarkedPoins = 0;
+        List<RouteList> routeLists= waybill.getRouteListList();
+        for (RouteList point:routeLists) {
+            if(point.getMarked()!=true) ammountNotMarkedPoins++;
+        }
+        if(ammountNotMarkedPoins!=0) return null;
+
         Integer newStatus = Integer.valueOf(newStatusValue);
         waybill.setStatus(newStatus);
         waybillService.save(waybill);
