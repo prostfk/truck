@@ -129,69 +129,10 @@ public class DriverController {
             else point.get().setMarked(true);
         }
         routeListService.save(point.get());
+        String message = point.get().getMarked()==true? "Прошел контрольную точку в заказе: " + order.get().getName() :"Отменил прохождение точки в заказе: " + order.get().getName();
 
-        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/markPoint/", new SocketNotification(name,"Прошел контрольную точку в заказе " + order.get().getName()));
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/markPoint/", new SocketNotification(name,message));
 
         return new RouteListDto(point.get());
     }
-
-    /*    @Deprecated
-    @PutMapping(value = "/order/{id}/CancellationAct/addProduct")
-    public Object addProductToCancellationAct(@PathVariable Long id, Long productId) throws JSONException {
-        Order orderById = orderService.findOrderById(id);
-        Product productById = productService.findProductById(productId);
-        CancellationAct cancellationAct = orderById.getConsignment().getCancellationAct();
-        List<Product> product = cancellationAct.getProduct();
-        JSONObject json = new JSONObject();
-        if (!product.contains(productById)) {
-            product.add(productById);
-            orderById.getConsignment().getCancellationAct().setProduct(product);
-            orderService.save(orderById);
-            json.put("status", "success");
-        } else {
-            json.put("error", "product is already cancelled");
-        }
-        return json.toString();
-    }*/
-
-/*    @Deprecated
-    @RequestMapping(value = "/orders/getMyOrders/{orderId}/consignment", method = RequestMethod.GET)
-    public List<ProductDto> getDriverConsignment(@PathVariable Long orderId) {
-        Optional<Order> order = orderService.findById(orderId);
-        List<Product> products = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
-        return Odt.ProductToDtoList(products);
-    }*/
-
-   /* @Deprecated
-    @RequestMapping(value = "/orders/getMyOrders/{orderId}/cancelProduct/{productId}", method = RequestMethod.GET)
-    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam(name = "cancel") int cancel) {
-        Consignment consignment = orderService.findOrderById(orderId).getConsignment();
-        CancellationAct cancellationAct = consignment.getCancellationAct();
-
-        if (cancellationAct == null) {
-            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
-            CancellationAct save = cancellationActService.save(cancellationAct);
-            consignment.setCancellationAct(save);
-        }
-
-        Optional<Product> product = productService.findById(productId);
-        product.get().setCount(product.get().getCount() - cancel);
-        product.get().setCancelledCount(product.get().getCancelledCount() == null ? 0 : product.get().getCancelledCount() + cancel);
-
-        if (product.get().getCount() == 0) {
-            product.get().setStatus(4);
-        } else {
-            product.get().setStatus(5);
-        }
-
-        cancellationAct.setPrice(product.get().getPrice() * cancel + cancellationAct.getPrice());
-        Integer amount = cancellationAct.getAmount() + cancel;
-        cancellationAct.setAmount(amount);
-
-        product.get().setCancellationAct(cancellationAct);
-        productService.save(product.get());
-        cancellationActService.save(cancellationAct);
-
-        return new ProductDto(product.get());
-    }*/
 }

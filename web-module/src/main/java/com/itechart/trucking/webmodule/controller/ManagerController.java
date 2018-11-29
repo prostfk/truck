@@ -13,6 +13,8 @@ import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.user.service.UserService;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.service.WaybillService;
+import com.itechart.trucking.webmodule.model.dto.SocketNotification;
+import com.itechart.trucking.webmodule.service.StompService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.itechart.trucking.formData.WaybillFormData;
 import com.itechart.trucking.odt.Odt;
@@ -59,6 +61,8 @@ public class ManagerController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private StompService stompService;
 
     @GetMapping(value = "/manager/orders")//todo findByStatus change on number value(Murat, please)
     public Object findActiveOrders(@RequestParam(value = "page") int pageId) {
@@ -231,6 +235,9 @@ public class ManagerController {
         }
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
+
+        String message = "Поступил заказ на перевозку (" + order.get().getName() + " ) ";
+        stompService.sendNotification("/topic/"+userByUsername.getCompany().getId()+"/changeWayBillStatusTo2/"+waybill.getDriver().getUser().getId(), new SocketNotification(name,message));
 
         return new OrderDto(order.get());
     }
