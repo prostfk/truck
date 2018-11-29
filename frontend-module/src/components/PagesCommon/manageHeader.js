@@ -1,8 +1,20 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import LogoutComponent from "../pageLogout/logoutComponent";
+import SockJsClient from 'react-stomp';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 export default class ManagerHeader extends Component {
+    constructor(props) {
+        super(props);
+        this.handleMessage = this.handleMessage.bind(this);
+    }
+
+    handleMessage(msg) {
+
+        NotificationManager.info(msg.message,'Информация ( '+ msg.userName+' )');
+    }
+
     render() {
         return (
             <nav className="navbar navbar-expand-lg navbar-dark" style={{backgroundColor: '#4e4e4e'}}>
@@ -24,9 +36,14 @@ export default class ManagerHeader extends Component {
                     <li className="navbar-text">
                         <LogoutComponent/>
                     </li>
-
                 </div>
+                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/markPoint/']}
+                              onMessage={(msg) => {
+                                  this.handleMessage(msg);
+                              }}
+                              ref={ (client) => { this.clientRef = client }} />
             </nav>
+
         );
 
     }

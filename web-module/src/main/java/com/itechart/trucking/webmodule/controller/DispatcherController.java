@@ -328,7 +328,7 @@ public class DispatcherController {
         waybillSocketUpdateDto.setCompanyId(userByEmail.getCompany().getId());
         waybillSocketUpdateDto.setWaybillDto(new WaybillDto(waybill));
 
-        stompService.sendNotification("/topic/dispatcher", waybillSocketUpdateDto);
+        stompService.sendNotification("/topic/"+userByEmail.getCompany().getId()+"/calendarUpdate", waybillSocketUpdateDto);
 
         return true;
     }

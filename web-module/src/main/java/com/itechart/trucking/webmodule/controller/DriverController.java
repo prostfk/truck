@@ -21,7 +21,9 @@ import com.itechart.trucking.user.service.UserService;
 import com.itechart.trucking.waybill.dto.WaybillDto;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.service.WaybillService;
+import com.itechart.trucking.webmodule.model.dto.SocketNotification;
 import com.itechart.trucking.webmodule.service.CommonService;
+import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,9 @@ public class DriverController {
 
     @Autowired
     private WaybillService waybillService;
+
+    @Autowired
+    private StompService stompService;
 
 /*    @Autowired
     private ProductService productService;
@@ -109,7 +114,8 @@ public class DriverController {
 
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/markpoint/{pointId}", method = RequestMethod.PUT)
     public RouteListDto markOrder(@PathVariable Long orderId, @PathVariable Long pointId) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = commonService.getCurrentUser();
+        String name = user.getUsername();
 
         Optional<Order> order = orderService.findById(orderId);
         if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name) || order.get().getWaybill().getStatus()!=2)
@@ -123,6 +129,9 @@ public class DriverController {
             else point.get().setMarked(true);
         }
         routeListService.save(point.get());
+
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/markPoint/", new SocketNotification(name,"Прошел контрольную точку в заказе " + order.get().getName()));
+
         return new RouteListDto(point.get());
     }
 
