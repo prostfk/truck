@@ -73,8 +73,6 @@ class pageManagerOrders extends Component {
         let isDelivered = false;
         if (order.waybill.status === 2)
             isDone = true;
-        if (order.waybill.status === 3)
-            isDelivered = true;
 
         return <div className="row table_row animated fadeInUp">
             <div className="col-md-1">{order.name}</div>
@@ -83,32 +81,34 @@ class pageManagerOrders extends Component {
             <div className="col-md-1">{order.receiver.address}</div>
             <div className="col-md-2">{new Date(order.waybill.dateDeparture).toLocaleDateString()}</div>
             <div className="col-md-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
-            <div className="col-md-4" style={{display: isDone ? 'block' : 'none'}}>
+            <div className="col-md-4">
                 <div className="row">
-                    <div className="col-md-6">
-                        <div className = "table_button bg-secondary text-white" onClick={this.cancelCheckingWaybill.bind(this, order.id)}>Отменить проверку</div>
+                    <div className="col-md-5">
+                        <Link to={`/manager/edit/consignment/${order.id}`}
+                              className="table_button bg-secondary text-white">Тов.
+                            партия</Link>
                     </div>
-                    <div className="col-md-6">
-                        <div className = "table_button bg-secondary text-white" onClick={this.finishOrder.bind(this, order.id)}>Завершить заказ</div>
+                    <div className="col-md-4" style={{display: isDone ? 'none' : 'block'}}>
+                        <Link to={`/manager/edit/routelist/${order.id}`}
+                              className="table_button bg-secondary text-white">Пут.
+                            лист</Link>
+                    </div>
+                    <div className="col-md-3" style={{display: isDone ? 'none' : 'block'}}><a
+                        onClick={this.finishCheck.bind(this, order.id)}
+                        className="table_button bg-secondary text-white">Проверен</a></div>
+                    <div className="col-md-4" style={{display: isDone ? 'block' : 'none'}}>
+                        <div className="table_button bg-secondary text-white"
+                             onClick={this.cancelCheckingWaybill.bind(this, order.id)}>Отменить проверку
+                        </div>
+                    </div>
+                    <div className="col-md-3" style={{display: isDone ? 'block' : 'none'}}>
+                        <div className="table_button bg-secondary text-white"
+                             onClick={this.finishOrder.bind(this, order.id)}>Зав. заказ
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="col-md-4" style={{display: isDone ? 'none' : 'block'}}>
-                <div className="row">
-            <div className="col-md-6" style={{display: isDone ? 'none' : 'block'}}>
-                <Link to={`/manager/edit/consignment/${order.id}`} className="table_button bg-secondary text-white">Товарная
-                    партия</Link>
-            </div>
-            <div className="col-md-6" style={{display: isDelivered ? 'none' : 'block'}}>
-                <Link to={`/manager/edit/routelist/${order.id}`} className="table_button bg-secondary text-white">Путевой
-                    лист</Link>
-            </div>
-            <div className="col-md-6" style={{display: isDelivered ? 'block' : 'none'}}><a
-                onClick={this.finishCheck.bind(this, order.id)}
-                className="table_button bg-secondary text-white">Проверен</a></div>
-            </div>
-            </div>
-            </div>
+        </div>
     }
 
     cancelCheckingWaybill(orderId) {
@@ -174,6 +174,7 @@ class pageManagerOrders extends Component {
             }
         });
     }
+
     render() {
         return (
             <div className="row">

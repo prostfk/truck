@@ -162,8 +162,6 @@ public class ManagerController {
             product.get().setCancellationAct(null);
         }*/
 
-
-
         productService.save(product.get());
         cancellationActService.save(cancellationAct);
 
@@ -224,11 +222,6 @@ public class ManagerController {
         waybill.setCheckDate(new Date((new java.util.Date()).getTime()));
         waybill.setUser(userByUsername);
 
-        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
-        if(cancellationAct != null) {
-            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
-            cancellationActService.save(cancellationAct);
-        }
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
 
@@ -243,11 +236,6 @@ public class ManagerController {
         waybill.setCheckDate(null);
         waybill.setUser(null);
 
-        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
-        if(cancellationAct != null) {
-            cancellationAct.setDate(null);
-            cancellationActService.save(cancellationAct);
-        }
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
 
@@ -258,6 +246,13 @@ public class ManagerController {
     public OrderDto finishOrder(@PathVariable Long orderId) {
         Optional<Order> order = orderService.findById(orderId);
         order.get().setStatus(3);
+
+        CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
+        if(cancellationAct != null) {
+            cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
+            cancellationActService.save(cancellationAct);
+        }
+
         orderService.save(order.get());
 
         return new OrderDto(order.get());
