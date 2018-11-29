@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from 'react-router-dom'
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class DriverOrderList extends React.Component {
     constructor(props) {
@@ -16,7 +17,10 @@ class DriverOrderList extends React.Component {
 
 
     updateWayBill(newWayBill){
-        if(!newWayBill) return;
+        if(!newWayBill) {
+            NotificationManager.error("Возможно вы не прошли все контрольные точки","Ошибка");
+            return;
+        }
         let oldWayBills = this.state.orders;
 
         var newArray = oldWayBills.map(function(element) {
@@ -27,6 +31,7 @@ class DriverOrderList extends React.Component {
             else return element;
         });
         this.setState({orders:newArray});
+        NotificationManager.success("Вы успешно закончили поездку!");
     }
 
     componentDidMount() {
@@ -58,10 +63,13 @@ class DriverOrderList extends React.Component {
            ).then(function (response) {
             return response.json();
         }).then(function (result) {
+            if(!result) {
+                return;
+            }
             refThis.updateWayBill(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.error("Возможно вы не проехали все точки, или заказ уже закрыт","Ошибка");
         });
     }
 
