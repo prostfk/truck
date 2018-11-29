@@ -112,7 +112,7 @@ public class DriverController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<Order> order = orderService.findById(orderId);
-        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name))
+        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name) || order.get().getWaybill().getStatus()!=2)
             return null;
 
         Optional<RouteList> point = routeListService.findById(pointId);
