@@ -341,7 +341,7 @@ class ManagerConsignment extends Component {
                     <h3>Товарная партия</h3>
                     <div className="row table_header animated fadeIn">
                         <div className="col-md-2">Наименование</div>
-                        <div className="col-md-2">Состоние</div>
+                        <div className="col-md-2">Состояние</div>
                         <div className="col-md-2">Описание</div>
                         <div className="col-md-2">Цена</div>
                         <div className="col-md-2"/>

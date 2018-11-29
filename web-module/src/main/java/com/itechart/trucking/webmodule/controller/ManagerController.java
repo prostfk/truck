@@ -246,6 +246,8 @@ public class ManagerController {
     public OrderDto finishOrder(@PathVariable Long orderId) {
         Optional<Order> order = orderService.findById(orderId);
         order.get().setStatus(3);
+        Waybill waybill = order.get().getWaybill();
+        waybill.setStatus(4);
 
         CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
         if(cancellationAct != null) {
@@ -253,6 +255,7 @@ public class ManagerController {
             cancellationActService.save(cancellationAct);
         }
 
+        waybillService.save(waybill);
         orderService.save(order.get());
 
         return new OrderDto(order.get());

@@ -73,6 +73,8 @@ class pageManagerOrders extends Component {
         let isDelivered = false;
         if (order.waybill.status === 2)
             isDone = true;
+        if (order.waybill.status === 3)
+            isDelivered = true;
 
         return <div className="row table_row animated fadeInUp">
             <div className="col-md-1">{order.name}</div>
@@ -83,28 +85,31 @@ class pageManagerOrders extends Component {
             <div className="col-md-1">{new Date(order.waybill.dateArrival).toLocaleDateString()}</div>
             <div className="col-md-4">
                 <div className="row">
-                    <div className="col-md-5">
+                    <div className="col-md-5" style={{display: isDone ? 'none' : 'block'}}>
                         <Link to={`/manager/edit/consignment/${order.id}`}
                               className="table_button bg-secondary text-white">Тов.
                             партия</Link>
                     </div>
-                    <div className="col-md-4" style={{display: isDone ? 'none' : 'block'}}>
+                    <div className="col-md-4" style={{display: isDone || isDelivered ? 'none' : 'block'}}>
                         <Link to={`/manager/edit/routelist/${order.id}`}
                               className="table_button bg-secondary text-white">Пут.
                             лист</Link>
                     </div>
-                    <div className="col-md-3" style={{display: isDone ? 'none' : 'block'}}><a
+                    <div className="col-md-3" style={{display: isDone || isDelivered ? 'none' : 'block'}}><a
                         onClick={this.finishCheck.bind(this, order.id)}
                         className="table_button bg-secondary text-white">Проверен</a></div>
-                    <div className="col-md-4" style={{display: isDone ? 'block' : 'none'}}>
+                    <div className="col-md-7" style={{display: isDone ? 'block' : 'none'}}>
                         <div className="table_button bg-secondary text-white"
                              onClick={this.cancelCheckingWaybill.bind(this, order.id)}>Отменить проверку
                         </div>
                     </div>
-                    <div className="col-md-3" style={{display: isDone ? 'block' : 'none'}}>
-                        <div className="table_button bg-secondary text-white"
-                             onClick={this.finishOrder.bind(this, order.id)}>Зав. заказ
-                        </div>
+                    <div className="col-md-5" style={{display: isDone ? 'block' : 'none'}}>
+                        <b>Проверка завершена</b>
+                    </div>
+                    <div className="col-md-7" style={{display: isDelivered ? 'block' : 'none'}}>
+                        <a className="table_button bg-secondary text-white"
+                             onClick={this.finishOrder.bind(this, order.id)}>Завершить заказ
+                        </a>
                     </div>
                 </div>
             </div>
