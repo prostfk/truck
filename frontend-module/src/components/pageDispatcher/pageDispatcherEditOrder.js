@@ -230,7 +230,7 @@ export default class DispatcherEditOrder extends Component {
             companyNameForSearch: [event.target.value]
         });
         if (event.target.value !== '') {
-            fetch(`http://localhost:8080/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
                 .then(response => {
                     return response.json()
                 }).then(data => {
@@ -246,7 +246,7 @@ export default class DispatcherEditOrder extends Component {
     };
 
     fetchToUserStocks = () => {
-        fetch(`http://localhost:8080/api/companies/findStocksByUsername`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/companies/findStocksByUsername`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             console.log(data);
@@ -267,7 +267,7 @@ export default class DispatcherEditOrder extends Component {
     findAutos() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`http://localhost:8080/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             console.log(data);
             data.map(auto => {
@@ -283,7 +283,7 @@ export default class DispatcherEditOrder extends Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`http://localhost:8080/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             console.log(data);
             let driverHtml = '';
             data.map(driver => {
@@ -368,6 +368,29 @@ export default class DispatcherEditOrder extends Component {
             this.setState({consignment: newConsignment});
         }
     };
+
+    processSelect = () => {
+        if (ValidationUtil.getStringFromUnnownObject(this.state.waybill_status)===1){
+            return <select onChange={this.changeInput} value={this.state.waybill_status}
+                           className="form-control"
+                           id="waybill_status">
+                <option selected disabled>Статус</option>
+                <option value={'1'}>Оформлен</option>
+                <option value={'2'}>Проверка завершена</option>
+                <option value={'3'}>Доставлен</option>
+            </select>
+        }else {
+            return <select onChange={this.changeInput} value={this.state.waybill_status}
+                           className="form-control"
+                           id="waybill_status" disabled={'disabled'}>
+                <option selected disabled>Статус</option>
+                <option value={'1'}>Оформлен</option>
+                <option value={'2'}>Проверка завершена</option>
+                <option value={'3'}>Доставлен</option>
+            </select>
+        }
+    };
+
     render() {
         let green = {
             color: 'green'
@@ -411,6 +434,7 @@ export default class DispatcherEditOrder extends Component {
 
                                 <div className="form-group">
                                     <small className="form-text text-muted">Сатус заказа</small>
+
                                     <select onChange={this.changeInput} value={this.state.status}
                                             className="form-control"
                                             id="status">
@@ -426,14 +450,17 @@ export default class DispatcherEditOrder extends Component {
                                 <h3>ТТН</h3>
 
                                 <small className="form-text text-muted">Статус</small>
-                                <select onChange={this.changeInput} value={this.state.waybill_status}
-                                        className="form-control"
-                                        id="waybill_status">
-                                    <option selected disabled>Статус</option>
-                                    <option value={'1'}>Оформлен</option>
-                                    <option value={'2'}>Проверка завершена</option>
-                                    <option value={'3'}>Доставлен</option>
-                                </select>
+                                {
+                                    this.processSelect()
+                                }
+                                {/*<select onChange={this.changeInput} value={this.state.waybill_status}*/}
+                                {/*className="form-control"*/}
+                                {/*id="waybill_status">*/}
+                                {/*<option selected disabled>Статус</option>*/}
+                                {/*<option value={'1'}>Оформлен</option>*/}
+                                {/*<option value={'2'}>Проверка завершена</option>*/}
+                                {/*<option value={'3'}>Доставлен</option>*/}
+                                {/*</select>*/}
 
 
                                 <small className="form-text text-muted">Дата отправления</small>
@@ -554,6 +581,5 @@ export default class DispatcherEditOrder extends Component {
             </div>
         );
     }
-
 
 }

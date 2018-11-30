@@ -47,8 +47,12 @@ public class CommonControllers {
     public Object getOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByUsername(name);
-
-        Page<Order> orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
+        Page<Order> orderPage;
+        if (user.getUserRole().equals(UserRole.ROLE_DISPATCHER)){
+            orderPage = orderService.findByCompanyAndWaybillStatus(user.getCompany().getId(),1L,PageRequest.of(pageId-1, 5));
+        }else{
+            orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
+        }
         return orderPage.map(OrderDto::new);
     }
 
