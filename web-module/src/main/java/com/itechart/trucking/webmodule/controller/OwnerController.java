@@ -3,15 +3,18 @@ package com.itechart.trucking.webmodule.controller;
 import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
+import com.itechart.trucking.cancellationAct.service.CancellationActService;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.service.ClientService;
 import com.itechart.trucking.client.solrEntity.SolrClient;
 import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.consignment.repository.ConsignmentRepository;
+import com.itechart.trucking.consignment.service.ConsignmentService;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
@@ -22,9 +25,11 @@ import com.itechart.trucking.pagesDto.OwnerPageStatisticsDto;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
+import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.user.service.UserService;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
 import com.itechart.trucking.webmodule.service.CommonService;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -58,28 +63,25 @@ public class OwnerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    CommonService commonService;
+    private CommonService commonService;
 
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private RouteListService routeListService;
 
     @Autowired
-    private RouteListRepository routeListRepository;
+    private CancellationActService cancellationActService;
 
     @Autowired
-    private CancellationActRepository cancellationActRepository;
+    private ConsignmentService consignmentService;
 
     @Autowired
-    private ConsignmentRepository consignmentRepository;
-
-    @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
     private ClientSolrRepository clientSolrRepository;
@@ -98,10 +100,10 @@ public class OwnerController {
         OwnerPageStatisticsDto ownerPageStatisticsDto = new OwnerPageStatisticsDto();
         ownerPageStatisticsDto.setWorkersAmmount(userByUsername.getCompany().getWorkersAmmount());
 
-        List<Order> orders = orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId());
+        List<Order> orders = orderService.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId());
         ownerPageStatisticsDto.setAcceptedAmmount(userByUsername.getCompany().getOrderAcceptedAmmount(orders));
 
-        List<Order> ordersExecuted = orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
+        List<Order> ordersExecuted = orderService.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
         ownerPageStatisticsDto.setExecutedAmmount(userByUsername.getCompany().getOrderExcutedAmmount(ordersExecuted));
 
         ownerPageStatisticsDto.setCancellationActAmmount(userByUsername.getCompany().getOrderFailedAmmount(ordersExecuted));
@@ -115,7 +117,7 @@ public class OwnerController {
     public ClientStatisticsDto getStatByClient(@PathVariable Long id){
         User userByUsername = commonService.getCurrentUser();
         Company company = userByUsername.getCompany();
-        Client client = clientRepository.findClientById(id);
+        Client client = clientService.findClientById(id);
 
         ClientStatisticsDto clientStatisticsDto = new ClientStatisticsDto();
 
@@ -131,7 +133,7 @@ public class OwnerController {
     public void createStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
         User userByUsername = commonService.getCurrentUser();
         try {
-            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(),orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
+            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(),orderService.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
             ServletOutputStream outputStream = response.getOutputStream();
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
@@ -174,7 +176,7 @@ public class OwnerController {
     @ResponseBody
     public UserDto findUserByIdAndCompany(@PathVariable Long id){
         User userByUsername = commonService.getCurrentUser();
-        User user = userRepository.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
+        User user = userService.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
         return new UserDto(user);
     }
 
@@ -183,7 +185,7 @@ public class OwnerController {
     public List<OrderDto> fetchAllOrdersOfCompany(@ModelAttribute Order order) {
         User userByUsername = commonService.getCurrentUser();
         Company company = userByUsername.getCompany();
-        List<Order> allByCompany = orderRepository.findAllByCompany(company);
+        List<Order> allByCompany = orderService.findAllByCompany(company);
         return Odt.OrderToDtoList(allByCompany);
     }
 
@@ -192,7 +194,7 @@ public class OwnerController {
     public OrderDto fetchOrderOfCompany(@PathVariable Long id) {
         User userByUsername = commonService.getCurrentUser();
         Company company = userByUsername.getCompany();
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Order> order = orderService.findById(id);
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             Order order1 = order.get();
             OrderDto orderDto = new OrderDto(order1);
@@ -211,11 +213,11 @@ public class OwnerController {
     public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id){
         User userByUsername = commonService.getCurrentUser();
         Company company = userByUsername.getCompany();
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Order> order = orderService.findById(id);
 
         List<RouteList> routeLists;
         if(order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
+            routeLists = routeListService.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
         }
         else {
             return null;
@@ -228,13 +230,13 @@ public class OwnerController {
     public CancellationActDto fetchCancelActOfCompany(@PathVariable Long id) {
         User userByUsername = commonService.getCurrentUser();
         Company company =userByUsername.getCompany();
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Order> order = orderService.findById(id);
 
         Consignment consignment;
         CancellationAct cancellationAct;
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            consignment = consignmentRepository.findConsignmentByOrder(order.get());
-            cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
+            consignment = consignmentService.findConsignmentByOrder(order.get());
+            cancellationAct = cancellationActService.findCancellationActByConsignment(consignment);
         } else {
             return null;
         }
@@ -246,9 +248,9 @@ public class OwnerController {
     @ResponseBody
     public Object createClient(String name) throws JSONException {
         User userByUsername = commonService.getCurrentUser();
-        Client clientByName = clientRepository.findClientByName(name);
+        Client clientByName = clientService.findClientByName(name);
         if (clientByName==null){
-            @Valid Client save = clientRepository.save(new Client(name, "default",userByUsername.getCompany()));
+            @Valid Client save = clientService.save(new Client(name, "default",userByUsername.getCompany()));
             clientSolrRepository.save(SolrClient.solrClientFromClient(save));
             return new ClientDto(save);
         }else{
@@ -263,7 +265,7 @@ public class OwnerController {
     public Object fetchCompanyClients(@RequestParam(name = "page") int page) throws JSONException {
         User userByUsername = commonService.getCurrentUser();
 
-        Page<Client> clientPage = clientRepository.findAllByCompany(userByUsername.getCompany(), PageRequest.of(page - 1, 5));
+        Page<Client> clientPage = clientService.findAllByCompany(userByUsername.getCompany(), PageRequest.of(page - 1, 5));
 
         for (Client client : clientPage) {
             System.out.println(client);
@@ -281,9 +283,6 @@ public class OwnerController {
         json.put("clients", jsonArray);
         json.put("currentPage", clientPage.getNumber());
         json.put("totalElements", clientPage.getTotalElements());
-
-        System.out.println(json);
-
         return json.toString();
     }
 }

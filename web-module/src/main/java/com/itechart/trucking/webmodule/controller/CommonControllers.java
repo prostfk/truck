@@ -49,7 +49,7 @@ public class CommonControllers {
         User user = userService.findUserByUsername(name);
 
         Page<Order> orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
-        return orderPage.map(order -> new OrderDto(order));
+        return orderPage.map(OrderDto::new);
     }
 
     @GetMapping(value = "/stocks")
@@ -59,7 +59,7 @@ public class CommonControllers {
 
         Page<Stock> stockPage = stockService.findStockByCompanyAndActive(userByEmail.getCompany(),true, PageRequest.of(pageId-1, 5));
 
-        return stockPage.map(stock -> new StockDto(stock));
+        return stockPage.map(StockDto::new);
     }
 
     @DeleteMapping(value = "/stocks")

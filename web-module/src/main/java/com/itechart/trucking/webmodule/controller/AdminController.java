@@ -63,12 +63,6 @@ public class AdminController {
     private StockService stockService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private DriverRepository driverRepository;
-
-    @Autowired
     private SolrStockRepository solrStockRepository;
 
 

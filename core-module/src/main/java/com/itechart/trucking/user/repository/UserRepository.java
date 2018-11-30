@@ -48,7 +48,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
                     @Param("city") String city, @Param("street") String street, @Param("houseNumber") String houseNumber, @Param("flatNumber") String flatNumber);
 
 
-    @Query(value = "SELECT * FROM users WHERE CAST(birth_day AS text) LIKE :birthDay", nativeQuery = true)
+    @Query(value = "SELECT * FROM users JOIN company c2 on users.company = c2.id WHERE CAST(birth_day AS text) LIKE :birthDay", nativeQuery = true)
     List<User> customFindUsersByBirthDay(@Param("birthDay") String birthDay);
 
     User findUserByIdAndUsername(Long id, String username);
@@ -59,7 +59,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     User findUserById(Long id);
 
     @Query(value = "SELECT new com.itechart.trucking.user.statistics.UserStatisticsDto(u.userRole,count(u)) from User u group by u.userRole")
-    List<UserStatisticsDto> getTotalUserStistics();
+    List<UserStatisticsDto> getTotalUserStatistics();
 
 
 }
