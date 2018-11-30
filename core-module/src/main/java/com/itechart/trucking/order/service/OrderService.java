@@ -9,7 +9,6 @@ import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.formData.OrderFormData;
-import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.stock.repository.StockRepository;
@@ -19,8 +18,6 @@ import com.itechart.trucking.waybill.entity.Waybill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -83,7 +80,9 @@ public class OrderService {
         return orderRepository.findByCompany(company,pageable);
     }
 
-
+    public Page<Order> findByCompanyAndWaybillStatus(Long companyId, Long waybillStatus, Pageable pageable){
+        return orderRepository.findByCompanyAndWaybillStatus(companyId,waybillStatus, pageable);
+    }
 
     public List<Order> findCustomQueryOrderByDriver(Long driverId){
         return orderRepository.findCustomQueryOrderByDriver(driverId);
@@ -129,7 +128,7 @@ public class OrderService {
     }
 
     public List<Order> findByDates(java.util.Date startDateAccepted, java.util.Date endDateAccepted, Long company){
-        return orderRepository.findBydates(startDateAccepted,endDateAccepted,company);
+        return orderRepository.findByDates(startDateAccepted,endDateAccepted,company);
     }
 
     public List<Order> findAllByStatus(Integer status){

@@ -52,4 +52,12 @@ public class ProductService {
     public Optional<Product> findById(Long productId) {
         return productRepository.findById(productId);
     }
+
+    public void saveProduct(String name, Integer status, String description, Long id, Double price, Integer count) {
+        productRepository.saveProduct(name, status, description, id, price, count);
+    }
+
+    public void deleteWhereConsignmentId(Long consignmentId) {
+        productRepository.deleteWhereConsignmentId(consignmentId);
+    }
 }

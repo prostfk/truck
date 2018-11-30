@@ -2,6 +2,7 @@ package com.itechart.trucking.company.service;
 
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.company.statistics.CompanyStatisticsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -68,4 +69,7 @@ public class CompanyService {
     }
 
 
+    public List<CompanyStatisticsDto> getCompanyStatistics() {
+        return companyRepository.getCompanyStatistics();
+    }
 }

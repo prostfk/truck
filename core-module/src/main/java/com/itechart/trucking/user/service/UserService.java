@@ -6,9 +6,9 @@ import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.user.statistics.UserStatisticsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +18,9 @@ import org.json.JSONObject;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -126,4 +125,14 @@ public class UserService {
     public User findUserById(Long id) {
         return userRepository.findUserById(id);
     }
+
+    public List<UserStatisticsDto> getTotalUserStatistics() {
+        return userRepository.getTotalUserStatistics();
+    }
+
+    public User customFindUserByIdAndCompanyId(Long userId, Long companyId) {
+        return userRepository.customFindUserByIdAndCompanyId(userId, companyId);
+    }
+
+
 }

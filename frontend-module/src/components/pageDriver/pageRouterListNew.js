@@ -183,7 +183,7 @@ export class DriverRouterListNew extends Component {
 
     render() {
         return (
-            <div className={'row animated fadeIn'}>
+            <div className={'row animated fadeIn'} style={{overflow: 'hidden'}}>
                 <div className={'col-md-3'}>
                     <ul>
                         <h1>Точки</h1>
@@ -198,7 +198,7 @@ export class DriverRouterListNew extends Component {
                              google={this.props.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
                              className={'map'}
-                             zoom={14}>
+                             zoom={12}>
                             {
                                 this.state.routePoints.map((point, index) => {
                                     return this.setMarksToMap(point, index);
