@@ -146,7 +146,7 @@ public class DispatcherController {
         Waybill savedWaybill = waybillService.save(orderToSave.getWaybill());
         Order savedOrder = orderService.save(orderToSave);
         routeListService.save(new RouteList("Отправление", 1,false, savedOrder.getSender().getLat(),savedOrder.getSender().getLng(),savedWaybill));
-        routeListService.save(new RouteList("Отправление", null,false, savedOrder.getReceiver().getLat(),savedOrder.getReceiver().getLng(),savedWaybill));
+        routeListService.save(new RouteList("Завершение", null,false, savedOrder.getReceiver().getLat(),savedOrder.getReceiver().getLng(),savedWaybill));
         Consignment savedConsignment = consignmentService.save(new Consignment(new Date().toString(), savedOrder));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {

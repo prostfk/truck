@@ -4,6 +4,7 @@ import * as ReactDOM from "react-dom";
 import nonPassedMarker from './img/non-passed-marker.png';
 import passedMarker from './img/passed-marker.png';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import CommonUtil from "../commonUtil/commontUtil";
 
 export class DriverRouterListNew extends Component {
 
@@ -52,6 +53,7 @@ export class DriverRouterListNew extends Component {
 
         // Temp sort
         data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
+        CommonUtil.moveElementInArray(data,this.__findIndexOfPointByPointName(data,"Завершение"),data.length-1);
 
         /*for (let i = 0; i < data.length; i++) {
             console.log(data[i].id);
@@ -139,7 +141,7 @@ export class DriverRouterListNew extends Component {
                 selectedPointStatus: props.pointStatus
             });
         } else {
-            NotificationManager.error("Cann't mark point out of order", "Out of order")
+            NotificationManager.error("Нельзя выбрать эту точку.", "Ошибка")
         }
 
     };
@@ -217,7 +219,7 @@ export class DriverRouterListNew extends Component {
                             </InfoWindow>
                             <Polyline
                                 path={this.state.pathCoordinates}
-                                strokeColor="#CF89F9"
+                                strokeColor="red"
                                 strokeOpacity={0.8}
                                 strokeWeight={2}/>
                             <Polyline
@@ -231,6 +233,14 @@ export class DriverRouterListNew extends Component {
             </div>
         );
 
+    }
+
+    __findIndexOfPointByPointName(array, name){
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].point === name){
+                return i;
+            }
+        }
     }
 
 
