@@ -3,6 +3,7 @@
 import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-react';
 import * as ReactDOM from "react-dom";
 import redMarker from '../pageDriver/img/non-passed-marker.png';
+import CommonUtil from "../commonUtil/commontUtil";
 
 
 export class ManagerRouteList extends Component {
@@ -35,11 +36,14 @@ export class ManagerRouteList extends Component {
     componentDidMount() {
         this.getRouteList().then(data => {
             let level = 0;
-            data.forEach(point => {
-                if (level < point.pointLevel) {
-                    level = point.pointLevel;
-                }
-            });
+            data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
+            CommonUtil.moveElementInArray(data,this.__findIndexOfPointByPointName(data,"Завершение"),data.length-1);
+
+            // data.forEach(point => {
+            //     if (level < point.pointLevel) {
+            //         level = point.pointLevel;
+            //     }
+            // });
             this.setState({routePoints: data, pointLevel: level + 1});
             if (data[0]){
                 this.setState({mapCenter: {lat: data[0].lat, lng: data[0].lng}})
@@ -218,6 +222,15 @@ export class ManagerRouteList extends Component {
         );
 
     }
+
+    __findIndexOfPointByPointName(array, name){
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].point === name){
+                return i;
+            }
+        }
+    }
+
 }
 
 export default GoogleApiWrapper({
