@@ -2,6 +2,8 @@ package com.itechart.trucking.client.service;
 
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.solrEntity.SolrClient;
+import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.entity.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,9 @@ public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
+
+//    @Autowired
+//    private ClientSolrRepository clientSolrRepository;
 
     public Client findClientByName(String name){
         return clientRepository.findClientByName(name);
@@ -38,11 +43,14 @@ public class ClientService {
     }
 
     public Client save(@Valid Client client){
-        return clientRepository.save(client);
+        @Valid Client savedClient = clientRepository.save(client);
+        SolrClient solrClient = SolrClient.solrClientFromClient(savedClient);
+//        clientSolrRepository.save(solrClient);
+        return savedClient;
     }
 
     public Client update(@Valid Client client){
-        return clientRepository.save(client);
+        return save(client);
     }
 
     public void remove(Client client){

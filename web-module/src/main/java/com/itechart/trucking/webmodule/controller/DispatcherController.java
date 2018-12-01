@@ -2,17 +2,15 @@ package com.itechart.trucking.webmodule.controller;
 
 import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
-import com.itechart.trucking.cancellationAct.entity.CancellationAct;
-import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
 import com.itechart.trucking.client.dto.ClientDto;
-import com.itechart.trucking.client.entity.Client;
-import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.solrEntity.SolrClient;
+import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.dto.ConsignmentDto;
 import com.itechart.trucking.consignment.entity.Consignment;
-import com.itechart.trucking.consignment.repository.ConsignmentRepository;
+import com.itechart.trucking.consignment.service.ConsignmentService;
 import com.itechart.trucking.driver.dto.DriverDto;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.formData.OrderFormData;
@@ -20,27 +18,28 @@ import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.dto.OrderDtoCalendar;
 import com.itechart.trucking.order.entity.Order;
-import com.itechart.trucking.order.repository.OrderRepository;
 import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.product.entity.Product;
-import com.itechart.trucking.product.entity.ProductState;
-import com.itechart.trucking.product.repository.ProductRepository;
+import com.itechart.trucking.product.service.ProductService;
+import com.itechart.trucking.routeList.entity.RouteList;
+import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
-import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.stock.service.StockService;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
 import com.itechart.trucking.waybill.dto.WaybillDto;
 import com.itechart.trucking.waybill.dto.WaybillSocketUpdateDto;
 import com.itechart.trucking.waybill.entity.Waybill;
-import com.itechart.trucking.waybill.repository.WaybillRepository;
+import com.itechart.trucking.waybill.service.WaybillService;
+import com.itechart.trucking.webmodule.model.dto.SocketNotification;
 import com.itechart.trucking.webmodule.service.CommonService;
 import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,32 +67,31 @@ public class DispatcherController {
     private UserRepository userRepository;
 
     @Autowired
-    private OrderRepository orderRepository;
-
-    @Autowired
     private CompanyRepository companyRepository;
 
     @Autowired
-    private WaybillRepository waybillRepository;
+    private WaybillService waybillService;
 
     @Autowired
-    private StockRepository stockRepository;
+    private StockService stockService;
 
     @Autowired
     private OrderService orderService;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ConsignmentService consignmentService;
 
     @Autowired
-    private ConsignmentRepository consignmentRepository;
+    private ProductService productService;
 
     @Autowired
-    private ProductRepository productRepository;
+    private RouteListService routeListService;
 
     @Autowired
-    private CancellationActRepository cancellationActRepository;
+    private SolrStockRepository solrStockRepository;
 
+    @Autowired
+    private ClientSolrRepository clientSolrRepository;
 
     @GetMapping(value = "/company/findFreeDrivers")
     public List<DriverDto> findFreeDrivers(@RequestParam String dateFrom, @RequestParam String dateTo) {
@@ -108,7 +106,7 @@ public class DispatcherController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        List<Driver> customQueryDriverByDate = waybillRepository.findFreeDrivers(dateDeparture, dateArrival, user.getCompany().getId());
+        List<Driver> customQueryDriverByDate = waybillService.findFreeDrivers(dateDeparture, dateArrival, user.getCompany().getId());
         return Odt.DriverListToDtoList(customQueryDriverByDate);
     }
 
@@ -125,7 +123,7 @@ public class DispatcherController {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        List<Auto> customQueryAutoByDate = waybillRepository.findFreeAutos(dateDeparture, dateArrival, user.getCompany().getId());
+        List<Auto> customQueryAutoByDate = waybillService.findFreeAutos(dateDeparture, dateArrival, user.getCompany().getId());
         return Odt.AutoListToDtoList(customQueryAutoByDate);
     }
 
@@ -145,16 +143,20 @@ public class DispatcherController {
         User user = userRepository.findUserByUsername(name);
         if(user.getCompany().getActive()==0) return HttpStatus.NOT_ACCEPTABLE;
         Order orderToSave = orderService.getOrderFromDto(orderFormData, name);
-        Waybill savedWaybill = waybillRepository.save(orderToSave.getWaybill());
-        Order savedOrder = orderRepository.save(orderToSave);
-        Consignment savedConsignment = consignmentRepository.save(new Consignment(new Date().toString(), savedOrder));
+        Waybill savedWaybill = waybillService.save(orderToSave.getWaybill());
+        Order savedOrder = orderService.save(orderToSave);
+        routeListService.save(new RouteList("Отправление", 1,false, savedOrder.getSender().getLat(),savedOrder.getSender().getLng(),savedWaybill));
+        routeListService.save(new RouteList("Отправление", null,false, savedOrder.getReceiver().getLat(),savedOrder.getReceiver().getLng(),savedWaybill));
+        Consignment savedConsignment = consignmentService.save(new Consignment(new Date().toString(), savedOrder));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
             //changed product.getStatus().name() on product.getStatus()
-            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
+            productService.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/createOrder/", new SocketNotification("Диспетчер","Создан заказ - " + savedOrder.getName()));
+
         return HttpStatus.OK;
     }
 
@@ -162,28 +164,31 @@ public class DispatcherController {
     @PostMapping(value = "/companies/orders/edit")//todo REDO!!!!!!!!!!!!!!!!!!!!!!!
     public Object editOrder(OrderFormData orderDto, Long orderId, Long waybillId, String consignment, Long consignmentId, HttpServletRequest request) throws ParseException, JSONException {
         JSONObject json = new JSONObject();
+        User user = commonService.getCurrentUser();
         Order orderFromDto = orderService.getOrderFromDto(orderDto, SecurityContextHolder.getContext().getAuthentication().getName());
         orderFromDto.setId(orderId);
         orderFromDto.getWaybill().setId(waybillId);
-        Waybill savedWaybill = waybillRepository.save(orderFromDto.getWaybill());
-        Order savedOrder = orderRepository.save(orderFromDto);
+        Waybill savedWaybill = waybillService.save(orderFromDto.getWaybill());
+        Order savedOrder = orderService.save(orderFromDto);
         Consignment consignment1 = new Consignment(new Date().toString(), savedOrder);
         consignment1.setId(consignmentId);
-        Consignment savedConsignment = consignmentRepository.save(consignment1);
+        Consignment savedConsignment = consignmentService.save(consignment1);
         JSONArray jsonArray = new JSONArray(consignment);
-        productRepository.deleteWhereConsignmentId(consignmentId);
+        productService.deleteWhereConsignmentId(consignmentId);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = new JSONObject(jsonArray.get(i).toString());
             Product product = getProductFromJsonFile(jsonObject);
-            productRepository.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
+            productService.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
+
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/editOrder/", new SocketNotification("Диспетчер","Изменен заказ - " + orderDto.getName()));
         return HttpStatus.OK;
 
     }
 
     @GetMapping(value = "/orders/{id}/consignment")
     public Object getConsignments(@PathVariable Long id) {
-        Order orderById = orderRepository.findOrderById(id);
+        Order orderById = orderService.findOrderById(id);
         Consignment consignment = orderById.getConsignment();
         ConsignmentDto consignmentDto = new ConsignmentDto(consignment);
         consignmentDto.setProductList(consignment.getProductList());
@@ -192,7 +197,7 @@ public class DispatcherController {
 
     @GetMapping(value = "/orders/{id}")
     public OrderDto findOrderById(@PathVariable Long id) {
-        Order orderById = orderRepository.findOrderById(id);
+        Order orderById = orderService.findOrderById(id);
         OrderDto orderDto = new OrderDto(orderById);
         orderDto.setClient(orderById.getClient());
         orderDto.setCompany(orderById.getCompany());
@@ -204,8 +209,13 @@ public class DispatcherController {
 
     @GetMapping(value = "/clients/findClientsByNameLike")//todo correct search
     public List<ClientDto> findClientsByNameLike(@RequestParam String name) {
-        List<Client> clientsByNameLikeIgnoreCase = clientRepository.findClientsByNameLikeIgnoreCase(String.format("%%%s%%", name));
-        return Odt.ClientListToDtoList(clientsByNameLikeIgnoreCase);
+//        clientSolrRepository.deleteAll();
+//        Iterable<Client> all = clientRepository.findAll();
+//        clientSolrRepository.saveAll(Odt.ClientsToSolrClientsList(all));
+
+        List<SolrClient> byName = clientSolrRepository.findByName(name);
+
+        return Odt.SolrClientsListToDtoList(byName);
     }
 
     @GetMapping(value = "/companies/findCompaniesByNameLike")//todo correct search
@@ -224,7 +234,7 @@ public class DispatcherController {
 
     @GetMapping(value = "/companies/stocks/findStocksByAddressLike")//todo correct search
     public List<StockDto> findStocksByNameLike(@RequestParam String address) {
-        List<Stock> stocksByAddressLike = stockRepository.findStocksByAddressLike(String.format("%%%s%%", address));
+        List<Stock> stocksByAddressLike = stockService.findStocksByAddressLike(String.format("%%%s%%", address));
         return Odt.StockListToDtoList(stocksByAddressLike);
     }
 
@@ -233,24 +243,13 @@ public class DispatcherController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userRepository.findUserByUsername(name);
         try {
-            return Odt.StockListToDtoList(stockRepository.findStockByCompanyAndActive(userByEmail.getCompany(), true));
+            return Odt.StockListToDtoList(stockService.findStockByCompanyAndActive(userByEmail.getCompany(), true));
         } catch (NullPointerException e) {
             e.printStackTrace();
             JSONObject json = new JSONObject();
             json.put("error", "No stocks");
             return json.toString();
         }
-    }
-
-    @GetMapping(value = "/testUser")
-    public Object getUserDetails() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put("name", SecurityContextHolder.getContext().getAuthentication().getName());
-        json.put("details", SecurityContextHolder.getContext().getAuthentication().getDetails());
-        json.put("principal", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        json.put("credentials", SecurityContextHolder.getContext().getAuthentication().getCredentials());
-        json.put("authorities", SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        return json.toString();
     }
 
     @PostMapping(value = "/orders/createConsignment")
@@ -286,9 +285,9 @@ public class DispatcherController {
         LocalDate localDateTo = LocalDate.parse(to);
         Date localDateToDate = Date.from(localDateTo.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<Order> orders = orderRepository.findBydates(localDateFromDate,localDateToDate,user.getCompany().getId());
+        List<Order> orders = orderService.findByDates(localDateFromDate,localDateToDate,user.getCompany().getId());
 
-        List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders,item -> new OrderDtoCalendar(item));
+        List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders, OrderDtoCalendar::new);
         return orderDtoCalendars;
     }
 
@@ -302,8 +301,8 @@ public class DispatcherController {
         Long daysOffset = Long.parseLong(daysOffsetS);
         if(orderId==null || daysOffset==null) return false;
 
-        Order order = orderRepository.findOrderById(orderId);
-        if(userByEmail.getCompany().getId()!=orderRepository.findOrderById(orderId).getCompany().getId()) return false;
+        Order order = orderService.findOrderById(orderId);
+        if(userByEmail.getCompany().getId()!=orderService.findOrderById(orderId).getCompany().getId()) return false;
         Waybill waybill = order.getWaybill();
 
         LocalDate localDateDep = waybill.getDateDeparture().toLocalDate().plusDays(daysOffset);
@@ -312,7 +311,7 @@ public class DispatcherController {
         waybill.setDateDeparture(java.sql.Date.valueOf(localDateDep));
         waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
 
-        waybillRepository.save(waybill);
+        waybillService.save(waybill);
 
         WaybillSocketUpdateDto waybillSocketUpdateDto = new WaybillSocketUpdateDto();
         waybillSocketUpdateDto.setUpdaterUser(userByEmail.getId());
@@ -321,21 +320,21 @@ public class DispatcherController {
         waybillSocketUpdateDto.setCompanyId(userByEmail.getCompany().getId());
         waybillSocketUpdateDto.setWaybillDto(new WaybillDto(waybill));
 
-        stompService.sendNotification("/topic/dispatcher", waybillSocketUpdateDto);
+        stompService.sendNotification("/topic/"+userByEmail.getCompany().getId()+"/calendarUpdate", waybillSocketUpdateDto);
 
         return true;
     }
 
     private Boolean checkDatesForFreeAutosAndDrivers(Company company,Waybill waybill, java.sql.Date localDateDep, java.sql.Date localDateArr){
         boolean driverIsFree = false,autoIsFree=false;
-        List<Driver> freeDrivers = waybillRepository.findFreeDriversToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
+        List<Driver> freeDrivers = waybillService.findFreeDriversToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
         for (Driver driver:freeDrivers) {
             if (driver.getId()==waybill.getDriver().getId()){
                 driverIsFree=true;
                 break;
             }
         }
-        List<Auto> freeAutos = waybillRepository.findFreeAutosToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
+        List<Auto> freeAutos = waybillService.findFreeAutosToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
         for (Auto auto:freeAutos) {
             if (auto.getId()==waybill.getAuto().getId()){
                 autoIsFree=true;
@@ -344,6 +343,12 @@ public class DispatcherController {
         }
 
         return (driverIsFree && autoIsFree);
+    }
+
+    @GetMapping(value = "/findStock")
+    public List findStocks(@RequestParam Boolean active, @RequestParam String name){
+        User userByUsername = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        return solrStockRepository.findAllByCompanyIdAndActiveAndName(userByUsername.getCompany().getId(),active,name);
     }
 
 

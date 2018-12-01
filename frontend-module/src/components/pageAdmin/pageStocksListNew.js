@@ -1,9 +1,11 @@
 import React from "react";
-import ModalAcceptDelete from "./modalAcceptDelete";
+import ModalAcceptDelete, {RemoveIcon} from "./modalAcceptDelete";
 import CreateStockModal from "./modalComponentCreateStock";
 import EditStockModal from "./modalComponentEditStock";
 /*import PropTypes from "prop-types";*/
 import Pagination from "react-js-pagination";
+import {NotificationManager} from "react-notifications";
+import ValidationUtil from "../commonUtil/validationUtil";
 
 export default class PageStockListNew extends React.Component {
     constructor(props) {
@@ -21,7 +23,9 @@ export default class PageStockListNew extends React.Component {
             stockName:"",
             stockAddress:"",
             totalElements:0,
-            currentPage:1
+            currentPage:1,
+            searchStockName: '',
+            searchStocks: []
         };
         document.title = "Склады"
     }
@@ -33,6 +37,13 @@ export default class PageStockListNew extends React.Component {
         }).then(function (result) {
             refthis.setState({stocks:result})
         })
+    };
+
+    changeInput = (event) => {
+        this.setState({
+            [event.target.id]: [event.target.value]
+        });
+        console.log(this.state.searchStockName)
     };
 
     setCompanyName(event) {
@@ -58,7 +69,9 @@ export default class PageStockListNew extends React.Component {
                 // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
                 this.setState({stockName:"",stockAddress:""})
             })
-        }, err => console.log(err))
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     }
 
     getStockList(pageid=1){
@@ -118,14 +131,14 @@ export default class PageStockListNew extends React.Component {
             } else {
                 /* document.getElementById('error-form-span').innerText = data.error;*/
             }
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
+        });
     }
 
     renderTable(stock){
-        console.log("stock name"+ stock.name);
-        console.log(stock);
         if(!stock) return;
-        return <div className={"row table_row animated fadeInUp"}>
+        return <div className={"row table_row animated fadeInUp"} key={stock.id}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"col-md-5"}>{stock.name}</div>
             <div className={"col-md-4"}>{stock.address}</div>
@@ -152,50 +165,137 @@ export default class PageStockListNew extends React.Component {
             if (result) {
                 ref.setState({stocks:result})
             }
-        }).catch((err) => {
-            console.log(err);
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
-    render(){
-        return <div className="row">
-            <div className="offset-md-1 col-md-6 superuserform_companylist">
-                <div className="row table_header">
-                    <div className="col-md-1">ID</div>
-                    <div className="col-md-5">Название склада</div>
-                    <div className="col-md-4">Адрес</div>
-                    <div className="col-md-1"/>
-                    <div className="col-md-1"/>
-                </div>
-                {
-                    this.state.stocks.map((element)=>{
-                        return this.renderTable(element);
-                    })
-                }
 
-                <div className="table_footer">
-                    <div>
-                        <Pagination
-                            activePage={this.state.currentPage}
-                            totalItemsCount={this.state.totalElements}
-                            itemsCountPerPage={5}
-                            pageRangeDisplayed={5}
-                            hideDisabled={true}
-                            itemClass={"page-item"}
-                            linkClass={"page-link"}
-                            activeClass={"activePage"}
-                            onChange={this.handlePageChange}
-                        />
+    searchStocks = () => {
+        let name = ValidationUtil.getStringFromUnnownObject(this.state.searchStockName);
+        console.log(name);
+        fetch(`http://localhost:8080/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+            return response.json();
+        }).then(data=>{
+            console.log(data);
+            if (Array.isArray(data)){
+                if (data.length === 0){
+                    document.getElementById('error-stocks-list').innerText = 'Такого склада нет';
+                    document.getElementById('stocks-ul').innerHTML = '';
+                }else {
+                    document.getElementById('error-stocks-list').innerText = '';
+                    this.setState({searchStocks: data});
+                }
+            }else{
+                NotificationManager.error('Ошибка');
+            }
+        }).catch(()=>{
+            NotificationManager.error('Ошибка ');
+        });
+    };
+
+    render(){
+        let paginationTableStyle = this.state.searchStocks.length === 0 ? {display: ''} : {display: 'none'};
+        let searchTableStyle = this.state.searchStocks.length !== 0 ? {display: ''} : {display: 'none'};
+        return <>
+            <div className="row" style={paginationTableStyle}>
+                <div className="offset-md-1 col-md-6 superuserform_companylist">
+                    <div className="row table_header animated fadeIn">
+                        <div className="col-md-1">ID</div>
+                        <div className="col-md-5">Название склада</div>
+                        <div className="col-md-4">Адрес</div>
+                        <div className="col-md-1"/>
+                        <div className="col-md-1"/>
+                    </div>
+                    {
+                        this.state.stocks.map((element)=>{
+                            return this.renderTable(element);
+                        })
+                    }
+
+                    <div className="table_footer">
+                        <div>
+                            <Pagination
+                                activePage={this.state.currentPage}
+                                totalItemsCount={this.state.totalElements}
+                                itemsCountPerPage={5}
+                                pageRangeDisplayed={5}
+                                hideDisabled={true}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
+                                activeClass={"activePage"}
+                                onChange={this.handlePageChange}
+                            />
+                        </div>
                     </div>
                 </div>
+
+                <div className="offset-md-1 col-md-2">
+                    <form className="superuserform_newaccountform grey_form animated fadeIn">
+                        <CreateStockModal/>
+                        {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
+                    </form>
+                    <div className={'superuserform_newaccountform grey_form animated fadeIn'}>
+                        <h4>Поиск склада</h4>
+                        <small>Введите название склада:</small>
+                        <input type="text" onChange={this.changeInput} id={'searchStockName'} className="form-control"/>
+                        <button className="btn btn-primary" onClick={this.searchStocks}>Поиск</button>
+                        <small className="error-span" id={'error-stocks-list'}/>
+                    </div>
+                    <ul id={'stocks-ul'} className={'list-group'}/>
+
+                </div>
+
+            </div>
+            <div className="row" style={searchTableStyle}>
+                <div className="offset-md-1 col-md-6 superuserform_companylist">
+                    <div className="row table_header animated fadeIn">
+                        <div className="col-md-1">ID</div>
+                        <div className="col-md-5">Название склада</div>
+                        <div className="col-md-4">Адрес</div>
+                        <div className="col-md-1" onClick={()=>this.setState({searchStocks: []})}>Закрыть поиск</div>
+                        <div className="col-md-1" onClick={()=>this.setState({searchStocks: []})}><RemoveIcon/></div>
+                    </div>
+                    {
+                        this.state.searchStocks.map((element)=>{
+                            return this.renderTable(element);
+                        })
+                    }
+
+                    <div className="table_footer">
+                        <div>
+                            <Pagination
+                                activePage={this.state.currentPage}
+                                totalItemsCount={this.state.totalElements}
+                                itemsCountPerPage={5}
+                                pageRangeDisplayed={5}
+                                hideDisabled={true}
+                                itemClass={"page-item"}
+                                linkClass={"page-link"}
+                                activeClass={"activePage"}
+                                onChange={this.handlePageChange}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="offset-md-1 col-md-2">
+                    <form className="superuserform_newaccountform grey_form animated fadeIn">
+                        <CreateStockModal/>
+                        {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
+                    </form>
+                    <div className={'superuserform_newaccountform grey_form animated fadeIn'}>
+                        <h4>Поиск склада</h4>
+                        <small>Введите название склада:</small>
+                        <input type="text" onChange={this.changeInput} id={'searchStockName'} className="form-control"/>
+                        <button className="btn btn-primary" onClick={this.searchStocks}>Поиск</button>
+                        <small className="error-span" id={'error-stocks-list'}/>
+                    </div>
+                    <ul id={'stocks-ul'} className={'list-group'}/>
+
+                </div>
+
             </div>
 
-            <div className="offset-md-1 col-md-2">
-                <form className="superuserform_newaccountform grey_form">
-                    <CreateStockModal/>
-                    {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
-                </form>
-            </div>
-
-        </div>
+        </>
     }
 }

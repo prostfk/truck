@@ -5,6 +5,7 @@ import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 
 import {EditIcon} from "./pageAutoList";
+import {NotificationManager} from "react-notifications";
 /*import {edit} from 'react-icons-kit/fa/edit'*/
 
 /*const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
@@ -51,7 +52,7 @@ export default class UsersList extends Component {
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
-                throw new Error('Ошибка доступа');
+                NotificationManager.error('Ошибка доступа');
             } else {
                 return response.json();
             }
@@ -63,6 +64,8 @@ export default class UsersList extends Component {
                 totalElements: data.totalElements,
                 currentPage: ++data.number
             })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка доступа');
         })
     };
 
@@ -118,7 +121,7 @@ export default class UsersList extends Component {
     render() {
         return <div className={'row'}>
             <div className="offset-md-1 col-md-5 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     {/*<div className="col-md-1">Id</div>*/}
                     <div className="col-md-3">Никнейм</div>
                     <div className="col-md-3">Роль</div>
@@ -148,7 +151,7 @@ export default class UsersList extends Component {
                 </div>
             </div>
 
-            <div className="offset-md-1 col-md-4" id={'add-user-form'}>
+            <div className="offset-md-1 col-md-4 animated fadeIn" id={'add-user-form'}>
                 <CreateUser/>
             </div>
         </div>

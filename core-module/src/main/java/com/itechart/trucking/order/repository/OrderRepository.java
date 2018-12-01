@@ -1,6 +1,7 @@
 package com.itechart.trucking.order.repository;
 
 import com.itechart.trucking.auto.entity.Auto;
+import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.driver.entity.Driver;
 import com.itechart.trucking.order.dto.OrderDtoCalendar;
@@ -19,9 +20,6 @@ import java.util.List;
 public interface OrderRepository extends CrudRepository<Order, Long> {
     List<Order> findAllByCompany(Company company);
 
-/*    @Query("select o From Order o where o.waybill_id IN (select w.id FROM Waybill w where w.driver.id = :driverId) and o.status='Accepted'")
-    List<Order> findCustomQueryOrderByDriver(@Param("driverId") Long driverId);*/
-
     Order findOrderById(Long id);
 
     Page<Order> findByCompany(Company company, Pageable pageable);
@@ -34,10 +32,6 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     @Query(value = "UPDATE orders SET name=:orderName, client_id=:clientId, sender=:sender, receiver=:receiver, date_accepted=:dateDeparture, date_executed=:dateArrival, waybill_id=:waybillId, company_id=:companyId WHERE id=:orderId", nativeQuery = true)
     Order updateOrder(@Param("orderId")Long orderId, @Param("orderName") String orderName,@Param("clientId") Long clientId, @Param("sender") Long sender,@Param("receiver") Long receiver, @Param("dateDeparture") String dateDeparture, @Param("dateArrival") String dateArrival,@Param("waybillId")Long waybillId,@Param("companyId") Long companyId);
-
-/*    @Query(value = "select count(*) from orders where company_id=1 and date_accepted >= date_trunc('month', now()) - interval '6 month' and\n" +
-            "                           date_accepted < date_trunc('month', now()) group by extract(month from date_accepted)", nativeQuery = true)
-    List<Order> findCustomQueryOrderByDateAcceptedLastSixMont(String companyId);    */
 
     @Query(value = "select * from orders where company_id=:companyId and date_trunc('month',date_accepted) >= date_trunc('month', now()) - interval '6 month' and\n" +
             "                           date_trunc('month',date_accepted) <= date_trunc('month', now())", nativeQuery = true)
@@ -54,6 +48,10 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     List<Order> findOrdersByDateAcceptedBetweenAndCompany(Date startDateAccepted, Date endDateAccepted,Company company);
 
+    @Query(value = "select * from orders where company_id=:companyId and client_id=:clientId and date_trunc('month',date_executed) >= date_trunc('month', now()) - interval '6 month' and\n" +
+            "                           date_trunc('month',date_executed) <= date_trunc('month', now())", nativeQuery = true)
+    List<Order> findCustomQueryOrderByDateExecutedLastSixMontAndClientAndCompany(@Param("companyId") Long companyId,@Param("clientId") Long clientId);
+
     @Query(value = "SELECT *\n" +
             "FROM orders INNER JOIN waybill on orders.waybill_id = waybill.id\n" +
             "where (\n" +
@@ -62,12 +60,10 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
             "   or (date_departure > :startDate and date_arrival<:endDate)\n" +
             "       )\n" +
             "  and company_id=:company", nativeQuery = true)
-    List<Order> findBydates(@Param("startDate") Date startDateAccepted, @Param("endDate") Date endDateAccepted, @Param("company") Long company);
+    List<Order> findByDates(@Param("startDate") Date startDateAccepted, @Param("endDate") Date endDateAccepted, @Param("company") Long company);
 
-/*    @Query("select o From Order o where ((o.dateAccepted between :startDate and :endDate) or (o.dateExecuted between :startDate and :endDate) or (o.dateAccepted > :startDate and  o.dateExecuted<:endDate) )and o.company=:company")
-    List<Order> findBydates(@Param("startDate") Date startDateAccepted,@Param("endDate") Date endDateAccepted,@Param("company") Company company);
-   */
-    /*    @Query("select a From Auto a where a.id not IN (select w.auto.id FROM Waybill w where w.auto.id = :companyId GROUP BY w.auto.id)")
-    List<Auto> findCustomQueryAutoByDate(@Param("companyId") Long companyId);*/
     List<Order> findAllByStatus(Integer status);
+
+    @Query(value = "SELECT * FROM orders JOIN waybill ON orders.waybill_id = waybill.id WHERE company_id=:companyId AND waybill.status=:waybillStatus LIMIT ?#{#pageable.offset}|?#{#pageable.pageSize}", nativeQuery = true)
+    Page<Order> findByCompanyAndWaybillStatus(@Param("companyId") Long companyId, @Param("waybillStatus") Long waybillStatus, Pageable pageable);
 }

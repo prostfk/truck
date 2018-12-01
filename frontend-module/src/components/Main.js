@@ -11,6 +11,7 @@ import HeaderElement from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
+import PageOwnerClientStats from "./pageOwner/pageOwnerClientStat";
 
 import DriverRouterListNew from "./pageDriver/pageRouterListNew";
 //import DriverRouteList from "./pageDriver/pageRouteList";
@@ -33,14 +34,15 @@ import OwnerWaybill from "./pageOwner/pageOwnerWaybill";
 import CancellationAct from "./pageOwner/pageOwnerCancellationAct";
 import EditUser from "./pageAdmin/pageEditUser";
 import SendEmail from "./pageAdmin/emailSendPage";
-import DriverConsignment from "./pageDriver/pageConsignment";
+/*import DriverConsignment from "./pageDriver/pageConsignment";*/
 import OwnerCompanyClients from "./pageOwner/pageOwnerCompanyClients";
 import OwnerUsersList from "./pageOwner/pageOwnerUsersList";
 import OwnerStockList from "./pageOwner/pageOwnerStockList";
 //import TestComponent from "./testComponent/testComponent";
 import PageStockListNew from "./pageAdmin/pageStocksListNew";
 import CreateStockModal from "./pageAdmin/modalComponentCreateStock";
-
+import NotificationsErrorHandler from "./errorWindows/notificationErrorHandler";
+import WelcomePage from "./PagesCommon/welcomePages/welcomePage";
 
 class MainController extends React.Component {
 
@@ -49,9 +51,11 @@ class MainController extends React.Component {
             <Router>
                 <div>
                     <Route path="/*" component={HeaderElement}/>
-                    <Route path="/registration" component={registration}/>
-                    <Route path="/usersList" component={UsersList}/>
-                    <Route path="/user/:userId/edit" component={EditUser}/>
+                    <Route path="/*" component={NotificationsErrorHandler}/>
+                    <Route exact path="/" component={WelcomePage}/>
+                    <Route exact path="/registration" component={registration}/>
+                    <Route exact path="/usersList" component={UsersList}/>
+                    <Route exact path="/user/:userId/edit" component={EditUser}/>
                     <Route exact path="/sendEmail" component={SendEmail}/>
                     <Route exact path="/auth" component={pageUserLogin}/>
                     <Route exact path="/test" component={CreateStockModal}/>{/*ADD STOCKS IN THIS PATH*/}
@@ -68,7 +72,7 @@ class MainController extends React.Component {
                     <Route exact path="/orders/createOrder/:consignmentId" component={EditConsignment}/>
                     <Route exact path="/myorders/" component={DriverOrderList}/> {/*driver*/}
                     <Route exact path="/myorders/routelist/:orderrouteListId" component={DriverRouterListNew}/> {/*driver*/}
-                    <Route exact path="/driver/consignment/:consignmentId" component={DriverConsignment}/> {/*driver*/}
+                    {/*<Route exact path="/driver/consignment/:consignmentId" component={DriverConsignment}/>*/} {/*driver*/}
                     <Route exact path="/manager/orders" component={pageManagerOrders}/>
                     {/*<Route path="/manager/edit/*" component={ManagerHeader}/>*/}
                     <Route exact path="/manager/edit/consignment/:orderId" component={ManagerConsignment}/>
@@ -82,6 +86,7 @@ class MainController extends React.Component {
                     <Route exact path="/owner/usersList" component={OwnerUsersList}/>
                     <Route exact path="/owner/stocks" component={OwnerStockList}/>
                     <Route exact path="/owner/clients" component={OwnerCompanyClients}/>
+                    <Route exact path="/owner/client/:clientId" component={PageOwnerClientStats}/>
 
                 </div>
 

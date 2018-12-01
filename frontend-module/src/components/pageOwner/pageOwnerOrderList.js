@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 class OwnerOrderList extends React.Component {
     constructor(props) {
@@ -30,6 +31,8 @@ class OwnerOrderList extends React.Component {
         }).then(function (result) {
             console.log(result);
             return result;
+        }).catch(()=>{
+            NotificationManager.error('Ошибка');
         });
     }
 
@@ -59,7 +62,7 @@ class OwnerOrderList extends React.Component {
     render() {
         return <div className="row">
             <div className="offset-md-1 col-md-10 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">Клиент</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>

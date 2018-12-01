@@ -131,7 +131,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
     render() {
         let asd = this;
-        return <div className="row">
+        return <div className="row animated fadeIn">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <NotificationContainer/>
                 <h1>Календарь заказов</h1>
@@ -156,7 +156,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         showNonCurrentDates={false}
                         ref={(input) => { this.state.myref = input; }}
                     />
-                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/dispatcher']}
+                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
                                   onMessage={(msg) => {
                                       this.handleMessage(msg);
                                   }}

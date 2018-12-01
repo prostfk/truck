@@ -41,7 +41,7 @@ export class ManagerRouteList extends Component {
                 }
             });
             this.setState({routePoints: data, pointLevel: level + 1});
-            if (data[0]!==null){
+            if (data[0]){
                 this.setState({mapCenter: {lat: data[0].lat, lng: data[0].lng}})
             }
         });
@@ -68,9 +68,6 @@ export class ManagerRouteList extends Component {
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             return response.json();
-        }).then(function (result) {
-            console.log(result);
-            return result;
         });
     }
 
@@ -181,7 +178,7 @@ export class ManagerRouteList extends Component {
 
     render() {
         return (
-            <div className={'row'}>
+            <div className={'row animated fadeIn'} style={{overflow: 'hidden'}}>
                 <div className={'col-md-3'}>
                     <ul>
                         <h1>Точки</h1>

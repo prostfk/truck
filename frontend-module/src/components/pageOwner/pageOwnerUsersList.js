@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
+import {NotificationManager} from "react-notifications";
 
 export default class UsersList extends Component {
 
@@ -33,7 +34,9 @@ export default class UsersList extends Component {
                 totalElements: data.totalElements,
                 currentPage: ++data.number
             })
-        })
+        }).catch(()=>{
+            NotificationManager.error('Ошибка доступа');
+        });
     };
 
     handlePageChange(pageNumber) {
@@ -69,7 +72,7 @@ export default class UsersList extends Component {
     render() {
         return <div className={'row'}>
             <div className="offset-md-1 col-md-5 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     {/*<div className="col-md-1">Id</div>*/}
                     <div className="col-md-4">Никнейм</div>
                     <div className="col-md-4">Роль</div>

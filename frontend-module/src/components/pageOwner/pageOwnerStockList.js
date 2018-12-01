@@ -57,14 +57,9 @@ export default class PageStockListNew extends React.Component {
                 currentPage: ++data.number
             });
         });
-
-        console.log(this.state);
-        console.log("im updating!");
     }
 
     renderTable(stock) {
-        console.log("stock name" + stock.name);
-        console.log(stock);
         if (!stock) return;
         return <div className={"row table_row animated fadeInUp"}>
             <div className={"col-md-1"}>{stock.id}</div>
@@ -76,7 +71,7 @@ export default class PageStockListNew extends React.Component {
     render() {
         return <div className="row">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
-                <div className="row table_header">
+                <div className="row table_header animated fadeIn">
                     <div className="col-md-1">ID</div>
                     <div className="offset-md-1 col-md-5">Название склада</div>
                     <div className="offset-md-1 col-md-4">Адрес</div>

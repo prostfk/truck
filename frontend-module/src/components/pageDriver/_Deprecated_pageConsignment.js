@@ -1,5 +1,7 @@
+/*
 import React, {Component} from "react";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {NotificationManager} from "react-notifications";
 
 class DriverConsignment extends Component {
 
@@ -65,7 +67,7 @@ class DriverConsignment extends Component {
         });
     }
 
-    /*get active orders*/
+    /!*get active orders*!/
     getProductList() {
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
@@ -82,7 +84,7 @@ class DriverConsignment extends Component {
         });
     }
 
-    /*render row of table ( calls from html ) */
+    /!*render row of table ( calls from html ) *!/
     renderTable(product, index) {
         console.log(product);
         if (!product) return;
@@ -113,28 +115,39 @@ class DriverConsignment extends Component {
         </div>
     }
 
-    setLostState(/*productId*/) {
+    setLostState(/!*productId*!/) {
         this.toggleModalCancellation();
+        if (this.state.remainsOfSelectedProduct < 0){
+            NotificationManager.error('Количество товаров не может быть меньше 0');
+        }else {
+            let productId = this.state.products[this.state.selectedProductIndex].id;
+            let cancel = this.state.countOfSelectedProduct - this.state.remainsOfSelectedProduct;
 
-        let productId = this.state.products[this.state.selectedProductIndex].id;
-        let cancel = this.state.countOfSelectedProduct - this.state.remainsOfSelectedProduct;
-
-        let split = document.location.href.split('/');
-        let orderId = split[split.length - 1];
-        const ref = this;
-        fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/cancelProduct/${productId}?cancel=${cancel}`, {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
-            ref.forceUpdateHandler(result);
-            return result;
-        }).catch((err) => {
-            console.log(err);
-        });
+            let split = document.location.href.split('/');
+            let orderId = split[split.length - 1];
+            const ref = this;
+            fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/cancelProduct/${productId}?cancel=${cancel}`, {
+                method: "GET",
+                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            }).then(function (response) {
+                return response.json();
+            }).then(function (result) {
+                console.log(result);
+                ref.forceUpdateHandler(result);
+                return result;
+            }).catch((err) => {
+                NotificationManager.error('Количество товаров не может быть меньше 0');
+            });
+        }
     }
+
+    valButton = () => {
+        if (this.state.remainsOfSelectedProduct >= 0){
+            return  <Button color="danger" onClick={this.setLostState}>Списать</Button>
+        }else{
+            return "";
+        }
+    };
 
     render() {
         return (
@@ -159,7 +172,7 @@ class DriverConsignment extends Component {
                         </ModalBody>
 
                         <ModalFooter className={"logoutForm"}>
-                            <Button color="danger" onClick={this.setLostState}>Списать</Button>
+                            {this.valButton()}
                             <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}} onClick={() => {
                                 this.toggleModalCancellation()
                             }}>Отмена</Button>
@@ -167,7 +180,7 @@ class DriverConsignment extends Component {
                     </form>
                 </Modal>
 
-                <div className="offset-md-1 col-md-8 form_clear">
+                <div className="offset-md-1 col-md-8 form_clear animated fadeIn">
                     <h3>Товарная партия</h3>
                     <div className="row table_header">
                         <div className="col-md-3">Наименование</div>
@@ -187,4 +200,4 @@ class DriverConsignment extends Component {
     }
 }
 
-export default DriverConsignment;
+export default DriverConsignment;*/

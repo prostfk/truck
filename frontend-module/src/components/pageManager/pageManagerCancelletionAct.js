@@ -27,7 +27,7 @@ class ManagerCancelletionAct extends Component {
                             <div className="col-md-3">Наименование</div>
                             <div className="col-md-3">Состоние</div>
                             <div className="col-md-3">Количество</div>
-                            <div className="col-md-3"></div>
+                            <div className="col-md-3"/>
                         </div>
 
                         <div className="row table_row">
@@ -39,8 +39,8 @@ class ManagerCancelletionAct extends Component {
                     </div>
                 </div>
 
-                < div className="offset-md-2 col-md-8 form_clear">
-                    < button className="btn btn-success btn_fullsize"> Сохранить</button>
+                <div className="offset-md-2 col-md-8 form_clear">
+                    <button className="btn btn-success btn_fullsize"> Сохранить</button>
                 </div>
             </div>
         );

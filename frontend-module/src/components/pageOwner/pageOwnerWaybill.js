@@ -79,7 +79,7 @@ class OwnerWaybill extends React.Component {
 
     render() {
         return (<div>
-            <div className="row" id={'order-form'}>
+            <div className="row animated fadeIn" id={'order-form'}>
                 <div className="offset-md-3 col-md-6 superuserform_companylist">
                     <div className="row">
                         <div className="col-md-6">

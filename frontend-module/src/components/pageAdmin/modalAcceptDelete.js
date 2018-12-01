@@ -33,7 +33,7 @@ export default class ModalAcceptDelete extends React.Component {
         return (
 
             <div>
-                <a onClick={this.toggle}><RemoveIcon></RemoveIcon></a>
+                <a onClick={this.toggle}><RemoveIcon/></a>
                 <Modal isOpen={this.state.modal}>
                     <form onSubmit={this.handleSubmit}>
                         <ModalHeader>{this.props.headerText}</ModalHeader>

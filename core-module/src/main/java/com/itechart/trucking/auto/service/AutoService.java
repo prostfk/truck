@@ -3,6 +3,7 @@ package com.itechart.trucking.auto.service;
 import com.itechart.trucking.auto.dto.AutoDto;
 import com.itechart.trucking.auto.entity.Auto;
 import com.itechart.trucking.auto.repository.AutoRepository;
+import com.itechart.trucking.auto.statistics.AutoStatisticsDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.user.entity.User;
@@ -44,7 +45,7 @@ public class AutoService {
 
     public AutoDto saveAuto(@Valid AutoDto autoDto,User user) throws JSONException{
         if(autoDto==null) return null;
-                Auto auto = new Auto();
+        Auto auto = new Auto();
         auto.setName(autoDto.getName());
         auto.setCarNumber(autoDto.getCarNumber());
         auto.setFuelConsumption(autoDto.getFuelConsumption());
@@ -77,4 +78,7 @@ public class AutoService {
         return autoDtos;
     }
 
+    public List<AutoStatisticsDto> getAutoStatistics() {
+        return autoRepository.getAutoStatistics();
+    }
 }

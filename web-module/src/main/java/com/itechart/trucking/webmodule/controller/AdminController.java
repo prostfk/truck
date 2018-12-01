@@ -6,11 +6,15 @@ import com.itechart.trucking.auto.service.AutoService;
 import com.itechart.trucking.company.dto.CompanyDto;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.company.service.CompanyService;
 import com.itechart.trucking.driver.repository.DriverRepository;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.repository.StockRepository;
+import com.itechart.trucking.stock.service.StockService;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
@@ -44,33 +48,30 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-    CommonService commonService;
+    private CommonService commonService;
+
     @Autowired
-    UserService userService;
-    @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private AutoService autoService;
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private CompanyService companyService;
 
     @Autowired
-    private StockRepository stockRepository;
+    private StockService stockService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private SolrStockRepository solrStockRepository;
 
-    @Autowired
-    private DriverRepository driverRepository;
 
     @GetMapping(value = "/users")
     public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
         User user = commonService.getCurrentUser();
         Page<User> userPage = userService.findAllByCompany(user.getCompany(),PageRequest.of(pageId-1, 5));
 
-        return userPage.map(userInPage -> new UserDto(userInPage));
+        return userPage.map(UserDto::new);
     }
 
     @PostMapping(value = "/editCompany")
@@ -79,7 +80,7 @@ public class AdminController {
             return getInvalidDataJsonMessage();
         }
 
-        @Valid Company save = companyRepository.save(company);
+        @Valid Company save = companyService.save(company);
         return new CompanyDto(save);
     }
 
@@ -89,7 +90,7 @@ public class AdminController {
         if (result.hasErrors()  || user.getCompany().getId()!=commonService.getCurrentUser().getCompany().getId()) {
             return getInvalidDataJsonMessage();
         }
-        @Valid User save = userRepository.save(user);
+        @Valid User save = userService.save(user);
 
         return save != null ? new UserDto(user) : null;
     }
@@ -99,9 +100,9 @@ public class AdminController {
         User user = commonService.getCurrentUser();
         if (user.getCompany() == null) {
             if (!bindingResult.hasErrors()) {
-                @Valid Company save = companyRepository.save(company);
+                @Valid Company save = companyService.save(company);
                 user.setCompany(save);
-                User save1 = userRepository.save(user);
+                User save1 = userService.save(user);
                 return new UserDto(save1);
             }
         }
@@ -110,29 +111,20 @@ public class AdminController {
 
     @PostMapping(value = "/updateUser")
     public Object updateUser(@Valid UserDto userDto, String password) throws JSONException {
-        JSONObject json = new JSONObject();
-
-        User userById = userRepository.findUserById(userDto.getId());
-        if (userById == null) {
-            json.put("error", "no id attribute on formData object");
-        } else {
-            User userByUsername = commonService.getCurrentUser();
-            json = userService.updateUser(userDto,userByUsername,json,password);
-        }
-        return json.toString();
+        return userService.updateUser(userDto,password).toString();
     }
 
     @PostMapping(value = "/saveUser")
-    public Object saveUser(@Valid UserDto userDto, String password, String passport, String birthDay) throws JSONException {
-        return userService.saveUser(userDto, password, passport, birthDay);
+    public Object saveUser(@Valid UserDto userDto, String password, String passport) throws JSONException {
+        return userService.saveUser(userDto, password, passport);
     }
 
     @PostMapping(value = "/sendEmail")
     public Object sendEmail(String email, String message, String type, @Value("${server.email}") String serverEmail, @Value("${server.password}") String serverPassword) throws JSONException {
         JSONObject json = new JSONObject();
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
-        User byEmailAndCompany = userRepository.findUserByEmailAndCompany(email, userByUsername.getCompany());
+        User userByUsername = userService.findUserByUsername(name);
+        User byEmailAndCompany = userService.findUserByEmailAndCompany(email, userByUsername.getCompany());
         if (byEmailAndCompany!=null){
             try {
                 EmailUtil.sendMail(serverEmail,serverPassword,email,type,message);
@@ -151,8 +143,8 @@ public class AdminController {
     @GetMapping(value = "/checkEmail")
     public Object checkEmailInBaseAndInCurrentCompany(@RequestParam String email) throws JSONException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
-        User byEmailAndCompany = userRepository.findUserByEmailAndCompany(email, userByUsername.getCompany());
+        User userByUsername = userService.findUserByUsername(name);
+        User byEmailAndCompany = userService.findUserByEmailAndCompany(email, userByUsername.getCompany());
         JSONObject json = new JSONObject();
         if (byEmailAndCompany != null) {
             json.put("status", "ok");
@@ -164,7 +156,7 @@ public class AdminController {
 
     @GetMapping(value = "/user/{id}")
     public UserDto findUserById(@PathVariable Long id) {
-        User userById = userRepository.findUserById(id);
+        User userById = userService.findUserById(id);
         if(commonService.getCurrentUser().getCompany().getId()!=userById.getCompany().getId()) return null;
         return new UserDto(userById);
     }
@@ -175,14 +167,13 @@ public class AdminController {
         if (result.hasErrors()) {
             return getInvalidDataJsonMessage();
         }
-
         User userByUsername = commonService.getCurrentUser();
-
-        Stock stock= stockRepository.findStockById(stockDto.getId());
+        Stock stock= stockService.findStockById(stockDto.getId());
         if(stock.getCompany().getId()==userByUsername.getCompany().getId()){
             if(!stockDto.getName().equals("")) stock.setName(stockDto.getName());
             if(!stockDto.getAddress().equals("")) stock.setAddress(stockDto.getAddress());
-            stockRepository.save(stock);
+            Stock save = stockService.save(stock);
+            solrStockRepository.save(SolrStock.solrStockFromStock(save));
         }
         return new StockDto(stock);
     }
@@ -202,21 +193,18 @@ public class AdminController {
     @PutMapping(value = "/changeCompanyName")
     public boolean changeCompanyName(@RequestBody String companyName) {
         if(companyName.equals("")) return false;
-        
         Company company =commonService.getCurrentUser().getCompany();
         if(company==null) return false;
-        
         company.setName(companyName);
-        companyRepository.save(company);
+        companyService.save(company);
         return true;
     }
 
     @GetMapping(value = "/autos")
     public Object findAutos(@RequestParam(value = "page") int pageId) {
         User userByEmail = commonService.getCurrentUser();
-
         Page<Auto> autoPage = autoService.findAllByCompanyAndActive(userByEmail.getCompany(),true,PageRequest.of(pageId-1, 5));
-        return autoPage.map(auto -> new AutoDto(auto));
+        return autoPage.map(AutoDto::new);
     }
 
     @PostMapping(value = "/saveAuto")
@@ -237,7 +225,6 @@ public class AdminController {
     public  List<AutoDto> processRemoveAuto(@RequestBody String idS) throws JSONException {
         final Long id = Long.parseLong(idS);
         User userByEmail = commonService.getCurrentUser();
-
         return autoService.processRemoveAuto(id,userByEmail);
     }
 

@@ -7,6 +7,8 @@ import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.stock.dto.StockDto;
 import com.itechart.trucking.stock.entity.Stock;
 import com.itechart.trucking.stock.service.StockService;
+import com.itechart.trucking.stock.solrEntity.SolrStock;
+import com.itechart.trucking.stock.solrRepository.SolrStockRepository;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.service.UserService;
@@ -32,12 +34,12 @@ public class CommonControllers {
     private UserService userService;
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private StockService stockService;
-
     @Autowired
     private WaybillService waybillService;
+    @Autowired
+    private SolrStockRepository solrStockRepository;
 
 
     // dispatcher | manager
@@ -45,9 +47,13 @@ public class CommonControllers {
     public Object getOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByUsername(name);
-
-        Page<Order> orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
-        return orderPage.map(order -> new OrderDto(order));
+        Page<Order> orderPage;
+        if (user.getUserRole().equals(UserRole.ROLE_DISPATCHER)){
+            orderPage = orderService.findByCompanyAndWaybillStatus(user.getCompany().getId(),1L,PageRequest.of(pageId-1, 5));
+        }else{
+            orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
+        }
+        return orderPage.map(OrderDto::new);
     }
 
     @GetMapping(value = "/stocks")
@@ -57,7 +63,7 @@ public class CommonControllers {
 
         Page<Stock> stockPage = stockService.findStockByCompanyAndActive(userByEmail.getCompany(),true, PageRequest.of(pageId-1, 5));
 
-        return stockPage.map(stock -> new StockDto(stock));
+        return stockPage.map(StockDto::new);
     }
 
     @DeleteMapping(value = "/stocks")
@@ -84,16 +90,15 @@ public class CommonControllers {
     public List<StockDto> createStock(@ModelAttribute Stock stock) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userService.findUserByUsername(name);
-
         Stock stock1 = new Stock();
         stock1.setActive(true);
         stock1.setName(stock.getName());
         stock1.setAddress(stock.getAddress());
         stock1.setCompany(userByEmail.getCompany());
         stock1.setLat(stock.getLat());
-        stock1.setLng(stock.getLng())   ;
-        stockService.save(stock1);
-
+        stock1.setLng(stock.getLng());
+        Stock save = stockService.save(stock1);
+        solrStockRepository.save(SolrStock.solrStockFromStock(save));
         return Odt.StockListToDtoList(userByEmail.getCompany().getCompanyStocks());
 
     }

@@ -1,25 +1,29 @@
 package com.itechart.trucking.webmodule.controller;
 
-import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
-import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
+import com.itechart.trucking.cancellationAct.service.CancellationActService;
 import com.itechart.trucking.consignment.entity.Consignment;
+import com.itechart.trucking.consignment.service.ConsignmentService;
 import com.itechart.trucking.driver.entity.Driver;
-import com.itechart.trucking.driver.repository.DriverRepository;
+import com.itechart.trucking.driver.service.DriverService;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
-import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.order.service.OrderService;
 import com.itechart.trucking.product.dto.ProductDto;
 import com.itechart.trucking.product.entity.Product;
-import com.itechart.trucking.product.entity.ProductState;
-import com.itechart.trucking.product.repository.ProductRepository;
+import com.itechart.trucking.product.service.ProductService;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
-import com.itechart.trucking.routeList.repository.RouteListRepository;
+import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.user.entity.User;
-import com.itechart.trucking.user.repository.UserRepository;
-import org.json.JSONArray;
+import com.itechart.trucking.user.service.UserService;
+import com.itechart.trucking.waybill.dto.WaybillDto;
+import com.itechart.trucking.waybill.entity.Waybill;
+import com.itechart.trucking.waybill.service.WaybillService;
+import com.itechart.trucking.webmodule.model.dto.SocketNotification;
+import com.itechart.trucking.webmodule.service.CommonService;
+import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,42 +41,40 @@ import java.util.Optional;
 public class DriverController {
 
     @Autowired
-    private OrderRepository orderRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private DriverRepository driverRepository;
-    @Autowired
-    private RouteListRepository routeListRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CancellationActRepository cancellationActRepository;
+    private OrderService orderService;
 
-    @PutMapping(value = "/order/{id}/CancellationAct/addProduct")
-    public Object addProductToCancellationAct(@PathVariable Long id, Long productId) throws JSONException {
-        Order orderById = orderRepository.findOrderById(id);
-        Product productById = productRepository.findProductById(productId);
-        CancellationAct cancellationAct = orderById.getConsignment().getCancellationAct();
-        List<Product> product = cancellationAct.getProduct();
-        JSONObject json = new JSONObject();
-        if (!product.contains(productById)) {
-            product.add(productById);
-            orderById.getConsignment().getCancellationAct().setProduct(product);
-            orderRepository.save(orderById);
-            json.put("status", "success");
-        } else {
-            json.put("error", "product is already cancelled");
-        }
-        return json.toString();
+    @Autowired
+    private UserService userService;
 
-    }
+    @Autowired
+    private DriverService driverService;
+
+    @Autowired
+    private RouteListService routeListService;
+
+    @Autowired
+    private CommonService commonService;
+
+    @Autowired
+    private WaybillService waybillService;
+
+    @Autowired
+    private StompService stompService;
+
+/*    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private CancellationActService cancellationActService;
+
+    @Autowired
+    private ConsignmentService consignmentService;*/
 
     @RequestMapping(value = "/orders/getMyOrders", method = RequestMethod.GET)
     public List<OrderDto> getMyOrders() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Driver driver = driverRepository.findDriverByUser(userRepository.findUserByUsername(name));
-        List<Order> orders = orderRepository.findCustomQueryOrderByDriver(driver.getId());
+        Driver driver = driverService.findDriverByUser(userService.findUserByUsername(name));
+        List<Order> orders = orderService.findCustomQueryOrderByDriver(driver.getId());
         List<OrderDto> orderDtos = Odt.OrderToDtoList(orders);
         return orderDtos;
     }
@@ -80,67 +82,57 @@ public class DriverController {
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/routelist", method = RequestMethod.GET)
     public List<RouteListDto> getRouteList(@PathVariable Long orderId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Order> order = orderRepository.findById(orderId);
+        Optional<Order> order = orderService.findById(orderId);
         if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name))
             return null;
         return Odt.RouteListToDtoList(order.get().getWaybill().getRouteListList());
     }
 
+    @RequestMapping(value = "/orders/getMyOrders/{orderId}/setNewStatus", method = RequestMethod.PUT)
+    public WaybillDto setNewStatus(@PathVariable Long orderId, @RequestBody String newStatusValue) {
+        if(newStatusValue.equals("2") && newStatusValue.equals("3")) return null;
+
+        User user = commonService.getCurrentUser();
+        Order order = orderService.findOrderById(orderId);
+        Waybill waybill = order.getWaybill();
+
+        if (waybill.getDriver()==null || (waybill.getStatus()!=2 && waybill.getStatus()!=3) || waybill.getDriver().getUser().getId()!=user.getId()  ) return null;
+
+        int ammountNotMarkedPoins = 0;
+        List<RouteList> routeLists= waybill.getRouteListList();
+        for (RouteList point:routeLists) {
+            if(point.getMarked()!=true) ammountNotMarkedPoins++;
+        }
+        if(ammountNotMarkedPoins!=0) return null;
+
+        Integer newStatus = Integer.valueOf(newStatusValue);
+        waybill.setStatus(newStatus);
+        waybillService.save(waybill);
+        return new WaybillDto(waybill);
+    }
+
 
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/markpoint/{pointId}", method = RequestMethod.PUT)
     public RouteListDto markOrder(@PathVariable Long orderId, @PathVariable Long pointId) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = commonService.getCurrentUser();
+        String name = user.getUsername();
 
-        Optional<Order> order = orderRepository.findById(orderId);
-        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name))
+        Optional<Order> order = orderService.findById(orderId);
+        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name) || order.get().getWaybill().getStatus()!=2)
             return null;
 
-        Optional<RouteList> point = routeListRepository.findById(pointId);
+        Optional<RouteList> point = routeListService.findById(pointId);
         if (!point.isPresent() || point.get().getWaybill().getId() != order.get().getWaybill().getId()) return null;
         else {
             if (point.get().getMarked() == null) point.get().setMarked(false);
             if (point.get().getMarked()) point.get().setMarked(false);
             else point.get().setMarked(true);
         }
-        routeListRepository.save(point.get());
+        routeListService.save(point.get());
+        String message = point.get().getMarked()==true? "Прошел контрольную точку в заказе: " + order.get().getName() :"Отменил прохождение точки в заказе: " + order.get().getName();
+
+        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/markPoint/", new SocketNotification(name,message));
+
         return new RouteListDto(point.get());
-    }
-
-    @RequestMapping(value = "/orders/getMyOrders/{orderId}/consignment", method = RequestMethod.GET)
-    public List<ProductDto> getDriverConsignment(@PathVariable Long orderId) {
-        Optional<Order> order = orderRepository.findById(orderId);
-        List<Product> products = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
-        return Odt.ProductToDtoList(products);
-    }
-
-    @RequestMapping(value = "/orders/getMyOrders/{orderId}/cancelProduct/{productId}", method = RequestMethod.GET)
-    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam(name = "cancel") int cancel) {
-        Consignment consignment = orderRepository.findOrderById(orderId).getConsignment();
-        CancellationAct cancellationAct = consignment.getCancellationAct();
-
-        if (cancellationAct == null) {
-            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
-            cancellationActRepository.save(cancellationAct);
-        }
-
-        Optional<Product> product = productRepository.findById(productId);
-        product.get().setCount(product.get().getCount() - cancel);
-        product.get().setCancelledCount(product.get().getCancelledCount() + cancel);
-
-        if (product.get().getCount() == 0) {
-            product.get().setStatus(4);
-        } else {
-            product.get().setStatus(5);
-        }
-
-        cancellationAct.setPrice(product.get().getPrice() * cancel + cancellationAct.getPrice());
-        Integer amount = cancellationAct.getAmount() + cancel;
-        cancellationAct.setAmount(amount);
-
-        product.get().setCancellationAct(cancellationAct);
-        productRepository.save(product.get());
-        cancellationActRepository.save(cancellationAct);
-
-        return new ProductDto(product.get());
     }
 }

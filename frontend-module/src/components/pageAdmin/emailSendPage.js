@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {NotificationManager} from "react-notifications";
 
 export default class SendEmail extends Component {
 
@@ -56,6 +57,8 @@ export default class SendEmail extends Component {
             } else {
                 document.getElementById('error-span').innerText = 'Проверьте правильность почты';
             }
+        }).catch(() => {
+            NotificationManager.error('Ошибка доступа');
         })
     };
 
