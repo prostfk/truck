@@ -25,6 +25,7 @@
     "react-notifications": "^1.4.3",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
+    "react-router-redux": "^4.0.8",
     "react-scripts": "2.0.5",
     "react-stomp": "^4.0.0",
     "react-websocket": "^2.0.0",

@@ -83,12 +83,11 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user, index) => {
-        if (!user) return;debugger;
-        user.reg_date[6] = user.reg_date[6] / 1000000;
+        if (!user) return;
+        /*user.reg_date[6] = user.reg_date[6] / 1000000;*/
         let timezoneoffset = new Date().getTimezoneOffset();
-        let dateofreg = user.reg_date == null ? "-" : moment.utc(user.reg_date);
+        let dateofreg = user.reg_date == null ? "-" : moment().utc(user.reg_date);
         let localTime = moment(dateofreg).utcOffset(-timezoneoffset).format('YYYY-MM-DD HH:mm:ss');
-
 
         return <div className={'row table_row animated fadeInUp'} key={index}>
 
