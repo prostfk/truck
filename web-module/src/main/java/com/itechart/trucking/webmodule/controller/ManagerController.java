@@ -136,7 +136,7 @@ public class ManagerController {
         Consignment consignment = orderService.findOrderById(orderId).getConsignment();
         CancellationAct cancellationAct = consignment.getCancellationAct();
         if(cancellationAct == null) {
-            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, new Double(0), consignment);
+            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
             cancellationActService.save(cancellationAct);
         }
 
@@ -145,7 +145,7 @@ public class ManagerController {
             return null;
 
         if (cancel > 0) {
-            product.get().setCancelledCount(product.get().getCancelledCount() + cancel);
+            product.get().setCancelledCount(product.get().getCancelledCount()==null ? 0 : product.get().getCancelledCount() + cancel);
             product.get().setCount(product.get().getCount() - cancel);
 
             if (product.get().getCount() == 0) {
