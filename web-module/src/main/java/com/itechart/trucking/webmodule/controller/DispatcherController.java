@@ -310,9 +310,7 @@ public class DispatcherController {
         if(!checkDatesForFreeAutosAndDrivers(userByEmail.getCompany(),waybill,java.sql.Date.valueOf(localDateDep),java.sql.Date.valueOf(localDateArr))) return false;
         waybill.setDateDeparture(java.sql.Date.valueOf(localDateDep));
         waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
-
         waybillService.save(waybill);
-
         WaybillSocketUpdateDto waybillSocketUpdateDto = new WaybillSocketUpdateDto();
         waybillSocketUpdateDto.setUpdaterUser(userByEmail.getId());
         waybillSocketUpdateDto.setUpdaterUserName(userByEmail.getUsername());

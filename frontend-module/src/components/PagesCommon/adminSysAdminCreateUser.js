@@ -225,7 +225,7 @@ export default class CreateUser extends Component {
                                     <span className="error-span" id="error-date-span"/>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="row col-md-6">
                             {
                                 this.state.newUserRole === 'ROLE_DRIVER' || (Array.isArray(this.state.newUserRole) ? this.state.newUserRole.includes('ROLE_DRIVER') : false) ? (
                                     <div className="form-group">

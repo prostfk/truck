@@ -53,13 +53,10 @@ class pageUserLogin extends Component {
         let formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);
-        console.log(formData.get('password'));
         fetch('http://localhost:8080/auth', {method: "POST", body: formData}).then(response => {
-            // document.getElementById('login-form').style.display = 'none';
             response.json().then(data => {
                 if (data.error === undefined) {
                     document.getElementById('login-form').style.display = 'none';
-                    console.log(`SUCCESS: ${data.token}`);
                     localStorage.setItem("Auth-token", data.token);
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", data.role);

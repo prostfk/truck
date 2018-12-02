@@ -187,9 +187,13 @@ export default class DispatcherCreateOrderPage extends React.Component {
         let da = this.state.date_arrival;
         fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
-            data.map(auto => {
-                autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
-            });
+            if (data.length !== 0){
+                data.map(auto => {
+                    autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
+                });
+            }else {
+                autoHtml = '<option>Нет свободных авто</option>'
+            }
             document.getElementById('auto').innerHTML = autoHtml;
             this.setDefault();
         })).catch(() => {
@@ -200,11 +204,15 @@ export default class DispatcherCreateOrderPage extends React.Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeDrivers?dateFrom=${da}&dateTo=${dd}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
-            data.map(driver => {
-                driverHtml += `<option value=${driver.id}>${driver.name}</option>`
-            });
+            if (data.length !== 0){
+                data.map(driver => {
+                    driverHtml += `<option value=${driver.id}>${driver.name}</option>`
+                });
+            }else{
+                driverHtml += '<option>Нет свободных водителей</option>'
+            }
             document.getElementById('driver').innerHTML = driverHtml;
             this.setDefault();
         }).catch(() => {
@@ -396,7 +404,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                 <small className="form-text text-muted">Водитель</small>
                                 <select onChange={this.changeInput} value={this.state.driver} className="form-control"
                                         id="driver">
-                                    <option selected disabled>Водитель</option>
+                                    <option disabled>Водитель</option>
 
                                 </select>
                                 <span id="driver-error-span" className={'error-span'}/>
@@ -405,7 +413,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                 <small className="form-text text-muted">Автомобиль</small>
                                 <select onChange={this.changeInput} value={this.state.auto} className="form-control"
                                         id="auto">
-                                    <option selected disabled>Авто</option>
+                                    <option disabled>Авто</option>
 
                                 </select>
                                 <span id="auto-error-span" className={'error-span'}/>

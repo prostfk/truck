@@ -79,16 +79,16 @@ class DispatcherOrderList extends React.Component {
         });
     }
 
-    renderTable(order) {
+    renderTable(order, index) {
         if (!order) return;
-        return <div className="row table_row order_row animated fadeInUp">
+        return <div className="row table_row order_row animated fadeInUp" key={index}>
             <div className="col-md-3">{order.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateDeparture)}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateArrival)}</div>
             <div className="col-md-1">
-                <Link to={`/orders/${order.id}/edit`}><EditIcon></EditIcon></Link>
+                <Link to={`/orders/${order.id}/edit`}><EditIcon/></Link>
             </div>
         </div>
     }
@@ -110,19 +110,19 @@ class DispatcherOrderList extends React.Component {
             </div>
 
         }
-        return <div class="row">
-            <div class="offset-md-1 col-md-7 superuserform_companylist animated fadeIn">
+        return <div className="row">
+            <div className="offset-md-1 col-md-7 superuserform_companylist animated fadeIn">
                 <div className="row table_header">
                     <div className="col-md-3">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>
                     <div className="col-md-2">Дата отправления</div>
                     <div className="col-md-2">Дата получения</div>
-                    <div className="col-md-1"></div>
+                    <div className="col-md-1"/>
                 </div>
                 {
-                    this.state.orders.map((element) => {
-                        return this.renderTable(element);
+                    this.state.orders.map((element, index) => {
+                        return this.renderTable(element, index);
                     })
                 }
                 <div className="table_footer">
@@ -141,8 +141,8 @@ class DispatcherOrderList extends React.Component {
                     </div>
                 </div>
             </div>
-            <div class="offset-md-1 col-md-2 animated fadeIn">
-                <form class="superuserform_newaccountform grey_form">
+            <div className="offset-md-1 col-md-2 animated fadeIn">
+                <form className="superuserform_newaccountform grey_form">
                     {element}
                 </form>
             </div>

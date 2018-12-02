@@ -37,7 +37,7 @@ export default class LogoutComponent extends Component {
                         <ModalHeader>Выйти?</ModalHeader>
                         <ModalBody className={"logoutForm"}>
                             <Button color="danger" onClick={this.submitLogout}>Выйти</Button>
-                            <Button style={{marginLeft: '2%'}} backgroundColor={'#4e4e4e'}
+                            <Button style={{marginLeft: '2%', backgroundColor: '#4e4e4e'}}
                                     onClick={this.toggle}>Отмена</Button>
                         </ModalBody>
                     </form>
