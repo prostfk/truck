@@ -219,12 +219,12 @@ export class DriverRouterListNew extends Component {
                             </InfoWindow>
                             <Polyline
                                 path={this.state.pathCoordinates}
-                                strokeColor="red"
+                                strokeColor="#C02900"
                                 strokeOpacity={0.8}
                                 strokeWeight={2}/>
                             <Polyline
                                 path={this.state.passedPathCoordinates}
-                                strokeColor="green"
+                                strokeColor="#1AC000"
                                 strokeOpacity={0.8}
                                 strokeWeight={2}/>
                         </Map>

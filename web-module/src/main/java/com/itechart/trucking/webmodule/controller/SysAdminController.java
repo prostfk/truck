@@ -84,7 +84,7 @@ public class SysAdminController {
     @GetMapping(value = "/companies")
     public  Object findAllCompanies(@RequestParam(name = "page") String page) {
         Page<Company> companies = companyService.findCompaniesByPage(page);
-        return companies.map(company -> new CompanyDto(company));
+        return companies.map(CompanyDto::new);
     }
 
     @PostMapping(value = "/companies/changeStatus")

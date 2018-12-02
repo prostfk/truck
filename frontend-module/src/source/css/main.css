@@ -225,3 +225,7 @@ svg{
     margin-bottom: 4px;
     margin-right: 10px;
 }
+
+.col-md-2{
+    overflow: hidden;
+}

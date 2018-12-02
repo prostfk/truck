@@ -58,6 +58,8 @@ export class ManagerRouteList extends Component {
                 if (level < point.pointLevel) {
                     level = point.pointLevel;
                 }
+                data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
+                CommonUtil.moveElementInArray(data,this.__findIndexOfPointByPointName(data,"Завершение"),data.length-1);
             });
             this.setState({routePoints: data, point: "", pointLevel: level + 1});
         });

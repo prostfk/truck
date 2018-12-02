@@ -101,7 +101,7 @@ public class DriverController {
         int ammountNotMarkedPoins = 0;
         List<RouteList> routeLists= waybill.getRouteListList();
         for (RouteList point:routeLists) {
-            if(point.getMarked()!=true) ammountNotMarkedPoins++;
+            if(point.getMarked() == null ||!point.getMarked()) ammountNotMarkedPoins++;
         }
         if(ammountNotMarkedPoins!=0) return null;
 
