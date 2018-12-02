@@ -47,6 +47,8 @@ export default class DispatcherEditOrder extends Component {
             consignmentId: ""
         };
 
+        this.findDrivers();
+        this.findAutos();
         this.initOrder();
 
     }

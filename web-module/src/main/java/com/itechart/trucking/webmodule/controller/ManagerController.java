@@ -145,7 +145,7 @@ public class ManagerController {
             return null;
 
         if (cancel > 0) {
-            product.get().setCancelledCount(product.get().getCancelledCount()==null ? 0 : product.get().getCancelledCount() + cancel);
+            product.get().setCancelledCount(product.get().getCancelledCount()==null ? cancel : product.get().getCancelledCount() + cancel);
             product.get().setCount(product.get().getCount() - cancel);
 
             if (product.get().getCount() == 0) {

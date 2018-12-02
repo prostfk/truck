@@ -53,7 +53,8 @@ CREATE TABLE public.driver (
   name character varying(45) NOT NULL,
   passport_number character varying(45) NOT NULL,
   company_of_driver integer NOT NULL,
-  userid INTEGER NOT NULL
+  userid INTEGER NOT NULL,
+  FOREIGN KEY (userid) REFERENCES users(id)
 );
 
 ALTER TABLE public.driver OWNER TO postgres;
