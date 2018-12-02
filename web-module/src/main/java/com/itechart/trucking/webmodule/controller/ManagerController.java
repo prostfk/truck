@@ -127,6 +127,7 @@ public class ManagerController {
         if (!order.isPresent())
             return false;
         routeList.setWaybill(order.get().getWaybill());
+        routeList.setMarked(false);
         return routeListService.save(routeList) != null;
 
     }

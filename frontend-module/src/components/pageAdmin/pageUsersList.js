@@ -83,7 +83,7 @@ export default class UsersList extends Component {
     }
 
     renderUser = (user, index) => {
-        if (!user) return;
+        if (!user) return;debugger;
         user.reg_date[6] = user.reg_date[6] / 1000000;
         let timezoneoffset = new Date().getTimezoneOffset();
         let dateofreg = user.reg_date == null ? "-" : moment.utc(user.reg_date);
