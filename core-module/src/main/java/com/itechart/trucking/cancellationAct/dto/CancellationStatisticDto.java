@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CancellationStatisticDto {
-    private int productAmmount=0;
+    private int productAmmount = 0;
     private double productPrice;
 
     public void addProductAmmount(int productAmmount) {

@@ -35,15 +35,15 @@ public class CancellationActService {
         return cancellationActRepository.findCancellationActByConsignment(consignment);
     }
 
-    public CancellationAct save(@Valid CancellationAct cancellationAct){
+    public CancellationAct save(@Valid CancellationAct cancellationAct) {
         return cancellationActRepository.save(cancellationAct);
     }
 
-    public CancellationAct update(@Valid CancellationAct cancellationAct){
+    public CancellationAct update(@Valid CancellationAct cancellationAct) {
         return cancellationActRepository.save(cancellationAct);
     }
 
-    public void remove(CancellationAct cancellationAct){
+    public void remove(CancellationAct cancellationAct) {
         cancellationActRepository.delete(cancellationAct);
     }
 

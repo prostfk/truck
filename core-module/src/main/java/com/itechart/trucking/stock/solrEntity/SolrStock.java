@@ -40,8 +40,8 @@ public class SolrStock {
         this.companyId = companyId;
     }
 
-    public static SolrStock solrStockFromStock(Stock stock){
-        return new SolrStock(stock.getId(),stock.getAddress(),stock.getName(),stock.getActive(),stock.getLng(),stock.getLat(),stock.getCompany().getId());
+    public static SolrStock solrStockFromStock(Stock stock) {
+        return new SolrStock(stock.getId(), stock.getAddress(), stock.getName(), stock.getActive(), stock.getLng(), stock.getLat(), stock.getCompany().getId());
     }
 
 }

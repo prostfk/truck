@@ -19,7 +19,8 @@ public class Waybill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Min(0) @Max(4)
+    @Min(0)
+    @Max(4)
     private Integer status;
     private Date dateDeparture;
     private Date dateArrival;

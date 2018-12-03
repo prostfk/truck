@@ -11,9 +11,13 @@ import java.util.List;
 public interface CancellationActRepository extends CrudRepository<CancellationAct, Long> {
 
     CancellationAct findCancellationActById(Long id);
+
     List<CancellationAct> findCancellationActsByDateAfter(String date);
+
     List<CancellationAct> findCancellationActsByDateBefore(String date);
+
     List<CancellationAct> findCancellationActsByPrice(int price);
+
     CancellationAct findCancellationActByConsignment(Consignment consignment);
 
 }

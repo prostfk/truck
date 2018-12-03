@@ -18,36 +18,36 @@ public class StockService {
     private StockRepository stockRepository;
 
     @Deprecated
-    public List<Stock> findStocksByCompany(Company company){
+    public List<Stock> findStocksByCompany(Company company) {
         return stockRepository.findStocksByCompany(company);
     }
 
     @Deprecated
-    public List<Stock> findStockByCompanyAndActive(Company company,Boolean active){
-        return stockRepository.findStockByCompanyAndActive(company,active);
+    public List<Stock> findStockByCompanyAndActive(Company company, Boolean active) {
+        return stockRepository.findStockByCompanyAndActive(company, active);
     }
 
-    public Page<Stock> findStockByCompanyAndActive(Company company, Boolean active, Pageable pageable){
+    public Page<Stock> findStockByCompanyAndActive(Company company, Boolean active, Pageable pageable) {
         return stockRepository.findStockByCompanyAndActive(company, active, pageable);
     }
 
-    public Stock findStockById(Long id){
+    public Stock findStockById(Long id) {
         return stockRepository.findStockById(id);
     }
 
-    public List<Stock> findStocksByAddressLike(String addressLike){
+    public List<Stock> findStocksByAddressLike(String addressLike) {
         return stockRepository.findStocksByAddressLike(addressLike);
     }
 
-    public Stock save(@Valid Stock stock){
+    public Stock save(@Valid Stock stock) {
         return stockRepository.save(stock);
     }
 
-    public Stock update(@Valid Stock stock){
+    public Stock update(@Valid Stock stock) {
         return stockRepository.save(stock);
     }
 
-    public void remove(Stock stock){
+    public void remove(Stock stock) {
         stockRepository.delete(stock);
     }
 

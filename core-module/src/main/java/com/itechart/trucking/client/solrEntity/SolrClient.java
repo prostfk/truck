@@ -28,10 +28,9 @@ public class SolrClient {
         this.type = type;
     }
 
-    public static SolrClient solrClientFromClient(Client client){
-        return new SolrClient(client.getId(),client.getName(),client.getType());
+    public static SolrClient solrClientFromClient(Client client) {
+        return new SolrClient(client.getId(), client.getName(), client.getType());
     }
-
 
 
 }

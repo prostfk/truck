@@ -16,9 +16,9 @@ public interface StockRepository extends CrudRepository<Stock, Long> {
     List<Stock> findStocksByCompany(Company company);
 
     @Deprecated
-    List<Stock> findStockByCompanyAndActive(Company company,Boolean active);
+    List<Stock> findStockByCompanyAndActive(Company company, Boolean active);
 
-    Page<Stock>findStockByCompanyAndActive(Company company, Boolean active, Pageable pageable);
+    Page<Stock> findStockByCompanyAndActive(Company company, Boolean active, Pageable pageable);
 
     Stock findStockById(Long id);
 

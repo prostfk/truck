@@ -18,5 +18,5 @@ public interface DriverRepository extends CrudRepository<Driver, Long> {
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO driver(name, passport_number, company_of_driver, userid) VALUES (:driverName,:passportNumber,:companyId, :userId)", nativeQuery = true)
-    void saveDriver(@Param("driverName")String driverName, @Param("passportNumber") String passportNumber, @Param("companyId")Long companyId, @Param("userId")Long userId);
+    void saveDriver(@Param("driverName") String driverName, @Param("passportNumber") String passportNumber, @Param("companyId") Long companyId, @Param("userId") Long userId);
 }

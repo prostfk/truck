@@ -17,35 +17,35 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Product findProductById(Long id){
+    public Product findProductById(Long id) {
         return productRepository.findProductById(id);
     }
 
-    public List<Product> findProductsByStatus(Integer status){
+    public List<Product> findProductsByStatus(Integer status) {
         return productRepository.findProductsByStatus(status);
     }
 
-    public List<Product> findProductsByDescriptionLikeIgnoreCase(String description){
+    public List<Product> findProductsByDescriptionLikeIgnoreCase(String description) {
         return productRepository.findProductsByDescriptionLikeIgnoreCase(description);
     }
 
-    public List<Product> findAllByConsignment(Consignment consignment){
+    public List<Product> findAllByConsignment(Consignment consignment) {
         return productRepository.findAllByConsignment(consignment);
     }
 
-    public Page<Product> findAllByConsignment(Consignment consignment, Pageable pageable){
-        return productRepository.findAllByConsignment(consignment,pageable);
+    public Page<Product> findAllByConsignment(Consignment consignment, Pageable pageable) {
+        return productRepository.findAllByConsignment(consignment, pageable);
     }
 
-    public Product save(Product product){
+    public Product save(Product product) {
         return productRepository.save(product);
     }
 
-    public Product update(Product product){
+    public Product update(Product product) {
         return productRepository.save(product);
     }
 
-    public void remove(Product product){
+    public void remove(Product product) {
         productRepository.delete(product);
     }
 

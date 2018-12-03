@@ -53,19 +53,19 @@ public class WaybillService {
         return waybillRepository.saveWaybill(waybillStatus, driverId, autoId, dateDeparture, dateArrival);
     }
 
-    public List<Waybill> findTop10WaybillsByUserId(Long userId){
+    public List<Waybill> findTop10WaybillsByUserId(Long userId) {
         return waybillRepository.findTop10WaybillsByUserId(userId);
     }
 
-    public Waybill save(@Valid Waybill waybill){
+    public Waybill save(@Valid Waybill waybill) {
         return waybillRepository.save(waybill);
     }
 
-    public Waybill update(@Valid Waybill waybill){
+    public Waybill update(@Valid Waybill waybill) {
         return waybillRepository.save(waybill);
     }
 
-    public void remove(Waybill waybill){
+    public void remove(Waybill waybill) {
         waybillRepository.delete(waybill);
     }
 

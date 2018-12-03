@@ -13,24 +13,24 @@ public class DriverService {
     @Autowired
     private DriverRepository driverRepository;
 
-    public Driver findDriverByUser(User user){
+    public Driver findDriverByUser(User user) {
         return driverRepository.findDriverByUser(user);
     }
 
-    public Driver findDriverById(Long id){
+    public Driver findDriverById(Long id) {
         return driverRepository.findDriverById(id);
     }
 
-    public void saveDriver(String driverName, String passportNumber, Long companyId, Long userId){
-        driverRepository.saveDriver(driverName,passportNumber,companyId,userId);
+    public void saveDriver(String driverName, String passportNumber, Long companyId, Long userId) {
+        driverRepository.saveDriver(driverName, passportNumber, companyId, userId);
     }
 
-    public Driver save(Driver driver){
+    public Driver save(Driver driver) {
         return driverRepository.save(driver);
     }
 
-    public Driver update(Driver driver){
-        if (driver.getId()!=null){
+    public Driver update(Driver driver) {
+        if (driver.getId() != null) {
             return driverRepository.save(driver);
         }
         return driver;
