@@ -47,7 +47,6 @@ export default class DispatcherCreateOrderPage extends React.Component {
     }
 
     changeInput(event) {
-        console.log(this.state);
         this.setState({
             [event.target.id]: [event.target.value]
         });
@@ -86,16 +85,16 @@ export default class DispatcherCreateOrderPage extends React.Component {
         } else {
             document.getElementById('driver-error-span').innerText = '';
         }
-        if (!stocksVal){
+        if (!stocksVal) {
             document.getElementById('stocks-error-span').innerText = 'Выберите разные склады';
-        }else{
+        } else {
             document.getElementById('stocks-error-span').innerText = '';
         }
         return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation && validateAuto && validateDriver && stocksVal;
     };
 
     saveBtnClick() {
-        if (this.state.consignment.length === 0){
+        if (this.state.consignment.length === 0) {
             NotificationManager.error("Добавьте товар");
             return;
         }
@@ -112,10 +111,6 @@ export default class DispatcherCreateOrderPage extends React.Component {
             formData.append("autoId", ValidationUtil.getStringFromUnnownObject(this.state.auto));
             formData.append("driverId", ValidationUtil.getStringFromUnnownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
-            formData.forEach((v, k) => {
-                console.log(`${v} - ${k}`);
-            });
-
             fetch('http://localhost:8080/api/orders/createOrder', {
                 method: "POST",
                 body: formData,
@@ -191,11 +186,11 @@ export default class DispatcherCreateOrderPage extends React.Component {
         let da = this.state.date_arrival;
         fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
             let autoHtml = '';
-            if (data.length !== 0){
+            if (data.length !== 0) {
                 data.map(auto => {
                     autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
                 });
-            }else {
+            } else {
                 autoHtml = '<option>Нет свободных авто</option>'
             }
             document.getElementById('auto').innerHTML = autoHtml;
@@ -210,11 +205,11 @@ export default class DispatcherCreateOrderPage extends React.Component {
         let da = this.state.date_arrival;
         fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
-            if (data.length !== 0){
+            if (data.length !== 0) {
                 data.map(driver => {
                     driverHtml += `<option value=${driver.id}>${driver.name}</option>`
                 });
-            }else{
+            } else {
                 driverHtml += '<option>Нет свободных водителей</option>'
             }
             document.getElementById('driver').innerHTML = driverHtml;
@@ -244,7 +239,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     //Consignment
 
     addProduct = (event) => {
-        if (this.validateProduct()){
+        if (this.validateProduct()) {
             event.preventDefault();
             let product = {
                 name: ValidationUtil.getStringFromUnnownObject(this.state.newProductName),
@@ -276,15 +271,15 @@ export default class DispatcherCreateOrderPage extends React.Component {
     };
 
     validateProduct = () => {
-        try{
-            let nameVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductName)!== '';
+        try {
+            let nameVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductName) !== '';
             // let statusVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus)!== '';
-            let descVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription)!== '';
-            let priceVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice)!== '';
-            let countVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductCount)!== '';
-            if (!nameVal){
+            let descVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription) !== '';
+            let priceVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice) !== '';
+            let countVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductCount) !== '';
+            if (!nameVal) {
                 document.getElementById('prodName-error-span').innerText = 'Название не может быть пустым';
-            }else{
+            } else {
                 document.getElementById('prodName-error-span').innerText = '';
             }
             // if (!statusVal){
@@ -292,37 +287,37 @@ export default class DispatcherCreateOrderPage extends React.Component {
             // }else{
             //     document.getElementById('prodStatus-error-span').innerText = '';
             // }
-            if (!descVal){
+            if (!descVal) {
                 document.getElementById('prodDescription-error-span').innerText = 'Описание не может быть пустым';
-            }else{
+            } else {
                 document.getElementById('prodDescription-error-span').innerText = '';
             }
-            if (!priceVal){
+            if (!priceVal) {
                 document.getElementById('prodPrice-error-span').innerText = 'Цена должна быть указана';
-            }else{
+            } else {
                 document.getElementById('prodPrice-error-span').innerText = '';
             }
-            if (!countVal){
+            if (!countVal) {
                 document.getElementById('prodCount-error-span').innerText = 'Количество не может быть пустым';
-            }else{
+            } else {
                 document.getElementById('prodCount-error-span').innerText = '';
             }
             document.getElementById('prodForm-error-span').innerText = '';
             return nameVal && descVal && priceVal && countVal;
-        }catch (e) {
+        } catch (e) {
             document.getElementById('prodForm-error-span').innerText = 'Проверьте правильность ваших данных';
             return false;
         }
     };
 
     deleteProduct(index) {
-        console.log(index);
         const newConsignment = [...this.state.consignment];
         if (index !== -1) {
             newConsignment.splice(index, 1);
             this.setState({consignment: newConsignment});
         }
     }
+
     render() {
 
         let customerCompanyStyle = {
@@ -495,7 +490,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                             <div className="col-md-2">{item.count}</div>
                                             <div className="col-md-2">{item.price}</div>
                                             <div className="col-md-2">
-                                                <div className="table_button bg-secondary text-white" onClick={this.deleteProduct.bind(this, index)}>удалить</div>
+                                                <div className="table_button bg-secondary text-white"
+                                                     onClick={this.deleteProduct.bind(this, index)}>удалить
+                                                </div>
                                             </div>
                                         </div>
                                     }

@@ -45,7 +45,7 @@ export default class ModalComponentEditAuto extends React.Component {
     }
 
     handleSubmit(event) {
-        this.props.clickfunc(this.state.autoId, this.state.autoName, this.state.autoCarNumber, this.state.autoType, this.state.autoFuelConsumption);
+        this.props.clickFunc(this.state.autoId, this.state.autoName, this.state.autoCarNumber, this.state.autoType, this.state.autoFuelConsumption);
         this.setState({
             modal: !this.state.modal,
         });
@@ -72,7 +72,7 @@ export default class ModalComponentEditAuto extends React.Component {
         return (
 
             <div>
-                <a onClick={this.toggle}><EditIcon></EditIcon></a>
+                <a onClick={this.toggle}><EditIcon/></a>
                 <Modal isOpen={this.state.modal}>
                     <form onSubmit={this.handleSubmit}>
                         <ModalHeader>Редактирование автомобиля</ModalHeader>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'reactstrap';
 import ValidationUtil from "../commonUtil/validationUtil";
 import {NotificationManager} from "react-notifications";
 
@@ -51,12 +51,11 @@ export default class ModalComponentEditCompany extends React.Component {
     }
 
     getCompanyName() {
-        const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+        return fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         }).catch(() => {
             NotificationManager.error('Ошибка доступа');
         });
-        return fetchResult;
     }
 
     componentDidMount() {

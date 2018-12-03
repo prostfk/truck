@@ -343,11 +343,4 @@ public class DispatcherController {
         return (driverIsFree && autoIsFree);
     }
 
-    @GetMapping(value = "/findStock")
-    public List findStocks(@RequestParam Boolean active, @RequestParam String name){
-        User userByUsername = userRepository.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        return solrStockRepository.findAllByCompanyIdAndActiveAndName(userByUsername.getCompany().getId(),active,name);
-    }
-
-
 }

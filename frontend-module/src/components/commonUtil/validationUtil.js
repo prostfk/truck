@@ -5,12 +5,12 @@ export default class ValidationUtil {
     }
 
 
-    static validateDateForNotThisYear(date){
+    static validateDateForNotThisYear(date) {
         let b = this.validateDateToPattern(date);
-        if (b){
+        if (b) {
             date = Array.isArray(date) ? date.join('') : date;
             return Number(date.split('/')[2]) < new Date().getFullYear();
-        }else{
+        } else {
             return false;
         }
     }
@@ -23,7 +23,7 @@ export default class ValidationUtil {
         return /^-?[\d.]+(?:e-?\d+)?$/.test(string)
     }
 
-    static validateDateToPattern(date){ //pattern = dd/MM/yyyy
+    static validateDateToPattern(date) { //pattern = dd/MM/yyyy
         return /^([0-2][0-9]|(3)[0-1])(\/)(((0)[1-9])|((1)[0-2]))(\/)\d{4}$/.test(date.toString());
     }
 
@@ -40,7 +40,7 @@ export default class ValidationUtil {
         return `${split[2]}/${split[1]}/${split[0]}`
     }
 
-    static getStringFromUnnownObject(obj){
+    static getStringFromUnnownObject(obj) {
         return Array.isArray(obj) ? obj.join('') : obj;
     }
 

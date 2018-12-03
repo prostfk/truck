@@ -54,10 +54,8 @@ public class AnonController {
             clientSolrRepository.deleteAll();
             List<SolrStock> solrStocks = Odt.StockToSolrStocksList(allStocks);
             List<SolrClient> solrClients = Odt.ClientsToSolrClientsList(allClients);
-            solrClients.forEach(solrClient -> {
-                clientSolrRepository.save(solrClient);
-            });
-            solrStocks.forEach(stock -> {solrStockRepository.save(stock);});
+            solrClients.forEach(solrClient -> clientSolrRepository.save(solrClient));
+            solrStocks.forEach(stock -> solrStockRepository.save(stock));
 //            solrStockRepository.saveAll(solrStocks);
 //            clientSolrRepository.saveAll(solrClients);
             json.put("status", "ok");

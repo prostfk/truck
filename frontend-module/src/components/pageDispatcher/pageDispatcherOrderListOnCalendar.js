@@ -110,7 +110,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
        msg.waybillDto.dateArrival=msg.waybillDto.dateArrival.year+"-"+msg.waybillDto.dateArrival.monthValue+"-"+msg.waybillDto.dateArrival.dayOfMonth;
        msg.waybillDto.dateDeparture=msg.waybillDto.dateDeparture.year+"-"+msg.waybillDto.dateDeparture.monthValue+"-"+msg.waybillDto.dateDeparture.dayOfMonth;
 
-        if(myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
+        if(myCompanyId!==msg.companyId) return; //commit to view notifications for all users;
 
         let dateArrival = moment(msg.waybillDto.dateArrival);
         let rangeArrival =dateArrival.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));
@@ -120,7 +120,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
         if(!rangeArrival && !rangeDeparture) return;
 
-        if(myId==msg.updaterUser) {
+        if(myId===msg.updaterUser) {
             NotificationManager.success('Заказ обновлён '+ msg.orderName, 'Информация');
         }
         else{
@@ -130,7 +130,6 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
     }
 
     render() {
-        let asd = this;
         return <div className="row animated fadeIn">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <NotificationContainer/>

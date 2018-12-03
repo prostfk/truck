@@ -22,7 +22,6 @@ export default class EditStockModal extends Component {
         this.setState({
             modal: !this.state.modal
         });
-        console.log(this.state)
     };
 
     handleInputChange = (e) => {
@@ -39,10 +38,7 @@ export default class EditStockModal extends Component {
             document.getElementById('info').style.color = 'red';
             this.setState({successAddress: ''})
         }
-        // this.setState({search: "", value: suggest.formatted_address, suggest: suggest})
         this.setState({search: "", suggest: suggest})
-        // this.setState({suggest: suggest})
-
     };
 
     submitForm = () => {
@@ -59,7 +55,6 @@ export default class EditStockModal extends Component {
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}
             }).then(response => {
                 response.json().then(data => {
-                    console.log(data);
                     this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})
                 })
             }).catch(() => {
@@ -132,7 +127,6 @@ export default class EditStockModal extends Component {
 
 //AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI
 }
-/*const API_KEY = "AIzaSyC8b04jlgefJ27fjvs4axnTGGKvYtFemWI";*/
 EditStockModal.propTypes = {
     googleMaps: PropTypes.object,
 };

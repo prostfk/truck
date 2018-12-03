@@ -116,4 +116,11 @@ public class CommonControllers {
         return null;
     }
 
+    @GetMapping(value = "/findStock")
+    public List findStocks(@RequestParam Boolean active, @RequestParam String name){
+        User userByUsername = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<SolrStock> allByCompanyIdAndActiveAndName = solrStockRepository.findAllByCompanyIdAndActiveAndName(userByUsername.getCompany().getId(), active, name);
+        return allByCompanyIdAndActiveAndName;
+    }
+
 }
