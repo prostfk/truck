@@ -44,6 +44,7 @@ public class AnonController {
     private ClientRepository clientRepository;
     @Autowired
     private StockRepository stockRepository;
+
     @GetMapping(value = "/initSolr")
     public Object initSolr() throws JSONException {
         JSONObject json = new JSONObject();
@@ -59,7 +60,7 @@ public class AnonController {
 //            solrStockRepository.saveAll(solrStocks);
 //            clientSolrRepository.saveAll(solrClients);
             json.put("status", "ok");
-        }catch (Exception e){
+        } catch (Exception e) {
             json.put("status", "failed: " + e.getMessage());
         }
         return json.toString();
@@ -130,7 +131,7 @@ public class AnonController {
             }
         } else if (bindingResult.hasErrors()) {
             jsonObject.put("error", "Invalid data!");
-        }else if (!userNotInBase){
+        } else if (!userNotInBase) {
             jsonObject.put("error", "user with such username already exists");
         }
         return jsonObject.toString();

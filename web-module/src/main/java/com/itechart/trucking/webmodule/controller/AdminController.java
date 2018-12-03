@@ -69,14 +69,14 @@ public class AdminController {
     @GetMapping(value = "/users")
     public Object findUsers(@RequestParam(value = "page") int pageId) throws JSONException {
         User user = commonService.getCurrentUser();
-        Page<User> userPage = userService.findAllByCompany(user.getCompany(),PageRequest.of(pageId-1, 5));
+        Page<User> userPage = userService.findAllByCompany(user.getCompany(), PageRequest.of(pageId - 1, 5));
 
         return userPage.map(UserDto::new);
     }
 
     @PostMapping(value = "/editCompany")
     public Object processEditingCompany(@Valid Company company, BindingResult bindingResult) throws JSONException {
-        if (bindingResult.hasErrors() || company.getId()!=commonService.getCurrentUser().getCompany().getId()) {
+        if (bindingResult.hasErrors() || company.getId() != commonService.getCurrentUser().getCompany().getId()) {
             return getInvalidDataJsonMessage();
         }
 
@@ -87,7 +87,7 @@ public class AdminController {
     @PostMapping(value = "/editUser/{id}")
     @ResponseBody
     public Object processEditingUser(@PathVariable Long id, @Valid User user, BindingResult result) throws JSONException {
-        if (result.hasErrors()  || user.getCompany().getId()!=commonService.getCurrentUser().getCompany().getId()) {
+        if (result.hasErrors() || user.getCompany().getId() != commonService.getCurrentUser().getCompany().getId()) {
             return getInvalidDataJsonMessage();
         }
         @Valid User save = userService.save(user);
@@ -111,7 +111,7 @@ public class AdminController {
 
     @PostMapping(value = "/updateUser")
     public Object updateUser(@Valid UserDto userDto, String password) throws JSONException {
-        return userService.updateUser(userDto,password).toString();
+        return userService.updateUser(userDto, password).toString();
     }
 
     @PostMapping(value = "/saveUser")
@@ -125,15 +125,15 @@ public class AdminController {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userService.findUserByUsername(name);
         User byEmailAndCompany = userService.findUserByEmailAndCompany(email, userByUsername.getCompany());
-        if (byEmailAndCompany!=null){
+        if (byEmailAndCompany != null) {
             try {
-                EmailUtil.sendMail(serverEmail,serverPassword,email,type,message);
+                EmailUtil.sendMail(serverEmail, serverPassword, email, type, message);
                 json.put("status", "success");
             } catch (Exception e) {
                 e.printStackTrace();
                 json.put("error", "Something went wrong with email. Check mail, maybe it is incorrect");
             }
-        }else{
+        } else {
             json.put("error", "Something went wrong with email. Check mail, maybe it is incorrect");
         }
         return json.toString();
@@ -157,7 +157,7 @@ public class AdminController {
     @GetMapping(value = "/user/{id}")
     public UserDto findUserById(@PathVariable Long id) {
         User userById = userService.findUserById(id);
-        if(commonService.getCurrentUser().getCompany().getId()!=userById.getCompany().getId()) return null;
+        if (commonService.getCurrentUser().getCompany().getId() != userById.getCompany().getId()) return null;
         return new UserDto(userById);
     }
 
@@ -168,10 +168,10 @@ public class AdminController {
             return getInvalidDataJsonMessage();
         }
         User userByUsername = commonService.getCurrentUser();
-        Stock stock= stockService.findStockById(stockDto.getId());
-        if(stock.getCompany().getId()==userByUsername.getCompany().getId()){
-            if(!stockDto.getName().equals("")) stock.setName(stockDto.getName());
-            if(!stockDto.getAddress().equals("")) stock.setAddress(stockDto.getAddress());
+        Stock stock = stockService.findStockById(stockDto.getId());
+        if (stock.getCompany().getId() == userByUsername.getCompany().getId()) {
+            if (!stockDto.getName().equals("")) stock.setName(stockDto.getName());
+            if (!stockDto.getAddress().equals("")) stock.setAddress(stockDto.getAddress());
             Stock save = stockService.save(stock);
             solrStockRepository.save(SolrStock.solrStockFromStock(save));
         }
@@ -179,11 +179,11 @@ public class AdminController {
     }
 
     @GetMapping(value = "/getCompanyName")
-    public String getCompanyName(){
+    public String getCompanyName() {
         User userByUsername = commonService.getCurrentUser();
         JSONObject json = new JSONObject();
         try {
-            json.put("companyName",userByUsername.getCompany().getName());
+            json.put("companyName", userByUsername.getCompany().getName());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -192,9 +192,9 @@ public class AdminController {
 
     @PutMapping(value = "/changeCompanyName")
     public boolean changeCompanyName(@RequestBody String companyName) {
-        if(companyName.equals("")) return false;
-        Company company =commonService.getCurrentUser().getCompany();
-        if(company==null) return false;
+        if (companyName.equals("")) return false;
+        Company company = commonService.getCurrentUser().getCompany();
+        if (company == null) return false;
         company.setName(companyName);
         companyService.save(company);
         return true;
@@ -203,29 +203,29 @@ public class AdminController {
     @GetMapping(value = "/autos")
     public Object findAutos(@RequestParam(value = "page") int pageId) {
         User userByEmail = commonService.getCurrentUser();
-        Page<Auto> autoPage = autoService.findAllByCompanyAndActive(userByEmail.getCompany(),true,PageRequest.of(pageId-1, 5));
+        Page<Auto> autoPage = autoService.findAllByCompanyAndActive(userByEmail.getCompany(), true, PageRequest.of(pageId - 1, 5));
         return autoPage.map(AutoDto::new);
     }
 
     @PostMapping(value = "/saveAuto")
     public AutoDto saveAuto(@Valid AutoDto autoDto) throws JSONException {
         User userByEmail = commonService.getCurrentUser();
-        return autoService.saveAuto(autoDto,userByEmail);
+        return autoService.saveAuto(autoDto, userByEmail);
     }
 
     @PutMapping(value = "/auto/edit")
     @ResponseBody
     public AutoDto processEditingAuto(@Valid AutoDto autoDto) throws JSONException {
         User userByEmail = commonService.getCurrentUser();
-        return autoService.processEditingAuto(autoDto,userByEmail);
+        return autoService.processEditingAuto(autoDto, userByEmail);
     }
 
     @DeleteMapping(value = "/auto/")
     @ResponseBody
-    public  List<AutoDto> processRemoveAuto(@RequestBody String idS) throws JSONException {
+    public List<AutoDto> processRemoveAuto(@RequestBody String idS) throws JSONException {
         final Long id = Long.parseLong(idS);
         User userByEmail = commonService.getCurrentUser();
-        return autoService.processRemoveAuto(id,userByEmail);
+        return autoService.processRemoveAuto(id, userByEmail);
     }
 
 

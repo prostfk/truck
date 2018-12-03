@@ -94,7 +94,7 @@ public class OwnerController {
 
     @GetMapping(value = "/company/getFullStat")//check xls method
     @ResponseBody
-    public OwnerPageStatisticsDto getFullStat(){
+    public OwnerPageStatisticsDto getFullStat() {
         User userByUsername = commonService.getCurrentUser();
 
         OwnerPageStatisticsDto ownerPageStatisticsDto = new OwnerPageStatisticsDto();
@@ -114,14 +114,14 @@ public class OwnerController {
 
     @GetMapping(value = "/company/getStatByClient/{id}")//check xls method
     @ResponseBody
-    public ClientStatisticsDto getStatByClient(@PathVariable Long id){
+    public ClientStatisticsDto getStatByClient(@PathVariable Long id) {
         User userByUsername = commonService.getCurrentUser();
         Company company = userByUsername.getCompany();
         Client client = clientService.findClientById(id);
 
         ClientStatisticsDto clientStatisticsDto = new ClientStatisticsDto();
 
-        List<Order> orders= orderService.findOrdersByLastSixMonthAndClient(company,client);
+        List<Order> orders = orderService.findOrdersByLastSixMonthAndClient(company, client);
 
         clientStatisticsDto.setExecutedAmmount(company.getOrderExcutedAmmount(orders));
         clientStatisticsDto.setClientDto(new ClientDto(client));
@@ -130,16 +130,16 @@ public class OwnerController {
 
     @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
-    public void createStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
+    public void createStatisticsXls(@Value("${excel.path}") String path, HttpServletResponse response) {
         User userByUsername = commonService.getCurrentUser();
         try {
-            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(),orderService.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
+            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(), orderService.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
             ServletOutputStream outputStream = response.getOutputStream();
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
-            byte[] buffer= new byte[8192];
+            byte[] buffer = new byte[8192];
             int length;
-            while ((length = fis.read(buffer)) > 0){
+            while ((length = fis.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
             fis.close();
@@ -152,16 +152,16 @@ public class OwnerController {
 
     @GetMapping(value = "/company/fullStatistics")//check xls method
     @ResponseBody
-    public void createFullStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
+    public void createFullStatisticsXls(@Value("${excel.path}") String path, HttpServletResponse response) {
         User userByUsername = commonService.getCurrentUser();
         try {
-            String filename = new ExcelUtil().calcFullStatistics(path, userByUsername.getUsername(),getFullStat());
+            String filename = new ExcelUtil().calcFullStatistics(path, userByUsername.getUsername(), getFullStat());
             ServletOutputStream outputStream = response.getOutputStream();
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
-            byte[] buffer= new byte[8192];
+            byte[] buffer = new byte[8192];
             int length;
-            while ((length = fis.read(buffer)) > 0){
+            while ((length = fis.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
             fis.close();
@@ -174,7 +174,7 @@ public class OwnerController {
 
     @GetMapping(value = "/company/user/{id}")
     @ResponseBody
-    public UserDto findUserByIdAndCompany(@PathVariable Long id){
+    public UserDto findUserByIdAndCompany(@PathVariable Long id) {
         User userByUsername = commonService.getCurrentUser();
         User user = userService.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
         return new UserDto(user);
@@ -208,18 +208,17 @@ public class OwnerController {
         }
     }
 
-    @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id){
+    public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id) {
         User userByUsername = commonService.getCurrentUser();
         Company company = userByUsername.getCompany();
         Optional<Order> order = orderService.findById(id);
 
         List<RouteList> routeLists;
-        if(order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
+        if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             routeLists = routeListService.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
-        }
-        else {
+        } else {
             return null;
         }
         return Odt.RouteListToDtoList(routeLists);
@@ -229,7 +228,7 @@ public class OwnerController {
     @ResponseBody
     public CancellationActDto fetchCancelActOfCompany(@PathVariable Long id) {
         User userByUsername = commonService.getCurrentUser();
-        Company company =userByUsername.getCompany();
+        Company company = userByUsername.getCompany();
         Optional<Order> order = orderService.findById(id);
 
         Consignment consignment;
@@ -249,11 +248,11 @@ public class OwnerController {
     public Object createClient(String name) throws JSONException {
         User userByUsername = commonService.getCurrentUser();
         Client clientByName = clientService.findClientByName(name);
-        if (clientByName==null){
-            @Valid Client save = clientService.save(new Client(name, "default",userByUsername.getCompany()));
+        if (clientByName == null) {
+            @Valid Client save = clientService.save(new Client(name, "default", userByUsername.getCompany()));
             clientSolrRepository.save(SolrClient.solrClientFromClient(save));
             return new ClientDto(save);
-        }else{
+        } else {
             JSONObject json = new JSONObject();
             json.put("error", "Such client is already exists");
             return json.toString();
@@ -273,7 +272,7 @@ public class OwnerController {
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        for (Client client:clientPage.getContent()) {
+        for (Client client : clientPage.getContent()) {
             JSONObject jsonObject;
             ClientDto clientDto = new ClientDto(client);
             jsonObject = new JSONObject(ClientDto.toMap(clientDto));

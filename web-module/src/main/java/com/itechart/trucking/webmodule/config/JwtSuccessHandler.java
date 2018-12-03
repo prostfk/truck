@@ -19,7 +19,6 @@ import java.util.List;
 public class JwtSuccessHandler implements AuthenticationSuccessHandler {
 
 
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 //        System.out.println("Successfully authenticated....");
@@ -28,7 +27,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
         User validate = new JwtVal().validate(token);
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(validate.getUserRole().name()));
-        JwtAuthToken jwtAuthToken = new JwtAuthToken(token, validate.getUsername(),validate.getUserRole(),authorities);
+        JwtAuthToken jwtAuthToken = new JwtAuthToken(token, validate.getUsername(), validate.getUserRole(), authorities);
         jwtAuthToken.setDetails(jwtAuthToken.getCredentials());
         SecurityContextHolder.getContext().setAuthentication(jwtAuthToken);
 

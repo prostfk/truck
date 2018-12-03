@@ -71,8 +71,8 @@ public class SysAdminController {
         JSONObject json = new JSONObject();
         try {
             ST st = new ST(FileUtil.readFile(new ClassPathResource("registration.stg").getFile().getAbsolutePath()));
-            st.add("link", String.format("%s:%s/registration?token=%s",request.getServerName(), "3000", token));
-            EmailUtil.sendMail(username, password, email, "Registration", st.render(new Locale("ru","ru")));
+            st.add("link", String.format("%s:%s/registration?token=%s", request.getServerName(), "3000", token));
+            EmailUtil.sendMail(username, password, email, "Registration", st.render(new Locale("ru", "ru")));
             tokenService.save(new Token(email, token));
             json.put("status", "send");
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class SysAdminController {
     }
 
     @GetMapping(value = "/companies")
-    public  Object findAllCompanies(@RequestParam(name = "page") String page) {
+    public Object findAllCompanies(@RequestParam(name = "page") String page) {
         Page<Company> companies = companyService.findCompaniesByPage(page);
         return companies.map(CompanyDto::new);
     }
@@ -129,7 +129,7 @@ public class SysAdminController {
         List<UserStatisticsDto> userStatisticsDtos = userService.getTotalUserStatistics();
         List<CompanyStatisticsDto> companyStatisticsDtos = companyService.getCompanyStatistics();
         List<AutoStatisticsDto> autoStatisticsDtos = autoService.getAutoStatistics();
-        return new SysAdminStatistics(userStatisticsDtos,companyStatisticsDtos,autoStatisticsDtos);
+        return new SysAdminStatistics(userStatisticsDtos, companyStatisticsDtos, autoStatisticsDtos);
     }
 
 

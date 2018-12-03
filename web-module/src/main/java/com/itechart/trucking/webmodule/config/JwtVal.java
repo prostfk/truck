@@ -25,10 +25,9 @@ public class JwtVal {
                 UserRole role = UserRole.valueOf(body.get("role", String.class));
                 jwtUser = new User(username, null, null, role, null, null);
             }
-        }catch (MalformedJwtException e){
+        } catch (MalformedJwtException e) {
             LOGGER.info("Empty or invalid token: " + e.getMessage());
-        }
-        catch (SignatureException e) {
+        } catch (SignatureException e) {
             LOGGER.warn("Someone tried to change token in header. Token value: " + token);
         } catch (Exception e) {
             LOGGER.warn("Exception in token validation(Maybe, no such user): ", e);

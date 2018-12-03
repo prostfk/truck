@@ -68,7 +68,7 @@ public class ManagerController {
     public Object findActiveOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userService.findUserByUsername(name);
-        Page<Order> orderPage = orderService.findAllByStatusAndCompanyId(1,userByUsername.getCompany().getId(), PageRequest.of(pageId-1, 5));
+        Page<Order> orderPage = orderService.findAllByStatusAndCompanyId(1, userByUsername.getCompany().getId(), PageRequest.of(pageId - 1, 5));
         return orderPage.map(OrderDto::new);
     }
 
@@ -79,14 +79,14 @@ public class ManagerController {
     }
 
     @GetMapping(value = "/manager/products/{id}")
-    public Object findProductsByOrderId(@PathVariable Long id,@RequestParam(value = "page") int pageId) {
+    public Object findProductsByOrderId(@PathVariable Long id, @RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userService.findUserByUsername(name);
 
         Optional<Order> order = orderService.findById(id);
-        if(!order.isPresent() || order.get().getCompany().getId()!=userByEmail.getCompany().getId()) return null;
+        if (!order.isPresent() || order.get().getCompany().getId() != userByEmail.getCompany().getId()) return null;
 
-        Page<Product> productPage = productService.findAllByConsignment(consignmentService.findConsignmentByOrder(order.get()),PageRequest.of(pageId-1, 5));
+        Page<Product> productPage = productService.findAllByConsignment(consignmentService.findConsignmentByOrder(order.get()), PageRequest.of(pageId - 1, 5));
 
         return productPage.map(ProductDto::new);
     }
@@ -136,7 +136,7 @@ public class ManagerController {
     public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam("cancel") int cancel) {
         Consignment consignment = orderService.findOrderById(orderId).getConsignment();
         CancellationAct cancellationAct = consignment.getCancellationAct();
-        if(cancellationAct == null) {
+        if (cancellationAct == null) {
             cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
             cancellationActService.save(cancellationAct);
         }
@@ -146,7 +146,7 @@ public class ManagerController {
             return null;
 
         if (cancel > 0) {
-            product.get().setCancelledCount(product.get().getCancelledCount()==null ? cancel : product.get().getCancelledCount() + cancel);
+            product.get().setCancelledCount(product.get().getCancelledCount() == null ? cancel : product.get().getCancelledCount() + cancel);
             product.get().setCount(product.get().getCount() - cancel);
 
             if (product.get().getCount() == 0) {
@@ -177,7 +177,7 @@ public class ManagerController {
     public ProductDto restoreProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam("restore") int restore) {
         Consignment consignment = orderService.findOrderById(orderId).getConsignment();
         CancellationAct cancellationAct = consignment.getCancellationAct();
-        if(cancellationAct == null) {
+        if (cancellationAct == null) {
             cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, new Double(0), consignment);
             cancellationActService.save(cancellationAct);
         }
@@ -209,7 +209,6 @@ public class ManagerController {
         }*/
 
 
-
         productService.save(product.get());
         cancellationActService.save(cancellationAct);
 
@@ -231,7 +230,7 @@ public class ManagerController {
         order.get().setWaybill(waybill);
 
         String message = "Поступил заказ на перевозку (" + order.get().getName() + " ) ";
-        stompService.sendNotification("/topic/"+userByUsername.getCompany().getId()+"/changeWayBillStatusTo2/"+waybill.getDriver().getUser().getId(), new SocketNotification(name,message));
+        stompService.sendNotification("/topic/" + userByUsername.getCompany().getId() + "/changeWayBillStatusTo2/" + waybill.getDriver().getUser().getId(), new SocketNotification(name, message));
 
         return new OrderDto(order.get());
     }
@@ -258,7 +257,7 @@ public class ManagerController {
         waybill.setStatus(4);
 
         CancellationAct cancellationAct = order.get().getConsignment().getCancellationAct();
-        if(cancellationAct != null) {
+        if (cancellationAct != null) {
             cancellationAct.setDate(new Date((new java.util.Date()).getTime()));
             cancellationActService.save(cancellationAct);
         }

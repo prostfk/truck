@@ -128,12 +128,12 @@ public class DispatcherController {
     }
 
     @GetMapping(value = "/getCompany")
-    public CompanyDto getCompany(){
+    public CompanyDto getCompany() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
         Company company = user.getCompany();
         CompanyDto companyDto = new CompanyDto(company);
-        if(company.getActive()==0) companyDto.setLockerId(company.getLockerId());
+        if (company.getActive() == 0) companyDto.setLockerId(company.getLockerId());
         return companyDto;
     }
 
@@ -141,12 +141,12 @@ public class DispatcherController {
     public Object createOrder(OrderFormData orderFormData, String consignment) throws JSONException, ParseException {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
-        if(user.getCompany().getActive()==0) return HttpStatus.NOT_ACCEPTABLE;
+        if (user.getCompany().getActive() == 0) return HttpStatus.NOT_ACCEPTABLE;
         Order orderToSave = orderService.getOrderFromDto(orderFormData, name);
         Waybill savedWaybill = waybillService.save(orderToSave.getWaybill());
         Order savedOrder = orderService.save(orderToSave);
-        routeListService.save(new RouteList("Отправление", 1,false, savedOrder.getSender().getLat(),savedOrder.getSender().getLng(),savedWaybill));
-        routeListService.save(new RouteList("Завершение", null,false, savedOrder.getReceiver().getLat(),savedOrder.getReceiver().getLng(),savedWaybill));
+        routeListService.save(new RouteList("Отправление", 1, false, savedOrder.getSender().getLat(), savedOrder.getSender().getLng(), savedWaybill));
+        routeListService.save(new RouteList("Завершение", null, false, savedOrder.getReceiver().getLat(), savedOrder.getReceiver().getLng(), savedWaybill));
         Consignment savedConsignment = consignmentService.save(new Consignment(new Date().toString(), savedOrder));
         JSONArray jsonArray = new JSONArray(consignment);
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -155,7 +155,7 @@ public class DispatcherController {
             //changed product.getStatus().name() on product.getStatus()
             productService.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
-        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/createOrder/", new SocketNotification("Диспетчер","Создан заказ - " + savedOrder.getName()));
+        stompService.sendNotification("/topic/" + user.getCompany().getId() + "/createOrder/", new SocketNotification("Диспетчер", "Создан заказ - " + savedOrder.getName()));
 
         return HttpStatus.OK;
     }
@@ -181,7 +181,7 @@ public class DispatcherController {
             productService.saveProduct(product.getName(), product.getStatus(), product.getDescription(), savedConsignment.getId(), product.getPrice(), product.getCount());
         }
 
-        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/editOrder/", new SocketNotification("Диспетчер","Изменен заказ - " + orderDto.getName()));
+        stompService.sendNotification("/topic/" + user.getCompany().getId() + "/editOrder/", new SocketNotification("Диспетчер", "Изменен заказ - " + orderDto.getName()));
         return HttpStatus.OK;
 
     }
@@ -263,19 +263,28 @@ public class DispatcherController {
         Iterator keys = jsonObject.keys();
         while (keys.hasNext()) {
             String next = keys.next().toString();
-            switch (next){
-                case "price": product.setPrice(Double.parseDouble(jsonObject.getString(next)));break;
-                case "name": product.setName(jsonObject.getString(next));break;
-                case "description": product.setDescription(jsonObject.getString(next));break;
+            switch (next) {
+                case "price":
+                    product.setPrice(Double.parseDouble(jsonObject.getString(next)));
+                    break;
+                case "name":
+                    product.setName(jsonObject.getString(next));
+                    break;
+                case "description":
+                    product.setDescription(jsonObject.getString(next));
+                    break;
                 //changed ProductState.valueOf(jsonObject.getString(next)) on Integer.valueOf(jsonObject.getString(next))
-                case "status": product.setStatus(Integer.valueOf(jsonObject.getString(next)));break;
-                case "count": product.setCount(Integer.parseInt(jsonObject.getString(next)));
+                case "status":
+                    product.setStatus(Integer.valueOf(jsonObject.getString(next)));
+                    break;
+                case "count":
+                    product.setCount(Integer.parseInt(jsonObject.getString(next)));
             }
         }
         return product;
     }
 
-    @RequestMapping(value = "/ordersByDate",method = RequestMethod.GET)
+    @RequestMapping(value = "/ordersByDate", method = RequestMethod.GET)
     public List<OrderDtoCalendar> getOrders(@RequestParam(value = "from") String from, @RequestParam(value = "to") String to) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findUserByUsername(name);
@@ -285,7 +294,7 @@ public class DispatcherController {
         LocalDate localDateTo = LocalDate.parse(to);
         Date localDateToDate = Date.from(localDateTo.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        List<Order> orders = orderService.findByDates(localDateFromDate,localDateToDate,user.getCompany().getId());
+        List<Order> orders = orderService.findByDates(localDateFromDate, localDateToDate, user.getCompany().getId());
 
         List<OrderDtoCalendar> orderDtoCalendars = Odt.convertLists(orders, OrderDtoCalendar::new);
         return orderDtoCalendars;
@@ -293,21 +302,22 @@ public class DispatcherController {
 
     // we should test if out driver and auto is free for new date
     @PutMapping(value = "/waybill/changedate")
-    public Boolean changeDateOfWaybill(@ModelAttribute(value = "orderId") String orderIdS,@ModelAttribute(value = "daysOffset") String daysOffsetS) {
+    public Boolean changeDateOfWaybill(@ModelAttribute(value = "orderId") String orderIdS, @ModelAttribute(value = "daysOffset") String daysOffsetS) {
         User userByEmail = commonService.getCurrentUser();
-        if(userByEmail==null) return false;
+        if (userByEmail == null) return false;
 
         Long orderId = Long.parseLong(orderIdS);
         Long daysOffset = Long.parseLong(daysOffsetS);
-        if(orderId==null || daysOffset==null) return false;
+        if (orderId == null || daysOffset == null) return false;
 
         Order order = orderService.findOrderById(orderId);
-        if(userByEmail.getCompany().getId()!=orderService.findOrderById(orderId).getCompany().getId()) return false;
+        if (userByEmail.getCompany().getId() != orderService.findOrderById(orderId).getCompany().getId()) return false;
         Waybill waybill = order.getWaybill();
 
         LocalDate localDateDep = waybill.getDateDeparture().toLocalDate().plusDays(daysOffset);
         LocalDate localDateArr = waybill.getDateArrival().toLocalDate().plusDays(daysOffset);
-        if(!checkDatesForFreeAutosAndDrivers(userByEmail.getCompany(),waybill,java.sql.Date.valueOf(localDateDep),java.sql.Date.valueOf(localDateArr))) return false;
+        if (!checkDatesForFreeAutosAndDrivers(userByEmail.getCompany(), waybill, java.sql.Date.valueOf(localDateDep), java.sql.Date.valueOf(localDateArr)))
+            return false;
         waybill.setDateDeparture(java.sql.Date.valueOf(localDateDep));
         waybill.setDateArrival(java.sql.Date.valueOf(localDateArr));
         waybillService.save(waybill);
@@ -318,24 +328,24 @@ public class DispatcherController {
         waybillSocketUpdateDto.setCompanyId(userByEmail.getCompany().getId());
         waybillSocketUpdateDto.setWaybillDto(new WaybillDto(waybill));
 
-        stompService.sendNotification("/topic/"+userByEmail.getCompany().getId()+"/calendarUpdate", waybillSocketUpdateDto);
+        stompService.sendNotification("/topic/" + userByEmail.getCompany().getId() + "/calendarUpdate", waybillSocketUpdateDto);
 
         return true;
     }
 
-    private Boolean checkDatesForFreeAutosAndDrivers(Company company,Waybill waybill, java.sql.Date localDateDep, java.sql.Date localDateArr){
-        boolean driverIsFree = false,autoIsFree=false;
-        List<Driver> freeDrivers = waybillService.findFreeDriversToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
-        for (Driver driver:freeDrivers) {
-            if (driver.getId()==waybill.getDriver().getId()){
-                driverIsFree=true;
+    private Boolean checkDatesForFreeAutosAndDrivers(Company company, Waybill waybill, java.sql.Date localDateDep, java.sql.Date localDateArr) {
+        boolean driverIsFree = false, autoIsFree = false;
+        List<Driver> freeDrivers = waybillService.findFreeDriversToChange(localDateDep, localDateArr, company.getId(), waybill.getId());
+        for (Driver driver : freeDrivers) {
+            if (driver.getId() == waybill.getDriver().getId()) {
+                driverIsFree = true;
                 break;
             }
         }
-        List<Auto> freeAutos = waybillService.findFreeAutosToChange(localDateDep,localDateArr,company.getId(),waybill.getId());
-        for (Auto auto:freeAutos) {
-            if (auto.getId()==waybill.getAuto().getId()){
-                autoIsFree=true;
+        List<Auto> freeAutos = waybillService.findFreeAutosToChange(localDateDep, localDateArr, company.getId(), waybill.getId());
+        for (Auto auto : freeAutos) {
+            if (auto.getId() == waybill.getAuto().getId()) {
+                autoIsFree = true;
                 break;
             }
         }

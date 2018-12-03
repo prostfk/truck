@@ -90,20 +90,21 @@ public class DriverController {
 
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/setNewStatus", method = RequestMethod.PUT)
     public WaybillDto setNewStatus(@PathVariable Long orderId, @RequestBody String newStatusValue) {
-        if(newStatusValue.equals("2") && newStatusValue.equals("3")) return null;
+        if (newStatusValue.equals("2") && newStatusValue.equals("3")) return null;
 
         User user = commonService.getCurrentUser();
         Order order = orderService.findOrderById(orderId);
         Waybill waybill = order.getWaybill();
 
-        if (waybill.getDriver()==null || (waybill.getStatus()!=2 && waybill.getStatus()!=3) || waybill.getDriver().getUser().getId()!=user.getId()  ) return null;
+        if (waybill.getDriver() == null || (waybill.getStatus() != 2 && waybill.getStatus() != 3) || waybill.getDriver().getUser().getId() != user.getId())
+            return null;
 
         int ammountNotMarkedPoins = 0;
-        List<RouteList> routeLists= waybill.getRouteListList();
-        for (RouteList point:routeLists) {
-            if(point.getMarked() == null ||!point.getMarked()) ammountNotMarkedPoins++;
+        List<RouteList> routeLists = waybill.getRouteListList();
+        for (RouteList point : routeLists) {
+            if (point.getMarked() == null || !point.getMarked()) ammountNotMarkedPoins++;
         }
-        if(ammountNotMarkedPoins!=0) return null;
+        if (ammountNotMarkedPoins != 0) return null;
 
         Integer newStatus = Integer.valueOf(newStatusValue);
         waybill.setStatus(newStatus);
@@ -118,7 +119,7 @@ public class DriverController {
         String name = user.getUsername();
 
         Optional<Order> order = orderService.findById(orderId);
-        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name) || order.get().getWaybill().getStatus()!=2)
+        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name) || order.get().getWaybill().getStatus() != 2)
             return null;
 
         Optional<RouteList> point = routeListService.findById(pointId);
@@ -129,9 +130,9 @@ public class DriverController {
             else point.get().setMarked(true);
         }
         routeListService.save(point.get());
-        String message = point.get().getMarked()==true? "Прошел контрольную точку в заказе: " + order.get().getName() :"Отменил прохождение точки в заказе: " + order.get().getName();
+        String message = point.get().getMarked() == true ? "Прошел контрольную точку в заказе: " + order.get().getName() : "Отменил прохождение точки в заказе: " + order.get().getName();
 
-        stompService.sendNotification("/topic/"+user.getCompany().getId()+"/markPoint/", new SocketNotification(name,message));
+        stompService.sendNotification("/topic/" + user.getCompany().getId() + "/markPoint/", new SocketNotification(name, message));
 
         return new RouteListDto(point.get());
     }

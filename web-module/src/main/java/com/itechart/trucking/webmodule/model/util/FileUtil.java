@@ -12,15 +12,15 @@ public class FileUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BirthDayCongratulations.class);
 
-    public static String readFile(String path){
+    public static String readFile(String path) {
         StringBuilder sb = new StringBuilder();
-        try (FileReader fr = new FileReader(path)){
+        try (FileReader fr = new FileReader(path)) {
             int i = 0;
-            while ((i = fr.read())!=-1){
-                sb.append((char)i);
+            while ((i = fr.read()) != -1) {
+                sb.append((char) i);
             }
         } catch (IOException e) {
-            LOGGER.error("FILE NOT FOUND: ",e);
+            LOGGER.error("FILE NOT FOUND: ", e);
         }
         return sb.toString();
     }

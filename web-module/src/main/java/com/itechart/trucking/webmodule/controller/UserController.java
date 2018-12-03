@@ -12,7 +12,7 @@ public class UserController {
 
 
     @Autowired
-    public UserController(BirthDayCongratulations bdc){
+    public UserController(BirthDayCongratulations bdc) {
         bdc.congratulate();
     }
 
