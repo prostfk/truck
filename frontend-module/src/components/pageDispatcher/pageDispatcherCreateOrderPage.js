@@ -102,8 +102,8 @@ export default class DispatcherCreateOrderPage extends React.Component {
             formData.append("status", ValidationUtil.getStringFromUnnownObject(this.state.status));
             formData.append("departureStock", ValidationUtil.getStringFromUnnownObject(this.state.departure_stock));
             formData.append("deliveryStock", ValidationUtil.getStringFromUnnownObject(this.state.delivery_stock));
-            formData.append("dateArrival", ValidationUtil.getStringFromUnnownObject(this.state.date_departure));
-            formData.append("dateDeparture", ValidationUtil.getStringFromUnnownObject(this.state.date_arrival));
+            formData.append("dateArrival", ValidationUtil.getStringFromUnnownObject(this.state.date_arrival));
+            formData.append("dateDeparture", ValidationUtil.getStringFromUnnownObject(this.state.date_departure));
             formData.append("waybillStatus", ValidationUtil.getStringFromUnnownObject(this.state.waybill_status));
             formData.append("autoId", ValidationUtil.getStringFromUnnownObject(this.state.auto));
             formData.append("driverId", ValidationUtil.getStringFromUnnownObject(this.state.driver));
