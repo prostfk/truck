@@ -7,7 +7,7 @@ import DispatcherOrderList from "./pageDispatcher/pageDispatcherOrderList"
 import CompanyListPage from "./pageSysAdmin/pageCompanyList";
 import pageUserLogin from "./pageUserLogin/pageUserLogin";
 import EditConsignment from "./pageDispatcher/pageDispatcherEditConsigment";
-import HeaderElement from "./PagesCommon/header";
+import HeaderContainer from "./PagesCommon/header";
 import registration from "./registration/registration";
 import DriverOrderList from "./pageDriver/pageDriver";
 import PageSysAdminStatistics from "./pageSysAdmin/pageSysAdminStatistics";
@@ -44,13 +44,13 @@ import CreateStockModal from "./pageAdmin/modalComponentCreateStock";
 import NotificationsErrorHandler from "./errorWindows/notificationErrorHandler";
 import WelcomePage from "./PagesCommon/welcomePages/welcomePage";
 
-class MainController extends React.Component {
+class MainRouter extends React.Component {
 
     render() {
         return (
             <Router>
                 <div>
-                    <Route path="/*" component={HeaderElement}/>
+                    <Route path="/*" component={HeaderContainer}/>
                     <Route path="/*" component={NotificationsErrorHandler}/>
                     <Route exact path="/" component={WelcomePage}/>
                     <Route exact path="/registration" component={registration}/>
@@ -96,4 +96,4 @@ class MainController extends React.Component {
     }
 }
 
-export default MainController;
+export default MainRouter;
