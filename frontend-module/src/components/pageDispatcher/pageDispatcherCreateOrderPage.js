@@ -95,6 +95,10 @@ export default class DispatcherCreateOrderPage extends React.Component {
     };
 
     saveBtnClick() {
+        if (this.state.consignment.length === 0){
+            NotificationManager.error("Добавьте товар");
+            return;
+        }
         if (this.validateOrderForm()) {
             let formData = new FormData();
             formData.append("clientId", ValidationUtil.getStringFromUnnownObject(this.state.client_id));

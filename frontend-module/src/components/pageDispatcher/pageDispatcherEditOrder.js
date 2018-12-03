@@ -97,7 +97,7 @@ export default class DispatcherEditOrder extends Component {
     validateProduct = () => {
         try{
             let nameVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductName)!== '';
-            let statusVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus)!== '';
+            // let statusVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus)!== '';
             let descVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription)!== '';
             let priceVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice)!== '';
             let countVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductCount)!== '';
@@ -106,11 +106,11 @@ export default class DispatcherEditOrder extends Component {
             }else{
                 document.getElementById('prodName-error-span').innerText = '';
             }
-            if (!statusVal){
-                document.getElementById('prodStatus-error-span').innerText = 'Статус не может быть пустым';
-            }else{
-                document.getElementById('prodStatus-error-span').innerText = '';
-            }
+            // if (!statusVal){
+            //     document.getElementById('prodStatus-error-span').innerText = 'Статус не может быть пустым';
+            // }else{
+            //     document.getElementById('prodStatus-error-span').innerText = '';
+            // }
             if (!descVal){
                 document.getElementById('prodDescription-error-span').innerText = 'Описание не может быть пустым';
             }else{
@@ -127,7 +127,7 @@ export default class DispatcherEditOrder extends Component {
                 document.getElementById('prodCount-error-span').innerText = '';
             }
             document.getElementById('prodForm-error-span').innerText = '';
-            return nameVal && statusVal && descVal && priceVal && countVal;
+            return nameVal && descVal && priceVal && countVal;
         }catch (e) {
             document.getElementById('prodForm-error-span').innerText = 'Проверьте правильность ваших данных';
             return false;
@@ -135,6 +135,10 @@ export default class DispatcherEditOrder extends Component {
     };
 
     sendInfoToServer() {
+        if (this.state.consignment.length === 0){
+            NotificationManager.error("Добавьте товар");
+            return;
+        }
         if (this.validateOrderForm()) {
             let formData = new FormData();
             formData.append("orderId", this.state.order.id);
@@ -519,17 +523,17 @@ export default class DispatcherEditOrder extends Component {
                                            placeholder={"Название"}/>
                                     <span className="error-span" id="prodName-error-span"/>
                                 </div>
-                                <div className="col-md-2">
-                                    <select className="custom-select" onChange={this.changeInput}
-                                            value={this.state.newProductStatus} id="newProductStatus">
-                                        <option value={'1'}>Принят</option>
-                                        <option value={'2'}>Проверка завершена</option>
-                                        <option value={'3'}>Доставлен</option>
-                                        <option value={'4'}>Утерян</option>
-                                    </select>
-                                    <span className="error-span" id="prodStatus-error-span"/>
+                                {/*<div className="col-md-2">*/}
+                                    {/*<select className="custom-select" onChange={this.changeInput}*/}
+                                            {/*value={this.state.newProductStatus} id="newProductStatus">*/}
+                                        {/*<option value={'1'}>Принят</option>*/}
+                                        {/*<option value={'2'}>Проверка завершена</option>*/}
+                                        {/*<option value={'3'}>Доставлен</option>*/}
+                                        {/*<option value={'4'}>Утерян</option>*/}
+                                    {/*</select>*/}
+                                    {/*<span className="error-span" id="prodStatus-error-span"/>*/}
 
-                                </div>
+                                {/*</div>*/}
                                 <div className="col-md-2">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}
