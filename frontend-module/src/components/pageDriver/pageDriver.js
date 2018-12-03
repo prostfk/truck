@@ -1,6 +1,8 @@
 import React from "react";
 import {Link} from 'react-router-dom'
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import connect from "react-redux/es/connect/connect";
+import {UPLOAD_ORDERS} from "../../constants/driverActionTypes";
 
 class DriverOrderList extends React.Component {
     constructor(props) {
@@ -23,8 +25,8 @@ class DriverOrderList extends React.Component {
         }
         let oldWayBills = this.state.orders;
 
-        var newArray = oldWayBills.map(function(element) {
-            if(element.waybill.id==newWayBill.id) {
+        let newArray = oldWayBills.map(function(element) {
+            if(element.waybill.id===newWayBill.id) {
                 element.waybill = newWayBill;
                 return element;
             }
@@ -37,6 +39,7 @@ class DriverOrderList extends React.Component {
     componentDidMount() {
         this.getOrderList().then(data => {
             this.setState({orders: data});
+            this.props.updateOrders(data);
         });
     }
 
@@ -46,13 +49,13 @@ class DriverOrderList extends React.Component {
             return response.json();
         }).then(function (result) {
             return result;
-        }).catch((err) => {
-            console.log(err);
+        }).catch(() => {
+            NotificationManager.error("Ошибка", 'Попробуйте позже');
         });
     }
 
     updateOrderStatus(orderId,status){
-        if(status!=2 && status!=3) return;
+        if(status!==2 && status!==3) return;
         let refThis = this;
         /*/orders/getMyOrders/{orderId}/setNewStatus*/
         fetch('http://localhost:8080/api/orders/getMyOrders/'+orderId+'/setNewStatus', {
@@ -78,8 +81,7 @@ class DriverOrderList extends React.Component {
 
     renderTable(order, index) {
         if (!order) return;
-        console.log(order.waybill);
-        let buttonAction = order.waybill.status==2?
+        let buttonAction = order.waybill.status===2?
             <a onClick={()=>{this.updateOrderStatus(order.id,3)}} className="table_button bg-secondary text-white">Завершить заказ</a>:"Заказ завершен"
 
         return <div key={index} className="row table_row order_row animated fadeInUp">
@@ -121,4 +123,18 @@ class DriverOrderList extends React.Component {
     }
 }
 
-export default DriverOrderList;
+const mapStateToProps = state => {
+    return {
+        orders: state.driverReducer
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return ({
+        updateOrders: payload => {
+            dispatch({type: UPLOAD_ORDERS, payload: payload})
+        }
+    })
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DriverOrderList);
