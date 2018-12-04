@@ -32,7 +32,7 @@ export default class PageStockListNew extends React.Component {
 
     forceUpdateHandler() {
         const refthis = this;
-        fetch('http://localhost:8080/api/stocks?=' + this.state.currentPage, {
+        fetch('/api/stocks?=' + this.state.currentPage, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -66,7 +66,7 @@ export default class PageStockListNew extends React.Component {
         formData.append("name", this.state.stockName);
         formData.append("address", this.state.stockAddress);
         console.log(formData);
-        fetch('http://localhost:8080/api/stocks', {
+        fetch('/api/stocks', {
             method: "POST",
             body: formData,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -81,7 +81,7 @@ export default class PageStockListNew extends React.Component {
     }
 
     getStockList(pageId = 1) {
-        return fetch('http://localhost:8080/api/stocks?page=' + pageId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('/api/stocks?page=' + pageId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
@@ -115,7 +115,7 @@ export default class PageStockListNew extends React.Component {
         formData.append("name", newStockName);
         formData.append("address", newStockAddress);
 
-        fetch('http://localhost:8080/api/editStock/', {
+        fetch('/api/editStock/', {
             method: "PUT",
             body: formData,
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
@@ -158,7 +158,7 @@ export default class PageStockListNew extends React.Component {
 
     submitDelete(stockId) {
         const ref = this;
-        fetch('http://localhost:8080/api/stocks', {
+        fetch('/api/stocks', {
             method: 'DELETE',
             body: stockId,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -176,7 +176,7 @@ export default class PageStockListNew extends React.Component {
 
     searchStocks = () => {
         let name = ValidationUtil.getStringFromUnnownObject(this.state.searchStockName);
-        fetch(`http://localhost:8080/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+        fetch(`/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         }).then(data => {
             if (Array.isArray(data)) {

@@ -41,7 +41,7 @@ export default class UsersList extends Component {
 
 
     getUsersRequest = (pageid = 1) => {
-        fetch('http://localhost:8080/api/users?page=' + pageid, {
+        fetch('/api/users?page=' + pageid, {
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {

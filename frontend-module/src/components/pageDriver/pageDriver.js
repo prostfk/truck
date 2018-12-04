@@ -42,7 +42,7 @@ class DriverOrderList extends React.Component {
 
     /*get all company list*/
     getOrderList() {
-        return fetch('http://localhost:8080/api/orders/getMyOrders', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
+        return fetch('/api/orders/getMyOrders', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
@@ -55,7 +55,7 @@ class DriverOrderList extends React.Component {
         if(status!=2 && status!=3) return;
         let refThis = this;
         /*/orders/getMyOrders/{orderId}/setNewStatus*/
-        fetch('http://localhost:8080/api/orders/getMyOrders/'+orderId+'/setNewStatus', {
+        fetch('/api/orders/getMyOrders/'+orderId+'/setNewStatus', {
             method: "PUT",
             headers: {'Auth-token': localStorage.getItem('Auth-token')},
             body:status

@@ -19,7 +19,7 @@ export default class PageStockListNew extends React.Component {
 
     forceUpdateHandler() {
         const refthis = this;
-        fetch('http://localhost:8080/api/stocks?=' + this.state.currentPage, {
+        fetch('/api/stocks?=' + this.state.currentPage, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -31,7 +31,7 @@ export default class PageStockListNew extends React.Component {
 
 
     getStockList(pageid = 1) {
-        const fetchResult = fetch('http://localhost:8080/api/stocks?page=' + pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        const fetchResult = fetch('/api/stocks?page=' + pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

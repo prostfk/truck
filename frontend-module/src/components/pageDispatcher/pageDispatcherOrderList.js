@@ -42,7 +42,7 @@ class DispatcherOrderList extends React.Component {
 
     /*get all company list*/
     getOrderList(pageid = 1) {
-        return fetch('http://localhost:8080/api/orders?page=' + pageid, {
+        return fetch('/api/orders?page=' + pageid, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -66,7 +66,7 @@ class DispatcherOrderList extends React.Component {
     }
 
     getCompany() {
-        return fetch('http://localhost:8080/api/getCompany/', {
+        return fetch('/api/getCompany/', {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {

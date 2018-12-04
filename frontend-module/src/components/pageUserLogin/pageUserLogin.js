@@ -53,7 +53,7 @@ class pageUserLogin extends Component {
         let formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);
-        fetch('http://localhost:8080/auth', {method: "POST", body: formData}).then(response => {
+        fetch('/auth', {method: "POST", body: formData}).then(response => {
             response.json().then(data => {
                 if (data.error === undefined) {
                     document.getElementById('login-form').style.display = 'none';

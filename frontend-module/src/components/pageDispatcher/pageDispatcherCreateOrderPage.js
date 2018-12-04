@@ -111,7 +111,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
             formData.append("autoId", ValidationUtil.getStringFromUnnownObject(this.state.auto));
             formData.append("driverId", ValidationUtil.getStringFromUnnownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
-            fetch('http://localhost:8080/api/orders/createOrder', {
+            fetch('/api/orders/createOrder', {
                 method: "POST",
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -135,7 +135,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
             companyNameForSearch: [event.target.value]
         });
         if (event.target.value !== '') {
-            fetch(`http://localhost:8080/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
                 .then(response => {
                     return response.json()
                 }).then(data => {

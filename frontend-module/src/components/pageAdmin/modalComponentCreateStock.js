@@ -58,7 +58,7 @@ export default class CreateStockModal extends Component {
             formData.append("lat", this.state.lat);
             formData.append("lng", this.state.lng);
 
-            fetch('http://localhost:8080/api/stocks', {
+            fetch('/api/stocks', {
                 method: "POST",
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}
