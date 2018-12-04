@@ -5,9 +5,9 @@ import com.itechart.trucking.order.entity.Order;
 import lombok.Data;
 
 public class SocketNotificationDriver extends SocketNotification {
-    Long orderId;
-    Boolean orderAdd=true;
-    OrderDto order;
+    private Long orderId;
+    private Boolean orderAdd=true;
+    private OrderDto order;
 
     public SocketNotificationDriver(String userName, String message) {
         super(userName, message);
