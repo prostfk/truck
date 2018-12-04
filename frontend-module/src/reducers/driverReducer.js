@@ -1,6 +1,7 @@
-import {DELETE_ORDER, UPLOAD_ORDERS} from "../constants/driverActionTypes";
+import {DELETE_ORDER, UPLOAD_ORDERS,GET_ORDERS} from "../constants/driverActionTypes";
 
 export default (state = [], action) => {
+
     switch (action.type) {
         case UPLOAD_ORDERS:
             return [

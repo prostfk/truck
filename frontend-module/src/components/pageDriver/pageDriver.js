@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from 'react-router-dom'
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import connect from "react-redux/es/connect/connect";
-import {UPLOAD_ORDERS} from "../../constants/driverActionTypes";
+import {GET_ORDERS, UPLOAD_ORDERS} from "../../constants/driverActionTypes";
 
 class DriverOrderList extends React.Component {
     constructor(props) {
@@ -37,9 +37,10 @@ class DriverOrderList extends React.Component {
     }
 
     componentDidMount() {
+        let refThis = this;
         this.getOrderList().then(data => {
-            this.setState({orders: data});
-            this.props.updateOrders(data);
+            refThis.setState({orders: data});
+            refThis.props.setOrders(data);
         });
     }
 
@@ -81,6 +82,7 @@ class DriverOrderList extends React.Component {
 
     renderTable(order, index) {
         if (!order) return;
+        debugger;
         let buttonAction = order.waybill.status===2?
             <a onClick={()=>{this.updateOrderStatus(order.id,3)}} className="table_button bg-secondary text-white">Завершить заказ</a>:"Заказ завершен"
 
@@ -114,8 +116,8 @@ class DriverOrderList extends React.Component {
                     <div className="col-md-2">Путь</div>
                 </div>
                 {
-                    this.state.orders.map((element, index) => {
-                        return this.renderTable(element, index);
+                    this.props.orders.map((element, index) => {
+                        return this.renderTable(element[0], index);
                     })
                 }
             </div>
@@ -131,9 +133,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return ({
-        updateOrders: payload => {
-            dispatch({type: UPLOAD_ORDERS, payload: payload})
-        }
+        setOrders: payload => { dispatch({type: UPLOAD_ORDERS, payload: payload})  },
+        getOrders: payload => { dispatch({type: GET_ORDERS, payload: payload}) },
     })
 };
 
