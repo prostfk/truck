@@ -1,8 +1,8 @@
 import React from "react";
 import {Link} from 'react-router-dom'
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import connect from "react-redux/es/connect/connect";
-import {GET_ORDERS, UPLOAD_ORDERS} from "../../constants/driverActionTypes";
+import {UPLOAD_ORDERS} from "../../constants/driverActionTypes";
 
 class DriverOrderList extends React.Component {
     constructor(props) {
@@ -41,6 +41,8 @@ class DriverOrderList extends React.Component {
         this.getOrderList().then(data => {
             refThis.setState({orders: data});
             refThis.props.setOrders(data);
+/*            let newElem = {"id":1,"name":"Тестовый","status":1,"dateAccepted":[2018,12,5],"dateExecuted":[2018,12,4],"waybill":{"id":2,"status":2,"dateDeparture":[2018,12,20],"dateArrival":[2018,12,22],"driver":null,"auto":null,"routeListList":null},"sender":{"id":2,"address":"Неманская 56","name":"Неманская 56","active":true,"lat":53.9231175,"lng":27.429209600000036,"company":null,"stockSenderOrders":null,"stockReceiverOrders":null},"receiver":{"id":1,"address":"Революционная 15","name":"Революционная 14","active":true,"lat":53.9017861,"lng":27.550358200000005,"company":null,"stockSenderOrders":null,"stockReceiverOrders":null},"company":null,"client":{"id":2,"name":"Евроопт Гродно","type":"default","company":null,"clientOrders":null},"consignment":null};
+            refThis.props.addOrder(newElem);*/
         });
     }
 
@@ -82,7 +84,6 @@ class DriverOrderList extends React.Component {
 
     renderTable(order, index) {
         if (!order) return;
-        debugger;
         let buttonAction = order.waybill.status===2?
             <a onClick={()=>{this.updateOrderStatus(order.id,3)}} className="table_button bg-secondary text-white">Завершить заказ</a>:"Заказ завершен"
 
@@ -117,7 +118,7 @@ class DriverOrderList extends React.Component {
                 </div>
                 {
                     this.props.orders.map((element, index) => {
-                        return this.renderTable(element[0], index);
+                        return this.renderTable(element, index);
                     })
                 }
             </div>
@@ -133,8 +134,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return ({
-        setOrders: payload => { dispatch({type: UPLOAD_ORDERS, payload: payload})  },
-        getOrders: payload => { dispatch({type: GET_ORDERS, payload: payload}) },
+        setOrders: payload => { dispatch({type: UPLOAD_ORDERS, payload: payload})  }
     })
 };
 

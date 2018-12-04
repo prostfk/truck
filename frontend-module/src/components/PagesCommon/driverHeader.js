@@ -3,14 +3,23 @@ import {Link} from "react-router-dom";
 import LogoutComponent from "../pageLogout/logoutComponent";
 import SockJsClient from "react-stomp";
 import {NotificationManager} from "react-notifications";
+import connect from "react-redux/es/connect/connect";
+import {ADD_ORDER,DELETE_ORDER} from "../../constants/driverActionTypes";
 
-export default class DriverHeader extends Component {
+
+class DriverHeader extends Component {
     constructor(props) {
         super(props);
         this.handleMessage = this.handleMessage.bind(this);
     }
 
     handleMessage(msg) {
+        if(msg.orderAdd==true){
+            this.props.addOrder(msg.order);
+        }
+        else{
+            this.props.deleteOrder(msg.orderId);
+        }
         NotificationManager.info(msg.message,'Информация ( '+ msg.userName+' )');
     }
     render() {
@@ -38,7 +47,7 @@ export default class DriverHeader extends Component {
                     </li>
 
                 </div>
-                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/changeWayBillStatusTo2/'+localStorage.getItem("userId")]}
+                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/changeWayBillStatus/'+localStorage.getItem("userId")]}
                               onMessage={(msg) => {
                                   this.handleMessage(msg);
                               }}
@@ -48,3 +57,18 @@ export default class DriverHeader extends Component {
     }
 
 }
+
+const mapStateToProps = state => {
+    return {
+        orders: state.driverReducer
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return ({
+        addOrder: payload => { dispatch({type: ADD_ORDER, payload: payload})  },
+        deleteOrder: payload => { dispatch({type: DELETE_ORDER, payload: payload})  }
+    })
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DriverHeader);
