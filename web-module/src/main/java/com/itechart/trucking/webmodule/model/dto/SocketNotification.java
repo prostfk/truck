@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class SocketNotification {
-    String userName;
-    String message;
+    protected String userName;
+    protected String message;
 
     public SocketNotification(String userName, String message) {
         this.userName = userName;
