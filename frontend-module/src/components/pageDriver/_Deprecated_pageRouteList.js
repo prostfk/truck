@@ -1,3 +1,4 @@
+/*
 import React from "react";
 
 class DriverRouteList extends React.Component {
@@ -46,7 +47,7 @@ class DriverRouteList extends React.Component {
         });
     }
 
-    /*get all company list*/
+    /!*get all company list*!/
     getRouteList() {
         return fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
@@ -55,7 +56,7 @@ class DriverRouteList extends React.Component {
         });
     }
 
-    /*render row of table ( calls from html ) */
+    /!*render row of table ( calls from html ) *!/
     renderTable(routePoint) {
         if (!routePoint) return;
         return <div className="row table_row order_row">
@@ -87,4 +88,4 @@ class DriverRouteList extends React.Component {
     }
 }
 
-export default DriverRouteList;
+export default DriverRouteList;*/

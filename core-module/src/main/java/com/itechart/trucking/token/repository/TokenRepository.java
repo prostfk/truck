@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface TokenRepository extends CrudRepository<Token, Long> {
 
     Token findTokenByEmail(String email);
+
     Token findTokenByTokenValue(String tokenValue);
 
 }

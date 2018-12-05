@@ -8,7 +8,7 @@ public class CompanyStatisticsDto {
     public Long count;
 
 
-    public CompanyStatisticsDto(int blocked,Long count) {
+    public CompanyStatisticsDto(int blocked, Long count) {
         this.isBlocked = blocked;
         this.count = count;
     }

@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class TokenUtil {
 
-    public static String generateToken(int length){
+    public static String generateToken(int length) {
         char[] chars = "zxcvbnmasdfghjklqwertyuiop1234567890ZXCVBNMASDFGHJKLQWERTYUIOP".toCharArray();
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();

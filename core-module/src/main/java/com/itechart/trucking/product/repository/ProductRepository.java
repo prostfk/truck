@@ -35,5 +35,5 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     @Transactional
     @Modifying
     @Query(value = "INSERT INTO product(name, status, description, product_consignment, price, count) VALUES (:productName, :productStatus, :description,:consignmentId, :price, :productCount)", nativeQuery = true)
-    int saveProduct(@Param("productName") String name, @Param("productStatus") Integer status, @Param("description") String description, @Param("consignmentId") Long consignmentId, @Param("price") Double price, @Param("productCount")Integer productCount);
+    int saveProduct(@Param("productName") String name, @Param("productStatus") Integer status, @Param("description") String description, @Param("consignmentId") Long consignmentId, @Param("price") Double price, @Param("productCount") Integer productCount);
 }

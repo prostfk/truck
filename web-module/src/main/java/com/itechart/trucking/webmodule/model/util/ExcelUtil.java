@@ -25,7 +25,7 @@ public class ExcelUtil {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         Sheet sheet = book.createSheet("Stats");
-        String[] headers = {"Название заказа", "Дата создания", "Дата выполнения", "Доход" ,"Расход","Прибыль"};
+        String[] headers = {"Название заказа", "Дата создания", "Дата выполнения", "Доход", "Расход", "Прибыль"};
         Row row = sheet.createRow(0);
         for (int i = 0; i < headers.length; i++) {
             Cell cell = row.createCell(i);
@@ -35,17 +35,23 @@ public class ExcelUtil {
             Order order = orders.get(i);
             double profitFromOrder = getProfitFromOrder(order);
             double consumption = getConsumption(order);
-            row = sheet.createRow(i+1);
-            Cell cell = row.createCell(0);cell.setCellValue(order.getName());
-            cell = row.createCell(1);cell.setCellValue(df.format(order.getDateAccepted()));
-            cell = row.createCell(2);cell.setCellValue(df.format(order.getDateExecuted()));
-            cell = row.createCell(3);cell.setCellValue(profitFromOrder);
-            cell = row.createCell(4);cell.setCellValue(consumption);
-            cell = row.createCell(5);cell.setCellValue(profitFromOrder - consumption);
+            row = sheet.createRow(i + 1);
+            Cell cell = row.createCell(0);
+            cell.setCellValue(order.getName());
+            cell = row.createCell(1);
+            cell.setCellValue(df.format(order.getDateAccepted()));
+            cell = row.createCell(2);
+            cell.setCellValue(df.format(order.getDateExecuted()));
+            cell = row.createCell(3);
+            cell.setCellValue(profitFromOrder);
+            cell = row.createCell(4);
+            cell.setCellValue(consumption);
+            cell = row.createCell(5);
+            cell.setCellValue(profitFromOrder - consumption);
         }
         book.write(new FileOutputStream(String.format("%s/%s.xls", path, username)));
         book.close();
-        return String.format("%s/%s.xls",path, username);
+        return String.format("%s/%s.xls", path, username);
     }
 
     public String calcFullStatistics(String path, String username, OwnerPageStatisticsDto ownerPageStatisticsDto) throws IOException {
@@ -60,30 +66,30 @@ public class ExcelUtil {
 
         Workbook book = new HSSFWorkbook();
         Sheet sheet = book.createSheet("Stats");
-        String[] headersAcceptedExecutedAmmount = {"Месяц", "Количество принятых заказов","Количество выполненных заказов"};
-        String[] headersStaff = {"Работники","Количество" };
-        String[] headersСancellationAct = {"Месяц", "Сумма товаров","Сумма"};
+        String[] headersAcceptedExecutedAmmount = {"Месяц", "Количество принятых заказов", "Количество выполненных заказов"};
+        String[] headersStaff = {"Работники", "Количество"};
+        String[] headersСancellationAct = {"Месяц", "Сумма товаров", "Сумма"};
 
-        CreateHeaderRow(sheet,headersAcceptedExecutedAmmount,"Заказы",EXCELOFFSET,2);
-        generateAcceptedAmmountAndExecutedAmmountRows(sheet,acceptedAmmount,executedAmmount,EXCELOFFSET,4);
+        CreateHeaderRow(sheet, headersAcceptedExecutedAmmount, "Заказы", EXCELOFFSET, 2);
+        generateAcceptedAmmountAndExecutedAmmountRows(sheet, acceptedAmmount, executedAmmount, EXCELOFFSET, 4);
 
-        CreateHeaderRow(sheet,headersStaff,"Персонал",EXCELOFFSET,12);
-        generateStaffRows(sheet,workersAmmount,EXCELOFFSET,14);
+        CreateHeaderRow(sheet, headersStaff, "Персонал", EXCELOFFSET, 12);
+        generateStaffRows(sheet, workersAmmount, EXCELOFFSET, 14);
 
-        CreateHeaderRow(sheet,headersСancellationAct,"Акты списания",EXCELOFFSET,21);
-        generateСancellationActRows(sheet,cancellationActAmmount,EXCELOFFSET,23);
+        CreateHeaderRow(sheet, headersСancellationAct, "Акты списания", EXCELOFFSET, 21);
+        generateСancellationActRows(sheet, cancellationActAmmount, EXCELOFFSET, 23);
 
-        setAutoSizeOfColumns(sheet,EXCELOFFSET);
+        setAutoSizeOfColumns(sheet, EXCELOFFSET);
 
         book.write(new FileOutputStream(String.format("%s/%s.xls", path, username)));
         book.close();
-        return String.format("%s/%s.xls",path, username);
+        return String.format("%s/%s.xls", path, username);
     }
 
 
-    private void generateAcceptedAmmountAndExecutedAmmountRows(Sheet sheet,Map acceptedAmmount,Map executedAmmount,int EXCELOFFSET,int yPos){
+    private void generateAcceptedAmmountAndExecutedAmmountRows(Sheet sheet, Map acceptedAmmount, Map executedAmmount, int EXCELOFFSET, int yPos) {
         yPos--;
-        AtomicInteger rowNum= new AtomicInteger(yPos);
+        AtomicInteger rowNum = new AtomicInteger(yPos);
 
         acceptedAmmount.forEach((k, v) -> {
             {
@@ -92,19 +98,19 @@ public class ExcelUtil {
                 Cell cellMonth = row.createCell(EXCELOFFSET); // month
                 cellMonth.setCellValue(getMonthName(k));
 
-                Cell cellAccepted = row.createCell(EXCELOFFSET+1); // accepted val
+                Cell cellAccepted = row.createCell(EXCELOFFSET + 1); // accepted val
                 cellAccepted.setCellValue(String.valueOf(v));
 
-                Cell cellExecuted = row.createCell(EXCELOFFSET+2); // executed val
+                Cell cellExecuted = row.createCell(EXCELOFFSET + 2); // executed val
                 cellExecuted.setCellValue(String.valueOf(executedAmmount.get(k)));
                 rowNum.addAndGet(1);
             }
         });
     }
 
-    private void generateStaffRows(Sheet sheet,Map workersAmmount,int EXCELOFFSET,int yPos){
+    private void generateStaffRows(Sheet sheet, Map workersAmmount, int EXCELOFFSET, int yPos) {
         yPos--;
-        AtomicInteger rowNum= new AtomicInteger(yPos);
+        AtomicInteger rowNum = new AtomicInteger(yPos);
 
         workersAmmount.forEach((k, v) -> {
             {
@@ -113,7 +119,7 @@ public class ExcelUtil {
                 Cell cellMonth = row.createCell(EXCELOFFSET); // month
                 cellMonth.setCellValue(getStaffRole(k));
 
-                Cell cellAccepted = row.createCell(EXCELOFFSET+1); // accepted val
+                Cell cellAccepted = row.createCell(EXCELOFFSET + 1); // accepted val
                 cellAccepted.setCellValue(String.valueOf(v));
 
                 rowNum.addAndGet(1);
@@ -121,13 +127,13 @@ public class ExcelUtil {
         });
     }
 
-    private void generateСancellationActRows(Sheet sheet,Map cancellationActAmmount,int EXCELOFFSET,int yPos){
+    private void generateСancellationActRows(Sheet sheet, Map cancellationActAmmount, int EXCELOFFSET, int yPos) {
         yPos--;
-        AtomicInteger rowNum= new AtomicInteger(yPos);
+        AtomicInteger rowNum = new AtomicInteger(yPos);
 
         cancellationActAmmount.forEach((k, v) -> {
             {
-                CancellationStatisticDto cancellationStatisticDto= (CancellationStatisticDto) v;
+                CancellationStatisticDto cancellationStatisticDto = (CancellationStatisticDto) v;
 
 
                 Row row = sheet.createRow(rowNum.get());
@@ -135,10 +141,10 @@ public class ExcelUtil {
                 Cell cellMonth = row.createCell(EXCELOFFSET); // month
                 cellMonth.setCellValue(getMonthName(k));
 
-                Cell cellProductAmmount = row.createCell(EXCELOFFSET+1); // accepted val
+                Cell cellProductAmmount = row.createCell(EXCELOFFSET + 1); // accepted val
                 cellProductAmmount.setCellValue(String.valueOf(cancellationStatisticDto.getProductAmmount()));
 
-                Cell productPrice = row.createCell(EXCELOFFSET+2); // accepted val
+                Cell productPrice = row.createCell(EXCELOFFSET + 2); // accepted val
                 productPrice.setCellValue(String.valueOf(cancellationStatisticDto.getProductPrice()));
 
                 rowNum.addAndGet(1);
@@ -146,27 +152,27 @@ public class ExcelUtil {
         });
     }
 
-    private void setAutoSizeOfColumns(Sheet sheet,int EXCELOFFSET){
-        for (int i=0+EXCELOFFSET;i<3+EXCELOFFSET;i++){
+    private void setAutoSizeOfColumns(Sheet sheet, int EXCELOFFSET) {
+        for (int i = 0 + EXCELOFFSET; i < 3 + EXCELOFFSET; i++) {
             sheet.autoSizeColumn(i);
         }
     }
 
-    private void CreateHeaderRow(Sheet sheet,String[] headers,String title,int EXCELOFFSET,int yPos){
+    private void CreateHeaderRow(Sheet sheet, String[] headers, String title, int EXCELOFFSET, int yPos) {
         yPos--;
         //creating title
         Row rowHeader = sheet.createRow(yPos);
         Cell cellHeader = rowHeader.createCell(1);
         cellHeader.setCellValue(title);
         //creating header
-        Row row = sheet.createRow(yPos+1);
+        Row row = sheet.createRow(yPos + 1);
         for (int i = 0; i < headers.length; i++) {
-            Cell cell = row.createCell(i+EXCELOFFSET);
+            Cell cell = row.createCell(i + EXCELOFFSET);
             cell.setCellValue(headers[i]);
         }
     }
 
-    private double getProfitFromOrder(Order order){
+    private double getProfitFromOrder(Order order) {
         List<Product> productList = order.getConsignment().getProductList();
         double profit = 0;
         for (Product product : productList) {
@@ -175,9 +181,9 @@ public class ExcelUtil {
         return profit;
     }
 
-    private double getConsumption(Order order){
+    private double getConsumption(Order order) {
         CancellationAct cancellationAct = order.getConsignment().getCancellationAct();
-        if (cancellationAct==null){
+        if (cancellationAct == null) {
             return 0;
         }
         List<Product> product = cancellationAct.getProduct();
@@ -188,54 +194,75 @@ public class ExcelUtil {
         return consumption;
     }
 
-    public String getMonthName(Object monthObj){
-            int i = (Integer) monthObj;
-            String month = String.valueOf(i);
-            String monthName;
-            switch (month){
-                case "1": monthName = "Январь";
-                    break;
-                case "2": monthName = "Февраль";
-                    break;
-                case "3": monthName = "Март";
-                    break;
-                case "4": monthName = "Апрель";
-                    break;
-                case "5": monthName = "Май";
-                    break;
-                case "6": monthName = "Июнь";
-                    break;
-                case "7": monthName = "Июль";
-                    break;
-                case "8": monthName = "Август";
-                    break;
-                case "9": monthName = "Сентябрь";
-                    break;
-                case "10": monthName = "Октябрь";
-                    break;
-                case "11": monthName = "Ноябрь";
-                    break;
-                case "12": monthName = "Декабрь";
-                    break;
-                    default:monthName ="-"+ month; break;
-            }
+    public String getMonthName(Object monthObj) {
+        int i = (Integer) monthObj;
+        String month = String.valueOf(i);
+        String monthName;
+        switch (month) {
+            case "1":
+                monthName = "Январь";
+                break;
+            case "2":
+                monthName = "Февраль";
+                break;
+            case "3":
+                monthName = "Март";
+                break;
+            case "4":
+                monthName = "Апрель";
+                break;
+            case "5":
+                monthName = "Май";
+                break;
+            case "6":
+                monthName = "Июнь";
+                break;
+            case "7":
+                monthName = "Июль";
+                break;
+            case "8":
+                monthName = "Август";
+                break;
+            case "9":
+                monthName = "Сентябрь";
+                break;
+            case "10":
+                monthName = "Октябрь";
+                break;
+            case "11":
+                monthName = "Ноябрь";
+                break;
+            case "12":
+                monthName = "Декабрь";
+                break;
+            default:
+                monthName = "-" + month;
+                break;
+        }
         return monthName;
     }
 
-    public String getStaffRole(Object staffObj){
+    public String getStaffRole(Object staffObj) {
         String staffName = String.valueOf(staffObj);
-        switch (staffName){
-            case "ROLE_COMP_OWNER": staffName = "Владелецы компании";
+        switch (staffName) {
+            case "ROLE_COMP_OWNER":
+                staffName = "Владелецы компании";
                 break;
-            case "ROLE_ADMIN": staffName = "Администраторы компании";
+            case "ROLE_ADMIN":
+                staffName = "Администраторы компании";
                 break;
-            case "ROLE_DISPATCHER": staffName = "Диспетчеры";
+            case "ROLE_DISPATCHER":
+                staffName = "Диспетчеры";
                 break;
-            case "ROLE_MANAGER": staffName = "Менеджеры";
+            case "ROLE_MANAGER":
+                staffName = "Менеджеры";
                 break;
-            case "ROLE_DRIVER": staffName = "Водители";
+            case "ROLE_DRIVER":
+                staffName = "Водители";
                 break;
-            default:staffName ="-"+ staffName; break;
+            default:
+                staffName = "-" + staffName;
+                break;
         }
         return staffName;
     }

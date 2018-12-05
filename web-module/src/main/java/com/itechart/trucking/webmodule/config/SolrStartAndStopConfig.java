@@ -12,19 +12,19 @@ public class SolrStartAndStopConfig {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(SolrStartAndStopConfig.class);
 
-    void startSolrServer(String startScript){
+    void startSolrServer(String startScript) {
         executeScript(startScript);
     }
 
-    void stopSolrServer(String stopScript){
+    void stopSolrServer(String stopScript) {
         executeScript(stopScript);
     }
 
-    private void executeScript(String script){
+    private void executeScript(String script) {
         String fullCommand;
-        if (System.getProperty("os.name").equals("Linux")){
+        if (System.getProperty("os.name").equals("Linux")) {
             fullCommand = String.format("%s %s", "sh", script);
-        }else{
+        } else {
             fullCommand = script;
         }
         try {

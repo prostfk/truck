@@ -20,6 +20,7 @@ public class CancellationActDto {
     private ProductDto product;
 
     public CancellationActDto(CancellationAct cancellationAct) {
+        if (cancellationAct == null) return;
         this.id = cancellationAct.getId();
         this.date = cancellationAct.getDate();
         this.amount = cancellationAct.getAmount();

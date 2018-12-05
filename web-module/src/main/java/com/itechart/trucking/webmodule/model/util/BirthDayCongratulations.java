@@ -6,13 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import org.stringtemplate.v4.ST;
 
+import java.io.Console;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class BirthDayCongratulations {
@@ -23,38 +28,53 @@ public class BirthDayCongratulations {
     private String email;
     @Value("${server.password}")
     private String password;
-    private String message = "<h1>Уважаемый %s!</h1><br/><h2>Поздравляем вас с %d-летием. Желаем всего классного вот так да круто очень</h2><br/><br/><h5>С уважением, колектив %s!!</h5>";
+    private ST st;
+    private String message;
 
     @Autowired
     private UserRepository userRepository;
+
+    public BirthDayCongratulations() {
+        try {
+            st = new ST(FileUtil.readFile(new ClassPathResource("birthday.stg").getFile().getAbsolutePath()));
+        } catch (IOException e) {
+            LOGGER.error("FILE WITH BIRTHDAY WISHES NOT FOUND! ", e);
+        }
+    }
 
     public void congratulate(){
         new Thread(() -> {
             while (true) {
                 Date date = new Date();
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
+                calendar.setTime(date);calendar.get(Calendar.YEAR);
                 SimpleDateFormat df = new SimpleDateFormat("MM-dd");
                 String dateString = String.format("%%-%s", df.format(date));
-                System.out.println(dateString);
                 List<User> usersByBirthDay = userRepository.customFindUsersByBirthDay(dateString);
                 usersByBirthDay.forEach(user -> {
                     try {
                         int year = new Date().getYear() - user.getBirthDay().getYear();
-                        EmailUtil.sendMail(email, password, user.getEmail(), "Happy birthday",
-                                String.format(message,user.getUsername(),year,user.getCompany().getName())
-                        );
+                        st.add("name", getNameOfUser(user));
+                        st.add("year", year);
+                        st.add("companyName", user.getCompany().getName());
+                        message = st.render(new Locale("ru", "ru"));
+                        EmailUtil.sendMail(email, password, user.getEmail(), "Поздравляем!",message);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         LOGGER.warn("Email sending problem: ", e);
                     }
                 });
                 try {
                     Thread.sleep(86400000L);
                 } catch (InterruptedException e) {
-                    System.out.println("Program shutting down");
+                    LOGGER.warn("Program was interrupt");
                 }
             }
         }).start();
+    }
+
+    private String getNameOfUser(User user){
+        return user.getFirstName() != null && !user.getFirstName().equals("") ? user.getFirstName() : user.getUsername();
     }
 
 }

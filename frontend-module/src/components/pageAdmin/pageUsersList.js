@@ -1,18 +1,11 @@
 import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 import Pagination from "react-js-pagination";
-/*import ValidationUtil from "../commonUtil/validationUtil";*/
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 
 import {EditIcon} from "./pageAutoList";
 import {NotificationManager} from "react-notifications";
-/*import {edit} from 'react-icons-kit/fa/edit'*/
-
-/*const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
-import Moment from 'react-moment';
-import {withBaseIcon} from "react-icons-kit";
-*/
-
+import Link from "react-router-dom/es/Link";
 
 var moment = require('moment');
 require("moment/min/locales.min");
@@ -57,14 +50,14 @@ export default class UsersList extends Component {
                 return response.json();
             }
         }).then(data => {
-            let gettedusers = data.content;
-            console.log(gettedusers);
+            let getEditedUsers = data.content;
+            console.log(getEditedUsers);
             this.setState({
-                users: gettedusers,
+                users: getEditedUsers,
                 totalElements: data.totalElements,
                 currentPage: ++data.number
             })
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка доступа');
         })
     };
@@ -81,23 +74,20 @@ export default class UsersList extends Component {
         this.setState({currentPage: pageNumber});
     }
 
-    renderUser = (user) => {
+    renderUser = (user, index) => {
         if (!user) return;
-        user.reg_date[6] = user.reg_date[6] / 1000000;
-        let timezoneoffset = new Date().getTimezoneOffset();
-        let dateofreg = user.reg_date == null ? "-" : moment.utc(user.reg_date);
-        let localTime = moment(dateofreg).utcOffset(-timezoneoffset).format('YYYY-MM-DD HH:mm:ss');
+        let timeZoneOffset = new Date().getTimezoneOffset();
+        let dateOfRegistration = user.reg_date == null ? "-" : moment().utc(user.reg_date);
+        let localTime = moment(dateOfRegistration).utcOffset(-timeZoneOffset).format('YYYY-MM-DD HH:mm');
 
-
-        return <div className={'row table_row animated fadeInUp'}>
-
-            {/*<div className={'col-md-1'}>{user.id}</div>*/}
+        return <div className={'row table_row animated fadeInUp'} key={index}>
             <div className={'col-md-3'}>{user.username}</div>
             <div className={'col-md-3'}>{this.russianRole(user.userRole)}</div>
             <div className={'col-md-3'}>{localTime}</div>
             <div className={'col-md-2'} style={{'overflow': 'hidden'}}>{user.email}</div>
-            {user.userRole !== 'ROLE_COMP_OWNER' ? <div className={'col-md-1'}><a href={`/user/${user.id}/edit`}><EditIcon></EditIcon></a></div> : <div/>}
-            </div>
+            {user.userRole !== 'ROLE_COMP_OWNER' ?
+                <div className={'col-md-1'}><Link to={`/user/${user.id}/edit`}><EditIcon/></Link></div> : <div/>}
+        </div>
     };
 
     russianRole = (role) => {
@@ -122,16 +112,15 @@ export default class UsersList extends Component {
         return <div className={'row'}>
             <div className="offset-md-1 col-md-5 superuserform_companylist">
                 <div className="row table_header animated fadeIn">
-                    {/*<div className="col-md-1">Id</div>*/}
                     <div className="col-md-3">Никнейм</div>
                     <div className="col-md-3">Роль</div>
                     <div className="col-md-3">Дата регистрации</div>
                     <div className="col-md-2">Почта</div>
-                    <div className="col-md-1">Изменить</div>
+                    <div className="col-md-1">Ред.</div>
                 </div>
                 {
-                    this.state.users.map((user) => {
-                        return this.renderUser(user);
+                    this.state.users.map((user, index) => {
+                        return this.renderUser(user, index);
                     })
                 }
                 <div className="table_footer">

@@ -52,9 +52,6 @@ class SysAdminPage extends React.Component {
         let value = this.state.inputMail;
         this.setState({inputMail: ''});
         formData.append("email", value);
-        setTimeout(() => {
-            document.getElementById('user-new-form').style.display = '';
-        }, 2000);
         fetch(`http://localhost:8080/api/createAdmin?email=${value}`, {
             method: "POST",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -62,11 +59,9 @@ class SysAdminPage extends React.Component {
             response.json().then(function (data) {
                 console.log(data);
                 if (data.error === undefined) {
-                    document.getElementById('result-span').style.color = 'green';
-                    document.getElementById('result-span').innerText = 'Письмо отправлено';
-                    document.getElementById('user-new-form').style.display = 'none';
-                    document.getElementById('result-span').innerText = '';
+                    NotificationManager.success('Отправлено');
                 } else {
+                    NotificationManager.error('Ошибка');
                     document.getElementById('result-span').style.color = 'red';
                     document.getElementById('result-span').innerText = 'Неверная почта';
                 }
@@ -115,7 +110,7 @@ class SysAdminPage extends React.Component {
                                     className={"table_button bg-secondary text-white"}>Вкл</a>;
         const lockedDate = company.lockDate == null ? "" : " Дата: " + (new Date(company.lockDate));
         const titleoflock = company.active ? "Активна" : (company.lockerId === null ? "[admin]" : company.lockerId.username) + " : " + (company.lockComment === "" ? "[without message]" : company.lockComment) + lockedDate;
-        return <div className={"row table_row animated fadeInUp"}>
+        return <div className={"row table_row animated fadeInUp"} key={company.id}>
             <div className={"col-md-1"}>{company.id}</div>
             <div className={"col-md-5"}>{company.name}</div>
             <div className={"col-md-3"} title={titleoflock}

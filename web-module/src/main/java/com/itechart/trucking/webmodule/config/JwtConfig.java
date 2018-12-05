@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
 public class JwtConfig extends WebSecurityConfigurerAdapter {
@@ -40,7 +40,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthFilter authTokenFilter() {
 
-        JwtAuthFilter filter =new JwtAuthFilter();
+        JwtAuthFilter filter = new JwtAuthFilter();
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(new JwtSuccessHandler());
         return filter;
@@ -62,7 +62,7 @@ public class JwtConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

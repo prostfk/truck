@@ -15,7 +15,7 @@ import './source/css/animate.css'
 import './source/js/bootstrap.min.js';*/
 
 
-import MainController from "./components/Main";
+import MainRouter from "./components/Main";
 import ErrorUiHandler from "./components/errorWindows/errorHandler";
 /*import {NotificationContainer} from "react-notifications";*/
 
@@ -24,7 +24,7 @@ class App extends Component {
     render() {
         return (
             <ErrorUiHandler>
-                <MainController/>
+                <MainRouter/>
             </ErrorUiHandler>
         );
     }

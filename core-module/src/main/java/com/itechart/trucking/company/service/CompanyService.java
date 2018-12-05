@@ -2,6 +2,7 @@ package com.itechart.trucking.company.service;
 
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
+import com.itechart.trucking.company.statistics.CompanyStatisticsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,10 +17,10 @@ public class CompanyService {
     @Autowired
     private CompanyRepository companyRepository;
 
-    public Page<Company> findCompaniesByPage(String page){
+    public Page<Company> findCompaniesByPage(String page) {
         Integer pageId = Integer.parseInt(page);
-        if(pageId==null) return null;
-        return companyRepository.findAll(PageRequest.of(pageId-1, 5));
+        if (pageId == null) return null;
+        return companyRepository.findAll(PageRequest.of(pageId - 1, 5));
     }
 
     public Company findCompanyByName(String name) {
@@ -50,15 +51,15 @@ public class CompanyService {
         return companyRepository.findStatsForXlsReport(companyId);
     }
 
-    public Company save(@Valid Company company){
+    public Company save(@Valid Company company) {
         return companyRepository.save(company);
     }
 
-    public Company update(@Valid Company company){
+    public Company update(@Valid Company company) {
         return companyRepository.save(company);
     }
 
-    public void remove(Company company){
+    public void remove(Company company) {
         companyRepository.delete(company);
     }
 
@@ -68,4 +69,7 @@ public class CompanyService {
     }
 
 
+    public List<CompanyStatisticsDto> getCompanyStatistics() {
+        return companyRepository.getCompanyStatistics();
+    }
 }

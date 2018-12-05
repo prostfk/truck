@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 //deprecated
-export default class ModalComponentStockEdit extends React.Component {
+export default class _Deprecated_modalComponentStockEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {modal: false, stockName: props.stockName, stockAddress: props.stockAddress};

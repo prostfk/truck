@@ -19,23 +19,26 @@ export default class PageStockListNew extends React.Component {
         this.submitEdit = this.submitEdit.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
-            stocks:[],
-            stockName:"",
-            stockAddress:"",
-            totalElements:0,
-            currentPage:1,
+            stocks: [],
+            stockName: "",
+            stockAddress: "",
+            totalElements: 0,
+            currentPage: 1,
             searchStockName: '',
             searchStocks: []
         };
         document.title = "Склады"
     }
 
-    forceUpdateHandler(){
+    forceUpdateHandler() {
         const refthis = this;
-        fetch('http://localhost:8080/api/stocks?='+this.state.currentPage, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch('http://localhost:8080/api/stocks?=' + this.state.currentPage, {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            refthis.setState({stocks:result})
+            refthis.setState({stocks: result})
         })
     };
 
@@ -51,65 +54,66 @@ export default class PageStockListNew extends React.Component {
             stockName: event.target.value
         })
     }
+
     setCompanyAddress(event) {
         this.setState({
             stockAddress: event.target.value
         })
     }
-    addNewStock(event){
-        let stockaddress = this.state.stockAddress;
-        let stockname = this.state.stockName;
+
+    addNewStock(event) {
         let formData = new FormData();
-        formData.append("name", stockname);
-        formData.append("address", stockaddress);
+        formData.append("name", this.state.stockName);
+        formData.append("address", this.state.stockAddress);
         console.log(formData);
-        fetch('http://localhost:8080/api/stocks', {method: "POST",body: formData, headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+        fetch('http://localhost:8080/api/stocks', {
+            method: "POST",
+            body: formData,
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(response => {
             response.json().then(data => {
                 console.log(data);
-                // this.forceUpdateHandler();    /*this.setState({stocks:data}) its not working.. why??*/
-                this.setState({stockName:"",stockAddress:""})
+                this.setState({stockName: "", stockAddress: ""})
             })
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
 
-    getStockList(pageid=1){
-        const fetchResult = fetch('http://localhost:8080/api/stocks?page='+pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+    getStockList(pageId = 1) {
+        return fetch('http://localhost:8080/api/stocks?page=' + pageId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
         });
-        return fetchResult;
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getStockList().then(data => {
             this.setState({
-                stocks:data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                stocks: data.content,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             });
         });
     }
+
     handlePageChange(pageNumber) {
         this.getStockList(pageNumber).then(data => {
             this.setState({
-                stocks:data.content,
-                totalElements:data.totalElements,
-                currentPage:++data.number
+                stocks: data.content,
+                totalElements: data.totalElements,
+                currentPage: ++data.number
             });
         });
-
-        console.log(this.state);
-        console.log("im updating!");
     }
 
-    submitEdit(newStockName,newStockAdress,stockId,event){
-        let refThis=this;
+    submitEdit(newStockName, newStockAddress, stockId, event) {
+        let refThis = this;
         let formData = new FormData();
         formData.append("id", stockId);
         formData.append("name", newStockName);
-        formData.append("address", newStockAdress);
+        formData.append("address", newStockAddress);
 
         fetch('http://localhost:8080/api/editStock/', {
             method: "PUT",
@@ -119,7 +123,6 @@ export default class PageStockListNew extends React.Component {
             console.log(response);
             return response.json();
         }).then(data => {
-            console.log(data);
             if (data.error === undefined) {
                 refThis.state.stocks.find((element, index, array) => {
                     if (element.id === data.id) {
@@ -129,30 +132,31 @@ export default class PageStockListNew extends React.Component {
                     }
                 });
             } else {
-                /* document.getElementById('error-form-span').innerText = data.error;*/
+                NotificationManager.error('Ошибка');
             }
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
 
-    renderTable(stock){
-        if(!stock) return;
-        return <div className={"row table_row animated fadeInUp"}>
+    renderTable(stock) {
+        if (!stock) return;
+        return <div className={"row table_row animated fadeInUp"} key={stock.id}>
             <div className={"col-md-1"}>{stock.id}</div>
             <div className={"col-md-5"}>{stock.name}</div>
             <div className={"col-md-4"}>{stock.address}</div>
             <div className={"col-md-1"}>
                 <EditStockModal stockName={stock.name} stockId={stock.id}/>
-                {/*<ModalComponentStockEdit clickfunc={this.submitEdit} className={"table_button bg-secondary text-white"} stockName={stock.name} stockAddress={stock.address} stockId={stock.id}/>*/}
             </div>
             <div className={"col-md-1"}>
-                <ModalAcceptDelete clickfunc={this.submitDelete} componentId={stock.id} headerText={"Вы действительно хотите удалить склад?"} bodyText={"Восстановить склад будет невозможно"} />
+                <ModalAcceptDelete clickfunc={this.submitDelete} componentId={stock.id}
+                                   headerText={"Вы действительно хотите удалить склад?"}
+                                   bodyText={"Восстановить склад будет невозможно"}/>
             </div>
         </div>
     }
 
-    submitDelete(stockId){
+    submitDelete(stockId) {
         const ref = this;
         fetch('http://localhost:8080/api/stocks', {
             method: 'DELETE',
@@ -163,42 +167,41 @@ export default class PageStockListNew extends React.Component {
         }).then(function (result) {
             console.log(result);
             if (result) {
-                ref.setState({stocks:result})
+                ref.setState({stocks: result})
             }
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
 
     searchStocks = () => {
         let name = ValidationUtil.getStringFromUnnownObject(this.state.searchStockName);
-        console.log(name);
-        fetch(`http://localhost:8080/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+        fetch(`http://localhost:8080/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
-        }).then(data=>{
-            console.log(data);
-            if (Array.isArray(data)){
-                if (data.length === 0){
+        }).then(data => {
+            if (Array.isArray(data)) {
+                if (data.length === 0) {
                     document.getElementById('error-stocks-list').innerText = 'Такого склада нет';
                     document.getElementById('stocks-ul').innerHTML = '';
-                }else {
+                } else {
                     document.getElementById('error-stocks-list').innerText = '';
                     this.setState({searchStocks: data});
                 }
-            }else{
+            } else {
+                console.log(data);
                 NotificationManager.error('Ошибка');
             }
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка ');
         });
     };
 
-    render(){
+    render() {
         let paginationTableStyle = this.state.searchStocks.length === 0 ? {display: ''} : {display: 'none'};
         let searchTableStyle = this.state.searchStocks.length !== 0 ? {display: ''} : {display: 'none'};
         return <>
             <div className="row" style={paginationTableStyle}>
-                <div className="offset-md-1 col-md-6 superuserform_companylist">
+                <div className="offset-lg-1 col-lg-6 col-md-7  superuserform_companylist">
                     <div className="row table_header animated fadeIn">
                         <div className="col-md-1">ID</div>
                         <div className="col-md-5">Название склада</div>
@@ -207,7 +210,7 @@ export default class PageStockListNew extends React.Component {
                         <div className="col-md-1"/>
                     </div>
                     {
-                        this.state.stocks.map((element)=>{
+                        this.state.stocks.map((element) => {
                             return this.renderTable(element);
                         })
                     }
@@ -229,10 +232,9 @@ export default class PageStockListNew extends React.Component {
                     </div>
                 </div>
 
-                <div className="offset-md-1 col-md-2">
+                <div className="offset-lg-1 col-lg-3 col-md-5">
                     <form className="superuserform_newaccountform grey_form animated fadeIn">
                         <CreateStockModal/>
-                        {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
                     </form>
                     <div className={'superuserform_newaccountform grey_form animated fadeIn'}>
                         <h4>Поиск склада</h4>
@@ -252,11 +254,11 @@ export default class PageStockListNew extends React.Component {
                         <div className="col-md-1">ID</div>
                         <div className="col-md-5">Название склада</div>
                         <div className="col-md-4">Адрес</div>
-                        <div className="col-md-1" onClick={()=>this.setState({searchStocks: []})}>Закрыть поиск</div>
-                        <div className="col-md-1" onClick={()=>this.setState({searchStocks: []})}><RemoveIcon/></div>
+                        <div className="col-md-1" onClick={() => this.setState({searchStocks: []})}>Закрыть поиск</div>
+                        <div className="col-md-1" onClick={() => this.setState({searchStocks: []})}><RemoveIcon/></div>
                     </div>
                     {
-                        this.state.searchStocks.map((element)=>{
+                        this.state.searchStocks.map((element) => {
                             return this.renderTable(element);
                         })
                     }
@@ -281,7 +283,6 @@ export default class PageStockListNew extends React.Component {
                 <div className="offset-md-1 col-md-2">
                     <form className="superuserform_newaccountform grey_form animated fadeIn">
                         <CreateStockModal/>
-                        {/*<a onClick={this.addNewStock} className="btn btn_fullsize btn-success">Добавить</a>*/}
                     </form>
                     <div className={'superuserform_newaccountform grey_form animated fadeIn'}>
                         <h4>Поиск склада</h4>

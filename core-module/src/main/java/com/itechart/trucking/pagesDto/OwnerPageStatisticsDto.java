@@ -10,9 +10,9 @@ import java.util.Map;
 
 @Data
 public class OwnerPageStatisticsDto {
-    Map acceptedAmmount = new HashMap<String,Integer>();
-    Map executedAmmount = new HashMap<String,Integer>();
-    Map workersAmmount = new HashMap<String,Integer>();
+    Map acceptedAmmount = new HashMap<String, Integer>();
+    Map executedAmmount = new HashMap<String, Integer>();
+    Map workersAmmount = new HashMap<String, Integer>();
 
     Map cancellationActAmmount = new HashMap<String, CancellationStatisticDto>();
     int totalItemsFailed = 0;

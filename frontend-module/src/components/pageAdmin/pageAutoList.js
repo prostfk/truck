@@ -11,8 +11,8 @@ import {NotificationManager} from "react-notifications";
 
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
-export const RemoveIcon = () => <RedIconContainer icon={remove}/>
-export const EditIcon = () => <SideIconContainer icon={edit}/>
+export const RemoveIcon = () => <RedIconContainer icon={remove}/>;
+export const EditIcon = () => <SideIconContainer icon={edit}/>;
 
 export default class AutoList extends Component {
 
@@ -20,6 +20,8 @@ export default class AutoList extends Component {
         super(props);
         this.submitDelete = this.submitDelete.bind(this);
         this.submitEdit = this.submitEdit.bind(this);
+        this.forceUpdateHandler = this.forceUpdateHandler.bind(this);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
             autos: [],
             newAutoName: '',
@@ -27,10 +29,10 @@ export default class AutoList extends Component {
             newAutoType: '',
             newAutoFuelConsumption: '',
             totalElements: 0,
-            totalPages: 0,
+            currentPage: 1,
             number: 0
         };
-        this.fetchToAutos();
+        this.forceUpdateHandler();
     }
 
     validateAuto = () => {
@@ -46,22 +48,21 @@ export default class AutoList extends Component {
         else document.getElementById('error-type-span').innerText = '';
         if (!fuelVal) document.getElementById('error-fuel-span').innerText = 'Расход должен быть от 3 до 150 литров';
         else document.getElementById('error-fuel-span').innerText = '';
-        console.log(`Number: ${numberVal}, Name: ${nameVal}, Type: ${typeVal}, Fuel: ${fuelVal}`);
         return nameVal && numberVal && typeVal && fuelVal;
     };
 
-    fetchToAutos = (pageid = 1) => {
-        fetch('http://localhost:8080/api/autos?page=' + pageid, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
-            if (response.status === 403 || response.status === 500) {
-                throw new Error('Ошибка доступа');
-            } else {
-                return response.json();
-            }
-        }).then(data => {
-            this.setState({
-                autos: data.content,
-                totalElements: data.totalElements,
-                number: ++data.number
+    forceUpdateHandler(pageId = 1) {
+        const refThis = this;
+        fetch('http://localhost:8080/api/autos?page=' + pageId, {
+            method: "get",
+            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+        }).then(function (response) {
+            return response.json();
+        }).then(function (result) {
+            refThis.setState({
+                autos: result.content,
+                totalElements: result.totalElements,
+                currentPage: ++result.number
             })
         }).catch(() => {
             NotificationManager.error('Ошибка доступа');
@@ -86,10 +87,8 @@ export default class AutoList extends Component {
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem('Auth-token')}
             }).then(response => {
-                console.log(response);
                 return response.json();
-            }).then(data => {
-                console.log(data);
+            }).then(() => {
                 this.setState({
                     newAutoFuelConsumption: "",
                     newAutoType: "",
@@ -103,26 +102,21 @@ export default class AutoList extends Component {
         }
     };
 
-    forceUpdateHandler(pageid = 1) {
-        const refthis = this;
-        fetch('http://localhost:8080/api/autos?page=' + pageid, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            refthis.setState({
-                autos: result.content,
-                totalElements: result.totalElements,
-                number: ++result.number
-            })
-        }).catch(() => {
-            NotificationManager.error('Ошибка доступа');
-        });
-    };
+    handlePageChange(pageNumber) {
+        this.forceUpdateHandler(pageNumber);
+        this.setState({currentPage: pageNumber});
+    }
+
+    renderModalAuto(auto) {
+        return <ModalComponentEditAuto key={auto.id} clickFunc={this.submitEdit}
+                                       className={"table_button bg-secondary text-white"} autoId={auto.id}
+                                       autoName={auto.name} autoCarNumber={auto.carNumber} autoType={auto.type}
+                                       autoFuelConsumption={auto.fuelConsumption}/>
+    }
+
 
     renderAuto = (auto) => {
-        return <div className={'row table_row animated fadeInUp'}>
+        return <div className={'row table_row animated fadeInUp'} key={auto.id}>
             <div className={'col-md-1'}>{auto.id}</div>
             <div className={'col-md-3'}>{auto.name}</div>
             <div className={'col-md-2'}>{auto.carNumber}</div>
@@ -130,10 +124,7 @@ export default class AutoList extends Component {
             <div className={'col-md-2'}>{auto.fuelConsumption}</div>
             <div className={'col-md-1'}>
                 <div className={"col-md-2"}>
-                    <ModalComponentEditAuto clickfunc={this.submitEdit}
-                                            className={"table_button bg-secondary text-white"} autoId={auto.id}
-                                            autoName={auto.name} autoCarNumber={auto.carNumber} autoType={auto.type}
-                                            autoFuelConsumption={auto.fuelConsumption}/>
+                    {this.renderModalAuto(auto)}
                 </div>
             </div>
             <div className={"col-md-1"}>
@@ -153,7 +144,6 @@ export default class AutoList extends Component {
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            console.log(result);
             if (result) {
                 ref.setState({autos: result})
             }
@@ -178,7 +168,6 @@ export default class AutoList extends Component {
         }).then(response => {
             return response.json();
         }).then(data => {
-            console.log(data);
             if (data.error === undefined) {
                 refThis.state.autos.find((element, index, array) => {
                     if (element.id === data.id) {
@@ -188,7 +177,7 @@ export default class AutoList extends Component {
                     }
                 });
             } else {
-                /* document.getElementById('error-form-span').innerText = data.error;*/
+                NotificationManager.error('Ошибка, попробуйте еще раз');
             }
         }).catch(() => {
             NotificationManager.error('Ошибка доступа');
@@ -209,13 +198,14 @@ export default class AutoList extends Component {
                     </div>
                     {
                         this.state.autos.map((auto) => {
+                            console.log(this.state.autos);
                             return this.renderAuto(auto);
                         })
                     }
                     <div className="table_footer">
                         <div>
                             <Pagination
-                                activePage={this.state.number}
+                                activePage={this.state.currentPage}
                                 totalItemsCount={this.state.totalElements}
                                 itemsCountPerPage={5}
                                 pageRangeDisplayed={5}

@@ -36,7 +36,7 @@ public class StockDto {
         this.lng = stock.getLng();
     }
 
-    public StockDto(Long id, String name,String address) {
+    public StockDto(Long id, String name, String address) {
         this.id = id;
         this.address = address;
         this.name = name;
@@ -57,7 +57,7 @@ public class StockDto {
         this.stockReceiverOrders = Odt.OrderToDtoList(stockReceiverOrders);
     }
 
-    public static Map<String, Object> toMap(StockDto stockDto){
+    public static Map<String, Object> toMap(StockDto stockDto) {
         ObjectMapper oMapper = new ObjectMapper();
         Map<java.lang.String, java.lang.Object> map = oMapper.convertValue(stockDto, Map.class);
         return map;

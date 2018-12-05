@@ -34,25 +34,26 @@ public class CommonControllers {
     private UserService userService;
     @Autowired
     private OrderService orderService;
-
     @Autowired
     private StockService stockService;
-
     @Autowired
     private WaybillService waybillService;
-
     @Autowired
     private SolrStockRepository solrStockRepository;
 
 
     // dispatcher | manager
-    @RequestMapping(value = "/orders",method = RequestMethod.GET)
+    @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public Object getOrders(@RequestParam(value = "page") int pageId) {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByUsername(name);
-
-        Page<Order> orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId-1, 5));
-        return orderPage.map(order -> new OrderDto(order));
+        Page<Order> orderPage;
+        if (user.getUserRole().equals(UserRole.ROLE_DISPATCHER)) {
+            orderPage = orderService.findByCompanyAndWaybillStatus(user.getCompany().getId(), 1L, PageRequest.of(pageId - 1, 5));
+        } else {
+            orderPage = orderService.findByCompany(user.getCompany(), PageRequest.of(pageId - 1, 5));
+        }
+        return orderPage.map(OrderDto::new);
     }
 
     @GetMapping(value = "/stocks")
@@ -60,9 +61,9 @@ public class CommonControllers {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByEmail = userService.findUserByUsername(name);
 
-        Page<Stock> stockPage = stockService.findStockByCompanyAndActive(userByEmail.getCompany(),true, PageRequest.of(pageId-1, 5));
+        Page<Stock> stockPage = stockService.findStockByCompanyAndActive(userByEmail.getCompany(), true, PageRequest.of(pageId - 1, 5));
 
-        return stockPage.map(stock -> new StockDto(stock));
+        return stockPage.map(StockDto::new);
     }
 
     @DeleteMapping(value = "/stocks")
@@ -77,7 +78,7 @@ public class CommonControllers {
         Stock stock = stockService.findStockById(stockId);
         if (stock == null) return null;
 
-        if (stock.getCompany().getId()==userByEmail.getCompany().getId()) {
+        if (stock.getCompany().getId() == userByEmail.getCompany().getId()) {
             stock.setActive(false);
             stockService.save(stock);
         }
@@ -104,15 +105,22 @@ public class CommonControllers {
 
     //temporarily unavailable(in developing)
     @GetMapping(value = "/feed")
-    public Object findFeed(){
+    public Object findFeed() {
         String name = SecurityContextHolder.getContext().getAuthentication().getName();
         User userByUsername = userService.findUserByUsername(name);
         UserRole userRole = userByUsername.getUserRole();
-        switch (userRole){
+        switch (userRole) {
             case ROLE_DRIVER:
                 List<Waybill> waybills = waybillService.findTop10WaybillsByUserId(userByUsername.getId());
         }
         return null;
+    }
+
+    @GetMapping(value = "/findStock")
+    public List findStocks(@RequestParam Boolean active, @RequestParam String name) {
+        User userByUsername = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        List<SolrStock> allByCompanyIdAndActiveAndName = solrStockRepository.findAllByCompanyIdAndActiveAndName(userByUsername.getCompany().getId(), active, name);
+        return allByCompanyIdAndActiveAndName;
     }
 
 }

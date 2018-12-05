@@ -41,122 +41,122 @@ public class Odt {
                 .collect(Collectors.toList());
     }
 
-    public static List<WaybillDto> WayBilToDtoList(List<Waybill> waybills){
-        if(waybills==null) return null;
+    public static List<WaybillDto> WayBilToDtoList(List<Waybill> waybills) {
+        if (waybills == null) return null;
         List<WaybillDto> waybillDtos = new ArrayList<>();
-        for (Waybill waybill:waybills) {
+        for (Waybill waybill : waybills) {
             WaybillDto waybillDto = new WaybillDto(waybill);
             waybillDtos.add(waybillDto);
         }
         return waybillDtos;
     }
 
-    public static List<OrderDto> OrderToDtoList(List<Order> orders){
-        if(orders==null) return null;
+    public static List<OrderDto> OrderToDtoList(List<Order> orders) {
+        if (orders == null) return null;
         List<OrderDto> orderDtos = new ArrayList<>();
-        for (Order order:orders) {
+        for (Order order : orders) {
             OrderDto orderDto = new OrderDto(order);
             orderDtos.add(orderDto);
         }
         return orderDtos;
     }
 
-    public static List<ProductDto> ProductToDtoList(List<Product> products){
-        if(products==null) return null;
+    public static List<ProductDto> ProductToDtoList(List<Product> products) {
+        if (products == null) return null;
         List<ProductDto> productDtos = new ArrayList<>();
-        for (Product product:products) {
+        for (Product product : products) {
             ProductDto productDto = new ProductDto(product);
             productDtos.add(productDto);
         }
         return productDtos;
     }
 
-    public static List<CancellationActDto> CancellationActToDtoList(List<CancellationAct> cancellationActs){
-        if(cancellationActs==null) return null;
+    public static List<CancellationActDto> CancellationActToDtoList(List<CancellationAct> cancellationActs) {
+        if (cancellationActs == null) return null;
         List<CancellationActDto> cancellationActDtos = new ArrayList<>();
-        for (CancellationAct cancellationAct:cancellationActs) {
+        for (CancellationAct cancellationAct : cancellationActs) {
             CancellationActDto cancellationActDto = new CancellationActDto(cancellationAct);
             cancellationActDtos.add(cancellationActDto);
         }
         return cancellationActDtos;
     }
 
-    public static List<RouteListDto> RouteListToDtoList(List<RouteList> routeLists){
-        if(routeLists==null) return null;
+    public static List<RouteListDto> RouteListToDtoList(List<RouteList> routeLists) {
+        if (routeLists == null) return null;
         List<RouteListDto> routeListDtos = new ArrayList<>();
-        for (RouteList routeList:routeLists) {
+        for (RouteList routeList : routeLists) {
             RouteListDto routeListDto = new RouteListDto(routeList);
             routeListDtos.add(routeListDto);
         }
         return routeListDtos;
     }
 
-    public static List<UserDto> UserListToDtoList(List<User> userList){
-        if(userList==null) return null;
+    public static List<UserDto> UserListToDtoList(List<User> userList) {
+        if (userList == null) return null;
         List<UserDto> userDtoList = new ArrayList<>();
-        for (User user:userList) {
+        for (User user : userList) {
             UserDto userDto = new UserDto(user);
             userDtoList.add(userDto);
         }
         return userDtoList;
     }
 
-    public static List<ClientDto> ClientListToDtoList(List<Client> noneDtoList){
-        if(noneDtoList==null) return null;
+    public static List<ClientDto> ClientListToDtoList(List<Client> noneDtoList) {
+        if (noneDtoList == null) return null;
         List<ClientDto> newDtoList = new ArrayList<>();
-        for (Client element:noneDtoList) {
+        for (Client element : noneDtoList) {
             ClientDto newTypedElemnt = new ClientDto(element);
             newDtoList.add(newTypedElemnt);
         }
         return newDtoList;
     }
 
-    public static List<ClientDto> SolrClientsListToDtoList(List<SolrClient> solrClients){
-        if (solrClients==null) return null;
+    public static List<ClientDto> SolrClientsListToDtoList(List<SolrClient> solrClients) {
+        if (solrClients == null) return null;
         List<ClientDto> clientDtos = new LinkedList<>();
         solrClients.forEach(solrClient -> clientDtos.add(new ClientDto(solrClient)));
         return clientDtos;
     }
 
-    public static List<SolrClient> ClientsToSolrClientsList(Iterable<Client> clients){
+    public static List<SolrClient> ClientsToSolrClientsList(Iterable<Client> clients) {
         List<SolrClient> solrClients = new LinkedList<>();
-        clients.forEach(client -> solrClients.add(new SolrClient(client.getId(),client.getName(),client.getType())));
+        clients.forEach(client -> solrClients.add(new SolrClient(client.getId(), client.getName(), client.getType())));
         return solrClients;
     }
 
-    public static List<SolrStock> StockToSolrStocksList(Iterable<Stock> stocks){
+    public static List<SolrStock> StockToSolrStocksList(Iterable<Stock> stocks) {
         List<SolrStock> solrStocks = new LinkedList<>();
         solrStocks.forEach(stock -> solrStocks.add(new SolrStock(
-                stock.getId(),stock.getAddress(),stock.getName(),stock.getActive(),
-                stock.getLng(),stock.getLat(),stock.getCompanyId()
+                stock.getId(), stock.getAddress(), stock.getName(), stock.getActive(),
+                stock.getLng(), stock.getLat(), stock.getCompanyId()
         )));
         return solrStocks;
     }
 
-    public static List<StockDto> StockListToDtoList(List<Stock> noneDtoList){
-        if(noneDtoList==null) return null;
+    public static List<StockDto> StockListToDtoList(List<Stock> noneDtoList) {
+        if (noneDtoList == null) return null;
         List<StockDto> newDtoList = new ArrayList<>();
-        for (Stock element:noneDtoList) {
+        for (Stock element : noneDtoList) {
             StockDto newTypedElemnt = new StockDto(element);
             newDtoList.add(newTypedElemnt);
         }
         return newDtoList;
     }
 
-    public static List<DriverDto> DriverListToDtoList(List<Driver> noneDtoList){
-        if(noneDtoList==null) return null;
+    public static List<DriverDto> DriverListToDtoList(List<Driver> noneDtoList) {
+        if (noneDtoList == null) return null;
         List<DriverDto> newDtoList = new ArrayList<>();
-        for (Driver element:noneDtoList) {
+        for (Driver element : noneDtoList) {
             DriverDto newTypedElemnt = new DriverDto(element);
             newDtoList.add(newTypedElemnt);
         }
         return newDtoList;
     }
 
-    public static List<AutoDto> AutoListToDtoList(List<Auto> noneDtoList){
-        if(noneDtoList==null) return null;
+    public static List<AutoDto> AutoListToDtoList(List<Auto> noneDtoList) {
+        if (noneDtoList == null) return null;
         List<AutoDto> newDtoList = new ArrayList<>();
-        for (Auto element:noneDtoList) {
+        for (Auto element : noneDtoList) {
             AutoDto newTypedElemnt = new AutoDto(element);
             newDtoList.add(newTypedElemnt);
         }
@@ -164,11 +164,11 @@ public class Odt {
     }
 
     public static LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        if(dateToConvert==null) return null;
+        if (dateToConvert == null) return null;
         return new java.sql.Date(dateToConvert.getTime()).toLocalDate();
     }
 
-    public static List<CompanyDto> CompanyListToDtoList(List<Company> companies){
+    public static List<CompanyDto> CompanyListToDtoList(List<Company> companies) {
         LinkedList<CompanyDto> companyDtos = new LinkedList<>();
         companies.forEach(company -> {
             companyDtos.add(new CompanyDto(company));
@@ -176,11 +176,11 @@ public class Odt {
         return companyDtos;
     }
 
-    public static Object getSingleObjectFromList(List list){
+    public static Object getSingleObjectFromList(List list) {
         Object object;
-        try{
+        try {
             object = list.get(0);
-        }catch (ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             object = null;
         }
         return object;

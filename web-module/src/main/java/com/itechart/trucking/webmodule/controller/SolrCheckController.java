@@ -28,19 +28,19 @@ public class SolrCheckController {
 
     @GetMapping(value = "/stocks")
     @ResponseBody
-    public Object getStocks(){
+    public Object getStocks() {
         return solrStockRepository.findAll();
     }
 
     @GetMapping(value = "/findStock")
     @ResponseBody
-    public Object findStocks(@RequestParam Long companyId, @RequestParam Boolean active, @RequestParam String name){
-        return solrStockRepository.findAllByCompanyIdAndActiveAndName(companyId,active,name);
+    public Object findStocks(@RequestParam Long companyId, @RequestParam Boolean active, @RequestParam String name) {
+        return solrStockRepository.findAllByCompanyIdAndActiveAndName(companyId, active, name);
     }
 
     @GetMapping(value = "/clients")
     @ResponseBody
-    public Object getClients(){
+    public Object getClients() {
         return clientSolrRepository.findAll();
     }
 

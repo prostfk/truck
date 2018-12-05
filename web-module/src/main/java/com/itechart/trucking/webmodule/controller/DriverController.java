@@ -16,7 +16,14 @@ import com.itechart.trucking.product.service.ProductService;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.service.RouteListService;
+import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.service.UserService;
+import com.itechart.trucking.waybill.dto.WaybillDto;
+import com.itechart.trucking.waybill.entity.Waybill;
+import com.itechart.trucking.waybill.service.WaybillService;
+import com.itechart.trucking.webmodule.model.dto.SocketNotification;
+import com.itechart.trucking.webmodule.service.CommonService;
+import com.itechart.trucking.webmodule.service.StompService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,32 +53,22 @@ public class DriverController {
     private RouteListService routeListService;
 
     @Autowired
+    private CommonService commonService;
+
+    @Autowired
+    private WaybillService waybillService;
+
+    @Autowired
+    private StompService stompService;
+
+/*    @Autowired
     private ProductService productService;
 
     @Autowired
     private CancellationActService cancellationActService;
 
     @Autowired
-    private ConsignmentService consignmentService;
-
-    @PutMapping(value = "/order/{id}/CancellationAct/addProduct")
-    public Object addProductToCancellationAct(@PathVariable Long id, Long productId) throws JSONException {
-        Order orderById = orderService.findOrderById(id);
-        Product productById = productService.findProductById(productId);
-        CancellationAct cancellationAct = orderById.getConsignment().getCancellationAct();
-        List<Product> product = cancellationAct.getProduct();
-        JSONObject json = new JSONObject();
-        if (!product.contains(productById)) {
-            product.add(productById);
-            orderById.getConsignment().getCancellationAct().setProduct(product);
-            orderService.save(orderById);
-            json.put("status", "success");
-        } else {
-            json.put("error", "product is already cancelled");
-        }
-        return json.toString();
-
-    }
+    private ConsignmentService consignmentService;*/
 
     @RequestMapping(value = "/orders/getMyOrders", method = RequestMethod.GET)
     public List<OrderDto> getMyOrders() {
@@ -91,13 +88,42 @@ public class DriverController {
         return Odt.RouteListToDtoList(order.get().getWaybill().getRouteListList());
     }
 
+    @RequestMapping(value = "/orders/getMyOrders/{orderId}/setNewStatus", method = RequestMethod.PUT)
+    public WaybillDto setNewStatus(@PathVariable Long orderId, @RequestBody String newStatusValue) {
+        if (!newStatusValue.equals("3")) return null;
+
+        User user = commonService.getCurrentUser();
+        Order order = orderService.findOrderById(orderId);
+        Waybill waybill = order.getWaybill();
+
+        if (waybill.getDriver() == null || (waybill.getStatus() != 2 && waybill.getStatus() != 3) || waybill.getDriver().getUser().getId() != user.getId())
+            return null;
+
+        int ammountNotMarkedPoins = 0;
+        List<RouteList> routeLists = waybill.getRouteListList();
+        for (RouteList point : routeLists) {
+            if (point.getMarked() == null || !point.getMarked()) ammountNotMarkedPoins++;
+        }
+        if (ammountNotMarkedPoins != 0) return null;
+
+        Integer newStatus = Integer.valueOf(newStatusValue);
+        waybill.setStatus(newStatus);
+        waybillService.save(waybill);
+
+        String message ="Прибыл в конечный пункт. Заказ: " + order.getName();
+        stompService.sendNotification("/topic/" + user.getCompany().getId() + "/driverArrival/", new SocketNotification("Водитель" +  waybill.getDriver().getName(), message));
+
+        return new WaybillDto(waybill);
+    }
+
 
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/markpoint/{pointId}", method = RequestMethod.PUT)
     public RouteListDto markOrder(@PathVariable Long orderId, @PathVariable Long pointId) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = commonService.getCurrentUser();
+        String name = user.getUsername();
 
         Optional<Order> order = orderService.findById(orderId);
-        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name))
+        if (!order.isPresent() || !order.get().getWaybill().getDriver().getUser().getUsername().equals(name) || order.get().getWaybill().getStatus() != 2)
             return null;
 
         Optional<RouteList> point = routeListService.findById(pointId);
@@ -108,45 +134,10 @@ public class DriverController {
             else point.get().setMarked(true);
         }
         routeListService.save(point.get());
+        String message = point.get().getMarked() == true ? "Прошел контрольную точку в заказе: " + order.get().getName() : "Отменил прохождение точки в заказе: " + order.get().getName();
+
+        stompService.sendNotification("/topic/" + user.getCompany().getId() + "/markPoint/", new SocketNotification(name, message));
+
         return new RouteListDto(point.get());
-    }
-
-    @RequestMapping(value = "/orders/getMyOrders/{orderId}/consignment", method = RequestMethod.GET)
-    public List<ProductDto> getDriverConsignment(@PathVariable Long orderId) {
-        Optional<Order> order = orderService.findById(orderId);
-        List<Product> products = order.isPresent() ? order.get().getConsignment().getProductList() : Collections.EMPTY_LIST;
-        return Odt.ProductToDtoList(products);
-    }
-
-    @RequestMapping(value = "/orders/getMyOrders/{orderId}/cancelProduct/{productId}", method = RequestMethod.GET)
-    public ProductDto cancelProduct(@PathVariable Long productId, @PathVariable Long orderId, @RequestParam(name = "cancel") int cancel) {
-        Consignment consignment = orderService.findOrderById(orderId).getConsignment();
-        CancellationAct cancellationAct = consignment.getCancellationAct();
-
-        if (cancellationAct == null) {
-            cancellationAct = new CancellationAct(new Date((new java.util.Date().getTime())), 0, 0D, consignment);
-            CancellationAct save = cancellationActService.save(cancellationAct);
-            consignment.setCancellationAct(save);
-        }
-
-        Optional<Product> product = productService.findById(productId);
-        product.get().setCount(product.get().getCount() - cancel);
-        product.get().setCancelledCount(product.get().getCancelledCount() == null ? 0 : product.get().getCancelledCount() + cancel);
-
-        if (product.get().getCount() == 0) {
-            product.get().setStatus(4);
-        } else {
-            product.get().setStatus(5);
-        }
-
-        cancellationAct.setPrice(product.get().getPrice() * cancel + cancellationAct.getPrice());
-        Integer amount = cancellationAct.getAmount() + cancel;
-        cancellationAct.setAmount(amount);
-
-        product.get().setCancellationAct(cancellationAct);
-        productService.save(product.get());
-        cancellationActService.save(cancellationAct);
-
-        return new ProductDto(product.get());
     }
 }

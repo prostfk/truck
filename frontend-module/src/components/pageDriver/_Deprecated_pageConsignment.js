@@ -1,3 +1,4 @@
+/*
 import React, {Component} from "react";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import {NotificationManager} from "react-notifications";
@@ -66,7 +67,7 @@ class DriverConsignment extends Component {
         });
     }
 
-    /*get active orders*/
+    /!*get active orders*!/
     getProductList() {
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
@@ -83,7 +84,7 @@ class DriverConsignment extends Component {
         });
     }
 
-    /*render row of table ( calls from html ) */
+    /!*render row of table ( calls from html ) *!/
     renderTable(product, index) {
         console.log(product);
         if (!product) return;
@@ -114,7 +115,7 @@ class DriverConsignment extends Component {
         </div>
     }
 
-    setLostState(/*productId*/) {
+    setLostState(/!*productId*!/) {
         this.toggleModalCancellation();
         if (this.state.remainsOfSelectedProduct < 0){
             NotificationManager.error('Количество товаров не может быть меньше 0');
@@ -193,21 +194,10 @@ class DriverConsignment extends Component {
                             return this.renderTable(element, index);
                         })
                     }
-                    <div className="table_footer">
-                        <nav aria-label="...">
-                            <ul className="pagination pagination-sm">
-                                <li className="page-item disabled">
-                                    <a className="page-link" href="#" tabIndex="-1">1</a>
-                                </li>
-                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            </ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
         );
     }
 }
 
-export default DriverConsignment;
+export default DriverConsignment;*/

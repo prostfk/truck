@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-/*import HeaderElement from '../src/components/PagesCommon/header'*/
+/*import HeaderContainer from '../src/components/PagesCommon/header'*/
 import * as serviceWorker from './serviceWorker';
 /*import ErrorUiHandler from "./components/errorWindows/errorHandler";*/
 

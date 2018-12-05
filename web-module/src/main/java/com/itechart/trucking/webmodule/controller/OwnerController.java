@@ -3,27 +3,35 @@ package com.itechart.trucking.webmodule.controller;
 import com.itechart.trucking.cancellationAct.dto.CancellationActDto;
 import com.itechart.trucking.cancellationAct.entity.CancellationAct;
 import com.itechart.trucking.cancellationAct.repository.CancellationActRepository;
+import com.itechart.trucking.cancellationAct.service.CancellationActService;
 import com.itechart.trucking.client.dto.ClientDto;
 import com.itechart.trucking.client.entity.Client;
 import com.itechart.trucking.client.repository.ClientRepository;
+import com.itechart.trucking.client.service.ClientService;
 import com.itechart.trucking.client.solrEntity.SolrClient;
 import com.itechart.trucking.client.solrRepository.ClientSolrRepository;
 import com.itechart.trucking.company.entity.Company;
 import com.itechart.trucking.company.repository.CompanyRepository;
 import com.itechart.trucking.consignment.entity.Consignment;
 import com.itechart.trucking.consignment.repository.ConsignmentRepository;
+import com.itechart.trucking.consignment.service.ConsignmentService;
 import com.itechart.trucking.odt.Odt;
 import com.itechart.trucking.order.dto.OrderDto;
 import com.itechart.trucking.order.entity.Order;
 import com.itechart.trucking.order.repository.OrderRepository;
+import com.itechart.trucking.order.service.OrderService;
+import com.itechart.trucking.pagesDto.ClientStatisticsDto;
 import com.itechart.trucking.pagesDto.OwnerPageStatisticsDto;
 import com.itechart.trucking.routeList.dto.RouteListDto;
 import com.itechart.trucking.routeList.entity.RouteList;
 import com.itechart.trucking.routeList.repository.RouteListRepository;
+import com.itechart.trucking.routeList.service.RouteListService;
 import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.user.service.UserService;
 import com.itechart.trucking.webmodule.model.util.ExcelUtil;
+import com.itechart.trucking.webmodule.service.CommonService;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,25 +63,25 @@ public class OwnerController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OwnerController.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    private OrderRepository orderRepository;
+    private CommonService commonService;
 
     @Autowired
-    private RouteListRepository routeListRepository;
+    private OrderService orderService;
 
     @Autowired
-    private CancellationActRepository cancellationActRepository;
+    private RouteListService routeListService;
 
     @Autowired
-    private ConsignmentRepository consignmentRepository;
+    private CancellationActService cancellationActService;
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ConsignmentService consignmentService;
 
     @Autowired
-    private CompanyRepository companyRepository;
+    private ClientService clientService;
 
     @Autowired
     private ClientSolrRepository clientSolrRepository;
@@ -83,19 +91,19 @@ public class OwnerController {
         LOGGER.debug("'get' request on index page");
         return "index";
     }
+
     @GetMapping(value = "/company/getFullStat")//check xls method
     @ResponseBody
-    public OwnerPageStatisticsDto getFullStat(){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
+    public OwnerPageStatisticsDto getFullStat() {
+        User userByUsername = commonService.getCurrentUser();
 
         OwnerPageStatisticsDto ownerPageStatisticsDto = new OwnerPageStatisticsDto();
         ownerPageStatisticsDto.setWorkersAmmount(userByUsername.getCompany().getWorkersAmmount());
 
-        List<Order> orders = orderRepository.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId());
+        List<Order> orders = orderService.findCustomQueryOrderByDateAcceptedLastSixMont(userByUsername.getCompany().getId());
         ownerPageStatisticsDto.setAcceptedAmmount(userByUsername.getCompany().getOrderAcceptedAmmount(orders));
 
-        List<Order> ordersExecuted = orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
+        List<Order> ordersExecuted = orderService.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId());
         ownerPageStatisticsDto.setExecutedAmmount(userByUsername.getCompany().getOrderExcutedAmmount(ordersExecuted));
 
         ownerPageStatisticsDto.setCancellationActAmmount(userByUsername.getCompany().getOrderFailedAmmount(ordersExecuted));
@@ -104,19 +112,34 @@ public class OwnerController {
         return ownerPageStatisticsDto;
     }
 
+    @GetMapping(value = "/company/getStatByClient/{id}")//check xls method
+    @ResponseBody
+    public ClientStatisticsDto getStatByClient(@PathVariable Long id) {
+        User userByUsername = commonService.getCurrentUser();
+        Company company = userByUsername.getCompany();
+        Client client = clientService.findClientById(id);
+
+        ClientStatisticsDto clientStatisticsDto = new ClientStatisticsDto();
+
+        List<Order> orders = orderService.findOrdersByLastSixMonthAndClient(company, client);
+
+        clientStatisticsDto.setExecutedAmmount(company.getOrderExcutedAmmount(orders));
+        clientStatisticsDto.setClientDto(new ClientDto(client));
+        return clientStatisticsDto;
+    }
+
     @GetMapping(value = "/company/statistics")//check xls method
     @ResponseBody
-    public void createStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
+    public void createStatisticsXls(@Value("${excel.path}") String path, HttpServletResponse response) {
+        User userByUsername = commonService.getCurrentUser();
         try {
-            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(),orderRepository.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
+            String filename = new ExcelUtil().calcOrders(path, userByUsername.getUsername(), orderService.findCustomQueryOrderByDateExecutedLastSixMont(userByUsername.getCompany().getId()));
             ServletOutputStream outputStream = response.getOutputStream();
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
-            byte[] buffer= new byte[8192];
+            byte[] buffer = new byte[8192];
             int length;
-            while ((length = fis.read(buffer)) > 0){
+            while ((length = fis.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
             fis.close();
@@ -129,17 +152,16 @@ public class OwnerController {
 
     @GetMapping(value = "/company/fullStatistics")//check xls method
     @ResponseBody
-    public void createFullStatisticsXls(@Value("${excel.path}")String path, HttpServletResponse response){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
+    public void createFullStatisticsXls(@Value("${excel.path}") String path, HttpServletResponse response) {
+        User userByUsername = commonService.getCurrentUser();
         try {
-            String filename = new ExcelUtil().calcFullStatistics(path, userByUsername.getUsername(),getFullStat());
+            String filename = new ExcelUtil().calcFullStatistics(path, userByUsername.getUsername(), getFullStat());
             ServletOutputStream outputStream = response.getOutputStream();
             File file = new File(filename);
             FileInputStream fis = new FileInputStream(file);
-            byte[] buffer= new byte[8192];
+            byte[] buffer = new byte[8192];
             int length;
-            while ((length = fis.read(buffer)) > 0){
+            while ((length = fis.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
             fis.close();
@@ -152,28 +174,27 @@ public class OwnerController {
 
     @GetMapping(value = "/company/user/{id}")
     @ResponseBody
-    public UserDto findUserByIdAndCompany(@PathVariable Long id){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(name);
-        User user = userRepository.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
+    public UserDto findUserByIdAndCompany(@PathVariable Long id) {
+        User userByUsername = commonService.getCurrentUser();
+        User user = userService.customFindUserByIdAndCompanyId(id, userByUsername.getCompany().getId());
         return new UserDto(user);
     }
 
     @GetMapping(value = "/company/orders")
     @ResponseBody
     public List<OrderDto> fetchAllOrdersOfCompany(@ModelAttribute Order order) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        List<Order> allByCompany = orderRepository.findAllByCompany(company);
+        User userByUsername = commonService.getCurrentUser();
+        Company company = userByUsername.getCompany();
+        List<Order> allByCompany = orderService.findAllByCompany(company);
         return Odt.OrderToDtoList(allByCompany);
     }
 
     @GetMapping(value = "/company/orders/{id}")
     @ResponseBody
     public OrderDto fetchOrderOfCompany(@PathVariable Long id) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        Optional<Order> order = orderRepository.findById(id);
+        User userByUsername = commonService.getCurrentUser();
+        Company company = userByUsername.getCompany();
+        Optional<Order> order = orderService.findById(id);
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
             Order order1 = order.get();
             OrderDto orderDto = new OrderDto(order1);
@@ -187,18 +208,17 @@ public class OwnerController {
         }
     }
 
-    @RequestMapping(value ="/company/routList/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/company/routList/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id){
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        Optional<Order> order = orderRepository.findById(id);
+    public List<RouteListDto> fetchRoutListOfOrder(@PathVariable Long id) {
+        User userByUsername = commonService.getCurrentUser();
+        Company company = userByUsername.getCompany();
+        Optional<Order> order = orderService.findById(id);
 
         List<RouteList> routeLists;
-        if(order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            routeLists = routeListRepository.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
-        }
-        else {
+        if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
+            routeLists = routeListService.findAllByWaybillOrderByPointLevel(order.get().getWaybill());
+        } else {
             return null;
         }
         return Odt.RouteListToDtoList(routeLists);
@@ -207,15 +227,15 @@ public class OwnerController {
     @GetMapping(value = "/company/cancelAct/{id}")
     @ResponseBody
     public CancellationActDto fetchCancelActOfCompany(@PathVariable Long id) {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        Company company = userRepository.findUserByUsername(name).getCompany();
-        Optional<Order> order = orderRepository.findById(id);
+        User userByUsername = commonService.getCurrentUser();
+        Company company = userByUsername.getCompany();
+        Optional<Order> order = orderService.findById(id);
 
         Consignment consignment;
         CancellationAct cancellationAct;
         if (order.isPresent() && order.get().getCompany().getId().equals(company.getId())) {
-            consignment = consignmentRepository.findConsignmentByOrder(order.get());
-            cancellationAct = cancellationActRepository.findCancellationActByConsignment(consignment);
+            consignment = consignmentService.findConsignmentByOrder(order.get());
+            cancellationAct = cancellationActService.findCancellationActByConsignment(consignment);
         } else {
             return null;
         }
@@ -226,14 +246,13 @@ public class OwnerController {
     @PostMapping(value = "/createClient")
     @ResponseBody
     public Object createClient(String name) throws JSONException {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByUsername = userRepository.findUserByUsername(username);
-        Client clientByName = clientRepository.findClientByName(name);
-        if (clientByName==null){
-            @Valid Client save = clientRepository.save(new Client(name, "default",userByUsername.getCompany()));
+        User userByUsername = commonService.getCurrentUser();
+        Client clientByName = clientService.findClientByName(name);
+        if (clientByName == null) {
+            @Valid Client save = clientService.save(new Client(name, "default", userByUsername.getCompany()));
             clientSolrRepository.save(SolrClient.solrClientFromClient(save));
             return new ClientDto(save);
-        }else{
+        } else {
             JSONObject json = new JSONObject();
             json.put("error", "Such client is already exists");
             return json.toString();
@@ -243,10 +262,9 @@ public class OwnerController {
     @GetMapping(value = "/company/clients")
     @ResponseBody
     public Object fetchCompanyClients(@RequestParam(name = "page") int page) throws JSONException {
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userByEmail = userRepository.findUserByUsername(name);
+        User userByUsername = commonService.getCurrentUser();
 
-        Page<Client> clientPage = clientRepository.findAllByCompany(userByEmail.getCompany(), PageRequest.of(page - 1, 5));
+        Page<Client> clientPage = clientService.findAllByCompany(userByUsername.getCompany(), PageRequest.of(page - 1, 5));
 
         for (Client client : clientPage) {
             System.out.println(client);
@@ -254,7 +272,7 @@ public class OwnerController {
         JSONObject json = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        for (Client client:clientPage.getContent()) {
+        for (Client client : clientPage.getContent()) {
             JSONObject jsonObject;
             ClientDto clientDto = new ClientDto(client);
             jsonObject = new JSONObject(ClientDto.toMap(clientDto));
@@ -264,9 +282,6 @@ public class OwnerController {
         json.put("clients", jsonArray);
         json.put("currentPage", clientPage.getNumber());
         json.put("totalElements", clientPage.getTotalElements());
-
-        System.out.println(json);
-
         return json.toString();
     }
 }

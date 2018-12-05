@@ -79,16 +79,16 @@ class DispatcherOrderList extends React.Component {
         });
     }
 
-    renderTable(order) {
+    renderTable(order, index) {
         if (!order) return;
-        return <div className="row table_row order_row animated fadeInUp">
+        return <div className="row table_row order_row animated fadeInUp" key={index}>
             <div className="col-md-3">{order.name}</div>
             <div className="col-md-2" title={order.sender.address}>{order.sender.name}</div>
             <div className="col-md-2" title={order.receiver.address}>{order.receiver.name}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateDeparture)}</div>
             <div className="col-md-2">{CommonUtil.getCorrectDateFromLong(order.waybill.dateArrival)}</div>
             <div className="col-md-1">
-                <Link to={`/orders/${order.id}/edit`}><EditIcon></EditIcon></Link>
+                <Link to={`/orders/${order.id}/edit`}><EditIcon/></Link>
             </div>
         </div>
     }
@@ -97,32 +97,37 @@ class DispatcherOrderList extends React.Component {
     render() {
         let element;// = <div></div>;
         if (this.state.company.active === 1) {
-            element = <span>
-                <h5>Добавление заказа</h5>
-                <Link to={`/orders/createorder`} className="btn btn-success btn_fullsize">Создать</Link>
-            </span>;
+            element = <form className="superuserform_newaccountform grey_form">
+                        <span>
+                            <h5>Добавление заказа</h5>
+                        <Link to={`/orders/createorder`} className="btn btn-success btn_fullsize">Создать</Link>
+                        </span>
+                     </form> ;
         } else if (this.state.company.active === 0) {
-            element = <div className={"error-span"}>
-                Комания Заблокирована!
-                <div>Администратор: {this.state.company.lockerId.username}</div>
-                <div>Дата: {CommonUtil.getCorrectDateFromLong(this.state.company.lockDate)}</div>
-                <div>Причина: {this.state.company.lockComment}</div>
-            </div>
+            element =
+                <form className="superuserform_newaccountform err-block">
+                    <div>
+                        Комания Заблокирована!
+                        <div>Администратор: {this.state.company.lockerId.username}</div>
+                        <div>Дата: {CommonUtil.getCorrectDateFromLong(this.state.company.lockDate)}</div>
+                        <div>Причина: {this.state.company.lockComment}</div>
+                    </div>
+                </form>
 
         }
-        return <div class="row">
-            <div class="offset-md-1 col-md-7 superuserform_companylist animated fadeIn">
+        return <div className="row">
+            <div className="offset-lg-1 col-lg-6 col-md-7 superuserform_companylist animated fadeIn">
                 <div className="row table_header">
                     <div className="col-md-3">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
                     <div className="col-md-2">Название склада (получатель)</div>
                     <div className="col-md-2">Дата отправления</div>
                     <div className="col-md-2">Дата получения</div>
-                    <div className="col-md-1"></div>
+                    <div className="col-md-1"/>
                 </div>
                 {
-                    this.state.orders.map((element) => {
-                        return this.renderTable(element);
+                    this.state.orders.map((element, index) => {
+                        return this.renderTable(element, index);
                     })
                 }
                 <div className="table_footer">
@@ -141,10 +146,8 @@ class DispatcherOrderList extends React.Component {
                     </div>
                 </div>
             </div>
-            <div class="offset-md-1 col-md-2 animated fadeIn">
-                <form class="superuserform_newaccountform grey_form">
+            <div className="offset-lg-1 col-lg-3 col-md-5 animated fadeIn">
                     {element}
-                </form>
             </div>
         </div>
     }

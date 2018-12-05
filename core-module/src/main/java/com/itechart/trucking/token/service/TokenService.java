@@ -21,15 +21,15 @@ public class TokenService {
         return tokenRepository.findTokenByTokenValue(tokenValue);
     }
 
-    public Token save(@Valid Token token){
+    public Token save(@Valid Token token) {
         return tokenRepository.save(token);
     }
 
-    public Token update(@Valid Token token){
+    public Token update(@Valid Token token) {
         return tokenRepository.save(token);
     }
 
-    public void remove(Token token){
+    public void remove(Token token) {
         tokenRepository.delete(token);
     }
 

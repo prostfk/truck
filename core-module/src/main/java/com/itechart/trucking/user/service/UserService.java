@@ -6,9 +6,9 @@ import com.itechart.trucking.user.dto.UserDto;
 import com.itechart.trucking.user.entity.User;
 import com.itechart.trucking.user.entity.UserRole;
 import com.itechart.trucking.user.repository.UserRepository;
+import com.itechart.trucking.user.statistics.UserStatisticsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +18,9 @@ import org.json.JSONObject;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -32,14 +31,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Page<User> findAllByCompany(Company company, Pageable pageable){
+    public Page<User> findAllByCompany(Company company, Pageable pageable) {
         return userRepository.findAllByCompany(company, pageable);
     }
 
     public JSONObject updateUser(UserDto userDto, String password) throws JSONException {
         JSONObject json = new JSONObject();
         User userByUsername = userRepository.findUserByUsername(userDto.getUsername());
-        if (userByUsername.getId() == userDto.getId()){
+        if (userByUsername.getId() == userDto.getId()) {
             if (password.length() > 5 && password.length() < 20) {
                 userRepository.updateUser(userDto.getId(), userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), userDto.getBirthDay(),
                         userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(),
@@ -61,7 +60,7 @@ public class UserService {
         userRepository.saveUser(
                 userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), companyId, userDto.getBirthDay(),
                 userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
-                userDto.getHouseNumber(), userDto.getFlatNumber(),timestamp
+                userDto.getHouseNumber(), userDto.getFlatNumber(), timestamp
         );
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("username", userDto.getUsername());
@@ -82,13 +81,13 @@ public class UserService {
 
                 userRepository.saveUser(userDto.getUsername(), userDto.getEmail(), passwordEncoder.encode(password), userDto.getUserRole().name(), admin.getCompany().getId(), userDto.getBirthDay(),
                         userDto.getFirstName(), userDto.getSecondName(), userDto.getThirdName(), userDto.getCountry(), userDto.getCity(), userDto.getStreet(),
-                        userDto.getHouseNumber(), userDto.getFlatNumber(),timestamp);
+                        userDto.getHouseNumber(), userDto.getFlatNumber(), timestamp);
 
-                if (userDto.getUserRole().equals(UserRole.ROLE_DRIVER)){
+                if (userDto.getUserRole().equals(UserRole.ROLE_DRIVER)) {
                     User savedUser = userRepository.findUserByUsername(userDto.getUsername());
                     driverRepository.saveDriver(
                             String.format("%s %s", savedUser.getFirstName(), savedUser.getSecondName()),
-                            passport,savedUser.getCompany().getId(),savedUser.getId()
+                            passport, savedUser.getCompany().getId(), savedUser.getId()
                     );
                 }
                 json.put("username", userDto.getUsername());
@@ -108,22 +107,32 @@ public class UserService {
         return userRepository.findUserByUsername(name);
     }
 
-    public User save(@Valid User user){
+    public User save(@Valid User user) {
         return userRepository.save(user);
     }
 
-    public User updateUser(Long id, @Valid User user){
-        if (id!=user.getId()){
+    public User updateUser(Long id, @Valid User user) {
+        if (id != user.getId()) {
             return null;
         }
         return userRepository.save(user);
     }
 
     public User findUserByEmailAndCompany(String email, Company company) {
-        return userRepository.findUserByEmailAndCompany(email,company);
+        return userRepository.findUserByEmailAndCompany(email, company);
     }
 
     public User findUserById(Long id) {
         return userRepository.findUserById(id);
     }
+
+    public List<UserStatisticsDto> getTotalUserStatistics() {
+        return userRepository.getTotalUserStatistics();
+    }
+
+    public User customFindUserByIdAndCompanyId(Long userId, Long companyId) {
+        return userRepository.customFindUserByIdAndCompanyId(userId, companyId);
+    }
+
+
 }

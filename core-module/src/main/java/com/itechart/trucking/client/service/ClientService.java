@@ -22,38 +22,38 @@ public class ClientService {
 //    @Autowired
 //    private ClientSolrRepository clientSolrRepository;
 
-    public Client findClientByName(String name){
+    public Client findClientByName(String name) {
         return clientRepository.findClientByName(name);
     }
 
-    public List<Client> findClientByType(String type){
+    public List<Client> findClientByType(String type) {
         return clientRepository.findClientByType(type);
     }
 
-    public Client findClientById(Long clientId){
+    public Client findClientById(Long clientId) {
         return clientRepository.findClientById(clientId);
     }
 
-    public List<Client> findClientsByNameLikeIgnoreCase(String format){
+    public List<Client> findClientsByNameLikeIgnoreCase(String format) {
         return clientRepository.findClientsByNameLikeIgnoreCase(format);
     }
 
-    public Page<Client> findAllByCompany(Company company, Pageable pageable){
-        return clientRepository.findAllByCompany(company,pageable);
+    public Page<Client> findAllByCompany(Company company, Pageable pageable) {
+        return clientRepository.findAllByCompany(company, pageable);
     }
 
-    public Client save(@Valid Client client){
+    public Client save(@Valid Client client) {
         @Valid Client savedClient = clientRepository.save(client);
         SolrClient solrClient = SolrClient.solrClientFromClient(savedClient);
 //        clientSolrRepository.save(solrClient);
         return savedClient;
     }
 
-    public Client update(@Valid Client client){
+    public Client update(@Valid Client client) {
         return save(client);
     }
 
-    public void remove(Client client){
+    public void remove(Client client) {
         clientRepository.delete(client);
     }
 

@@ -37,7 +37,6 @@ export default class EditUser extends Component {
         fetch(`http://localhost:8080/api/user/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             return response.json()
         }).then(data => {
-            console.log(data);
             this.setState({
                 username: data.username,
                 email: data.email,
@@ -74,9 +73,6 @@ export default class EditUser extends Component {
         formData.append("street", this.state.street);
         formData.append("houseNumber", this.state.houseNumber);
         formData.append("flatNumber", this.state.flatNumber);
-        formData.forEach((v, k) => {
-            console.log(k + " - " + v);
-        });
         fetch('http://localhost:8080/api/updateUser', {
             method: "POST",
             body: formData,

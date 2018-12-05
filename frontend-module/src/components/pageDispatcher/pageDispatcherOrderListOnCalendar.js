@@ -103,7 +103,6 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
     };
 
     handleMessage(msg){
-        console.log(msg);
         let myId = localStorage.getItem("userId");
         let myCompanyId = localStorage.getItem("companyId");
 
@@ -120,7 +119,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
         if(!rangeArrival && !rangeDeparture) return;
 
-        if(myId==msg.updaterUser) {
+        if(myId===msg.updaterUser) {
             NotificationManager.success('Заказ обновлён '+ msg.orderName, 'Информация');
         }
         else{
@@ -130,7 +129,6 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
     }
 
     render() {
-        let asd = this;
         return <div className="row animated fadeIn">
             <div className="offset-md-3 col-md-6 superuserform_companylist">
                 <NotificationContainer/>
@@ -156,7 +154,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         showNonCurrentDates={false}
                         ref={(input) => { this.state.myref = input; }}
                     />
-                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/dispatcher']}
+                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
                                   onMessage={(msg) => {
                                       this.handleMessage(msg);
                                   }}

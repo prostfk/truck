@@ -7,7 +7,7 @@ import AnonHeader from "./anonHeader";
 import DispatcherHeader from "./dispatcherHeader";
 import SysAdminHeader from "./sysAdminHeader";
 
-class HeaderElement extends React.Component {
+class HeaderContainer extends React.Component {
 
     // ROLE_USER,
 
@@ -31,4 +31,4 @@ class HeaderElement extends React.Component {
     }
 }
 
-export default HeaderElement;
+export default HeaderContainer;

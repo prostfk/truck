@@ -15,27 +15,25 @@ public class ConsignmentService {
     @Autowired
     private ConsignmentRepository consignmentRepository;
 
-    public Consignment findConsignmentByOrder(Order order){
+    public Consignment findConsignmentByOrder(Order order) {
         return consignmentRepository.findConsignmentByOrder(order);
     }
 
-    public void customDeleteConsignmentsByOrderId(Long orderId){
+    public void customDeleteConsignmentsByOrderId(Long orderId) {
         consignmentRepository.customDeleteConsignmentsByOrderId(orderId);
     }
 
-    public Consignment save(@Valid Consignment consignment){
+    public Consignment save(@Valid Consignment consignment) {
         return consignmentRepository.save(consignment);
     }
 
-    public Consignment update(@Valid Consignment consignment){
+    public Consignment update(@Valid Consignment consignment) {
         return consignmentRepository.save(consignment);
     }
 
-    public void remove(Consignment consignment){
+    public void remove(Consignment consignment) {
         consignmentRepository.delete(consignment);
     }
-
-
 
 
 }

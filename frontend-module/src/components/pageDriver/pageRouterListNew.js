@@ -3,7 +3,8 @@ import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-r
 import * as ReactDOM from "react-dom";
 import nonPassedMarker from './img/non-passed-marker.png';
 import passedMarker from './img/passed-marker.png';
-
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import CommonUtil from "../commonUtil/commontUtil";
 
 export class DriverRouterListNew extends Component {
 
@@ -23,21 +24,65 @@ export class DriverRouterListNew extends Component {
             markers: {},
             selectedPoint: '',
             pathCoordinates: [],
-            mapCenter: {lat: 53.9, lng: 27.56667}
+            mapCenter: {lat: 53.9, lng: 27.56667},
+
+            passedPoints: [],
+            enablePoints: [],
+            passedPathCoordinates: [],
         };
         document.title = "Путевой лист";
     }
 
     componentDidMount() {
         this.getRouteList().then(data => {
-            this.setState({routePoints: data, pathCoordinates: []});
-            this.setState({mapCenter: {lng: data[0].lng, lat: data[0].lat}});
-            for (let i = 0; i < data.length; i++) {
-                this.setState({
-                    pathCoordinates: [...this.state.pathCoordinates, {lng: data[i].lng, lat: data[i].lat}]
-                })
-            }
+            if (data.length === 0) return;
+            this.setState({
+                routePoints: data,
+                pathCoordinates: [],
+                mapCenter: {lng: data[0].lng, lat: data[0].lat},
+            });
+            this.updatePoints(data);
         });
+    }
+
+    updatePoints(data) {
+        let passedPoints = [];
+        let enablePoints = [];
+        let pathCoordinates = [];
+        let passedPathCoordinates = [];
+
+        // Temp sort
+        data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
+        CommonUtil.moveElementInArray(data,this.__findIndexOfPointByPointName(data,"Завершение"),data.length-1);
+
+        /*for (let i = 0; i < data.length; i++) {
+            console.log(data[i].id);
+        }*/
+
+        for (let i = 0; i < data.length; i++) {
+            pathCoordinates.push({lng: data[i].lng, lat: data[i].lat});
+
+            if (data[i].marked) {
+                passedPoints.push(data[i]);
+                passedPathCoordinates.push({lng: data[i].lng, lat: data[i].lat});
+            }
+        }
+
+        if (passedPoints.length > 0) {
+            enablePoints.push(data[passedPoints.length - 1]);
+            if (passedPoints.length < data.length) {
+                enablePoints.push(data[passedPoints.length])
+            }
+        } else {
+            enablePoints.push(data[0])
+        }
+
+        this.setState({
+            passedPoints: passedPoints,
+            enablePoints: enablePoints,
+            pathCoordinates: pathCoordinates,
+            passedPathCoordinates: passedPathCoordinates,
+        })
     }
 
     getRouteList() {
@@ -66,23 +111,43 @@ export class DriverRouterListNew extends Component {
 
     forceUpdateHandler() {
         this.getRouteList().then(data => {
-            this.setState({routePoints: data, point: "", sequence: ""});
+            this.updatePoints(data);
+            this.setState({
+                routePoints: data,
+                point: "",
+                sequence: ""});
         });
     }
 
     onMarkerClick = (props, marker, e) => {
         console.log(props);
-        this.setState({
-            selectedPlace: props,
-            activeMarker: marker,
-            showingInfoWindow: true,
-            selectedPoint: props.pointId,
-            selectedPointStatus: props.pointStatus
-        });
+
+        let enablePoints = this.state.enablePoints;
+        let permission = false;
+
+        for (let i = 0; i < enablePoints.length; i++) {
+            console.log("Enable point: " + enablePoints[i].id);
+            if (props.pointId === enablePoints[i].id) {
+                permission = true;
+            }
+        }
+
+        if (permission) {
+            this.setState({
+                selectedPlace: props,
+                activeMarker: marker,
+                showingInfoWindow: true,
+                selectedPoint: props.pointId,
+                selectedPointStatus: props.pointStatus
+            });
+        } else {
+            NotificationManager.error("Нельзя выбрать эту точку.", "Ошибка")
+        }
+
     };
 
-    rendPointsList = (point) => {
-        return <div className={'row animated fadeInUp'}>
+    rendPointsList = (point, index) => {
+        return <div key={index} className={'row animated fadeInUp'}>
             <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success' : 'list-group-item list-group-item-action list-group-item-danger'}
                 style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
         </div>
@@ -90,12 +155,16 @@ export class DriverRouterListNew extends Component {
 
     onButtonSubmitClick = () => {
         this.markPoint(this.state.selectedPoint);
+        this.setState({
+            showingInfoWindow: !this.state.showingInfoWindow,
+        });
     };
 
-    setMarksToMap = (point) => {
+    setMarksToMap = (point, index) => {
         let icon = point.marked ? passedMarker : nonPassedMarker;
         return (
-            <Marker icon={{url: icon}}
+            <Marker key={index}
+                    icon={{url: icon}}
                     title={point.point}
                     name={point.point}
                     pointId={point.id}
@@ -116,24 +185,25 @@ export class DriverRouterListNew extends Component {
 
     render() {
         return (
-            <div className={'row animated fadeIn'}>
+            <div className={'row animated fadeIn'} style={{overflow: 'hidden'}}>
                 <div className={'col-md-3'}>
                     <ul>
                         <h1>Точки</h1>
-                        {this.state.routePoints.map(p => {
-                            return this.rendPointsList(p);
+                        {this.state.routePoints.map((p, index) => {
+                            return this.rendPointsList(p, index);
                         })}
                     </ul>
                 </div>
                 <div className={'col-md-9'}>
                     <div style={{height: '92.5vh', width: '90%'}}>
-                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}} google={this.props.google}
+                        <Map center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}}
+                             google={this.props.google}
                              style={{width: '100%', height: '100%', position: 'relative'}}
                              className={'map'}
-                             zoom={14}>
+                             zoom={12}>
                             {
-                                this.state.routePoints.map(point => {
-                                    return this.setMarksToMap(point);
+                                this.state.routePoints.map((point, index) => {
+                                    return this.setMarksToMap(point, index);
                                 })
                             }
                             <InfoWindow
@@ -142,23 +212,35 @@ export class DriverRouterListNew extends Component {
                                 onOpen={e => {
                                     this.onInfoWindowOpen(this.props, e);
                                 }}>
-                                <p>{this.state.selectedPlace.name}</p>
-                                <div id="but-sub-mark"/>
+                                <div>
+                                    <p>{this.state.selectedPlace.name}</p>
+                                    <div id="but-sub-mark"/>
+                                </div>
                             </InfoWindow>
                             <Polyline
                                 path={this.state.pathCoordinates}
-                                strokeColor="#CF89F9"
+                                strokeColor="#C02900"
                                 strokeOpacity={0.8}
-                                strokeWeight={2} />
-
-                    </Map>
+                                strokeWeight={2}/>
+                            <Polyline
+                                path={this.state.passedPathCoordinates}
+                                strokeColor="#1AC000"
+                                strokeOpacity={0.8}
+                                strokeWeight={2}/>
+                        </Map>
+                    </div>
                 </div>
             </div>
+        );
 
+    }
 
-    </div>
-    );
-
+    __findIndexOfPointByPointName(array, name){
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].point === name){
+                return i;
+            }
+        }
     }
 
 
