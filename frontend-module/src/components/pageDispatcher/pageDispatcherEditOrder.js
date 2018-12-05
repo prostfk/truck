@@ -58,6 +58,7 @@ export default class DispatcherEditOrder extends Component {
         let nameValidation = ValidationUtil.validateStringForLength(Array.isArray(this.state.name) ? this.state.name.join('') : this.state.name, 3, 20);
         let dateArrivalValidation = ValidationUtil.validateDateToPattern(this.state.date_arrival);
         let dateDepartureValidation = ValidationUtil.validateDateToPattern(this.state.date_departure);
+        let correctDates = ValidationUtil.reformatDateToDateObject(ValidationUtil.getStringFromUnknownObject(this.state.date_arrival)) > ValidationUtil.reformatDateToDateObject(ValidationUtil.getStringFromUnknownObject(this.state.date_departure));
         let stocksVal = this.state.departure_stock !== this.state.delivery_stock;
         let validateAuto = ValidationUtil.validateForNumber(this.state.auto);
         let validateDriver = ValidationUtil.validateForNumber(this.state.driver);
@@ -71,7 +72,7 @@ export default class DispatcherEditOrder extends Component {
         } else {
             document.getElementById('name-error-span').innerText = "";
         }
-        if (!dateArrivalValidation || !dateDepartureValidation) {
+        if (!dateArrivalValidation || !dateDepartureValidation || !correctDates) {
             document.getElementById('date-error-span').innerText = "Неправильная дата";
         } else {
             document.getElementById('date-error-span').innerText = "";
@@ -91,16 +92,16 @@ export default class DispatcherEditOrder extends Component {
         } else {
             document.getElementById('stocks-error-span').innerText = '';
         }
-        return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation && validateAuto && validateDriver;
+        return clientIdValidation && nameValidation && dateArrivalValidation && dateDepartureValidation && validateAuto && validateDriver && correctDates;
     };
 
     validateProduct = () => {
         try {
-            let nameVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductName) !== '';
-            // let statusVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus)!== '';
-            let descVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription) !== '';
-            let priceVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice) !== '';
-            let countVal = ValidationUtil.getStringFromUnnownObject(this.state.newProductCount) !== '';
+            let nameVal = ValidationUtil.getStringFromUnknownObject(this.state.newProductName) !== '';
+            // let statusVal = ValidationUtil.getStringFromUnknownObject(this.state.newProductStatus)!== '';
+            let descVal = ValidationUtil.getStringFromUnknownObject(this.state.newProductDescription) !== '';
+            let priceVal = ValidationUtil.getStringFromUnknownObject(this.state.newProductPrice) !== '';
+            let countVal = ValidationUtil.getStringFromUnknownObject(this.state.newProductCount) !== '';
             if (!nameVal) {
                 document.getElementById('prodName-error-span').innerText = 'Название не может быть пустым';
             } else {
@@ -144,16 +145,16 @@ export default class DispatcherEditOrder extends Component {
             formData.append("orderId", this.state.order.id);
             formData.append("consignmentId", this.state.consignmentId);
             formData.append("waybillId", this.state.order.waybill.id);
-            formData.append("clientId", ValidationUtil.getStringFromUnnownObject(this.state.client_id));
-            formData.append("name", ValidationUtil.getStringFromUnnownObject(this.state.name));
-            formData.append("status", ValidationUtil.getStringFromUnnownObject(this.state.status));
-            formData.append("departureStock", ValidationUtil.getStringFromUnnownObject(this.state.departure_stock));
-            formData.append("deliveryStock", ValidationUtil.getStringFromUnnownObject(this.state.delivery_stock));
-            formData.append("dateArrival", ValidationUtil.getStringFromUnnownObject(this.state.date_arrival));
-            formData.append("dateDeparture", ValidationUtil.getStringFromUnnownObject(this.state.date_departure));
-            formData.append("waybillStatus", ValidationUtil.getStringFromUnnownObject(this.state.waybill_status));
-            formData.append("autoId", ValidationUtil.getStringFromUnnownObject(this.state.auto));
-            formData.append("driverId", ValidationUtil.getStringFromUnnownObject(this.state.driver));
+            formData.append("clientId", ValidationUtil.getStringFromUnknownObject(this.state.client_id));
+            formData.append("name", ValidationUtil.getStringFromUnknownObject(this.state.name));
+            formData.append("status", ValidationUtil.getStringFromUnknownObject(this.state.status));
+            formData.append("departureStock", ValidationUtil.getStringFromUnknownObject(this.state.departure_stock));
+            formData.append("deliveryStock", ValidationUtil.getStringFromUnknownObject(this.state.delivery_stock));
+            formData.append("dateArrival", ValidationUtil.getStringFromUnknownObject(this.state.date_arrival));
+            formData.append("dateDeparture", ValidationUtil.getStringFromUnknownObject(this.state.date_departure));
+            formData.append("waybillStatus", ValidationUtil.getStringFromUnknownObject(this.state.waybill_status));
+            formData.append("autoId", ValidationUtil.getStringFromUnknownObject(this.state.auto));
+            formData.append("driverId", ValidationUtil.getStringFromUnknownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
             fetch('http://localhost:8080/api/companies/orders/edit', {
                 method: 'POST',
@@ -343,11 +344,11 @@ export default class DispatcherEditOrder extends Component {
         if (this.validateProduct()) {
             event.preventDefault();
             let product = {
-                name: ValidationUtil.getStringFromUnnownObject(this.state.newProductName),
-                status: ValidationUtil.getStringFromUnnownObject(this.state.newProductStatus),
-                description: ValidationUtil.getStringFromUnnownObject(this.state.newProductDescription),
-                count: ValidationUtil.getStringFromUnnownObject(this.state.newProductCount),
-                price: ValidationUtil.getStringFromUnnownObject(this.state.newProductPrice)
+                name: ValidationUtil.getStringFromUnknownObject(this.state.newProductName),
+                status: ValidationUtil.getStringFromUnknownObject(this.state.newProductStatus),
+                description: ValidationUtil.getStringFromUnknownObject(this.state.newProductDescription),
+                count: ValidationUtil.getStringFromUnknownObject(this.state.newProductCount),
+                price: ValidationUtil.getStringFromUnknownObject(this.state.newProductPrice)
             };
             this.setState({
                 consignment: [...this.state.consignment, product],
@@ -366,7 +367,7 @@ export default class DispatcherEditOrder extends Component {
     };
 
     processSelect = () => {
-        if (ValidationUtil.getStringFromUnnownObject(this.state.waybill_status) === 1) {
+        if (ValidationUtil.getStringFromUnknownObject(this.state.waybill_status) === 1) {
             return <select onChange={this.changeInput} value={this.state.waybill_status}
                            className="form-control"
                            id="waybill_status">
