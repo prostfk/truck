@@ -186,11 +186,12 @@ class ManagerConsignment extends Component {
                 </select>
             </div>
             <div className="col-md-2">{product.description}</div>
-            <div className="col-md-2">{product.price}</div>
-            <div className="col-md-2"><a className="table_button bg-secondary text-white"
+            <div className="col-md-1">{product.price}</div>
+            <div className="col-md-2">{product.count}/{product.cancelledCount}</div>
+            <div className="col-md-1"><a className="table_button bg-secondary text-white"
                                          onClick={this.toggleModalCancellation.bind(this, index)}>{"Списать"}</a>
             </div>
-            <div className="col-md-2"><a className="table_button bg-secondary text-white"
+            <div className="col-md-1"><a className="table_button bg-secondary text-white"
                                          onClick={this.toggleModalRestore.bind(this, index)}>{"Восстановить"}</a>
             </div>
         </div>
@@ -337,15 +338,16 @@ class ManagerConsignment extends Component {
                     </form>
                 </Modal>
 
-                <div className="offset-md-1 col-md-8 form_clear">
+                <div className="offset-md-1 col-md-9 form_clear">
                     <h3>Товарная партия</h3>
                     <div className="row table_header animated fadeIn">
                         <div className="col-md-2">Наименование</div>
                         <div className="col-md-2">Состояние</div>
                         <div className="col-md-2">Описание</div>
-                        <div className="col-md-2">Цена</div>
-                        <div className="col-md-2"/>
-                        <div className="col-md-2"/>
+                        <div className="col-md-1">Цена</div>
+                        <div className="col-md-2">Количество товаров (в наличии/списано)</div>
+                        <div className="col-md-1"/>
+                        <div className="col-md-1"/>
                     </div>
                     {
                         this.state.products.map((element, index) => {

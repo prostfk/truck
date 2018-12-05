@@ -100,7 +100,7 @@ export default class UsersList extends Component {
                 </div>
             </div>
             <div className="offset-md-1 col-md-4" id={'add-user-form'}>
-                <CreateUser/>
+                <CreateUser updateList={this.getUsersRequest}/>
             </div>
         </div>
     }

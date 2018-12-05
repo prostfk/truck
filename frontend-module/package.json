@@ -31,7 +31,7 @@
     "react-stomp": "^4.0.0",
     "react-websocket": "^2.0.0",
     "reactstrap": "^6.5.0",
-    "redux": "latest"
+    "redux": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

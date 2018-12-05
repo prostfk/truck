@@ -21,7 +21,6 @@ public class Product {
     private Double price;
     private Integer count;
     @Min(0)
-    @Max(100)
     private Integer cancelledCount;
 
     @ManyToOne
