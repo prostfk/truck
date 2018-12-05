@@ -229,3 +229,7 @@ svg{
 .col-md-2{
     overflow: hidden;
 }
+.err-block{
+    background-color: #dc3545;
+    color:white;
+}

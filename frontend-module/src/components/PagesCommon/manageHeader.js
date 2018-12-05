@@ -44,7 +44,7 @@ export default class ManagerHeader extends Component {
                         <LogoutComponent/>
                     </li>
                 </div>
-                <SockJsClient url='http://192.168.1.116:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/markPoint/']}
+                <SockJsClient url='http://192.168.1.116:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/markPoint/','/topic/'+localStorage.getItem("companyId")+'/driverArrival/']}
                               onMessage={(msg) => {
                                   this.handleMessage(msg);
                               }}

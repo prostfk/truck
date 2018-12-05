@@ -23,6 +23,7 @@
 */target/**
 */node-modules/**
 */logging/**
+*node_modules
 *.properties
 *.log
 *.gz

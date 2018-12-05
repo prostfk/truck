@@ -9,9 +9,9 @@ import java.util.List;
 
 @Data
 public class SysAdminStatistics {
-    List<UserStatisticsDto> userStatisticsDtos;
-    List<CompanyStatisticsDto> companyStatisticsDtos;
-    List<AutoStatisticsDto> autoStatisticsDtos;
+    private List<UserStatisticsDto> userStatisticsDtos;
+    private List<CompanyStatisticsDto> companyStatisticsDtos;
+    private List<AutoStatisticsDto> autoStatisticsDtos;
 
     public SysAdminStatistics(List<UserStatisticsDto> userStatisticsDtos, List<CompanyStatisticsDto> companyStatisticsDtos, List<AutoStatisticsDto> autoStatisticsDtos) {
         this.userStatisticsDtos = userStatisticsDtos;

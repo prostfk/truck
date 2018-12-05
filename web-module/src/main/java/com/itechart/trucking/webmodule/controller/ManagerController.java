@@ -14,6 +14,7 @@ import com.itechart.trucking.user.service.UserService;
 import com.itechart.trucking.waybill.entity.Waybill;
 import com.itechart.trucking.waybill.service.WaybillService;
 import com.itechart.trucking.webmodule.model.dto.SocketNotification;
+import com.itechart.trucking.webmodule.model.dto.SocketNotificationDriver;
 import com.itechart.trucking.webmodule.service.StompService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.itechart.trucking.formData.WaybillFormData;
@@ -230,21 +231,37 @@ public class ManagerController {
         order.get().setWaybill(waybill);
 
         String message = "Поступил заказ на перевозку (" + order.get().getName() + " ) ";
-        stompService.sendNotification("/topic/" + userByUsername.getCompany().getId() + "/changeWayBillStatusTo2/" + waybill.getDriver().getUser().getId(), new SocketNotification(name, message));
+        SocketNotificationDriver socketNotificationDriver = new SocketNotificationDriver(name, message);
+        socketNotificationDriver.setOrderAdd(true);
+        socketNotificationDriver.setOrder(new OrderDto(order.get()));
+        socketNotificationDriver.setOrderId(orderId);
+        stompService.sendNotification("/topic/" + userByUsername.getCompany().getId() + "/changeWayBillStatus/" + waybill.getDriver().getUser().getId(), socketNotificationDriver);
 
         return new OrderDto(order.get());
     }
 
     @GetMapping(value = "/manager/cancelChecking/{orderId}")
     public OrderDto cancelWaybillCheck(@PathVariable Long orderId) {
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userByUsername = userService.findUserByUsername(name);
+
         Optional<Order> order = orderService.findById(orderId);
+        if(order.get().getCompany().getId()!=userByUsername.getCompany().getId()) return  null;
+
         Waybill waybill = order.get().getWaybill();
+
         waybill.setStatus(1);
         waybill.setCheckDate(null);
         waybill.setUser(null);
 
         waybillService.save(waybill);
         order.get().setWaybill(waybill);
+
+        String message = "Отозвал заказ на перепроверку (" + order.get().getName() + " ) ";
+        SocketNotificationDriver socketNotificationDriver = new SocketNotificationDriver(name, message);
+        socketNotificationDriver.setOrderAdd(false);
+        socketNotificationDriver.setOrderId(orderId);
+        stompService.sendNotification("/topic/" + userByUsername.getCompany().getId() + "/changeWayBillStatus/" + waybill.getDriver().getUser().getId(), socketNotificationDriver);
 
         return new OrderDto(order.get());
     }

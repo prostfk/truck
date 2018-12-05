@@ -21,5 +21,5 @@ Topicks:
 + /topic/{companyId}/calendarUpdate = Обновления дат заказов
 + /topic/{companyId}/createOrder = создание заказов ( отображается всем менеджерам, шлется от диспетчеров  )
 + /topic/{companyId}/editOrder = изменение заказов ( отображается всем менеджерам, шлется от диспетчеров  )
-+ /topic/{companyId}/changeWayBillStatusTo2/{DriverId} = изменение статуса заказа на проверен( отображается водителю, шлется от менеджера)
++ /topic/{companyId}/changeWayBillStatus/{DriverId} = изменение статуса заказа на проверен( отображается водителю, шлется от менеджера)
 + /topic/{companyId}/markPoint/ = отметка о прохождении контрольной точки ( отображается менеджерам, шлется от водителя)

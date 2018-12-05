@@ -201,7 +201,7 @@ export default class PageStockListNew extends React.Component {
         let searchTableStyle = this.state.searchStocks.length !== 0 ? {display: ''} : {display: 'none'};
         return <>
             <div className="row" style={paginationTableStyle}>
-                <div className="offset-md-1 col-md-6 superuserform_companylist">
+                <div className="offset-lg-1 col-lg-6 col-md-7  superuserform_companylist">
                     <div className="row table_header animated fadeIn">
                         <div className="col-md-1">ID</div>
                         <div className="col-md-5">Название склада</div>
@@ -232,7 +232,7 @@ export default class PageStockListNew extends React.Component {
                     </div>
                 </div>
 
-                <div className="offset-md-1 col-md-2">
+                <div className="offset-lg-1 col-lg-3 col-md-5">
                     <form className="superuserform_newaccountform grey_form animated fadeIn">
                         <CreateStockModal/>
                     </form>
