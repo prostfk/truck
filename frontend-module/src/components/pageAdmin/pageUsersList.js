@@ -141,7 +141,7 @@ export default class UsersList extends Component {
             </div>
 
             <div className="offset-md-1 col-md-4 animated fadeIn" id={'add-user-form'}>
-                <CreateUser/>
+                <CreateUser updateList={this.getUsersRequest}/>
             </div>
         </div>
     }
