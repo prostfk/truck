@@ -61,6 +61,7 @@ export default class CreateUser extends Component {
     };
 
     saveNewUser = () => {
+        let ref = this;
         if (this.validateUserForm()) {
             let formData = new FormData();
             formData.append('username', this.state.newUserUsername);
@@ -88,10 +89,10 @@ export default class CreateUser extends Component {
                     return response.json();
                 }
             }).then(data=>{
-                console.log(data);
                 if (data.error === undefined) {
                     document.getElementById('message-span').innerText = 'Сохранено';
                     document.getElementById('from-content').style.display = 'none';
+                    ref.props.updateList();
                     setTimeout(function () {
                         // document.getElementById('add-user-form').style.display = 'none';
                         document.getElementById('message-span').innerText = '';
@@ -99,7 +100,7 @@ export default class CreateUser extends Component {
                         document.getElementById('newUserEmail').value = '';
                         document.getElementById('newUserPassword').value = '';
                         document.getElementById('newUserUsername').value = '';
-                        document.getElementById('newUserRole').value = '';
+                        document.getElementById('newUserRole').value = 'ROLE_ADMIN';
                         document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
                         document.getElementById('newUserFirstName').value = '';
                         document.getElementById('newUserSecondName').value = '';
@@ -110,7 +111,7 @@ export default class CreateUser extends Component {
                         document.getElementById('newUserHouseNumber').value = '';
                         document.getElementById('newUserFlatNumber').value = '';
                         document.getElementById('error-form-span').innerText = '';
-                    }, 2000);
+                    }, 1000);
                 } else {
                     if (data.error === 'user with such username already exists'){
                         document.getElementById('error-form-span').innerText = 'Пользователь с таким никнеймом уже существует';

@@ -181,7 +181,7 @@ class registration extends Component {
                     <div className="form-group row">
                         <label htmlFor="newUsername" className="col-2 col-form-label">Логин *</label>
                         <div className="col-10">
-                            <input className="form-control" type="search" value={this.state.newUsername}
+                            <input className="form-control" type="text" value={this.state.newUsername}
                                    onChange={this.changeInput}
                                    id="newUsername"/>
                             <small className="text-danger" id="error-username-span"/>
@@ -253,13 +253,13 @@ class registration extends Component {
                         <label htmlFor="newHouseNumber" className="col-2 col-form-label">Дом</label>
                         <div className="col-10">
                             <input className="form-control" type="number" value={this.state.newHouseNumber}
-                                   onChange={this.changeInput} id="newHouseNumber"/>
+                                   onChange={this.changeInput} min={1} id="newHouseNumber"/>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label htmlFor="newFlatNumber" className="col-2 col-form-label">Квартира</label>
                         <div className="col-10">
-                            <input className="form-control" type="number" value={this.state.newFlatNumber}
+                            <input className="form-control" type="number" min={1} value={this.state.newFlatNumber}
                                    onChange={this.changeInput} id="newFlatNumber"/>
                         </div>
                     </div>
