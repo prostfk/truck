@@ -90,7 +90,7 @@ public class DriverController {
 
     @RequestMapping(value = "/orders/getMyOrders/{orderId}/setNewStatus", method = RequestMethod.PUT)
     public WaybillDto setNewStatus(@PathVariable Long orderId, @RequestBody String newStatusValue) {
-        if (newStatusValue.equals("2") && newStatusValue.equals("3")) return null;
+        if (!newStatusValue.equals("3")) return null;
 
         User user = commonService.getCurrentUser();
         Order order = orderService.findOrderById(orderId);
@@ -109,6 +109,10 @@ public class DriverController {
         Integer newStatus = Integer.valueOf(newStatusValue);
         waybill.setStatus(newStatus);
         waybillService.save(waybill);
+
+        String message ="Прибыл в конечный пункт. Заказ: " + order.getName();
+        stompService.sendNotification("/topic/" + user.getCompany().getId() + "/driverArrival/", new SocketNotification("Водитель" +  waybill.getDriver().getName(), message));
+
         return new WaybillDto(waybill);
     }
 

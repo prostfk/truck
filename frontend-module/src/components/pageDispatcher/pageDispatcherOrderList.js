@@ -97,21 +97,26 @@ class DispatcherOrderList extends React.Component {
     render() {
         let element;// = <div></div>;
         if (this.state.company.active === 1) {
-            element = <span>
-                <h5>Добавление заказа</h5>
-                <Link to={`/orders/createorder`} className="btn btn-success btn_fullsize">Создать</Link>
-            </span>;
+            element = <form className="superuserform_newaccountform grey_form">
+                        <span>
+                            <h5>Добавление заказа</h5>
+                        <Link to={`/orders/createorder`} className="btn btn-success btn_fullsize">Создать</Link>
+                        </span>
+                     </form> ;
         } else if (this.state.company.active === 0) {
-            element = <div className={"error-span"}>
-                Комания Заблокирована!
-                <div>Администратор: {this.state.company.lockerId.username}</div>
-                <div>Дата: {CommonUtil.getCorrectDateFromLong(this.state.company.lockDate)}</div>
-                <div>Причина: {this.state.company.lockComment}</div>
-            </div>
+            element =
+                <form className="superuserform_newaccountform err-block">
+                    <div>
+                        Комания Заблокирована!
+                        <div>Администратор: {this.state.company.lockerId.username}</div>
+                        <div>Дата: {CommonUtil.getCorrectDateFromLong(this.state.company.lockDate)}</div>
+                        <div>Причина: {this.state.company.lockComment}</div>
+                    </div>
+                </form>
 
         }
         return <div className="row">
-            <div className="offset-md-1 col-md-7 superuserform_companylist animated fadeIn">
+            <div className="offset-lg-1 col-lg-6 col-md-7 superuserform_companylist animated fadeIn">
                 <div className="row table_header">
                     <div className="col-md-3">Заказ</div>
                     <div className="col-md-2">Название склада (отправитель)</div>
@@ -141,10 +146,8 @@ class DispatcherOrderList extends React.Component {
                     </div>
                 </div>
             </div>
-            <div className="offset-md-1 col-md-2 animated fadeIn">
-                <form className="superuserform_newaccountform grey_form">
+            <div className="offset-lg-1 col-lg-3 col-md-5 animated fadeIn">
                     {element}
-                </form>
             </div>
         </div>
     }

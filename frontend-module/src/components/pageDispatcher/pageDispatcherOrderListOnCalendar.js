@@ -103,14 +103,13 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
     };
 
     handleMessage(msg){
-        console.log(msg);
         let myId = localStorage.getItem("userId");
         let myCompanyId = localStorage.getItem("companyId");
 
        msg.waybillDto.dateArrival=msg.waybillDto.dateArrival.year+"-"+msg.waybillDto.dateArrival.monthValue+"-"+msg.waybillDto.dateArrival.dayOfMonth;
        msg.waybillDto.dateDeparture=msg.waybillDto.dateDeparture.year+"-"+msg.waybillDto.dateDeparture.monthValue+"-"+msg.waybillDto.dateDeparture.dayOfMonth;
 
-        if(myCompanyId!==msg.companyId) return; //commit to view notifications for all users;
+        if(myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
 
         let dateArrival = moment(msg.waybillDto.dateArrival);
         let rangeArrival =dateArrival.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));
