@@ -15,17 +15,17 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE truck;
+--DROP DATABASE truck;
 --
 -- Name: truck; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE truck WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Russian_Russia.1251' LC_CTYPE = 'Russian_Russia.1251';
+--CREATE DATABASE truck WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Russian_Russia.1251' LC_CTYPE = 'Russian_Russia.1251';
 
 
-ALTER DATABASE truck OWNER TO postgres;
+--ALTER DATABASE truck OWNER TO postgres;
 
-\connect truck
+--connect truck
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -41,7 +41,7 @@ SET row_security = off;
 -- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
-CREATE SCHEMA public;
+--CREATE SCHEMA public;
 
 
 ALTER SCHEMA public OWNER TO postgres;

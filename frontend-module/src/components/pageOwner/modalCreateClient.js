@@ -29,7 +29,7 @@ export default class ModalCreateClient extends Component {
             return;
         }
         let formData = new FormData();
-        formData.append("name", ValidationUtil.getStringFromUnnownObject(this.state.name));
+        formData.append("name", ValidationUtil.getStringFromUnknownObject(this.state.name));
         fetch(`/api/createClient`, {
             method: "POST",
             body: formData,

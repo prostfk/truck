@@ -47,7 +47,7 @@ class DriverHeader extends Component {
                     </li>
 
                 </div>
-                <SockJsClient url='http://192.168.1.116:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/changeWayBillStatusTo2/'+localStorage.getItem("userId")]}
+                <SockJsClient url='http://192.168.1.116:8080/trucking/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/changeWayBillStatus/'+localStorage.getItem("userId")]}
                               onMessage={(msg) => {
                                   this.handleMessage(msg);
                               }}
