@@ -198,7 +198,6 @@ export default class AutoList extends Component {
                     </div>
                     {
                         this.state.autos.map((auto) => {
-                            console.log(this.state.autos);
                             return this.renderAuto(auto);
                         })
                     }

@@ -175,7 +175,8 @@ export default class PageStockListNew extends React.Component {
     }
 
     searchStocks = () => {
-        let name = ValidationUtil.getStringFromUnnownObject(this.state.searchStockName);
+
+        let name = ValidationUtil.getStringFromUnknownObject(this.state.searchStockName);
         fetch(`/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         }).then(data => {

@@ -34,6 +34,7 @@ public class ClientService {
         return clientRepository.findClientById(clientId);
     }
 
+    @Deprecated
     public List<Client> findClientsByNameLikeIgnoreCase(String format) {
         return clientRepository.findClientsByNameLikeIgnoreCase(format);
     }

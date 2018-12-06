@@ -4,6 +4,7 @@ import {GoogleApiWrapper, InfoWindow, Map, Marker, Polyline} from 'google-maps-r
 import * as ReactDOM from "react-dom";
 import redMarker from '../pageDriver/img/non-passed-marker.png';
 import CommonUtil from "../commonUtil/commontUtil";
+import {NotificationManager} from "react-notifications";
 
 
 export class ManagerRouteList extends Component {
@@ -37,15 +38,9 @@ export class ManagerRouteList extends Component {
         this.getRouteList().then(data => {
             let level = 0;
             data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
-            CommonUtil.moveElementInArray(data,this.__findIndexOfPointByPointName(data,"Завершение"),data.length-1);
-
-            // data.forEach(point => {
-            //     if (level < point.pointLevel) {
-            //         level = point.pointLevel;
-            //     }
-            // });
+            CommonUtil.moveElementInArray(data, this.__findIndexOfPointByPointName(data, "Завершение"), data.length - 1);
             this.setState({routePoints: data, pointLevel: level + 1});
-            if (data[0]){
+            if (data[0]) {
                 this.setState({mapCenter: {lat: data[0].lat, lng: data[0].lng}})
             }
         });
@@ -59,7 +54,7 @@ export class ManagerRouteList extends Component {
                     level = point.pointLevel;
                 }
                 data.sort((a, b) => a.id > b.id ? 1 : (a.id < b.id ? -1 : 0));
-                CommonUtil.moveElementInArray(data,this.__findIndexOfPointByPointName(data,"Завершение"),data.length-1);
+                CommonUtil.moveElementInArray(data, this.__findIndexOfPointByPointName(data, "Завершение"), data.length - 1);
             });
             this.setState({routePoints: data, point: "", pointLevel: level + 1});
         });
@@ -68,7 +63,6 @@ export class ManagerRouteList extends Component {
     getRouteList() {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
-        console.log(id);
         return fetch(`/api/manager/routeList/${id}`, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -77,33 +71,29 @@ export class ManagerRouteList extends Component {
         });
     }
 
-    renderMarkers(routePoint) {
+    renderMarkers(routePoint, index) {
         if (!routePoint) return;
-        return <Marker onClick={this.onMarkerClick} icon={redMarker}
+        return <Marker onClick={this.onMarkerClick} icon={redMarker} key={index}
                        name={routePoint.point} position={{lat: routePoint.lat, lng: routePoint.lng}}
                        id={routePoint.id}/>
 
     }
 
     deletePoint(pointId) {
-        console.log("delete");
-        console.log(pointId);
         const ref = this;
         fetch(`/api/manager/deletePoint/${pointId}`, {
             method: "DELETE",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        })
-            .then(function (response) {
+        }).then(function (response) {
                 return response.json();
             }).then(function (result) {
             if (result === true) {
                 ref.onInfoWindowClose();
                 ref.forceUpdateHandler();
             }
+        }).catch(() => {
+            NotificationManager.error("Ошибка при удалении");
         })
-            .catch((err) => {
-                console.log(err);
-            })
     }
 
     addPoint(lat, lng, city) {
@@ -117,8 +107,6 @@ export class ManagerRouteList extends Component {
         routePoint.waybill = null;
         routePoint.lat = lat;
         routePoint.lng = lng;
-        console.log(routePoint);
-
         fetch(`/api/manager/${id}/createPoint`, {
             method: "POST",
             headers: {'Content-Type': 'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
@@ -128,14 +116,12 @@ export class ManagerRouteList extends Component {
                 return response.json();
             }).then(function (result) {
             if (result === true) {
-                console.log(result);
                 ref.forceUpdateHandler();
             }
         });
     }
 
     onMarkerClick = (props, marker, event) => {
-        console.log(marker);
         this.setState({
             selectedPlace: props,
             activeMarker: marker,
@@ -150,10 +136,8 @@ export class ManagerRouteList extends Component {
     }
 
     onInfoWindowOpen(props, e, markerId) { //For mark button. Doesn't work without it
-        console.log(props);
-        console.log(markerId);
         const button = <div className="table_button bg-secondary text-white"
-                            onClick={this.deletePoint.bind(this, markerId)} pointId={markerId}>Удалить</div>
+                            onClick={this.deletePoint.bind(this, markerId)} pointId={markerId}>Удалить</div>;
         ReactDOM.render(React.Children.only(button), document.getElementById("info-window-container"));
     }
 
@@ -164,8 +148,8 @@ export class ManagerRouteList extends Component {
         })
     };
 
-    rendSideList = (point) => {
-        return <div className={'row animated fadeInUp'}>
+    rendSideList = (point, index) => {
+        return <div className={'row animated fadeInUp'} key={index}>
             <li className={point.marked ? 'list-group-item list-group-item-action list-group-item-success' : 'list-group-item list-group-item-action list-group-item-danger'}
                 style={{fontSize: '14px'}}>{point.point + " - " + (point.marked ? 'Пройдена' : 'Не пройдена')}</li>
         </div>
@@ -177,7 +161,6 @@ export class ManagerRouteList extends Component {
         return fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=17234ab712334e7caa071303d82f6b98`).then(response => {
             return response.json()
         }).then(data => {
-            console.log(data.results[0].components.city);
             return data.results[0].components.city;
         })
     };
@@ -188,8 +171,8 @@ export class ManagerRouteList extends Component {
                 <div className={'col-md-3'}>
                     <ul>
                         <h1>Точки</h1>
-                        {this.state.routePoints.map(p => {
-                            return this.rendSideList(p);
+                        {this.state.routePoints.map((p, index) => {
+                            return this.rendSideList(p, index);
                         })}
                     </ul>
                 </div>
@@ -199,15 +182,15 @@ export class ManagerRouteList extends Component {
                              center={{lat: this.state.mapCenter.lat, lng: this.state.mapCenter.lng}}
                              zoom={14} onClick={this.onMapClick} id="googleMap">
                             {
-                                this.state.routePoints.map((element) => {
-                                    return this.renderMarkers(element);
+                                this.state.routePoints.map((element, index) => {
+                                    return this.renderMarkers(element, index);
                                 })
                             }
                             <InfoWindow onClose={this.onInfoWindowClose}
                                         onOpen={e => {
                                             this.onInfoWindowOpen(this.props, e, this.state.activeMarker.id);
                                         }}
-                                        marker = {this.state.activeMarker } visible = {this.state.showingInfoWindow }>
+                                        marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
                                 <div>
                                     <h3>{this.state.activeMarker.name}</h3>
                                     <div className="table_button bg-secondary text-white" id="info-window-container"/>
@@ -217,17 +200,18 @@ export class ManagerRouteList extends Component {
                                 path={this.state.routePoints}
                                 strokeColor="#CF89F9"
                                 strokeOpacity={0.8}
-                                strokeWeight={2} />
+                                strokeWeight={2}/>
                         </Map>
-                    </div></div>
+                    </div>
+                </div>
             </div>
         );
 
     }
 
-    __findIndexOfPointByPointName(array, name){
+    __findIndexOfPointByPointName(array, name) {
         for (let i = 0; i < array.length; i++) {
-            if (array[i].point === name){
+            if (array[i].point === name) {
                 return i;
             }
         }

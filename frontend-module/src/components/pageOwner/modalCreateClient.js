@@ -21,7 +21,7 @@ export default class ModalCreateClient extends Component {
     };
 
     validateClient = () => {
-        return ValidationUtil.validateStringForLength(ValidationUtil.getStringFromUnnownObject(this.state.name),3, 39);
+        return ValidationUtil.validateStringForLength(ValidationUtil.getStringFromUnknownObject(this.state.name),3, 39);
     };
 
     handleSubmit = (event) => {
@@ -30,7 +30,6 @@ export default class ModalCreateClient extends Component {
         }
         let formData = new FormData();
         formData.append("name", ValidationUtil.getStringFromUnnownObject(this.state.name));
-        console.log(`${ValidationUtil.getStringFromUnnownObject(this.state.name)} --- ${this.state.name}`);
         fetch(`/api/createClient`, {
             method: "POST",
             body: formData,

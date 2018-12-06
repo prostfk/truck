@@ -40,7 +40,12 @@ export default class ValidationUtil {
         return `${split[2]}/${split[1]}/${split[0]}`
     }
 
-    static getStringFromUnnownObject(obj) {
+    static reformatDateToDateObject(dateStr){//dd-MM-yyyy
+        let dateArr = dateStr.split('/');
+        return new Date(`${dateArr[1]}/${dateArr[0]}/${dateArr[2]}`);
+    }
+
+    static getStringFromUnknownObject(obj) {
         return Array.isArray(obj) ? obj.join('') : obj;
     }
 
