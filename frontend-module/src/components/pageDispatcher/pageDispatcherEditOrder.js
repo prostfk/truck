@@ -156,7 +156,7 @@ export default class DispatcherEditOrder extends Component {
             formData.append("autoId", ValidationUtil.getStringFromUnknownObject(this.state.auto));
             formData.append("driverId", ValidationUtil.getStringFromUnknownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
-            fetch('/api/companies/orders/edit', {
+            fetch('http://localhost:8080/api/companies/orders/edit', {
                 method: 'POST',
                 headers: {'Auth-token': localStorage.getItem('Auth-token')},
                 body: formData
@@ -175,7 +175,7 @@ export default class DispatcherEditOrder extends Component {
     initOrder() {
         let link = document.location.href.split("/");
         let id = link[link.length - 2];
-        fetch(`/api/orders/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+        fetch(`http://localhost:8080/api/orders/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             return response.json()
         }).then(data => {
             this.setState({
@@ -321,7 +321,7 @@ export default class DispatcherEditOrder extends Component {
             document.getElementById('consignment-form').style.display = '';
             document.getElementById('sendOrderRequestButton').style.display = '';
             if (this.state.consignment.length === 0) {
-                fetch(`/api/orders/${this.state.orderId}/consignment`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+                fetch(`http://localhost:8080/api/orders/${this.state.orderId}/consignment`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
                     return response.json();
                 }).then(data => {
                     if (data.error === undefined) {

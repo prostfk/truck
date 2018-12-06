@@ -34,7 +34,7 @@ export default class EditUser extends Component {
     initForm = () => {
         let link = window.location.href.split("/");
         let id = link[link.length - 2];
-        fetch(`/api/user/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+        fetch(`http://localhost:8080/api/user/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
             return response.json()
         }).then(data => {
             this.setState({
@@ -73,7 +73,7 @@ export default class EditUser extends Component {
         formData.append("street", this.state.street);
         formData.append("houseNumber", this.state.houseNumber);
         formData.append("flatNumber", this.state.flatNumber);
-        fetch('/api/updateUser', {
+        fetch('http://localhost:8080/api/updateUser', {
             method: "POST",
             body: formData,
             headers: {'Auth-token': localStorage.getItem('Auth-token')}

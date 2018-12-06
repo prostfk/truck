@@ -52,7 +52,7 @@ export default class ModalComponentEditAuto extends React.Component {
     }
 
     getCompanyName() {
-        const fetchResult = fetch('/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+        const fetchResult = fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         }).catch(() => {
             NotificationManager.error('Ошибка доступа');

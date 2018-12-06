@@ -49,7 +49,7 @@ export default class EditStockModal extends Component {
             formData.append("id", this.props.stockId);
             formData.append("name", this.state.successAddress);
             formData.append("address", this.state.suggest.place_id);
-            fetch('/api/editStock', {
+            fetch('http://localhost:8080/api/editStock', {
                 method: "PUT",
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}

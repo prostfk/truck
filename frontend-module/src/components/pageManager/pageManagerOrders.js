@@ -43,7 +43,7 @@ class pageManagerOrders extends Component {
 
     /*get active orders*/
     getOrderList(pageid = 1) {
-        return fetch('/api/manager/orders?page=' + pageid, {
+        return fetch('http://localhost:8080/api/manager/orders?page=' + pageid, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -119,7 +119,7 @@ class pageManagerOrders extends Component {
     cancelCheckingWaybill(orderId) {
         console.log(orderId);
         const ref = this;
-        fetch(`/api/manager/cancelChecking/${orderId}`, {
+        fetch(`http://localhost:8080/api/manager/cancelChecking/${orderId}`, {
             method: 'GET',
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -137,7 +137,7 @@ class pageManagerOrders extends Component {
     finishCheck(orderId) {
         const ref = this;
         console.log(orderId);
-        fetch(`/api/manager/finishChecking/${orderId}`, {
+        fetch(`http://localhost:8080/api/manager/finishChecking/${orderId}`, {
             method: "GET",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -154,7 +154,7 @@ class pageManagerOrders extends Component {
     finishOrder(orderId) {
         const ref = this;
         console.log(orderId);
-        fetch(`/api/manager/finishOrder/${orderId}`, {
+        fetch(`http://localhost:8080/api/manager/finishOrder/${orderId}`, {
             method: "GET",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {

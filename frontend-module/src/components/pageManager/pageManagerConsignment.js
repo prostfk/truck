@@ -133,7 +133,7 @@ class ManagerConsignment extends Component {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
         console.log(id);
-        return fetch(`/api/manager/products/${id}?page=${pageid}`, {
+        return fetch(`http://localhost:8080/api/manager/products/${id}?page=${pageid}`, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -213,7 +213,7 @@ class ManagerConsignment extends Component {
         /*let formData = new FormData();
         formData.append("orderId", orderId);
         formData.append("isLost", isLost);*/
-        fetch(`/api/manager/${productId}/cancelProduct/${orderId}/?cancel=${cancel}`, {
+        fetch(`http://localhost:8080/api/manager/${productId}/cancelProduct/${orderId}/?cancel=${cancel}`, {
             method: "GET",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -241,7 +241,7 @@ class ManagerConsignment extends Component {
         /*let formData = new FormData();
         formData.append("orderId", orderId);
         formData.append("isLost", isLost);*/
-        fetch(`/api/manager/${productId}/restoreProduct/${orderId}/?restore=${restore}`, {
+        fetch(`http://localhost:8080/api/manager/${productId}/restoreProduct/${orderId}/?restore=${restore}`, {
             method: "GET",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -263,7 +263,7 @@ class ManagerConsignment extends Component {
         else if (event.target.value === "Доставлен") status = 3;
         else if (event.target.value === "Утерян") status = 4;
 
-        fetch(`/api/manager/updateProductStatus/${productId}`, {
+        fetch(`http://localhost:8080/api/manager/updateProductStatus/${productId}`, {
             method: "POST",
             body: status,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}

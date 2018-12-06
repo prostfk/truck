@@ -80,7 +80,7 @@ export default class CreateUser extends Component {
             if (this.state.newUserPassport !== '') {
                 formData.append('passport', this.state.newUserPassport)
             }
-            fetch('/api/saveUser', {
+            fetch('http://localhost:8080/api/saveUser', {
                 method: 'POST',
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem('Auth-token')}

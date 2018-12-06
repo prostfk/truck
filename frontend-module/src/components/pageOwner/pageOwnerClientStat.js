@@ -26,7 +26,7 @@ export default class PageOwnerClientStats extends Component {
     }
 
     getStatisticsByCompany() {
-        return fetch('/api/company/getStatByClient/'+this.state.clientId, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('http://localhost:8080/api/company/getStatByClient/'+this.state.clientId, {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
