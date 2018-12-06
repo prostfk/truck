@@ -5,6 +5,7 @@ import SockJsClient from "react-stomp";
 import {NotificationManager} from "react-notifications";
 import connect from "react-redux/es/connect/connect";
 import {ADD_ORDER,DELETE_ORDER} from "../../constants/driverActionTypes";
+import {WEBURL} from "../../constants/urls"
 
 
 class DriverHeader extends Component {
@@ -47,7 +48,7 @@ class DriverHeader extends Component {
                     </li>
 
                 </div>
-                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/changeWayBillStatus/'+localStorage.getItem("userId")]}
+                <SockJsClient url= '${WEBURL}/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/changeWayBillStatus/'+localStorage.getItem("userId")]}
                               onMessage={(msg) => {
                                   this.handleMessage(msg);
                               }}

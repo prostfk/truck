@@ -5,9 +5,11 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 import FullCalendar from 'fullcalendar-reactwrapper';
 import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
+import {WEBURL} from "../../constants/urls"
 
 var moment = require('moment');
 require("moment/min/locales.min");
+
 
 class pageDispatcherOrderListOnCalendar extends React.Component {
     constructor(props) {
@@ -154,7 +156,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         showNonCurrentDates={false}
                         ref={(input) => { this.state.myref = input; }}
                     />
-                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
+                    <SockJsClient url= '${WEBURL}/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
                                   onMessage={(msg) => {
                                       this.handleMessage(msg);
                                   }}
