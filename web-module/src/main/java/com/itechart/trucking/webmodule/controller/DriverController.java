@@ -134,7 +134,7 @@ public class DriverController {
             else point.get().setMarked(true);
         }
         routeListService.save(point.get());
-        String message = point.get().getMarked() == true ? "Прошел контрольную точку в заказе: " + order.get().getName() : "Отменил прохождение точки в заказе: " + order.get().getName();
+        String message = point.get().getMarked() ? "Прошел контрольную точку в заказе: " + order.get().getName() : "Отменил прохождение точки в заказе: " + order.get().getName();
 
         stompService.sendNotification("/topic/" + user.getCompany().getId() + "/markPoint/", new SocketNotification(name, message));
 

@@ -51,6 +51,7 @@ export default class ManagerHeader extends Component {
                               }}
                               ref={ (client) => { this.clientRef = client }} />
                 <SockJsClient url= {WEBURL + '/stomp'} topics={['/topic/'+localStorage.getItem("companyId")+'/editOrder/']}
+
                               onMessage={(msg) => {
                                   this.handleMessageEditOrder(msg);
                               }}
