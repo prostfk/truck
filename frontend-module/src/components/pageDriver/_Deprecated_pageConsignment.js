@@ -71,7 +71,7 @@ class DriverConsignment extends Component {
     getProductList() {
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        return fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/consignment`, {
+        return fetch(`/api/orders/getMyOrders/${orderId}/consignment`, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -126,7 +126,7 @@ class DriverConsignment extends Component {
             let split = document.location.href.split('/');
             let orderId = split[split.length - 1];
             const ref = this;
-            fetch(`http://localhost:8080/api/orders/getMyOrders/${orderId}/cancelProduct/${productId}?cancel=${cancel}`, {
+            fetch(`/api/orders/getMyOrders/${orderId}/cancelProduct/${productId}?cancel=${cancel}`, {
                 method: "GET",
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}
             }).then(function (response) {

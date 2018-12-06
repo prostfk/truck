@@ -29,9 +29,8 @@ export default class ModalCreateClient extends Component {
             return;
         }
         let formData = new FormData();
-        formData.append("name", ValidationUtil.getStringFromUnknownObject(this.state.name));
-        console.log(`${ValidationUtil.getStringFromUnknownObject(this.state.name)} --- ${this.state.name}`);
-        fetch(`http://localhost:8080/api/createClient`, {
+        formData.append("name", ValidationUtil.getStringFromUnnownObject(this.state.name));
+        fetch(`/api/createClient`, {
             method: "POST",
             body: formData,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}

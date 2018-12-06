@@ -57,7 +57,7 @@ class pageUserLogin extends Component {
         formData.append("username", username);
         formData.append("password", password);
         let refThis = this;
-        fetch('http://localhost:8080/auth', {method: "POST", body: formData}).then(response => {
+        fetch('/auth', {method: "POST", body: formData}).then(response => {
             response.json().then(data => {
                 if (data.error === undefined) {
                     refThis.props.authUser([

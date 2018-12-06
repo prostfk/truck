@@ -53,7 +53,7 @@ export default class AutoList extends Component {
 
     forceUpdateHandler(pageId = 1) {
         const refThis = this;
-        fetch('http://localhost:8080/api/autos?page=' + pageId, {
+        fetch('/api/autos?page=' + pageId, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -82,7 +82,7 @@ export default class AutoList extends Component {
             formData.append('type', this.state.newAutoType);
             formData.append('fuelConsumption', this.state.newAutoFuelConsumption);
             formData.append('carNumber', this.state.newAutoNumber);
-            fetch('http://localhost:8080/api/saveAuto/', {
+            fetch('/api/saveAuto/', {
                 method: "POST",
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem('Auth-token')}
@@ -137,7 +137,7 @@ export default class AutoList extends Component {
 
     submitDelete(autoId) {
         const ref = this;
-        fetch('http://localhost:8080/api/auto/', {
+        fetch('/api/auto/', {
             method: 'DELETE',
             body: autoId,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -161,7 +161,7 @@ export default class AutoList extends Component {
         formData.append("type", autoType);
         formData.append("fuelConsumption", autoFuelConsumption);
 
-        fetch('http://localhost:8080/api/auto/edit', {
+        fetch('/api/auto/edit', {
             method: "PUT",
             body: formData,
             headers: {'Auth-token': localStorage.getItem('Auth-token')}

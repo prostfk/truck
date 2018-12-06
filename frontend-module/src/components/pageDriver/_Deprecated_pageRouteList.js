@@ -17,7 +17,7 @@ class DriverRouteList extends React.Component {
 
     markPoint(pointId, event) {
         const ref = this;
-        fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
+        fetch('/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
             method: "PUT",
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(function (response) {
@@ -49,7 +49,7 @@ class DriverRouteList extends React.Component {
 
     /!*get all company list*!/
     getRouteList() {
-        return fetch('http://localhost:8080/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
+        return fetch('/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

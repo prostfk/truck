@@ -40,7 +40,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         this.state.currentDateFrom=from;
         this.state.currentDateTo=to;
 
-        return fetch('http://localhost:8080/api/ordersByDate?from=' + from + '&to=' + to, {
+        return fetch('/api/ordersByDate?from=' + from + '&to=' + to, {
             method: "get",
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
@@ -73,7 +73,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         formData.append("orderId", event.id);
         formData.append("daysOffset", days_offset._days);
 
-        fetch('http://localhost:8080/api/waybill/changedate', {
+        fetch('/api/waybill/changedate', {
             method: "PUT",
             body: formData,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -154,7 +154,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         showNonCurrentDates={false}
                         ref={(input) => { this.state.myref = input; }}
                     />
-                    <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
+                    <SockJsClient url='http://192.168.1.116:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
                                   onMessage={(msg) => {
                                       this.handleMessage(msg);
                                   }}
