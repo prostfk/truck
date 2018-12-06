@@ -156,7 +156,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
                         showNonCurrentDates={false}
                         ref={(input) => { this.state.myref = input; }}
                     />
-                    <SockJsClient url= '${WEBURL}/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
+                    <SockJsClient url= {WEBURL + 'http://localhost:8080/stomp'} topics={['/topic/'+localStorage.getItem("companyId")+'/calendarUpdate']}
                                   onMessage={(msg) => {
                                       this.handleMessage(msg);
                                   }}
