@@ -51,6 +51,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.*;
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -250,7 +251,11 @@ public class OwnerController {
         Client clientByName = clientService.findClientByName(name);
         if (clientByName == null) {
             @Valid Client save = clientService.save(new Client(name, "default", userByUsername.getCompany()));
-            clientSolrRepository.save(SolrClient.solrClientFromClient(save));
+            try {
+                clientSolrRepository.save(SolrClient.solrClientFromClient(save));
+            }catch (Exception ex){
+                System.out.println("clientSolorRepositoryErr");
+            }
             return new ClientDto(save);
         } else {
             JSONObject json = new JSONObject();

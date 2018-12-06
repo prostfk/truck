@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class ModalCreateClient extends Component {
 
@@ -28,6 +29,7 @@ export default class ModalCreateClient extends Component {
         if (!this.validateClient()){
             return;
         }
+        let refThis = this;
         let formData = new FormData();
         formData.append("name", ValidationUtil.getStringFromUnknownObject(this.state.name));
         console.log(`${ValidationUtil.getStringFromUnknownObject(this.state.name)} --- ${this.state.name}`);
@@ -38,17 +40,19 @@ export default class ModalCreateClient extends Component {
         }).then(function (response) {
             response.json().then(function (data) {
                 console.log(data);
-                if (data.error !== undefined) {
-                    document.getElementById('name-input').style.color = 'red';
+                if (data.error != undefined) {
+                    NotificationManager.error('Такое название уже существует');
                     document.getElementById('name-error-span').innerText = 'Такое название уже существует';
-
                 }else{
+                    NotificationManager.success('Добавлено');
                     document.getElementById('name-input').style.color = '';
                     document.getElementById('name-error-span').innerText = '';
                 }
             })
-        });
-        this.toggle();
+        }).then(()=>{
+            refThis.toggle();
+        })
+
 
     };
 
