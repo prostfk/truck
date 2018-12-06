@@ -30,10 +30,7 @@ public class DriverService {
     }
 
     public Driver update(Driver driver) {
-        if (driver.getId() != null) {
-            return driverRepository.save(driver);
-        }
-        return driver;
+        return driverRepository.save(driver);
     }
 
 

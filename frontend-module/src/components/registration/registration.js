@@ -55,7 +55,7 @@ class registration extends Component {
 
             return false;
         }
-        return fetch(`http://localhost:8080/checkCompanyName?name=${this.state.newCompanyName}`).then(response => {
+        return fetch(`/checkCompanyName?name=${this.state.newCompanyName}`).then(response => {
             return response.json();
         }).then(data => {
             if (data.error !== undefined) {
@@ -144,7 +144,7 @@ class registration extends Component {
             formData.forEach((v, k) => {
                 console.log(k + " " + v)
             });
-            fetch(`http://localhost:8080/registration`, {
+            fetch(`/registration`, {
                 method: "POST",
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem('Auth-token')}

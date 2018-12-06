@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
 import ValidationUtil from "../commonUtil/validationUtil";
+import {NotificationManager} from "react-notifications";
 
 export default class ModalCreateClient extends Component {
 
@@ -21,34 +22,36 @@ export default class ModalCreateClient extends Component {
     };
 
     validateClient = () => {
-        return ValidationUtil.validateStringForLength(ValidationUtil.getStringFromUnnownObject(this.state.name),3, 39);
+        return ValidationUtil.validateStringForLength(ValidationUtil.getStringFromUnknownObject(this.state.name),3, 39);
     };
 
     handleSubmit = (event) => {
         if (!this.validateClient()){
             return;
         }
+        let refThis = this;
         let formData = new FormData();
-        formData.append("name", ValidationUtil.getStringFromUnnownObject(this.state.name));
-        console.log(`${ValidationUtil.getStringFromUnnownObject(this.state.name)} --- ${this.state.name}`);
-        fetch(`http://localhost:8080/api/createClient`, {
+        formData.append("name", ValidationUtil.getStringFromUnknownObject(this.state.name));
+        fetch(`/api/createClient`, {
             method: "POST",
             body: formData,
             headers: {'Auth-token': localStorage.getItem("Auth-token")}
         }).then(function (response) {
             response.json().then(function (data) {
                 console.log(data);
-                if (data.error !== undefined) {
-                    document.getElementById('name-input').style.color = 'red';
+                if (data.error != undefined) {
+                    NotificationManager.error('Такое название уже существует');
                     document.getElementById('name-error-span').innerText = 'Такое название уже существует';
-
                 }else{
+                    NotificationManager.success('Добавлено');
                     document.getElementById('name-input').style.color = '';
                     document.getElementById('name-error-span').innerText = '';
                 }
             })
-        });
-        this.toggle();
+        }).then(()=>{
+            refThis.toggle();
+        })
+
 
     };
 

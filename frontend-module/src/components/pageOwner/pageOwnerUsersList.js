@@ -18,7 +18,7 @@ export default class UsersList extends Component {
     }
 
     getUsersRequest = (pageid = 1) => {
-        fetch('http://localhost:8080/api/users?page=' + pageid, {
+        fetch('/api/users?page=' + pageid, {
             headers: {'Auth-token': localStorage.getItem('Auth-token')}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
@@ -71,7 +71,7 @@ export default class UsersList extends Component {
 
     render() {
         return <div className={'row'}>
-            <div className="offset-md-1 col-md-5 superuserform_companylist">
+            <div className="offset-lg-1 col-lg-6 col-md-7 superuserform_companylist animated fadeIn">
                 <div className="row table_header animated fadeIn">
                     {/*<div className="col-md-1">Id</div>*/}
                     <div className="col-md-4">Никнейм</div>
@@ -99,7 +99,7 @@ export default class UsersList extends Component {
                     </div>
                 </div>
             </div>
-            <div className="offset-md-1 col-md-4" id={'add-user-form'}>
+            <div className="offset-lg-1 col-lg-3 col-md-5 animated fadeIn" id={'add-user-form'}>
                 <CreateUser updateList={this.getUsersRequest}/>
             </div>
         </div>

@@ -32,7 +32,7 @@ export default class ModalComponentEditCompany extends React.Component {
 
     handleSubmit(event) {
         if (this.validateCompanyName()) {
-            fetch('http://localhost:8080/api/changeCompanyName', {
+            fetch('/api/changeCompanyName', {
                 method: "PUT",
                 body: this.state.companyName,
                 headers: {'Auth-token': localStorage.getItem("Auth-token")}
@@ -51,7 +51,7 @@ export default class ModalComponentEditCompany extends React.Component {
     }
 
     getCompanyName() {
-        return fetch('http://localhost:8080/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+        return fetch('/api/getCompanyName', {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
             return response.json();
         }).catch(() => {
             NotificationManager.error('Ошибка доступа');

@@ -80,7 +80,7 @@ export default class CreateUser extends Component {
             if (this.state.newUserPassport !== '') {
                 formData.append('passport', this.state.newUserPassport)
             }
-            fetch('http://localhost:8080/api/saveUser', {
+            fetch('/api/saveUser', {
                 method: 'POST',
                 body: formData,
                 headers: {'Auth-token': localStorage.getItem('Auth-token')}
@@ -100,7 +100,7 @@ export default class CreateUser extends Component {
                         document.getElementById('newUserEmail').value = '';
                         document.getElementById('newUserPassword').value = '';
                         document.getElementById('newUserUsername').value = '';
-                        document.getElementById('newUserRole').value = 'ROLE_ADMIN';
+                        // document.getElementById('newUserRole').value = 'ROLE_ADMIN';
                         document.getElementById('newUserDate').value = CommonUtil.getCorrectDateFromLong(new Date().getTime());
                         document.getElementById('newUserFirstName').value = '';
                         document.getElementById('newUserSecondName').value = '';
@@ -203,13 +203,13 @@ export default class CreateUser extends Component {
                         <div className="row">
 
                             <div className="col-md-4">
-                                <label htmlFor="newUserEmail" id="emailLabel">Email</label>
+                                <label htmlFor="newUserEmail" id="emailLabel">Email*</label>
                                 <input onChange={this.changeInput} type="email" className="form-control" id="newUserEmail"
                                        placeholder="newUser@gmail.com" required=""/>
                                 <span className="error-span" id="error-email-span"/>
                             </div>
                             <div className="col-md-4">
-                                <label htmlFor="newUserRole" id="roleLabel">Роль</label>
+                                <label htmlFor="newUserRole" id="roleLabel">Роль*</label>
                                 <select className={'form-control'} id={'newUserRole'} value={this.state.newUserRole}
                                         onChange={this.changeInput}>
                                     <option value={'ROLE_ADMIN'}>Администратор</option>
@@ -219,7 +219,7 @@ export default class CreateUser extends Component {
                                 </select>
                             </div>
                             <div className="col-md-4">
-                                    <label htmlFor="newUserDate" id="dateLabel">Д.р.</label>
+                                    <label htmlFor="newUserDate" id="dateLabel">Д.р.*</label>
                                     <input onChange={this.changeInput} value={this.state.newUserDate} type="text"
                                            className="form-control" id="newUserDate"
                                            placeholder="01/01/2018" required=""/>

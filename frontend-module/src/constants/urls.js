@@ -1,0 +1,1 @@
+export const WEBURL = 'http://localhost:8080'; // 192.168.1.116:8080/trucking

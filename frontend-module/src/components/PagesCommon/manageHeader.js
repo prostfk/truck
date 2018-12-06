@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import LogoutComponent from "../pageLogout/logoutComponent";
 import SockJsClient from 'react-stomp';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import {WEBURL} from "../../constants/urls"
 
 export default class ManagerHeader extends Component {
     constructor(props) {
@@ -44,17 +45,18 @@ export default class ManagerHeader extends Component {
                         <LogoutComponent/>
                     </li>
                 </div>
-                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/markPoint/','/topic/'+localStorage.getItem("companyId")+'/driverArrival/']}
+                <SockJsClient url= {WEBURL + '/stomp'} topics={['/topic/'+localStorage.getItem("companyId")+'/markPoint/','/topic/'+localStorage.getItem("companyId")+'/driverArrival/']}
                               onMessage={(msg) => {
                                   this.handleMessage(msg);
                               }}
                               ref={ (client) => { this.clientRef = client }} />
-                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/editOrder/']}
+                <SockJsClient url= {WEBURL + '/stomp'} topics={['/topic/'+localStorage.getItem("companyId")+'/editOrder/']}
+
                               onMessage={(msg) => {
                                   this.handleMessageEditOrder(msg);
                               }}
                               ref={ (client) => { this.clientRef = client }} />
-                <SockJsClient url='http://localhost:8080/stomp' topics={['/topic/'+localStorage.getItem("companyId")+'/createOrder/']}
+                <SockJsClient url= {WEBURL + '/stomp'} topics={['/topic/'+localStorage.getItem("companyId")+'/createOrder/']}
                               onMessage={(msg) => {
                                   this.handleMessageCreateOrder(msg);
                               }}

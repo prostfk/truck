@@ -168,7 +168,7 @@ export default class PageSysAdminStatistics extends Component {
     }
 
     getFullStatistics() {
-        return fetch('http://localhost:8080/api/statistics/getFull', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('/api/statistics/getFull', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

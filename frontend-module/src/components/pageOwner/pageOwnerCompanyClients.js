@@ -8,6 +8,7 @@ export default class CompanyClients extends Component {
 
     constructor(props) {
         super(props);
+        this.handlePageChange = this.handlePageChange.bind(this);
         this.state = {
             clients: [],
             totalElements: 0,
@@ -15,6 +16,11 @@ export default class CompanyClients extends Component {
         };
         document.title = "Клиенты";
         this.fetchClients();
+    }
+
+    handlePageChange(pageNumber) {
+        this.fetchClients(pageNumber);
+        this.setState({currentPage: pageNumber});
     }
 
     fetchClients = (pageid = 1) => {
@@ -53,7 +59,7 @@ export default class CompanyClients extends Component {
     render() {
         return (
             <div className={'row'}>
-                <div className="offset-md-2 col-md-6 superuserform_companylist">
+                <div className="offset-lg-1 col-lg-6 col-md-7 superuserform_companylist animated fadeIn">
                     <div className="row table_header animated fadeIn">
                         <div className="col-md-1">Id</div>
                         <div className="col-md-5">Название</div>
@@ -81,7 +87,7 @@ export default class CompanyClients extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="offset-md-1 col-md-2" id={'add-user-form'}>
+                <div className="offset-lg-1 col-lg-3 col-md-5 animated fadeIn" id={'add-user-form'}>
                     <ModalCreateClient/>
                 </div>
             </div>
