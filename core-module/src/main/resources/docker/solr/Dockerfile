@@ -1,0 +1,2 @@
+FROM solr
+EXPOSE 8983
