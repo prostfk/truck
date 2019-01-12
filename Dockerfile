@@ -1,10 +1,12 @@
 FROM openjdk:8-jdk-alpine
 
-LABEL maintainer="callicoder@gmail.com"
+LABEL maintainer="prostrmk@gmail.com"
 
 VOLUME /tmp
 
 EXPOSE 8080
+
+RUN ls /var/lib/docker/tmp/docker-builder217913797/web-module/
 
 ARG JAR_FILE=web-module/target/web-module-1.0-SNAPSHOT.war
 

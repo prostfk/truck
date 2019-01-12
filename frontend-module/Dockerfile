@@ -18,4 +18,5 @@ RUN npm run build
 EXPOSE 3000
 
 # defined in package.json
-CMD [ "npm", "run", "start:server" ]
+#CMD [ "npm", "run", "start:server" ]
+CMD [ "npm", "start" ]
