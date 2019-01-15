@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import ModalCreateClient from "./modalCreateClient";
 import {NotificationContainer, NotificationManager} from "react-notifications";
+import ApiUtil from "../../util/ApiUtil";
 
 export default class CompanyClients extends Component {
 
@@ -24,16 +25,7 @@ export default class CompanyClients extends Component {
     }
 
     fetchClients = (pageid = 1) => {
-        fetch('/api/company/clients?page=' + pageid, {
-            method: 'GET',
-            headers: {'Auth-token': localStorage.getItem('Auth-token'), 'Accept': 'application/json;charset=UTF-8'}
-        }).then(response => {
-            if (response.status === 403 || response.status === 500) {
-                NotificationManager.error('Ошибка доступа');
-            } else {
-                return response.json();
-            }
-        }).then(data => {
+        ApiUtil(`/api/company/clients?page=${pageid}`).then(data => {
             console.log(data);
             this.setState({
                 clients: data.clients,

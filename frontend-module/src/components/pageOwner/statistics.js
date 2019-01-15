@@ -6,6 +6,7 @@ import {Container} from 'mdbreact';
 import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
 import {NotificationManager} from "react-notifications";
+import ApiUtil from "../../util/ApiUtil";
 
 export default class CompanyOwnerStatistics extends Component {
 
@@ -188,9 +189,7 @@ export default class CompanyOwnerStatistics extends Component {
     }
 
     getFullStatistics() {
-        return fetch('/api/company/getFullStat', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return ApiUtil('/api/company/getFullStat').then(result => {
             return result;
         }).catch(err=>{
             NotificationManager.error('Ошибка');

@@ -44,7 +44,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
         return fetch('/api/ordersByDate?from=' + from + '&to=' + to, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'Auth-token': localStorage.getItem("Auth-token"), 'Accept': 'application/json'}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

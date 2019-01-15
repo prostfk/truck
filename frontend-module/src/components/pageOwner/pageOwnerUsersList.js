@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 import {NotificationManager} from "react-notifications";
+import ApiUtil from "../../util/ApiUtil";
 
 export default class UsersList extends Component {
 
@@ -18,15 +19,7 @@ export default class UsersList extends Component {
     }
 
     getUsersRequest = (pageid = 1) => {
-        fetch('/api/users?page=' + pageid, {
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(response => {
-            if (response.status === 403 || response.status === 500) {
-                throw new Error('Ошибка доступа');
-            } else {
-                return response.json();
-            }
-        }).then(data => {
+        ApiUtil(`/api/users?page=${pageid}`).then(data => {
             let gettedusers = data.content;
             console.log(gettedusers);
             this.setState({

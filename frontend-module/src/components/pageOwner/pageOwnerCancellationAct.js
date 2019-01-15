@@ -2,6 +2,7 @@ import {Component} from 'react'
 import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import {Link} from "react-router-dom";
+import ApiUtil from "../../util/ApiUtil";
 
 class OwnerCancelAct extends Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class OwnerCancelAct extends Component {
         }
     }
 
-    componentDidMount(props) {
+    componentDidMount() {
         this.getCancelAct().then(data => {
             this.setState({
                 cancelAct: data,
@@ -24,12 +25,7 @@ class OwnerCancelAct extends Component {
     getCancelAct() {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
-        return fetch(`/api/company/cancelAct/${id}`, {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return ApiUtil(`/api/company/cancelAct/${id}`).then(function (result) {
             return result;
         });
     }

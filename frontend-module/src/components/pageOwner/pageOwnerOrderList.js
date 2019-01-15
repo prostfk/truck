@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
 import {NotificationManager} from "react-notifications";
+import ApiUtil from "../../util/ApiUtil";
 
 class OwnerOrderList extends React.Component {
     constructor(props) {
@@ -23,13 +24,7 @@ class OwnerOrderList extends React.Component {
 
     /*get all orders list for current company*/
     getOrderList() {
-        return fetch('/api/company/orders/', {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
+        return ApiUtil('/api/company/orders').then( (result) => {
             return result;
         }).catch(()=>{
             NotificationManager.error('Ошибка');

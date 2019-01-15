@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from 'react-router-dom'
+import ApiUtil from "../../util/ApiUtil";
 
 class OwnerRouteList extends React.Component {
     constructor(props) {
@@ -29,12 +30,7 @@ class OwnerRouteList extends React.Component {
     getRouteList() {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
-        return fetch(`/api/company/routList/${id}`, {
-            method: 'GET',
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return ApiUtil(`/api/company/routList/${id}`).then(function (result) {
             return result;
         });
     }

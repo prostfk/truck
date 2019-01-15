@@ -1,5 +1,6 @@
 import React from "react";
 import Pagination from "react-js-pagination";
+import ApiUtil from "../../util/ApiUtil";
 
 export default class PageStockListNew extends React.Component {
     constructor(props) {
@@ -31,12 +32,9 @@ export default class PageStockListNew extends React.Component {
 
 
     getStockList(pageid = 1) {
-        const fetchResult = fetch('/api/stocks?page=' + pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return ApiUtil(`/api/stocks?page=${this.state.currentPage}`).then(result => {
             return result;
         });
-        return fetchResult;
     }
 
     componentDidMount() {

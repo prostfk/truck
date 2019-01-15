@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {NotificationManager} from "react-notifications";
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {AUTH_SUCCESS} from "../../constants/userActionTypes";
-
+import ApiUtil from '../../util/ApiUtil';
 
 class pageUserLogin extends Component {
 
@@ -57,24 +57,26 @@ class pageUserLogin extends Component {
         formData.append("username", username);
         formData.append("password", password);
         let refThis = this;
-        fetch('/auth', {method: "POST", body: formData}).then(response => {
-            response.json().then(data => {
-                if (data.error === undefined) {
-                    refThis.props.authUser([
-                        data.role,data.token,data.userId,data.companyId
-                    ]);
-                    document.getElementById('login-form').style.display = 'none';
-                    localStorage.setItem("Auth-token", data.token);
-                    localStorage.setItem("username", username);
-                    localStorage.setItem("role", data.role);
-                    localStorage.setItem("userId", data.userId);
-                    localStorage.setItem("companyId", data.companyId);
-                    this.props.history.push('/');
-                } else {
-                    document.getElementById('error-span').innerText = "Неправильные данные";
-                }
-            })
-        }).catch(()=>{
+        console.log({username, password});
+        // let response = ApiUtil('/auth','post',formData);
+        // console.log(response);
+        ApiUtil('/auth', 'post', formData).then(data => {
+
+            if (data.error === undefined) {
+                refThis.props.authUser([
+                    data.role, data.token, data.userId, data.companyId
+                ]);
+                document.getElementById('login-form').style.display = 'none';
+                localStorage.setItem("Auth-token", data.token);
+                localStorage.setItem("username", username);
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("userId", data.userId);
+                localStorage.setItem("companyId", data.companyId);
+                this.props.history.push('/');
+            } else {
+                document.getElementById('error-span').innerText = "Неправильные данные";
+            }
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
@@ -90,9 +92,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return ({
         authUser: payload => {
-            dispatch({type: AUTH_SUCCESS,payload: payload})
+            dispatch({type: AUTH_SUCCESS, payload: payload})
         }
     })
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(pageUserLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(pageUserLogin);
