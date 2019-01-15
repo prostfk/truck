@@ -151,8 +151,27 @@
 			<version>1.1</version>
 			<scope>${spring.version}</scope>
 		</dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.ws</groupId>-->
+            <!--<artifactId>spring-ws-core</artifactId>-->
+            <!--<version>3.0.6.RELEASE</version>-->
+        <!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.boot</groupId>-->
+			<!--<artifactId>spring-boot-starter-web-services</artifactId>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.springframework.ws</groupId>-->
+			<!--<artifactId>spring-xml</artifactId>-->
+			<!--<version>2.0.3.RELEASE</version>-->
+		<!--</dependency>-->
 
-    </dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>2.6.2</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>
@@ -168,6 +187,24 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jaxb2-maven-plugin</artifactId>
+				<version>1.6</version>
+				<executions>
+					<execution>
+						<id>xjc</id>
+						<goals>
+							<goal>xjc</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaDirectory>${project.basedir}/src/main/resources/</schemaDirectory>
+					<outputDirectory>${project.basedir}/src/main/java</outputDirectory>
+					<clearOutputDir>false</clearOutputDir>
+				</configuration>
+			</plugin>
         </plugins>
 	</build>
 
