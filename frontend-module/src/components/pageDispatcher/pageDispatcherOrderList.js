@@ -6,6 +6,7 @@ import Pagination from "react-js-pagination";
 import {NotificationManager} from "react-notifications";
 import {withBaseIcon} from "react-icons-kit";
 import {edit} from 'react-icons-kit/fa/edit'
+import apiRequest from "../../util/ApiRequest";
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const EditIcon = () => <SideIconContainer icon={edit}/>;
 
@@ -42,12 +43,7 @@ class DispatcherOrderList extends React.Component {
 
     /*get all company list*/
     getOrderList(pageid = 1) {
-        return fetch('/api/orders?page=' + pageid, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return apiRequest(`/api/orders?page=${pageid}`).then(function (result) {
             return result;
         }).catch(() => {
             NotificationManager.error('Ошибка');
@@ -66,13 +62,7 @@ class DispatcherOrderList extends React.Component {
     }
 
     getCompany() {
-        return fetch('/api/getCompany/', {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
+        return apiRequest('/api/getCompany').then(function (result) {
             return result;
         }).catch(() => {
             NotificationManager.error('Ошибка');

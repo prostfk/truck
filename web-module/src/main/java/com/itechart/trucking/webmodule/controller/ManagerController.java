@@ -99,7 +99,7 @@ public class ManagerController {
     }
 
     @PostMapping(value = "/manager/updateProductStatus/{id}")
-    public Object changeStatus(@PathVariable Long id, @RequestBody String status) throws JSONException {
+    public Object changeStatus(@PathVariable Long id, String status) throws JSONException {
         Optional<Product> product = productService.findById(id);
         if (product.isPresent()) {
             product.get().setStatus(Integer.valueOf(status));

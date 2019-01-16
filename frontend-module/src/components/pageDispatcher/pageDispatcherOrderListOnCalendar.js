@@ -6,6 +6,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import FullCalendar from 'fullcalendar-reactwrapper';
 import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
 import {WEBURL} from "../../constants/urls"
+import apiRequest from "../../util/ApiRequest";
 
 var moment = require('moment');
 require("moment/min/locales.min");
@@ -42,14 +43,8 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         this.state.currentDateFrom=from;
         this.state.currentDateTo=to;
 
-        return fetch('/api/ordersByDate?from=' + from + '&to=' + to, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token"), 'Accept': 'application/json'}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return apiRequest(`/api/ordersByDate?from=${from}&to=${to}`).then(function (result) {
             let myres = result;
-
             myres.forEach(function (item, i, arr) {
                 let tmpDate = moment(item.end);
                 tmpDate.add(1, 'days');
@@ -75,18 +70,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         formData.append("orderId", event.id);
         formData.append("daysOffset", days_offset._days);
 
-        fetch('/api/waybill/changedate', {
-            method: "PUT",
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        })
-            .then(response => {
-                if (response.status === 500) {
-                    revertFunc();
-                    NotificationManager.error('Ошибка получения данных', 'Ошибка');
-                }
-                return response.json()
-            })
+        apiRequest('/api/waybill/changedate', 'put', formData)
             .then(data => {
                 if (data === false) {
                     revertFunc();
@@ -111,7 +95,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
        msg.waybillDto.dateArrival=msg.waybillDto.dateArrival.year+"-"+msg.waybillDto.dateArrival.monthValue+"-"+msg.waybillDto.dateArrival.dayOfMonth;
        msg.waybillDto.dateDeparture=msg.waybillDto.dateDeparture.year+"-"+msg.waybillDto.dateDeparture.monthValue+"-"+msg.waybillDto.dateDeparture.dayOfMonth;
 
-        if(myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
+        if(myCompanyId!==msg.companyId) return; //commit to view notifications for all users;
 
         let dateArrival = moment(msg.waybillDto.dateArrival);
         let rangeArrival =dateArrival.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));

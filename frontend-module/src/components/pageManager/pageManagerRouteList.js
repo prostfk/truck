@@ -5,6 +5,7 @@ import * as ReactDOM from "react-dom";
 import redMarker from '../pageDriver/img/non-passed-marker.png';
 import CommonUtil from "../commonUtil/commontUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 
 export class ManagerRouteList extends Component {
@@ -63,11 +64,8 @@ export class ManagerRouteList extends Component {
     getRouteList() {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
-        return fetch(`/api/manager/routeList/${id}`, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
+        return apiRequest(`/api/manager/routeList/${id}`).then(data=>{
+            return data;
         });
     }
 
@@ -81,12 +79,7 @@ export class ManagerRouteList extends Component {
 
     deletePoint(pointId) {
         const ref = this;
-        fetch(`/api/manager/deletePoint/${pointId}`, {
-            method: "DELETE",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-                return response.json();
-            }).then(function (result) {
+        apiRequest(`/api/manager/deletePoint/${pointId}`, 'delete').then(function (result) {
             if (result === true) {
                 ref.onInfoWindowClose();
                 ref.forceUpdateHandler();
@@ -107,14 +100,7 @@ export class ManagerRouteList extends Component {
         routePoint.waybill = null;
         routePoint.lat = lat;
         routePoint.lng = lng;
-        fetch(`/api/manager/${id}/createPoint`, {
-            method: "POST",
-            headers: {'Content-Type': 'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
-            body: JSON.stringify(routePoint)
-        })
-            .then(function (response) {
-                return response.json();
-            }).then(function (result) {
+        apiRequest(`/api/manager/${id}/createPoint`,'post').then(function (result) {
             if (result === true) {
                 ref.forceUpdateHandler();
             }
@@ -156,11 +142,7 @@ export class ManagerRouteList extends Component {
     };
 
     getAddressFromLatAndLng = (lat, lng) => {//open cage data api 2,500 requests per day
-        //geo api - 17234ab712334e7caa071303d82f6b98
-        //https://api.opencagedata.com/geocode/v1/json?q=LAT+LNG&key=17234ab712334e7caa071303d82f6b98
-        return fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=17234ab712334e7caa071303d82f6b98`).then(response => {
-            return response.json()
-        }).then(data => {
+        return apiRequest(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=17234ab712334e7caa071303d82f6b98`).then(data => {
             return data.results[0].components.city;
         })
     };

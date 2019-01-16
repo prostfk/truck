@@ -1,6 +1,8 @@
 ﻿import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
+import apiRequest from "../../util/ApiRequest";
+import {NotificationManager} from "react-notifications";
 
 class pageManagerOrders extends Component {
 
@@ -30,7 +32,6 @@ class pageManagerOrders extends Component {
     }
 
     forceUpdateHandler(order) {
-        console.log(order);
         const ref = this;
         ref.state.orders.find((element, index) => {
             if (element.id === order.id) {
@@ -43,12 +44,7 @@ class pageManagerOrders extends Component {
 
     /*get active orders*/
     getOrderList(pageid = 1) {
-        return fetch('/api/manager/orders?page=' + pageid, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return apiRequest(`/api/manager/orders?page=${pageid}`).then(function (result) {
             console.log(result);
             return result;
         });
@@ -119,58 +115,39 @@ class pageManagerOrders extends Component {
     cancelCheckingWaybill(orderId) {
         console.log(orderId);
         const ref = this;
-        fetch(`/api/manager/cancelChecking/${orderId}`, {
-            method: 'GET',
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest(`/api/manager/cancelChecking/${orderId}`).then(function (result) {
             console.log(result);
             if (result) {
                 ref.forceUpdateHandler(result);
             }
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     finishCheck(orderId) {
         const ref = this;
         console.log(orderId);
-        fetch(`/api/manager/finishChecking/${orderId}`, {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
+        apiRequest(`/api/manager/finishChecking/${orderId}`).then(result => {
             ref.forceUpdateHandler(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     finishOrder(orderId) {
         const ref = this;
-        console.log(orderId);
-        fetch(`/api/manager/finishOrder/${orderId}`, {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
+        apiRequest(`/api/manager/finishOrder/${orderId}`).then(result => {
             ref.removeDoneOrder(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     removeDoneOrder(order) {
         const ref = this;
-
         ref.state.orders.find((element, index) => {
             if (element.id === order.id) {
                 const newOrders = ref.state.orders;

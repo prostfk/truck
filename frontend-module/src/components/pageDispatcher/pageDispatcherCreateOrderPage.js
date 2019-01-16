@@ -2,6 +2,7 @@ import React from "react";
 import CommonUtil from "../commonUtil/commontUtil";
 import ValidationUtil from "../commonUtil/validationUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 export default class DispatcherCreateOrderPage extends React.Component {
     constructor(props) {
@@ -112,13 +113,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
             formData.append("autoId", ValidationUtil.getStringFromUnknownObject(this.state.auto));
             formData.append("driverId", ValidationUtil.getStringFromUnknownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
-            fetch('/api/orders/createOrder', {
-                method: "POST",
-                body: formData,
-                headers: {'Auth-token': localStorage.getItem("Auth-token")}
-            }).then(response => {
-                return response.json()
-            }).then(data => {
+            apiRequest('/api/orders/createOrder', 'post', formData).then(data => {
                 if (data.error === undefined) {
                     document.getElementById('order-form').style.display = 'none';
                     document.getElementById('consignment-form').style.display = 'none';
@@ -136,12 +131,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
             companyNameForSearch: [event.target.value]
         });
         if (event.target.value !== '') {
-            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
-                .then(response => {
-                    return response.json()
-                }).then(data => {
+            apiRequest(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`).then(data => {
                 this.addCompaniesInSelect(data);
-            }).catch(()=>{
+            }).catch(() => {
                 NotificationManager.error('Поиск по клиентам временно не работает');
             });
             document.getElementById('client_id').style.display = '';
@@ -152,7 +144,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     }
 
     fetchToSenderStocks() {
-        fetch(`/api/companies/findStocksByUsername`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        apiRequest('/api/companies/findStocksByUsername').then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -187,7 +179,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     findAutos() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        apiRequest(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`).then(data => {
             let autoHtml = '';
             if (data.length !== 0) {
                 data.map(auto => {
@@ -198,7 +190,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
             }
             document.getElementById('auto').innerHTML = autoHtml;
             this.setDefault();
-        })).catch(() => {
+        }).catch(() => {
             NotificationManager.error('Ошибка доступа');
         });
     }
@@ -206,7 +198,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        apiRequest(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`).then(data => {
             let driverHtml = '';
             if (data.length !== 0) {
                 data.map(driver => {
@@ -364,32 +356,9 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                         id="delivery_stock" placeholder="Куда">
                                 </select>
                                 <span id="stocks-error-span" className={'error-span'}/>
-
-                                {/*<div className="form-group">*/}
-                                {/*<small className="form-text text-muted">Сатус заказа</small>*/}
-                                {/*<select onChange={this.changeInput} value={this.state.status}*/}
-                                {/*className="form-control"*/}
-                                {/*id="status">*/}
-                                {/*<option selected disabled>Статус</option>*/}
-                                {/*<option value={'1'}>Принят</option>*/}
-                                {/*<option value={'2'}>Отклонен</option>*/}
-                                {/*<option value={'3'}>Выполен</option>*/}
-                                {/*<option value={'4'}>Не выполнен</option>*/}
-                                {/*</select>*/}
-                                {/*</div>*/}
                             </div>
                             <div className="col-md-6">
                                 <h3>ТТН</h3>
-
-                                {/*<small className="form-text text-muted">Статус</small>*/}
-                                {/*<select onChange={this.changeInput} value={this.state.waybill_status}*/}
-                                {/*className="form-control"*/}
-                                {/*id="waybill_status">*/}
-                                {/*<option selected disabled>Статус</option>*/}
-                                {/*<option value={'1'}>Оформлен</option>*/}
-                                {/*<option value={'2'}>Проверка завершена</option>*/}
-                                {/*<option value={'3'}>Доставлен</option>*/}
-                                {/*</select>*/}
 
 
                                 <small className="form-text text-muted">Дата отправления</small>
@@ -446,17 +415,6 @@ export default class DispatcherCreateOrderPage extends React.Component {
                                            placeholder={"Название"}/>
                                     <span className="error-span" id="prodName-error-span"/>
                                 </div>
-                                {/*<div className="col-md-2">*/}
-                                {/*<select className="custom-select" onChange={this.changeInput}*/}
-                                {/*value={this.state.newProductStatus} id="newProductStatus">*/}
-                                {/*<option value={'1'}>Принят</option>*/}
-                                {/*<option value={'2'}>Проверка завершена</option>*/}
-                                {/*<option value={'3'}>Доставлен</option>*/}
-                                {/*<option value={'4'}>Утерян</option>*/}
-                                {/*</select>*/}
-                                {/*<span className="error-span" id="prodStatus-error-span"/>*/}
-
-                                {/*</div>*/}
                                 <div className="col-md-2">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}

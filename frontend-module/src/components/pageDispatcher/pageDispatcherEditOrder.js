@@ -3,6 +3,7 @@ import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import ValidationUtil from "../commonUtil/validationUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 
 export default class DispatcherEditOrder extends Component {
@@ -156,13 +157,7 @@ export default class DispatcherEditOrder extends Component {
             formData.append("autoId", ValidationUtil.getStringFromUnknownObject(this.state.auto));
             formData.append("driverId", ValidationUtil.getStringFromUnknownObject(this.state.driver));
             formData.append("consignment", JSON.stringify(this.state.consignment));
-            fetch('/api/companies/orders/edit', {
-                method: 'POST',
-                headers: {'Auth-token': localStorage.getItem('Auth-token')},
-                body: formData
-            }).then(response => {
-                return response.json()
-            }).then(data => {
+            apiRequest('/api/companies/orders/edit','post',formData).then(data => {
                 if (data.error === undefined) {
                     this.props.history.push('/orders');
                 }
@@ -175,9 +170,7 @@ export default class DispatcherEditOrder extends Component {
     initOrder() {
         let link = document.location.href.split("/");
         let id = link[link.length - 2];
-        fetch(`/api/orders/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
-            return response.json()
-        }).then(data => {
+        apiRequest(`/api/orders/${id}`).then(data => {
             this.setState({
                 order: data,
                 date_departure: CommonUtil.getCorrectDateFromLong(data.dateAccepted),
@@ -250,7 +243,7 @@ export default class DispatcherEditOrder extends Component {
     };
 
     fetchToUserStocks = () => {
-        fetch(`/api/companies/findStocksByUsername`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        apiRequest(`/api/companies/findStocksByUsername`).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -270,14 +263,14 @@ export default class DispatcherEditOrder extends Component {
     findAutos() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        apiRequest(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`).then(data => {
             let autoHtml = '';
             data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
             });
             document.getElementById('auto').innerHTML = autoHtml;
             // this.setDefault();
-        })).catch(() => {
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
@@ -285,7 +278,7 @@ export default class DispatcherEditOrder extends Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        apiRequest(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`,'get').then(data => {
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
@@ -321,9 +314,7 @@ export default class DispatcherEditOrder extends Component {
             document.getElementById('consignment-form').style.display = '';
             document.getElementById('sendOrderRequestButton').style.display = '';
             if (this.state.consignment.length === 0) {
-                fetch(`/api/orders/${this.state.orderId}/consignment`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
-                    return response.json();
-                }).then(data => {
+                apiRequest(`/api/orders/${this.state.orderId}/consignment`).then(data => {
                     if (data.error === undefined) {
                         let array = [];
                         for (let i = 0; i < data.productList.length; i++) {
@@ -450,15 +441,6 @@ export default class DispatcherEditOrder extends Component {
                                 {
                                     this.processSelect()
                                 }
-                                {/*<select onChange={this.changeInput} value={this.state.waybill_status}*/}
-                                {/*className="form-control"*/}
-                                {/*id="waybill_status">*/}
-                                {/*<option selected disabled>Статус</option>*/}
-                                {/*<option value={'1'}>Оформлен</option>*/}
-                                {/*<option value={'2'}>Проверка завершена</option>*/}
-                                {/*<option value={'3'}>Доставлен</option>*/}
-                                {/*</select>*/}
-
 
                                 <small className="form-text text-muted">Дата отправления</small>
                                 <input value={this.state.date_departure} onBlur={this.changeDate}
@@ -514,17 +496,6 @@ export default class DispatcherEditOrder extends Component {
                                            placeholder={"Название"}/>
                                     <span className="error-span" id="prodName-error-span"/>
                                 </div>
-                                {/*<div className="col-md-2">*/}
-                                {/*<select className="custom-select" onChange={this.changeInput}*/}
-                                {/*value={this.state.newProductStatus} id="newProductStatus">*/}
-                                {/*<option value={'1'}>Принят</option>*/}
-                                {/*<option value={'2'}>Проверка завершена</option>*/}
-                                {/*<option value={'3'}>Доставлен</option>*/}
-                                {/*<option value={'4'}>Утерян</option>*/}
-                                {/*</select>*/}
-                                {/*<span className="error-span" id="prodStatus-error-span"/>*/}
-
-                                {/*</div>*/}
                                 <div className="col-md-2">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}

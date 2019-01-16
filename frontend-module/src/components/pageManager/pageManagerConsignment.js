@@ -1,6 +1,8 @@
 ﻿import React, {Component} from "react";
 import Pagination from "react-js-pagination";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import apiRequest from "../../util/ApiRequest";
+import {NotificationManager} from "react-notifications";
 
 class ManagerConsignment extends Component {
 
@@ -132,25 +134,16 @@ class ManagerConsignment extends Component {
     getProductList(pageid = 1) {
         let split = document.location.href.split('/');
         let id = split[split.length - 1];
-        console.log(id);
-        return fetch(`/api/manager/products/${id}?page=${pageid}`, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
+        return apiRequest(`/api/manager/products/${id}?page=${pageid}`).then(function (result) {
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     /*render row of table ( calls from html ) */
     renderTable(product, index) {
-        console.log(product);
         if (!product) return;
-
         let status;
         if (product.status === 1) {
             status = "Принят";
@@ -163,7 +156,6 @@ class ManagerConsignment extends Component {
         } else if (product.status === 5) {
             status = "Частично утерян";
         }
-
         let isLost = false;
         let semiLost = false;
         if (status === "Утерян") {
@@ -171,8 +163,6 @@ class ManagerConsignment extends Component {
         } else if (status === "Частично утерян") {
             semiLost = true;
         }
-
-
         return <div key={index} className="row table_row manager_orders animated fadeInUp">
             <div className="col-md-2">{product.name}</div>
             <div className="col-md-2" style={{display: semiLost ? 'block' : 'none'}}>Частично утерян</div>
@@ -197,61 +187,34 @@ class ManagerConsignment extends Component {
         </div>
     }
 
-    // {this.toggle.bind(this, index)}
-// {/*onClick={this.setLostState.bind(this, product.id, isLost)}*/}
     setLostState() {
         this.toggleModalCancellation();
-
         let productId = this.state.products[this.state.selectedProductIndex].id;
         let cancel = this.state.countOfSelectedProduct - this.state.remainsOfSelectedProduct;
-
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        console.log(orderId);
         const ref = this;
-
-        /*let formData = new FormData();
-        formData.append("orderId", orderId);
-        formData.append("isLost", isLost);*/
-        fetch(`/api/manager/${productId}/cancelProduct/${orderId}/?cancel=${cancel}`, {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
-            console.log(result);
+        apiRequest(`/api/manager/${productId}/cancelProduct/${orderId}/?cancel=${cancel}`).then(result => {
             ref.forceUpdateHandler(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     restoreProduct() {
         this.toggleModalRestore();
-
         let productId = this.state.products[this.state.selectedProductIndex].id;
         let restore = this.state.cancelledCount - this.state.remainsCancelled;
-
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        console.log(orderId);
         const ref = this;
-
-        /*let formData = new FormData();
-        formData.append("orderId", orderId);
-        formData.append("isLost", isLost);*/
-        fetch(`/api/manager/${productId}/restoreProduct/${orderId}/?restore=${restore}`, {
-            method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest(`/api/manager/${productId}/restoreProduct/${orderId}/?restore=${restore}`).then(function (result) {
             console.log(result);
             ref.forceUpdateHandler(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
@@ -262,21 +225,14 @@ class ManagerConsignment extends Component {
         else if (event.target.value === "Проверен") status = 2;
         else if (event.target.value === "Доставлен") status = 3;
         else if (event.target.value === "Утерян") status = 4;
-
-        fetch(`/api/manager/updateProductStatus/${productId}`, {
-            method: "POST",
-            body: status,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        })
-            .then(function (response) {
-                return response.json();
-            }).then(function (result) {
+        let formData = new FormData();
+        formData.append('status',status);
+        apiRequest(`/api/manager/updateProductStatus/${productId}`, 'post', formData).then(function (result) {
             if (result !== undefined) {
                 ref.forceUpdateHandler(result);
             }
-            console.log(result);
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
