@@ -1,8 +1,7 @@
 import axios from 'axios';
 import {NotificationManager} from 'react-notifications';
-const ApiUtil = async (url, method = 'get', data = {}, headers = {},errCallback) => {
+const apiRequest = async (url, method = 'get', data = {}, headers = {}, errCallback) => {
     headers.Accept = 'application/json;charset=UTF-8';
-    console.log(headers);
     if (localStorage.getItem('Auth-token')){
         headers['Auth-token'] = localStorage.getItem('Auth-token')
     }
@@ -17,8 +16,12 @@ const ApiUtil = async (url, method = 'get', data = {}, headers = {},errCallback)
         default:
             resp = await axios.get(url,{headers}).catch(err=>processError(err,errCallback));break;
     }
-    console.log(resp.data);
-    return await resp.data;
+    // console.log(resp.data);
+    if (resp){
+        return resp.data;
+    }else{
+        return undefined;
+    }
 };
 
 const processError = (err, callback) => {
@@ -28,4 +31,4 @@ const processError = (err, callback) => {
         NotificationManager.warning(err.toString());
     }
 };
-export default ApiUtil;
+export default apiRequest;

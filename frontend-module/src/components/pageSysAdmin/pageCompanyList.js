@@ -2,6 +2,7 @@ import React from "react";
 import ModalComponent from './modalComponent'
 import {NotificationManager} from "react-notifications";
 import Pagination from "react-js-pagination";
+import apiRequest from "../../util/ApiRequest";
 
 /*import ReactDOM from "react";*/
 
@@ -26,9 +27,7 @@ class SysAdminPage extends React.Component {
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId) {
         const refThis = this;
-        fetch('/api/companies/' + companyId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest(`/api/companies/${companyId}`).then(function (result) {
             refThis.state.companies.find((element, index, array) => {
                 if (element.id === companyId) {
                     const newCompanies = refThis.state.companies;
@@ -36,7 +35,7 @@ class SysAdminPage extends React.Component {
                     refThis.setState({companies: newCompanies});
                 }
             });
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     };
@@ -48,25 +47,16 @@ class SysAdminPage extends React.Component {
     }
 
     sendRef() {
-        let formData = new FormData();
-        let value = this.state.inputMail;
-        this.setState({inputMail: ''});
-        formData.append("email", value);
-        fetch(`/api/createAdmin?email=${value}`, {
-            method: "POST",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            response.json().then(function (data) {
-                console.log(data);
-                if (data.error === undefined) {
-                    NotificationManager.success('Отправлено');
-                } else {
-                    NotificationManager.error('Ошибка');
-                    document.getElementById('result-span').style.color = 'red';
-                    document.getElementById('result-span').innerText = 'Неверная почта';
-                }
-            })
-        }).catch(()=>{
+        apiRequest(`/api/createAdmin?email=${this.state.inputMail}`, 'post').then(data => {
+            if (data.error === undefined) {
+                NotificationManager.success('Отправлено');
+                this.setState({inputMail: ''});
+            } else {
+                NotificationManager.error('Ошибка');
+                document.getElementById('result-span').style.color = 'red';
+                document.getElementById('result-span').innerText = 'Неверная почта';
+            }
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
@@ -74,12 +64,13 @@ class SysAdminPage extends React.Component {
     /*auto run when page init*/
     componentDidMount() {
         this.getCompanyList().then(data => {
-            let gettedCompanies = data.content;
-            this.setState({
-                companies: gettedCompanies,
-                totalElements: data.totalElements,
-                currentPage: ++data.number
-            });
+            if (data) {
+                this.setState({
+                    companies: data.content,
+                    totalElements: data.totalElements,
+                    currentPage: ++data.number
+                });
+            }
         });
     }
 
@@ -90,15 +81,9 @@ class SysAdminPage extends React.Component {
 
     /*get all company list*/
     getCompanyList(pageid = 1) {
-        const myRes = fetch('/api/companies?page=' + pageid, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return apiRequest(`/api/companies?page=${pageid}`).then(function (result) {
             return result;
         });
-        return myRes;
     }
 
     /*render row of table ( calls from html ) */
@@ -125,38 +110,27 @@ class SysAdminPage extends React.Component {
     /*button changestatus handler*/
     submitUnlock(compId, event) {
         const ref = this;
-        fetch('/api/companies/changeStatus', {
-            method: "POST",
-            body: compId,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        let formData = new FormData();
+        formData.append('companyId', compId);
+        apiRequest('/api/companies/changeStatus', 'post', formData).then(function (result) {
             if (result === true) {
                 ref.forceUpdateHandler(compId);
             }
             return result;
-        }).catch((err) => {
-            console.log(err);
-        });
+        })
     }
 
     submitLock(desc, compId) {
         const ref = this;
-        console.log(desc + compId);
-        fetch('/api/companies/disable/' + compId, {
-            method: "POST",
-            body: desc,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        let formData = new FormData();
+        formData.append('description', desc);
+        apiRequest(`/api/companies/disable/${compId}`, 'post', formData).then(function (result) {
             if (result === true) {
                 ref.forceUpdateHandler(compId);
             }
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning('Ошибка блокировки')
         });
     }
 

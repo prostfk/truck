@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from 'react-router-dom'
-import ApiUtil from "../../util/ApiUtil";
+import apiRequest from "../../util/ApiRequest";
 
 class OwnerRouteList extends React.Component {
     constructor(props) {
@@ -30,7 +30,7 @@ class OwnerRouteList extends React.Component {
     getRouteList() {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
-        return ApiUtil(`/api/company/routList/${id}`).then(function (result) {
+        return apiRequest(`/api/company/routList/${id}`).then(function (result) {
             return result;
         });
     }

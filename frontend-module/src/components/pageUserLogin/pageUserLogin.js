@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {NotificationManager} from "react-notifications";
 import {connect} from 'react-redux'
 import {AUTH_SUCCESS} from "../../constants/userActionTypes";
-import ApiUtil from '../../util/ApiUtil';
+import apiRequest from '../../util/ApiRequest';
 
 class pageUserLogin extends Component {
 
@@ -58,9 +58,9 @@ class pageUserLogin extends Component {
         formData.append("password", password);
         let refThis = this;
         console.log({username, password});
-        // let response = ApiUtil('/auth','post',formData);
+        // let response = apiRequest('/auth','post',formData);
         // console.log(response);
-        ApiUtil('/auth', 'post', formData).then(data => {
+        apiRequest('/auth', 'post', formData).then(data => {
 
             if (data.error === undefined) {
                 refThis.props.authUser([

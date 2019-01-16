@@ -2,7 +2,7 @@ import {Component} from 'react'
 import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import {Link} from "react-router-dom";
-import ApiUtil from "../../util/ApiUtil";
+import apiRequest from "../../util/ApiRequest";
 
 class OwnerCancelAct extends Component {
     constructor(props) {
@@ -25,7 +25,7 @@ class OwnerCancelAct extends Component {
     getCancelAct() {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
-        return ApiUtil(`/api/company/cancelAct/${id}`).then(function (result) {
+        return apiRequest(`/api/company/cancelAct/${id}`).then(function (result) {
             return result;
         });
     }

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CommonUtil from "../commonUtil/commontUtil";
 import ValidationUtil from "../commonUtil/validationUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 export default class CreateUser extends Component {
 
@@ -80,15 +81,7 @@ export default class CreateUser extends Component {
             if (this.state.newUserPassport !== '') {
                 formData.append('passport', this.state.newUserPassport)
             }
-            fetch('/api/saveUser', {
-                method: 'POST',
-                body: formData,
-                headers: {'Auth-token': localStorage.getItem('Auth-token')}
-            }).then(response => {
-                if (response.status > 199 && response.status < 300) {
-                    return response.json();
-                }
-            }).then(data=>{
+            apiRequest('/api/saveUser','post',formData).then(data=>{
                 if (data.error === undefined) {
                     document.getElementById('message-span').innerText = 'Сохранено';
                     document.getElementById('from-content').style.display = 'none';

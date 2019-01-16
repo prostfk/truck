@@ -6,6 +6,7 @@ import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 import {EditIcon} from "./pageAutoList";
 import {NotificationManager} from "react-notifications";
 import Link from "react-router-dom/es/Link";
+import apiRequest from "../../util/ApiRequest";
 
 var moment = require('moment');
 require("moment/min/locales.min");
@@ -41,17 +42,8 @@ export default class UsersList extends Component {
 
 
     getUsersRequest = (pageid = 1) => {
-        fetch('/api/users?page=' + pageid, {
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(response => {
-            if (response.status === 403 || response.status === 500) {
-                NotificationManager.error('Ошибка доступа');
-            } else {
-                return response.json();
-            }
-        }).then(data => {
+        apiRequest(`/api/users?page=${pageid}`).then(data => {
             let getEditedUsers = data.content;
-            console.log(getEditedUsers);
             this.setState({
                 users: getEditedUsers,
                 totalElements: data.totalElements,
@@ -66,7 +58,6 @@ export default class UsersList extends Component {
         this.setState({
             [event.target.id]: [event.target.value]
         });
-        console.log(this.state)
     };
 
     handlePageChange(pageNumber) {

@@ -1,7 +1,7 @@
 import React from "react";
 import CommonUtil from "../commonUtil/commontUtil";
 import {Link} from "react-router-dom";
-import ApiUtil from "../../util/ApiUtil";
+import apiRequest from "../../util/ApiRequest";
 
 
 class OwnerWaybill extends React.Component {
@@ -41,7 +41,7 @@ class OwnerWaybill extends React.Component {
     initOrder() {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
-        ApiUtil(`/api/company/orders/${id}`).then(data => {
+        apiRequest(`/api/company/orders/${id}`).then(data => {
             console.log(data);
             this.setState({
                 order: data,

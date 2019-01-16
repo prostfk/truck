@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "react-js-pagination";
-import ApiUtil from "../../util/ApiUtil";
+import apiRequest from "../../util/ApiRequest";
 
 export default class PageStockListNew extends React.Component {
     constructor(props) {
@@ -32,7 +32,7 @@ export default class PageStockListNew extends React.Component {
 
 
     getStockList(pageid = 1) {
-        return ApiUtil(`/api/stocks?page=${this.state.currentPage}`).then(result => {
+        return apiRequest(`/api/stocks?page=${this.state.currentPage}`).then(result => {
             return result;
         });
     }

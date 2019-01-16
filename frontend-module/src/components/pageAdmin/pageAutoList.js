@@ -8,6 +8,7 @@ import ModalComponentEditAuto from "./modalComponentEditAuto";
 import ValidationUtil from "../commonUtil/validationUtil";
 import Pagination from "react-js-pagination";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
@@ -53,12 +54,7 @@ export default class AutoList extends Component {
 
     forceUpdateHandler(pageId = 1) {
         const refThis = this;
-        fetch('/api/autos?page=' + pageId, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest(`/api/autos?page=${pageId}`).then(function (result) {
             refThis.setState({
                 autos: result.content,
                 totalElements: result.totalElements,
@@ -82,13 +78,7 @@ export default class AutoList extends Component {
             formData.append('type', this.state.newAutoType);
             formData.append('fuelConsumption', this.state.newAutoFuelConsumption);
             formData.append('carNumber', this.state.newAutoNumber);
-            fetch('/api/saveAuto/', {
-                method: "POST",
-                body: formData,
-                headers: {'Auth-token': localStorage.getItem('Auth-token')}
-            }).then(response => {
-                return response.json();
-            }).then(() => {
+            apiRequest('/api/saveAuto/','post',formData).then(() => {
                 this.setState({
                     newAutoFuelConsumption: "",
                     newAutoType: "",
@@ -137,13 +127,7 @@ export default class AutoList extends Component {
 
     submitDelete(autoId) {
         const ref = this;
-        fetch('/api/auto/', {
-            method: 'DELETE',
-            body: autoId,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest('/api/auto','delete',autoId).then(function (result) {
             if (result) {
                 ref.setState({autos: result})
             }
@@ -160,14 +144,7 @@ export default class AutoList extends Component {
         formData.append("carNumber", autoCarNumber);
         formData.append("type", autoType);
         formData.append("fuelConsumption", autoFuelConsumption);
-
-        fetch('/api/auto/edit', {
-            method: "PUT",
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(response => {
-            return response.json();
-        }).then(data => {
+        apiRequest('/api/auto/edit', 'put',formData).then(data => {
             if (data.error === undefined) {
                 refThis.state.autos.find((element, index, array) => {
                     if (element.id === data.id) {

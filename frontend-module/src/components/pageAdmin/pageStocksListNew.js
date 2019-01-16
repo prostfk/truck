@@ -6,6 +6,7 @@ import EditStockModal from "./modalComponentEditStock";
 import Pagination from "react-js-pagination";
 import {NotificationManager} from "react-notifications";
 import ValidationUtil from "../commonUtil/validationUtil";
+import apiRequest from "../../util/ApiRequest";
 
 export default class PageStockListNew extends React.Component {
     constructor(props) {
@@ -32,12 +33,7 @@ export default class PageStockListNew extends React.Component {
 
     forceUpdateHandler() {
         const refthis = this;
-        fetch('/api/stocks?=' + this.state.currentPage, {
-            method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest(`/api/stocks?=${this.state.currentPage}`).then(function (result) {
             refthis.setState({stocks: result})
         })
     };
@@ -65,25 +61,16 @@ export default class PageStockListNew extends React.Component {
         let formData = new FormData();
         formData.append("name", this.state.stockName);
         formData.append("address", this.state.stockAddress);
-        console.log(formData);
-        fetch('/api/stocks', {
-            method: "POST",
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(response => {
-            response.json().then(data => {
-                console.log(data);
-                this.setState({stockName: "", stockAddress: ""})
-            })
+        apiRequest('/api/stocks', 'post', formData).then(data => {
+            console.log(data);
+            this.setState({stockName: "", stockAddress: ""})
         }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     }
 
     getStockList(pageId = 1) {
-        return fetch('/api/stocks?page=' + pageId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        return apiRequest(`/api/stocks?page=${pageId}`).then(function (result) {
             return result;
         });
     }
@@ -114,15 +101,7 @@ export default class PageStockListNew extends React.Component {
         formData.append("id", stockId);
         formData.append("name", newStockName);
         formData.append("address", newStockAddress);
-
-        fetch('/api/editStock/', {
-            method: "PUT",
-            body: formData,
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
-        }).then(response => {
-            console.log(response);
-            return response.json();
-        }).then(data => {
+        apiRequest('/api/editStock/', 'put', formData).then(data => {
             if (data.error === undefined) {
                 refThis.state.stocks.find((element, index, array) => {
                     if (element.id === data.id) {
@@ -158,13 +137,7 @@ export default class PageStockListNew extends React.Component {
 
     submitDelete(stockId) {
         const ref = this;
-        fetch('/api/stocks', {
-            method: 'DELETE',
-            body: stockId,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
-        }).then(function (response) {
-            return response.json();
-        }).then(function (result) {
+        apiRequest('/api/stocks', 'delete', stockId).then(function (result) {
             console.log(result);
             if (result) {
                 ref.setState({stocks: result})
@@ -176,9 +149,7 @@ export default class PageStockListNew extends React.Component {
 
     searchStocks = () => {
         let name = ValidationUtil.getStringFromUnknownObject(this.state.searchStockName);
-        fetch(`/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
-            return response.json();
-        }).then(data => {
+        apiRequest(`/api/findStock?active=true&name=${name}`).then(data => {
             if (Array.isArray(data)) {
                 if (data.length === 0) {
                     document.getElementById('error-stocks-list').innerText = 'Такого склада нет';

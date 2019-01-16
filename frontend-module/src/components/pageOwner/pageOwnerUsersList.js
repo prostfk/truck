@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 import {NotificationManager} from "react-notifications";
-import ApiUtil from "../../util/ApiUtil";
+import apiRequest from "../../util/ApiRequest";
 
 export default class UsersList extends Component {
 
@@ -19,7 +19,7 @@ export default class UsersList extends Component {
     }
 
     getUsersRequest = (pageid = 1) => {
-        ApiUtil(`/api/users?page=${pageid}`).then(data => {
+        apiRequest(`/api/users?page=${pageid}`).then(data => {
             let gettedusers = data.content;
             console.log(gettedusers);
             this.setState({

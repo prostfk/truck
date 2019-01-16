@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from 'react-router-dom'
 import CommonUtil from "../commonUtil/commontUtil";
 import {NotificationManager} from "react-notifications";
-import ApiUtil from "../../util/ApiUtil";
+import apiRequest from "../../util/ApiRequest";
 
 class OwnerOrderList extends React.Component {
     constructor(props) {
@@ -24,7 +24,7 @@ class OwnerOrderList extends React.Component {
 
     /*get all orders list for current company*/
     getOrderList() {
-        return ApiUtil('/api/company/orders').then( (result) => {
+        return apiRequest('/api/company/orders').then( (result) => {
             return result;
         }).catch(()=>{
             NotificationManager.error('Ошибка');
