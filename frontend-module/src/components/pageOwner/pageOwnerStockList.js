@@ -21,7 +21,7 @@ export default class PageStockListNew extends React.Component {
         const refthis = this;
         fetch('/api/stocks?=' + this.state.currentPage, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -31,7 +31,7 @@ export default class PageStockListNew extends React.Component {
 
 
     getStockList(pageid = 1) {
-        const fetchResult = fetch('/api/stocks?page=' + pageid, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        const fetchResult = fetch('/api/stocks?page=' + pageid, {headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

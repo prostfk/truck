@@ -31,7 +31,7 @@ export default class CompanyOwnerStatistics extends Component {
     }
 
     xlsCompanyInfo = () => {
-        fetch("/api/company/statistics",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+        fetch("/api/company/statistics",  {headers: {'authorization': localStorage.getItem("authorization")}}).then(response=>{
             return response.blob()
         }).then(blob=>{
             let url = window.URL.createObjectURL(blob);
@@ -44,7 +44,7 @@ export default class CompanyOwnerStatistics extends Component {
         })
     };
     xlsFullStat = () => {
-        fetch("/api/company/fullStatistics",  {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response=>{
+        fetch("/api/company/fullStatistics",  {headers: {'authorization': localStorage.getItem("authorization")}}).then(response=>{
             return response.blob()
         }).then(blob=>{
             let url = window.URL.createObjectURL(blob);
@@ -188,7 +188,7 @@ export default class CompanyOwnerStatistics extends Component {
     }
 
     getFullStatistics() {
-        return fetch('/api/company/getFullStat', {method: "get", headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('/api/company/getFullStat', {method: "get", headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;

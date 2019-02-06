@@ -158,7 +158,7 @@ export default class DispatcherEditOrder extends Component {
             formData.append("consignment", JSON.stringify(this.state.consignment));
             fetch('/api/companies/orders/edit', {
                 method: 'POST',
-                headers: {'Auth-token': localStorage.getItem('Auth-token')},
+                headers: {'authorization': localStorage.getItem('authorization')},
                 body: formData
             }).then(response => {
                 return response.json()
@@ -175,7 +175,7 @@ export default class DispatcherEditOrder extends Component {
     initOrder() {
         let link = document.location.href.split("/");
         let id = link[link.length - 2];
-        fetch(`/api/orders/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+        fetch(`/api/orders/${id}`, {headers: {'authorization': localStorage.getItem('authorization')}}).then(response => {
             return response.json()
         }).then(data => {
             this.setState({
@@ -234,7 +234,7 @@ export default class DispatcherEditOrder extends Component {
             companyNameForSearch: [event.target.value]
         });
         if (event.target.value !== '') {
-            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'authorization': localStorage.getItem("authorization")}})
                 .then(response => {
                     return response.json()
                 }).then(data => {
@@ -250,7 +250,7 @@ export default class DispatcherEditOrder extends Component {
     };
 
     fetchToUserStocks = () => {
-        fetch(`/api/companies/findStocksByUsername`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/companies/findStocksByUsername`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -270,7 +270,7 @@ export default class DispatcherEditOrder extends Component {
     findAutos() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             data.map(auto => {
                 autoHtml += `<option value=${auto.id}>${auto.name}</option>`;
@@ -285,7 +285,7 @@ export default class DispatcherEditOrder extends Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
             data.map(driver => {
                 driverHtml += `<option value=${driver.id}>${driver.name}</option>`
@@ -321,7 +321,7 @@ export default class DispatcherEditOrder extends Component {
             document.getElementById('consignment-form').style.display = '';
             document.getElementById('sendOrderRequestButton').style.display = '';
             if (this.state.consignment.length === 0) {
-                fetch(`/api/orders/${this.state.orderId}/consignment`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+                fetch(`/api/orders/${this.state.orderId}/consignment`, {headers: {'authorization': localStorage.getItem('authorization')}}).then(response => {
                     return response.json();
                 }).then(data => {
                     if (data.error === undefined) {

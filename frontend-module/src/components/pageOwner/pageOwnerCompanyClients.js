@@ -26,7 +26,7 @@ export default class CompanyClients extends Component {
     fetchClients = (pageid = 1) => {
         fetch('/api/company/clients?page=' + pageid, {
             method: 'GET',
-            headers: {'Auth-token': localStorage.getItem('Auth-token'), 'Accept': 'application/json;charset=UTF-8'}
+            headers: {'authorization': localStorage.getItem('authorization'), 'Accept': 'application/json;charset=UTF-8'}
         }).then(response => {
             if (response.status === 403 || response.status === 500) {
                 NotificationManager.error('Ошибка доступа');

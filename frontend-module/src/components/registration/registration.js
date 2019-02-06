@@ -147,7 +147,7 @@ class registration extends Component {
             fetch(`/registration`, {
                 method: "POST",
                 body: formData,
-                headers: {'Auth-token': localStorage.getItem('Auth-token')}
+                headers: {'authorization': localStorage.getItem('authorization')}
             }).then(response => {
                 return response.json()
             }).then(data => {

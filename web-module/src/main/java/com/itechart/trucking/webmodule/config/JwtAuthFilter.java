@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
     protected JwtAuthFilter() {
@@ -27,7 +28,7 @@ public class JwtAuthFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
-        String header = httpServletRequest.getHeader("Auth-token");
+        String header = httpServletRequest.getHeader("authorization");
         if (header == null) {
             LOGGER.warn("No token in header");
             return null;

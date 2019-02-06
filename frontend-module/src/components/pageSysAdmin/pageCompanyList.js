@@ -26,7 +26,7 @@ class SysAdminPage extends React.Component {
     /*update row in companies row's after change status of company*/
     forceUpdateHandler(companyId) {
         const refThis = this;
-        fetch('/api/companies/' + companyId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        fetch('/api/companies/' + companyId, {headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             refThis.state.companies.find((element, index, array) => {
@@ -54,7 +54,7 @@ class SysAdminPage extends React.Component {
         formData.append("email", value);
         fetch(`/api/createAdmin?email=${value}`, {
             method: "POST",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             response.json().then(function (data) {
                 console.log(data);
@@ -92,7 +92,7 @@ class SysAdminPage extends React.Component {
     getCompanyList(pageid = 1) {
         const myRes = fetch('/api/companies?page=' + pageid, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            headers: {'authorization': localStorage.getItem('authorization')}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -128,7 +128,7 @@ class SysAdminPage extends React.Component {
         fetch('/api/companies/changeStatus', {
             method: "POST",
             body: compId,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -147,7 +147,7 @@ class SysAdminPage extends React.Component {
         fetch('/api/companies/disable/' + compId, {
             method: "POST",
             body: desc,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

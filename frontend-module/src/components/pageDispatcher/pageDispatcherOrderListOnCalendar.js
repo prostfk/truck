@@ -44,7 +44,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
 
         return fetch('/api/ordersByDate?from=' + from + '&to=' + to, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -78,7 +78,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
         fetch('/api/waybill/changedate', {
             method: "PUT",
             body: formData,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         })
             .then(response => {
                 if (response.status === 500) {

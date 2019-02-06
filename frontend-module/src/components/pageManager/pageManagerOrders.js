@@ -45,7 +45,7 @@ class pageManagerOrders extends Component {
     getOrderList(pageid = 1) {
         return fetch('/api/manager/orders?page=' + pageid, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -121,7 +121,7 @@ class pageManagerOrders extends Component {
         const ref = this;
         fetch(`/api/manager/cancelChecking/${orderId}`, {
             method: 'GET',
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -139,7 +139,7 @@ class pageManagerOrders extends Component {
         console.log(orderId);
         fetch(`/api/manager/finishChecking/${orderId}`, {
             method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -156,7 +156,7 @@ class pageManagerOrders extends Component {
         console.log(orderId);
         fetch(`/api/manager/finishOrder/${orderId}`, {
             method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

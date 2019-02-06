@@ -35,7 +35,7 @@ export default class ModalCreateClient extends Component {
         fetch(`/api/createClient`, {
             method: "POST",
             body: formData,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             response.json().then(function (data) {
                 console.log(data);

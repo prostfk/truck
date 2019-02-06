@@ -22,7 +22,7 @@ public class JwtSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
 //        System.out.println("Successfully authenticated....");
-        String token = httpServletRequest.getHeader("Auth-token");
+        String token = httpServletRequest.getHeader("authorization");
 //        System.out.println(token);
         User validate = new JwtVal().validate(token);
         List<GrantedAuthority> authorities = new ArrayList<>();

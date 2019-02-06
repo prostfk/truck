@@ -65,7 +65,7 @@ export class ManagerRouteList extends Component {
         let id = split[split.length - 1];
         return fetch(`/api/manager/routeList/${id}`, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         });
@@ -83,7 +83,7 @@ export class ManagerRouteList extends Component {
         const ref = this;
         fetch(`/api/manager/deletePoint/${pointId}`, {
             method: "DELETE",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
                 return response.json();
             }).then(function (result) {
@@ -109,7 +109,7 @@ export class ManagerRouteList extends Component {
         routePoint.lng = lng;
         fetch(`/api/manager/${id}/createPoint`, {
             method: "POST",
-            headers: {'Content-Type': 'application/json', 'Auth-token': localStorage.getItem("Auth-token")},
+            headers: {'Content-Type': 'application/json', 'authorization': localStorage.getItem("authorization")},
             body: JSON.stringify(routePoint)
         })
             .then(function (response) {

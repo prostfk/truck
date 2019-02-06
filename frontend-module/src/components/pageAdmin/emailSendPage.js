@@ -21,7 +21,7 @@ export default class SendEmail extends Component {
 
     validateEmailForm = () => {
         if (this.state.senderEmail.length > 3 && this.state.senderEmail.length < 30) {
-            fetch(`/api/checkEmail?email=${this.state.receiverEmail}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+            fetch(`/api/checkEmail?email=${this.state.receiverEmail}`, {headers: {'authorization': localStorage.getItem('authorization')}}).then(response => {
                 return response.json();
             }).then(data => {
                 console.log(data);
@@ -47,7 +47,7 @@ export default class SendEmail extends Component {
         fetch('/api/sendEmail', {
             body: formData,
             method: 'POST',
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            headers: {'authorization': localStorage.getItem('authorization')}
         }).then(response => {
             return response.json();
         }).then(data => {

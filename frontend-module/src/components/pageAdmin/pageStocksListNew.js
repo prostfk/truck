@@ -34,7 +34,7 @@ export default class PageStockListNew extends React.Component {
         const refthis = this;
         fetch('/api/stocks?=' + this.state.currentPage, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -69,7 +69,7 @@ export default class PageStockListNew extends React.Component {
         fetch('/api/stocks', {
             method: "POST",
             body: formData,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(response => {
             response.json().then(data => {
                 console.log(data);
@@ -81,7 +81,7 @@ export default class PageStockListNew extends React.Component {
     }
 
     getStockList(pageId = 1) {
-        return fetch('/api/stocks?page=' + pageId, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(function (response) {
+        return fetch('/api/stocks?page=' + pageId, {headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
@@ -118,7 +118,7 @@ export default class PageStockListNew extends React.Component {
         fetch('/api/editStock/', {
             method: "PUT",
             body: formData,
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            headers: {'authorization': localStorage.getItem('authorization')}
         }).then(response => {
             console.log(response);
             return response.json();
@@ -161,7 +161,7 @@ export default class PageStockListNew extends React.Component {
         fetch('/api/stocks', {
             method: 'DELETE',
             body: stockId,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -176,7 +176,7 @@ export default class PageStockListNew extends React.Component {
 
     searchStocks = () => {
         let name = ValidationUtil.getStringFromUnknownObject(this.state.searchStockName);
-        fetch(`/api/findStock?active=true&name=${name}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => {
+        fetch(`/api/findStock?active=true&name=${name}`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => {
             return response.json();
         }).then(data => {
             if (Array.isArray(data)) {

@@ -115,7 +115,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
             fetch('/api/orders/createOrder', {
                 method: "POST",
                 body: formData,
-                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+                headers: {'authorization': localStorage.getItem("authorization")}
             }).then(response => {
                 return response.json()
             }).then(data => {
@@ -136,7 +136,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
             companyNameForSearch: [event.target.value]
         });
         if (event.target.value !== '') {
-            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}})
+            fetch(`/api/clients/findClientsByNameLike?name=${this.state.companyNameForSearch}`, {headers: {'authorization': localStorage.getItem("authorization")}})
                 .then(response => {
                     return response.json()
                 }).then(data => {
@@ -152,7 +152,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     }
 
     fetchToSenderStocks() {
-        fetch(`/api/companies/findStocksByUsername`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/companies/findStocksByUsername`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => response.json()).then(data => {
             let html = '';
             if (data.status === 404) return;
             data.map(stock => {
@@ -187,7 +187,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     findAutos() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json().then(data => {
+        fetch(`/api/company/findFreeAutos?dateFrom=${dd}&dateTo=${da}`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => response.json().then(data => {
             let autoHtml = '';
             if (data.length !== 0) {
                 data.map(auto => {
@@ -206,7 +206,7 @@ export default class DispatcherCreateOrderPage extends React.Component {
     findDrivers() {
         let dd = this.state.date_departure;
         let da = this.state.date_arrival;
-        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'Auth-token': localStorage.getItem("Auth-token")}}).then(response => response.json()).then(data => {
+        fetch(`/api/company/findFreeDrivers?dateFrom=${dd}&dateTo=${da}`, {headers: {'authorization': localStorage.getItem("authorization")}}).then(response => response.json()).then(data => {
             let driverHtml = '';
             if (data.length !== 0) {
                 data.map(driver => {

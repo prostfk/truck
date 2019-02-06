@@ -61,7 +61,7 @@ export default class CreateStockModal extends Component {
             fetch('http://localhost:8080/api/stocks', {
                 method: "POST",
                 body: formData,
-                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+                headers: {'authorization': localStorage.getItem("authorization")}
             }).then(response => {
                 response.json().then(data => {
                     console.log(data);

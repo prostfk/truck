@@ -26,7 +26,7 @@ class OwnerCancelAct extends Component {
         let id = link[link.length - 1];
         return fetch(`/api/company/cancelAct/${id}`, {
             method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

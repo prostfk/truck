@@ -12,7 +12,7 @@ export default class LogoutComponent extends Component {
     }
 
     submitLogout = () => {
-        localStorage.removeItem('Auth-token');
+        localStorage.removeItem('authorization');
         localStorage.removeItem('username');
         localStorage.removeItem('role');
         localStorage.removeItem('userId');

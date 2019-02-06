@@ -52,7 +52,7 @@ export default class EditStockModal extends Component {
             fetch('/api/editStock', {
                 method: "PUT",
                 body: formData,
-                headers: {'Auth-token': localStorage.getItem("Auth-token")}
+                headers: {'authorization': localStorage.getItem("authorization")}
             }).then(response => {
                 response.json().then(data => {
                     this.setState({modal: false, search: "", value: "", suggest: "", successAddress: ''})

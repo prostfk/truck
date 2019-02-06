@@ -83,7 +83,7 @@ export default class CreateUser extends Component {
             fetch('/api/saveUser', {
                 method: 'POST',
                 body: formData,
-                headers: {'Auth-token': localStorage.getItem('Auth-token')}
+                headers: {'authorization': localStorage.getItem('authorization')}
             }).then(response => {
                 if (response.status > 199 && response.status < 300) {
                     return response.json();

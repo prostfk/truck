@@ -40,7 +40,7 @@ class OwnerWaybill extends React.Component {
     initOrder() {
         let link = document.location.href.split("/");
         let id = link[link.length - 1];
-        fetch(`/api/company/orders/${id}`, {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(response => {
+        fetch(`/api/company/orders/${id}`, {headers: {'authorization': localStorage.getItem('authorization')}}).then(response => {
             return response.json()
         }).then(data => {
             console.log(data);

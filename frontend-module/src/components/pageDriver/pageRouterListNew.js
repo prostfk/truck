@@ -86,7 +86,7 @@ export class DriverRouterListNew extends Component {
     }
 
     getRouteList() {
-        return fetch('/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'Auth-token': localStorage.getItem('Auth-token')}}).then(function (response) {
+        return fetch('/api/orders/getMyOrders/' + this.state.orderId + '/routelist', {headers: {'authorization': localStorage.getItem('authorization')}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             console.log(result);
@@ -98,7 +98,7 @@ export class DriverRouterListNew extends Component {
         const ref = this;
         const myres = fetch('/api/orders/getMyOrders/' + this.state.orderId + '/markpoint/' + pointId, {
             method: "PUT",
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            headers: {'authorization': localStorage.getItem('authorization')}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

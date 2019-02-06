@@ -44,7 +44,7 @@ class DispatcherOrderList extends React.Component {
     getOrderList(pageid = 1) {
         return fetch('/api/orders?page=' + pageid, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -68,7 +68,7 @@ class DispatcherOrderList extends React.Component {
     getCompany() {
         return fetch('/api/getCompany/', {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {

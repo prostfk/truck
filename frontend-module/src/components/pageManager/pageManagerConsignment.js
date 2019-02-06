@@ -135,7 +135,7 @@ class ManagerConsignment extends Component {
         console.log(id);
         return fetch(`/api/manager/products/${id}?page=${pageid}`, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -215,7 +215,7 @@ class ManagerConsignment extends Component {
         formData.append("isLost", isLost);*/
         fetch(`/api/manager/${productId}/cancelProduct/${orderId}/?cancel=${cancel}`, {
             method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -243,7 +243,7 @@ class ManagerConsignment extends Component {
         formData.append("isLost", isLost);*/
         fetch(`/api/manager/${productId}/restoreProduct/${orderId}/?restore=${restore}`, {
             method: "GET",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -266,7 +266,7 @@ class ManagerConsignment extends Component {
         fetch(`/api/manager/updateProductStatus/${productId}`, {
             method: "POST",
             body: status,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         })
             .then(function (response) {
                 return response.json();

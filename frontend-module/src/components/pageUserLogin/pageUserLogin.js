@@ -64,7 +64,7 @@ class pageUserLogin extends Component {
                         data.role,data.token,data.userId,data.companyId
                     ]);
                     document.getElementById('login-form').style.display = 'none';
-                    localStorage.setItem("Auth-token", data.token);
+                    localStorage.setItem("authorization", data.token);
                     localStorage.setItem("username", username);
                     localStorage.setItem("role", data.role);
                     localStorage.setItem("userId", data.userId);

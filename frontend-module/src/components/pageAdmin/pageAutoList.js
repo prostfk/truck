@@ -55,7 +55,7 @@ export default class AutoList extends Component {
         const refThis = this;
         fetch('/api/autos?page=' + pageId, {
             method: "get",
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -85,7 +85,7 @@ export default class AutoList extends Component {
             fetch('/api/saveAuto/', {
                 method: "POST",
                 body: formData,
-                headers: {'Auth-token': localStorage.getItem('Auth-token')}
+                headers: {'authorization': localStorage.getItem('authorization')}
             }).then(response => {
                 return response.json();
             }).then(() => {
@@ -140,7 +140,7 @@ export default class AutoList extends Component {
         fetch('/api/auto/', {
             method: 'DELETE',
             body: autoId,
-            headers: {'Auth-token': localStorage.getItem("Auth-token")}
+            headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
@@ -164,7 +164,7 @@ export default class AutoList extends Component {
         fetch('/api/auto/edit', {
             method: "PUT",
             body: formData,
-            headers: {'Auth-token': localStorage.getItem('Auth-token')}
+            headers: {'authorization': localStorage.getItem('authorization')}
         }).then(response => {
             return response.json();
         }).then(data => {
