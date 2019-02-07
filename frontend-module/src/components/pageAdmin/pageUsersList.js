@@ -6,6 +6,7 @@ import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 import {EditIcon} from "./pageAutoList";
 import {NotificationManager} from "react-notifications";
 import Link from "react-router-dom/es/Link";
+import apiRequest from "../../util/ApiRequest";
 
 var moment = require('moment');
 require("moment/min/locales.min");
@@ -51,7 +52,6 @@ export default class UsersList extends Component {
             }
         }).then(data => {
             let getEditedUsers = data.content;
-            console.log(getEditedUsers);
             this.setState({
                 users: getEditedUsers,
                 totalElements: data.totalElements,
@@ -66,7 +66,6 @@ export default class UsersList extends Component {
         this.setState({
             [event.target.id]: [event.target.value]
         });
-        console.log(this.state)
     };
 
     handlePageChange(pageNumber) {

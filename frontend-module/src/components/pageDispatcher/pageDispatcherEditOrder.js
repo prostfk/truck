@@ -3,6 +3,7 @@ import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import ValidationUtil from "../commonUtil/validationUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 
 export default class DispatcherEditOrder extends Component {
@@ -277,9 +278,9 @@ export default class DispatcherEditOrder extends Component {
             });
             document.getElementById('auto').innerHTML = autoHtml;
             // this.setDefault();
-        })).catch(() => {
+        }).catch(() => {
             NotificationManager.error('Ошибка');
-        });
+        }))
     }
 
     findDrivers() {
@@ -450,15 +451,6 @@ export default class DispatcherEditOrder extends Component {
                                 {
                                     this.processSelect()
                                 }
-                                {/*<select onChange={this.changeInput} value={this.state.waybill_status}*/}
-                                {/*className="form-control"*/}
-                                {/*id="waybill_status">*/}
-                                {/*<option selected disabled>Статус</option>*/}
-                                {/*<option value={'1'}>Оформлен</option>*/}
-                                {/*<option value={'2'}>Проверка завершена</option>*/}
-                                {/*<option value={'3'}>Доставлен</option>*/}
-                                {/*</select>*/}
-
 
                                 <small className="form-text text-muted">Дата отправления</small>
                                 <input value={this.state.date_departure} onBlur={this.changeDate}
@@ -514,17 +506,6 @@ export default class DispatcherEditOrder extends Component {
                                            placeholder={"Название"}/>
                                     <span className="error-span" id="prodName-error-span"/>
                                 </div>
-                                {/*<div className="col-md-2">*/}
-                                {/*<select className="custom-select" onChange={this.changeInput}*/}
-                                {/*value={this.state.newProductStatus} id="newProductStatus">*/}
-                                {/*<option value={'1'}>Принят</option>*/}
-                                {/*<option value={'2'}>Проверка завершена</option>*/}
-                                {/*<option value={'3'}>Доставлен</option>*/}
-                                {/*<option value={'4'}>Утерян</option>*/}
-                                {/*</select>*/}
-                                {/*<span className="error-span" id="prodStatus-error-span"/>*/}
-
-                                {/*</div>*/}
                                 <div className="col-md-2">
                                     <input type="text" id="newProductDescription"
                                            value={this.state.newProductDescription}

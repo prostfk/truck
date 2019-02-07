@@ -15,6 +15,7 @@ import com.itechart.trucking.waybill.dto.WaybillDto;
 import com.itechart.trucking.waybill.entity.Waybill;
 import lombok.Data;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Map;

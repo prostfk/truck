@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import ValidationUtil from "../commonUtil/validationUtil";
 import CommonUtil from "../commonUtil/commontUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 class registration extends Component {
 
@@ -30,10 +31,7 @@ class registration extends Component {
     }
 
     checkToken = () => {
-        fetch(`/anon/tokenValidation?token=${this.state.token}`).then(response => {
-            return response.json();
-        }).then(data => {
-            console.log(data);
+        apiRequest(`/anon/tokenValidation?token=${this.state.token}`).then(data => {
             if (data.error !== undefined) {
                 window.location.href = '/';
             }
@@ -52,7 +50,6 @@ class registration extends Component {
     validateCompany = (event) => {
         let companyName = ValidationUtil.validateStringForLength(this.state.newCompanyName,3, 99);
         if (!companyName){
-
             return false;
         }
         return fetch(`/checkCompanyName?name=${this.state.newCompanyName}`).then(response => {
@@ -124,7 +121,7 @@ class registration extends Component {
         return userNameVal && passwordVal && dateVal && nameVal && surnameVal;
     };
 
-    sendFetch() { //fixme: redo form sending and backend processing(16-11-18)
+    sendFetch() {
         if (this.validateForm()) {
             console.log(true);
             let formData = new FormData();
@@ -151,7 +148,6 @@ class registration extends Component {
             }).then(response => {
                 return response.json()
             }).then(data => {
-                console.log(data);
                 if (data.error === undefined) {
                     window.location.href = '/auth'
                 } else {

@@ -7,6 +7,8 @@ import Icon from 'react-icons-kit';
 import {user} from 'react-icons-kit/fa/user';
 import {bank} from 'react-icons-kit/fa/bank';
 import {automobile} from 'react-icons-kit/fa/automobile';
+import apiRequest from "../../util/ApiRequest";
+import {NotificationManager} from "react-notifications";
 
 
 export default class PageSysAdminStatistics extends Component {
@@ -107,7 +109,7 @@ export default class PageSysAdminStatistics extends Component {
     }
 
     createCompanyStatistics(){
-        var ctxP = document.getElementById("pieChart").getContext('2d');
+        const ctxP = document.getElementById("pieChart").getContext('2d');
         new Chart(ctxP, {
             type: 'pie',
             data: {
@@ -127,7 +129,7 @@ export default class PageSysAdminStatistics extends Component {
     }
 
     createAutoStatistics(){
-        var ctxP = document.getElementById("pieChartAutos").getContext('2d');
+        const ctxP = document.getElementById("pieChartAutos").getContext('2d');
 
         new Chart(ctxP, {
             type: 'pie',
@@ -148,7 +150,7 @@ export default class PageSysAdminStatistics extends Component {
     }
 
     createUserRoleStatistics(){
-        var ctxD = document.getElementById("doughnutChart").getContext('2d');
+        const ctxD = document.getElementById("doughnutChart").getContext('2d');
         new Chart(ctxD, {
             type: 'doughnut',
             data: {
@@ -171,9 +173,9 @@ export default class PageSysAdminStatistics extends Component {
         return fetch('/api/statistics/getFull', {method: "get", headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
-            return result;
+            return result.json();
         }).catch(err=>{
-            throw new Error('Ошибка доступа')
+            NotificationManager.warning('Ошибка загрузки')
         });
     }
 

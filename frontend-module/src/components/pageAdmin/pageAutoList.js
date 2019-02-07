@@ -8,6 +8,7 @@ import ModalComponentEditAuto from "./modalComponentEditAuto";
 import ValidationUtil from "../commonUtil/validationUtil";
 import Pagination from "react-js-pagination";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 const SideIconContainer = withBaseIcon({size: 24, style: {color: '#50505d'}});
 const RedIconContainer = withBaseIcon({size: 24, style: {color: '#8d2a27'}});
@@ -160,7 +161,6 @@ export default class AutoList extends Component {
         formData.append("carNumber", autoCarNumber);
         formData.append("type", autoType);
         formData.append("fuelConsumption", autoFuelConsumption);
-
         fetch('/api/auto/edit', {
             method: "PUT",
             body: formData,

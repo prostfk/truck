@@ -6,6 +6,7 @@ import EditStockModal from "./modalComponentEditStock";
 import Pagination from "react-js-pagination";
 import {NotificationManager} from "react-notifications";
 import ValidationUtil from "../commonUtil/validationUtil";
+import apiRequest from "../../util/ApiRequest";
 
 export default class PageStockListNew extends React.Component {
     constructor(props) {
@@ -114,7 +115,6 @@ export default class PageStockListNew extends React.Component {
         formData.append("id", stockId);
         formData.append("name", newStockName);
         formData.append("address", newStockAddress);
-
         fetch('/api/editStock/', {
             method: "PUT",
             body: formData,

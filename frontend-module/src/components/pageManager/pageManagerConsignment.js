@@ -1,6 +1,8 @@
 ﻿import React, {Component} from "react";
 import Pagination from "react-js-pagination";
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap';
+import apiRequest from "../../util/ApiRequest";
+import {NotificationManager} from "react-notifications";
 
 class ManagerConsignment extends Component {
 
@@ -142,15 +144,13 @@ class ManagerConsignment extends Component {
             console.log(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     /*render row of table ( calls from html ) */
     renderTable(product, index) {
-        console.log(product);
         if (!product) return;
-
         let status;
         if (product.status === 1) {
             status = "Принят";
@@ -163,7 +163,6 @@ class ManagerConsignment extends Component {
         } else if (product.status === 5) {
             status = "Частично утерян";
         }
-
         let isLost = false;
         let semiLost = false;
         if (status === "Утерян") {
@@ -171,8 +170,6 @@ class ManagerConsignment extends Component {
         } else if (status === "Частично утерян") {
             semiLost = true;
         }
-
-
         return <div key={index} className="row table_row manager_orders animated fadeInUp">
             <div className="col-md-2">{product.name}</div>
             <div className="col-md-2" style={{display: semiLost ? 'block' : 'none'}}>Частично утерян</div>
@@ -197,17 +194,12 @@ class ManagerConsignment extends Component {
         </div>
     }
 
-    // {this.toggle.bind(this, index)}
-// {/*onClick={this.setLostState.bind(this, product.id, isLost)}*/}
     setLostState() {
         this.toggleModalCancellation();
-
         let productId = this.state.products[this.state.selectedProductIndex].id;
         let cancel = this.state.countOfSelectedProduct - this.state.remainsOfSelectedProduct;
-
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        console.log(orderId);
         const ref = this;
 
         /*let formData = new FormData();
@@ -223,19 +215,16 @@ class ManagerConsignment extends Component {
             ref.forceUpdateHandler(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     restoreProduct() {
         this.toggleModalRestore();
-
         let productId = this.state.products[this.state.selectedProductIndex].id;
         let restore = this.state.cancelledCount - this.state.remainsCancelled;
-
         let split = document.location.href.split('/');
         let orderId = split[split.length - 1];
-        console.log(orderId);
         const ref = this;
 
         /*let formData = new FormData();
@@ -251,7 +240,7 @@ class ManagerConsignment extends Component {
             ref.forceUpdateHandler(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
@@ -274,9 +263,8 @@ class ManagerConsignment extends Component {
             if (result !== undefined) {
                 ref.forceUpdateHandler(result);
             }
-            console.log(result);
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 

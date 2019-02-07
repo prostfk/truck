@@ -2,6 +2,7 @@ import {Component} from 'react'
 import React from "react";
 import CommonUtil from '../commonUtil/commontUtil'
 import {Link} from "react-router-dom";
+import apiRequest from "../../util/ApiRequest";
 
 class OwnerCancelAct extends Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class OwnerCancelAct extends Component {
         }
     }
 
-    componentDidMount(props) {
+    componentDidMount() {
         this.getCancelAct().then(data => {
             this.setState({
                 cancelAct: data,

@@ -88,9 +88,8 @@ public class SysAdminController {
     }
 
     @PostMapping(value = "/companies/changeStatus")
-    public boolean changeActiveStatus(@RequestBody String companyId) {
-        Long compId = Long.parseLong(companyId);
-        Company company = companyService.findCompanyById(compId);
+    public boolean changeActiveStatus(Long companyId) {
+        Company company = companyService.findCompanyById(companyId);
         int isActive = company.getActive();
         if (isActive == 1) {
             company.setActive(0);
@@ -104,7 +103,7 @@ public class SysAdminController {
     }
 
     @PostMapping(value = "/companies/disable/{companyId}")
-    public boolean disableCompany(@RequestBody String description, @PathVariable Long companyId) {
+    public boolean disableCompany(@RequestParam String description, @PathVariable Long companyId) {
         Company company = companyService.findCompanyById(companyId);
         User sysAdmin = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         company.setLockerId(sysAdmin);

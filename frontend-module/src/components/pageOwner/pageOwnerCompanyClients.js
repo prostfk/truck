@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
 import ModalCreateClient from "./modalCreateClient";
 import {NotificationContainer, NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 export default class CompanyClients extends Component {
 

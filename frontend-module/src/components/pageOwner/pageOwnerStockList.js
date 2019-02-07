@@ -1,5 +1,6 @@
 import React from "react";
 import Pagination from "react-js-pagination";
+import apiRequest from "../../util/ApiRequest";
 
 export default class PageStockListNew extends React.Component {
     constructor(props) {
@@ -31,12 +32,11 @@ export default class PageStockListNew extends React.Component {
 
 
     getStockList(pageid = 1) {
-        const fetchResult = fetch('/api/stocks?page=' + pageid, {headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
+        return fetch('/api/stocks?page=' + pageid, {headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
             return result;
         });
-        return fetchResult;
     }
 
     componentDidMount() {

@@ -1,6 +1,8 @@
 ﻿import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Pagination from "react-js-pagination";
+import apiRequest from "../../util/ApiRequest";
+import {NotificationManager} from "react-notifications";
 
 class pageManagerOrders extends Component {
 
@@ -30,7 +32,6 @@ class pageManagerOrders extends Component {
     }
 
     forceUpdateHandler(order) {
-        console.log(order);
         const ref = this;
         ref.state.orders.find((element, index) => {
             if (element.id === order.id) {
@@ -130,7 +131,7 @@ class pageManagerOrders extends Component {
                 ref.forceUpdateHandler(result);
             }
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
@@ -147,7 +148,7 @@ class pageManagerOrders extends Component {
             ref.forceUpdateHandler(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
@@ -164,13 +165,12 @@ class pageManagerOrders extends Component {
             ref.removeDoneOrder(result);
             return result;
         }).catch((err) => {
-            console.log(err);
+            NotificationManager.warning(err.toString())
         });
     }
 
     removeDoneOrder(order) {
         const ref = this;
-
         ref.state.orders.find((element, index) => {
             if (element.id === order.id) {
                 const newOrders = ref.state.orders;

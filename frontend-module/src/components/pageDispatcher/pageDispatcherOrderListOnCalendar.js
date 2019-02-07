@@ -6,6 +6,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 import FullCalendar from 'fullcalendar-reactwrapper';
 import 'fullcalendar-reactwrapper/dist/css/fullcalendar.min.css'
 import {WEBURL} from "../../constants/urls"
+import apiRequest from "../../util/ApiRequest";
 
 var moment = require('moment');
 require("moment/min/locales.min");
@@ -49,7 +50,6 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
             return response.json();
         }).then(function (result) {
             let myres = result;
-
             myres.forEach(function (item, i, arr) {
                 let tmpDate = moment(item.end);
                 tmpDate.add(1, 'days');
@@ -111,7 +111,7 @@ class pageDispatcherOrderListOnCalendar extends React.Component {
        msg.waybillDto.dateArrival=msg.waybillDto.dateArrival.year+"-"+msg.waybillDto.dateArrival.monthValue+"-"+msg.waybillDto.dateArrival.dayOfMonth;
        msg.waybillDto.dateDeparture=msg.waybillDto.dateDeparture.year+"-"+msg.waybillDto.dateDeparture.monthValue+"-"+msg.waybillDto.dateDeparture.dayOfMonth;
 
-        if(myCompanyId!=msg.companyId) return; //commit to view notifications for all users;
+        if(myCompanyId!==msg.companyId) return; //commit to view notifications for all users;
 
         let dateArrival = moment(msg.waybillDto.dateArrival);
         let rangeArrival =dateArrival.isBetween(moment(this.state.currentDateFrom),moment(this.state.currentDateTo));

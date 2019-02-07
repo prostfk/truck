@@ -39,7 +39,7 @@ export default class ModalCreateClient extends Component {
         }).then(function (response) {
             response.json().then(function (data) {
                 console.log(data);
-                if (data.error != undefined) {
+                if (data.error !== undefined) {
                     NotificationManager.error('Такое название уже существует');
                     document.getElementById('name-error-span').innerText = 'Такое название уже существует';
                 }else{

@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {NotificationManager} from "react-notifications";
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {AUTH_SUCCESS} from "../../constants/userActionTypes";
-
+import apiRequest from '../../util/ApiRequest';
 
 class pageUserLogin extends Component {
 
@@ -90,9 +90,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return ({
         authUser: payload => {
-            dispatch({type: AUTH_SUCCESS,payload: payload})
+            dispatch({type: AUTH_SUCCESS, payload: payload})
         }
     })
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(pageUserLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(pageUserLogin);

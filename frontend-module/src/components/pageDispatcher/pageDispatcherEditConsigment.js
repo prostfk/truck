@@ -60,11 +60,11 @@ class EditConsignment extends React.Component {
         else if (product.status === "2") status = "Доставлен";
         else if (product.status === "3") status = "Утерян";
 
-        return <div class="row table_row animated fadeInUp">
-            <div class="col-md-3">{product.name}</div>
-            <div class="col-md-3">{status}</div>
-            <div class="col-md-3">{product.description}</div>
-            <div class="col-md-3">
+        return <div className="row table_row animated fadeInUp">
+            <div className="col-md-3">{product.name}</div>
+            <div className="col-md-3">{status}</div>
+            <div className="col-md-3">{product.description}</div>
+            <div className="col-md-3">
                 <a onClick={this.deleteproduct.bind(this,
                     product.id)} className={"table_button bg-secondary text-white"}>Удалить</a>
             </div>
@@ -72,29 +72,29 @@ class EditConsignment extends React.Component {
     }
 
     render() {
-        return <div class="offset-md-2 col-md-8 form_clear animated fadeIn">
+        return <div className="offset-md-2 col-md-8 form_clear animated fadeIn">
             <h3>Товарная патрия {this.state.consigmentId}</h3>
-            <div class="row">
-                <di class="col-md-3">
+            <div className="row">
+                <di className="col-md-3">
                     <input value={this.state.newproduct_name} onChange={this.changeInput} id="newproduct_name"
-                           type="text" class="form-control" placeholder="Наименование товара"/>
+                           type="text" className="form-control" placeholder="Наименование товара"/>
                 </di>
-                <div class="col-md-3">
+                <div className="col-md-3">
                     <select value={this.state.newproduct_status} onChange={this.changeInput} id="newproduct_status"
-                            class="custom-select">
+                            className="custom-select">
                         <option value="0" selected>Принят</option>
                         <option value="1">Проверен</option>
                         <option value="2">Доставлен</option>
                         <option value="3">Утерян</option>
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div className="col-md-3">
                     <input value={this.state.newproduct_description} onChange={this.changeInput}
-                           id="newproduct_description" type="text" class="form-control"
+                           id="newproduct_description" type="text" className="form-control"
                            placeholder="Описание, количество.."/>
                 </div>
-                <di class="col-md-3">
-                    <button onClick={this.addProduct} type="button" class="btn btn-info btn_fullsize">Добавить</button>
+                <di className="col-md-3">
+                    <button onClick={this.addProduct} type="button" className="btn btn-info btn_fullsize">Добавить</button>
                 </di>
             </div>
             {

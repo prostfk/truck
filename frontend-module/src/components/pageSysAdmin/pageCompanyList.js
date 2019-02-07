@@ -2,6 +2,7 @@ import React from "react";
 import ModalComponent from './modalComponent'
 import {NotificationManager} from "react-notifications";
 import Pagination from "react-js-pagination";
+import apiRequest from "../../util/ApiRequest";
 
 /*import ReactDOM from "react";*/
 
@@ -36,7 +37,7 @@ class SysAdminPage extends React.Component {
                     refThis.setState({companies: newCompanies});
                 }
             });
-        }).catch(()=>{
+        }).catch(() => {
             NotificationManager.error('Ошибка');
         });
     };
@@ -74,12 +75,13 @@ class SysAdminPage extends React.Component {
     /*auto run when page init*/
     componentDidMount() {
         this.getCompanyList().then(data => {
-            let gettedCompanies = data.content;
-            this.setState({
-                companies: gettedCompanies,
-                totalElements: data.totalElements,
-                currentPage: ++data.number
-            });
+            if (data) {
+                this.setState({
+                    companies: data.content,
+                    totalElements: data.totalElements,
+                    currentPage: ++data.number
+                });
+            }
         });
     }
 
@@ -98,7 +100,6 @@ class SysAdminPage extends React.Component {
         }).then(function (result) {
             return result;
         });
-        return myRes;
     }
 
     /*render row of table ( calls from html ) */
@@ -132,14 +133,9 @@ class SysAdminPage extends React.Component {
         }).then(function (response) {
             return response.json();
         }).then(function (result) {
-            if (result === true) {
-                ref.forceUpdateHandler(compId);
-            }
-            return result;
-        }).catch((err) => {
-            console.log(err);
+        return result
         });
-    }
+    };
 
     submitLock(desc, compId) {
         const ref = this;
@@ -150,13 +146,8 @@ class SysAdminPage extends React.Component {
             headers: {'authorization': localStorage.getItem("authorization")}
         }).then(function (response) {
             return response.json();
-        }).then(function (result) {
-            if (result === true) {
-                ref.forceUpdateHandler(compId);
-            }
-            return result;
-        }).catch((err) => {
-            console.log(err);
+        }).then(function (result) {}).catch((err) => {
+            NotificationManager.warning('Ошибка блокировки')
         });
     }
 

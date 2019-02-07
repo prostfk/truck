@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 export default class SendEmail extends Component {
 

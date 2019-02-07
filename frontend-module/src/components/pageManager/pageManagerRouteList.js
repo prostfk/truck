@@ -5,6 +5,7 @@ import * as ReactDOM from "react-dom";
 import redMarker from '../pageDriver/img/non-passed-marker.png';
 import CommonUtil from "../commonUtil/commontUtil";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 
 export class ManagerRouteList extends Component {
@@ -156,11 +157,7 @@ export class ManagerRouteList extends Component {
     };
 
     getAddressFromLatAndLng = (lat, lng) => {//open cage data api 2,500 requests per day
-        //geo api - 17234ab712334e7caa071303d82f6b98
-        //https://api.opencagedata.com/geocode/v1/json?q=LAT+LNG&key=17234ab712334e7caa071303d82f6b98
-        return fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=17234ab712334e7caa071303d82f6b98`).then(response => {
-            return response.json()
-        }).then(data => {
+        return apiRequest(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=17234ab712334e7caa071303d82f6b98`).then(data => {
             return data.results[0].components.city;
         })
     };

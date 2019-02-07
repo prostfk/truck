@@ -5,6 +5,7 @@ import nonPassedMarker from './img/non-passed-marker.png';
 import passedMarker from './img/passed-marker.png';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import CommonUtil from "../commonUtil/commontUtil";
+import apiRequest from "../../util/ApiRequest";
 
 export class DriverRouterListNew extends Component {
 
@@ -104,9 +105,7 @@ export class DriverRouterListNew extends Component {
         }).then(function (result) {
             ref.forceUpdateHandler(result);
             return result;
-        }).catch((err) => {
-            console.log(err);
-        });
+        })
     };
 
     forceUpdateHandler() {
@@ -120,18 +119,14 @@ export class DriverRouterListNew extends Component {
     }
 
     onMarkerClick = (props, marker, e) => {
-        console.log(props);
-
         let enablePoints = this.state.enablePoints;
         let permission = false;
-
         for (let i = 0; i < enablePoints.length; i++) {
             console.log("Enable point: " + enablePoints[i].id);
             if (props.pointId === enablePoints[i].id) {
                 permission = true;
             }
         }
-
         if (permission) {
             this.setState({
                 selectedPlace: props,
@@ -174,7 +169,6 @@ export class DriverRouterListNew extends Component {
     };
 
     onInfoWindowOpen(props, e) { //For mark button. Doesn't work without it
-        console.log(props);
         const button = this.state.selectedPointStatus ? (
             <div onClick={this.onButtonSubmitClick} className={'btn btn-danger'}
                  id={'button-submit-mark-handler'}>Отменить</div>) : (

@@ -6,6 +6,7 @@ import {Container} from 'mdbreact';
 import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 export default class CompanyOwnerStatistics extends Component {
 
@@ -195,7 +196,7 @@ export default class CompanyOwnerStatistics extends Component {
         }).catch(err=>{
             NotificationManager.error('Ошибка');
         });
-    }
+    };
 
     generateAcceptedTable(data,mmonthNames){
         if(data.length<6 || mmonthNames.length<6) return;

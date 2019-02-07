@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Pagination from "react-js-pagination";
 import CreateUser from "../PagesCommon/adminSysAdminCreateUser";
 import {NotificationManager} from "react-notifications";
+import apiRequest from "../../util/ApiRequest";
 
 export default class UsersList extends Component {
 
