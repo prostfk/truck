@@ -92,7 +92,7 @@ class SysAdminPage extends React.Component {
 
     /*get all company list*/
     getCompanyList(pageid = 1) {
-        const myRes = fetch('/api/companies?page=' + pageid, {
+        return fetch('/api/companies?page=' + pageid, {
             method: "get",
             headers: {'authorization': localStorage.getItem('authorization')}
         }).then(function (response) {

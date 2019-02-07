@@ -12,7 +12,7 @@ var moment = require('moment');
 require("moment/min/locales.min");
 
 
-export default class UsersList extends Component {
+export default class AdminUsersList extends Component {
 
     constructor(props) {
         super(props);
@@ -117,11 +117,7 @@ export default class UsersList extends Component {
                     <div className="col-md-2">Почта</div>
                     <div className="col-md-1">Ред.</div>
                 </div>
-                {
-                    this.state.users.map((user, index) => {
-                        return this.renderUser(user, index);
-                    })
-                }
+                <AdminUsersList users={this.state.users}/>
                 <div className="table_footer">
                     <div>
                         <Pagination

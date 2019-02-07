@@ -25,7 +25,7 @@ import ManagerCancelletion from "./pageManager/pageManagerCancelletionAct";
 import ManagerRouteList from "./pageManager/pageManagerRouteList";
 /*import MainHeader from "./pageManager/mainHeader";
 import IndexComponent from './indexComponent/indexComponent'*/
-import UsersList from "./pageAdmin/pageUsersList";
+import AdminUsersList from "./pageAdmin/pageUsersList";
 import CompanyOwnerStatistics from "./pageOwner/statistics";
 import AutoList from "./pageAdmin/pageAutoList";
 import pageDispatcherOrderListOnCalendar from "./pageDispatcher/pageDispatcherOrderListOnCalendar";
@@ -58,7 +58,7 @@ class MainRouter extends React.Component {
                         <Route path="/*" component={NotificationsErrorHandler}/>
                         <Route exact path="/" component={WelcomePage}/>
                         <Route exact path="/registration" component={registration}/>
-                        <Route exact path="/usersList" component={UsersList}/>
+                        <Route exact path="/usersList" component={AdminUsersList}/>
                         <Route exact path="/user/:userId/edit" component={EditUser}/>
                         <Route exact path="/sendEmail" component={SendEmail}/>
                         <Route exact path="/auth" component={pageUserLogin}/>

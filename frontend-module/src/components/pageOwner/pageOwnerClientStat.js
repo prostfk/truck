@@ -2,12 +2,12 @@ import React, {Component} from 'react';
 
 import {Chart, Line} from 'react-chartjs-2';
 import { Container } from 'mdbreact';
-import domtoimage from 'dom-to-image';
 import Icon from 'react-icons-kit';
 import {user} from 'react-icons-kit/fa/user';
 import {bank} from 'react-icons-kit/fa/bank';
 import {automobile} from 'react-icons-kit/fa/automobile';
 import { saveAs } from 'file-saver';
+import domtoimage from 'dom-to-image';
 
 
 export default class PageOwnerClientStats extends Component {
@@ -104,7 +104,7 @@ export default class PageOwnerClientStats extends Component {
     saveStat = () => {
         document.getElementById('content-div').style.backgroundColor='white';
         domtoimage.toBlob(document.getElementById('content-div'))
-            .then(blob =>window.saveAs(blob, 'my-node.png'));
+            .then(blob =>window.saveAs(blob, `${new Date().toLocaleString('ru')}-stat.png`));
         document.getElementById('content-div').style.backgroundColor='';
     };
 
@@ -137,15 +137,15 @@ export default class PageOwnerClientStats extends Component {
     render(){
         return (
             <div style={{backgroundColor: '#f3f3f3'}}>
-                <div className="offset-xl-1 col-xl-10 superuserform_companylist">
-                    <h3>Статистика выполненных заказов для клиента " {this.state.clientName} "</h3>
+                <div className="offset-xl-3 col-xl-10 superuserform_companylist">
+                    <h3>Статистика выполненных заказов для клиента "{this.state.clientName}"</h3>
                     <button className="btn btn-primary" onClick={this.saveStat}>Скачать</button>
 
                 </div>
                 <div id={'content-div'}>
                     <div className="offset-xl-1 col-xl-10 superuserform_companylist">
                         {
-                            this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
+                            this.generateExecutedTable(this.state.executedAmmountMonthValues, this.state.mmonthNames)
                         }
                         <h6 align="center" style={{marginTop: '2%'}}>Месяц</h6>
                     </div>

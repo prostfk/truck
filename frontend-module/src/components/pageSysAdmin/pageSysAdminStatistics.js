@@ -9,6 +9,8 @@ import {bank} from 'react-icons-kit/fa/bank';
 import {automobile} from 'react-icons-kit/fa/automobile';
 import apiRequest from "../../util/ApiRequest";
 import {NotificationManager} from "react-notifications";
+import { saveAs } from 'file-saver';
+import domtoimage from 'dom-to-image';
 
 
 export default class PageSysAdminStatistics extends Component {
@@ -51,7 +53,7 @@ export default class PageSysAdminStatistics extends Component {
         let companies = [];
         let companiesHeaders = [];
         data.companyStatisticsDtos.forEach(function(element) {
-            companiesHeaders.push(element.isBlocked==0?"Заблокированные":"Активные");
+            companiesHeaders.push(element.isBlocked===0?"Заблокированные":"Активные");
             companies.push(element.count);
             companiesAmmount+=element.count;
         });
@@ -173,7 +175,7 @@ export default class PageSysAdminStatistics extends Component {
         return fetch('/api/statistics/getFull', {method: "get", headers: {'authorization': localStorage.getItem("authorization")}}).then(function (response) {
             return response.json();
         }).then(function (result) {
-            return result.json();
+            return result;
         }).catch(err=>{
             NotificationManager.warning('Ошибка загрузки')
         });
@@ -181,38 +183,46 @@ export default class PageSysAdminStatistics extends Component {
 
     render(){
         return (
-            <div className="row">
-                <div className="offset-xl-1 col-xl-10 superuserform_companylist">
-                    <div className="row">
-                        <div className="offset-xl-1 col-xl-5 stat_container">
-                            <div className="stat_container_header"> Компании </div>
-                            <Container>
-                                <canvas id="pieChart"></canvas>
-                            </Container>
-                        </div>
-                        <div className="offset-xl-1 col-xl-5">
-                            <div className="col-md-12 statblock color_orange"><Icon icon={user}/>Пользователей: {this.state.workersAmmount}</div>
-                            <div className="col-md-12 statblock"><Icon icon={bank}/>Компаний: {this.state.companiesAmmount}</div>
-                            <div className="col-md-12 statblock color_red"><Icon icon={automobile}/>Автомобилей: {this.state.autoAmmount}</div>
-                        </div>
-
-                    </div>
-                    <div className="row superuserform_companylist">
-                        <div className="offset-xl-1 col-xl-5 stat_container">
-                            <div className="stat_container_header">
-                                Пользователи
+            <div>
+                <div className="row" id={'content-div'} style={{backgroundColor: '#f3f3f3'}}>
+                    <div className="offset-xl-1 col-xl-10 superuserform_companylist">
+                        <div className="row">
+                            <div className="offset-xl-1 col-xl-5 stat_container">
+                                <div className="stat_container_header"> Компании </div>
+                                <Container>
+                                    <canvas id="pieChart"/>
+                                </Container>
                             </div>
-                            <Container>
-                                <canvas id="doughnutChart"></canvas>
-                            </Container>
+                            <div className="offset-xl-1 col-xl-5">
+                                <div className="col-md-12 statblock color_orange"><Icon icon={user}/>Пользователей: {this.state.workersAmmount}</div>
+                                <div className="col-md-12 statblock"><Icon icon={bank}/>Компаний: {this.state.companiesAmmount}</div>
+                                <div className="col-md-12 statblock color_red"><Icon icon={automobile}/>Автомобилей: {this.state.autoAmmount}</div>
+                            </div>
+
                         </div>
-                        <div className="offset-xl-1 col-xl-5 stat_container">
-                            <div className="stat_container_header"> Автомобили </div>
-                            <Container>
-                                <canvas id="pieChartAutos"></canvas>
-                            </Container>
+                        <div className="row superuserform_companylist">
+                            <div className="offset-xl-1 col-xl-5 stat_container">
+                                <div className="stat_container_header">
+                                    Пользователи
+                                </div>
+                                <Container>
+                                    <canvas id="doughnutChart"/>
+                                </Container>
+                            </div>
+                            <div className="offset-xl-1 col-xl-5 stat_container">
+                                <div className="stat_container_header"> Автомобили </div>
+                                <Container>
+                                    <canvas id="pieChartAutos"/>
+                                </Container>
+                            </div>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <button className={'btn btn-primary'} onClick={
+                        ()=>domtoimage.toBlob(document.getElementById('content-div'))
+                            .then(blob =>window.saveAs(blob, `${new Date().toLocaleString('ru')}.png`))
+                    }>Скачать</button>
                 </div>
             </div>
         );

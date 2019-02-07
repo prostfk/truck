@@ -365,12 +365,12 @@ export default class CompanyOwnerStatistics extends Component {
                         <div className="offset-md-1 col-xl-10 superuserform_companylist">
                             <h2> Заказы:</h2>
                             <div className="row">
-                                <div className="col-xl-6">
+                                <div className="col-xl-6 animated fadeIn">
                                     {
                                         this.generateAcceptedTable(this.state.acceptedAmmountMonthValues,this.state.mmonthNames)
                                     }
                                 </div>
-                                <div className="col-xl-6">
+                                <div className="col-xl-6 animated fadeIn">
                                     {
                                         this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
                                     }
@@ -400,7 +400,7 @@ export default class CompanyOwnerStatistics extends Component {
                             <h2> Сотрудники:</h2>
                             <div className="row">
                                 <Container>
-                                    <canvas id="barChart"></canvas>
+                                    <canvas id="barChart"/>
                                 </Container>
                             </div>
                         </div>
