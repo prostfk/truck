@@ -7,6 +7,8 @@ import driverIcon from './img/driver-icon.png'
 import statsIcon from './img/stats-icon.png'
 import {NotificationManager} from "react-notifications";
 import apiRequest from "../../util/ApiRequest";
+import domtoimage from "dom-to-image";
+import { saveAs } from 'file-saver';
 
 export default class CompanyOwnerStatistics extends Component {
 
@@ -338,7 +340,7 @@ export default class CompanyOwnerStatistics extends Component {
     render() {
 
         return (
-            <div>
+            <div style={{backgroundColor: '#f3f3f3'}}>
                 <div className="row animated fadeIn">
                     <div className="offset-md-1 col-xl-10 superuserform_companylist">
                         <h2> Скачать статистику</h2>
@@ -349,50 +351,58 @@ export default class CompanyOwnerStatistics extends Component {
                             <div onClick={this.xlsFullStat} className="col-xl-2 download_button" title={"Скачать"}>
                                 Полная статистика
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="offset-md-1 col-xl-10 superuserform_companylist">
-                        <h2> Заказы:</h2>
-                        <div className="row">
-                            <div className="col-xl-6">
-                                {
-                                    this.generateAcceptedTable(this.state.acceptedAmmountMonthValues,this.state.mmonthNames)
-                                }
-                            </div>
-                            <div className="col-xl-6">
-                                {
-                                    this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
-                                }
+                            <div className="col-xl-2 download_button" onClick={()=>{
+                                domtoimage.toBlob(document.getElementById('content-div'))
+                                    .then(blob =>window.saveAs(blob, `${new Date().toLocaleString('ru')}-${localStorage.getItem('username')}.png`));
+                            }}>
+                                Скачать графики
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="offset-md-1 col-xl-10 superuserform_companylist">
-                        <h2> Товарные списания:</h2>
-                        <div className="row">
-                            <div className="col-xl-6">
-                                {
-                                    this.generateFailedTableProducts(this.state.productAmount,this.state.mmonthNames)
-                                }
-                            </div>
-                            <div className="col-xl-6">
-                                {
-                                    this.generateFailedTablePrices(this.state.productPrice,this.state.mmonthNames)
-                                }
+                <div id={'content-div'} style={{backgroundColor: '#f3f3f3'}}>
+                    <div className="row">
+                        <div className="offset-md-1 col-xl-10 superuserform_companylist">
+                            <h2> Заказы:</h2>
+                            <div className="row">
+                                <div className="col-xl-6">
+                                    {
+                                        this.generateAcceptedTable(this.state.acceptedAmmountMonthValues,this.state.mmonthNames)
+                                    }
+                                </div>
+                                <div className="col-xl-6">
+                                    {
+                                        this.generateExecutedTable(this.state.executedAmmountMonthValues,this.state.mmonthNames)
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="offset-md-1 col-xl-6 superuserform_companylist info-block">
-                        <h2> Сотрудники:</h2>
-                        <div className="row">
+                    <div className="row">
+                        <div className="offset-md-1 col-xl-10 superuserform_companylist">
+                            <h2> Товарные списания:</h2>
+                            <div className="row">
+                                <div className="col-xl-6">
+                                    {
+                                        this.generateFailedTableProducts(this.state.productAmount,this.state.mmonthNames)
+                                    }
+                                </div>
+                                <div className="col-xl-6">
+                                    {
+                                        this.generateFailedTablePrices(this.state.productPrice,this.state.mmonthNames)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="offset-md-1 col-xl-6 superuserform_companylist info-block">
+                            <h2> Сотрудники:</h2>
+                            <div className="row">
                                 <Container>
                                     <canvas id="barChart"></canvas>
                                 </Container>
+                            </div>
                         </div>
                     </div>
                 </div>

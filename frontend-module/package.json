@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "dom-to-image": "^2.6.0",
+    "file-saver": "^2.0.0",
     "fullcalendar-reactwrapper": "^1.0.7",
     "google-map-react": "^1.1.0",
     "google-maps-react": "^2.0.2",
